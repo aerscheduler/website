@@ -1,0 +1,12 @@
+.bg-style-1{
+    background-color: tint-color($primary,95%);
+}
+.bg-style-2{
+    background-color: tint-color($primary,90%);
+}
+
+
+//Blur background
+.bg-blur{
+    background-image: linear-gradient(180deg, rgba(var(--bs-body-bg-rgb), 0.1), rgba(var(--bs-body-bg-rgb), 1) 85%),radial-gradient(ellipse at top left, rgba(var(--bs-primary-rgb), 0.25), transparent 50%),radial-gradient(ellipse at top right, rgba(var(--bs-info-rgb), 0.15), transparent 50%),radial-gradient(ellipse at center right, rgba(var(--bs-warning-rgb), 0.15), transparent 50%),radial-gradient(ellipse at center left, rgba(var(--bs-danger-rgb), 0.1), transparent 50%);
+}

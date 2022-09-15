@@ -1,0 +1,22 @@
+//Blog posts markdown style
+.markdown{
+    h2{
+        margin-top: 3rem;
+        margin-bottom: 1rem;
+    }
+    p{
+        margin-bottom: 0;
+    }
+    p:not(:last-child){
+        margin-bottom: 2rem;
+    }
+    a{
+        transition: all .25s;
+        &:hover{
+            text-decoration: underline;
+        }
+    }
+    ul{
+        margin-bottom: 0px;
+    }
+}

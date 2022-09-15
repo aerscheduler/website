@@ -1,0 +1,8 @@
+//Navs
+.nav-shadow{
+.nav-link{
+    &.active{
+        box-shadow: $box-shadow;
+    }
+}
+}

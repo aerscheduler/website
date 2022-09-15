@@ -1,0 +1,42 @@
+.btn{
+    transition: all .4s;
+    text-transform: capitalize;
+    --#{$prefix}btn-focus-box-shadow: 0 #{$btn-focus-width} 1rem rgba(var(--#{$prefix}btn-focus-shadow-rgb), .25);
+    &:hover{
+        box-shadow: var(--#{$prefix}btn-focus-box-shadow);
+    }
+    &.btn-gradient-primary{
+        background-image: linear-gradient(to right, $primary 0%, $orange 50%, $primary 100%);
+        color: $white;
+        transition:0.4s;
+        background-size: 200% auto;
+        border-color: rgba($primary,.025);
+        &:hover{
+            background-position: right center;
+            box-shadow: $box-shadow;
+        }
+    }
+    &.btn-gradient-secondary{
+        background-image: linear-gradient(to right, $secondary 0%, $gray-800 50%, $secondary 100%);
+        color: $white;
+        transition:0.4s;
+        background-size: 200% auto;
+        border-color: rgba($secondary,.025);
+        &:hover{
+            background-position: right center;
+            box-shadow: $box-shadow;
+        }
+    }
+    
+    &.btn-gradient-light{
+        background-image: linear-gradient(to right, tint-color($primary,85%) 0%,tint-color($primary,75%) 50%, tint-color($primary,85%) 100%);
+        color: $white;
+        transition:0.4s;
+        background-size: 200% auto;
+        border-color: rgba($primary,.025);
+        &:hover{
+            background-position: right center;
+            box-shadow: $box-shadow;
+        }
+    }
+}

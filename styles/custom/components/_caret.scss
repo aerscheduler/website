@@ -1,0 +1,34 @@
+
+
+.dropdown-arrow{
+    .dropdown-arrow-icon{
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 12px;
+        height: 12px;
+        transform: rotate(0deg);
+        transition: transform .25s;
+        margin-left: .3rem;
+        font-size: 1rem;
+    }
+}
+
+.navbar-expand {
+    @each $breakpoint in map-keys($grid-breakpoints) {
+      $next: breakpoint-next($breakpoint, $grid-breakpoints);
+      $infix: breakpoint-infix($next, $grid-breakpoints);
+  
+      // stylelint-disable-next-line scss/selector-no-union-class-name
+      &#{$infix} {
+        @include media-breakpoint-up($next) {
+
+            .dropdown:hover .dropdown-arrow{
+                .dropdown-arrow-icon{
+                    transform: rotate(180deg);
+                }
+            }
+        }
+    }
+}
+}

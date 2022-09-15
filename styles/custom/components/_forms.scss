@@ -1,0 +1,96 @@
+
+.password-hide,.password-show{
+    &:after{
+        content: "";
+        font-family: 'Material Symbols Rounded';
+        color: $gray-500;
+    }
+}
+.password-show{
+    &::after{
+        content: "\e8f4";
+    }
+}
+.password-hide{
+    &::after{
+        content: "\e8f5";
+    }
+}
+
+//React select
+.select__control{
+    border-width:$input-border-width!important;
+    border-color: $input-border-color!important;
+    box-shadow: none!important;
+    background-color: $input-bg!important;
+    padding: $input-padding-y $input-padding-x!important;
+    border-radius: $input-border-radius!important;
+    min-height: auto!important;
+    line-height: $input-line-height!important;
+    font-size: $input-font-size!important;
+    .select__value-container{
+        padding: 0!important;
+    }
+    .select__indicators .select__indicator{
+        padding: 0rem .5rem!important;
+        padding-right: 0!important;
+    }
+    .select__indicator-separator{
+        margin: 0px!important;
+    }
+    .select__dropdown-indicator{
+        color: currentColor!important;
+        &:hover{
+            color: currentColor!important;
+            opacity: .5;
+        }
+    }
+}
+.select__menu{
+    color: $gray-700!important;
+}
+
+
+body.dark-mode{
+    --#{$prefix}input-bg:transparent;
+    --#{$prefix}input-color:var(--#{$prefix}body-color);
+    --#{$prefix}input-placeholder-color:var(--#{$prefix}gray-400);
+    --#{$prefix}input-border:#{$input-border-width} solid var(--#{$prefix}gray-500);
+    .form-control{
+       
+        border:var(--#{$prefix}input-border);
+        background-color: var(--#{$prefix}input-bg);
+        color: var(--#{$prefix}input-color);
+        &:focus{
+            border-color: $input-focus-border-color;
+        }
+        // Placeholder
+  &::placeholder {
+    color: var(--#{$prefix}input-placeholder-color);
+    // Override Firefox's unusual default opacity; see https://github.com/twbs/bootstrap/pull/11526.
+    opacity: 1;
+  }
+    }
+    .select__control{
+        border:var(--#{$prefix}input-border)!important;
+        background-color: var(--#{$prefix}input-bg)!important;
+        color: var(--#{$prefix}input-color)!important;
+        .select__single-value{
+            color: var(--#{$prefix}input-color)!important;
+        }
+        .select__indicator-separator{
+            opacity: .25!important;
+        }
+        &.select__control--menu-is-open{
+            border-color:$input-focus-border-color!important;
+        }
+    }
+    .form-check-input{
+        border:var(--#{$prefix}input-border)!important;
+        background-color: var(--#{$prefix}input-bg)!important;
+        &:checked{
+            border-color:$primary!important;
+            background-color: $primary!important;
+        }
+    }
+}

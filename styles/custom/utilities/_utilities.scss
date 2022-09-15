@@ -1,0 +1,334 @@
+
+
+
+
+
+
+//Import utilities
+// Utilities
+
+$utilities: () !default;
+// stylelint-disable-next-line scss/dollar-variable-default
+$utilities: map-merge(( // scss-docs-start utils-Width in px
+        "width-px": (property: width,
+            class: width,
+            values: (5:5px,
+            10:10px,
+            20:20px,
+            25:25px,
+            30:30px,
+            40:40px,
+            60:60px,
+            75:75px,
+            80:80px,
+            85:85px,
+            90:90px,
+            100:100px,
+            120:120px,
+            140:140px,
+            160:160px,
+            180:180px,
+            200:200px,
+            240:240px,
+            260:260px,
+            280:280px,
+            300:300px,
+            )),
+
+        // scss-docs-start utils-Height in px
+        "height-px": (property: height,
+            class: height,
+            values: (5:5px,
+            10:10px,
+            20:20px,
+            25:25px,
+            30:30px,
+            40:40px,
+            60:60px,
+            75:75px,
+            80:80px,
+            85:85px,
+            90:90px,
+            100:100px,
+            120:120px,
+            140:140px,
+            160:160px,
+            180:180px,
+            200:200px,
+            240:240px,
+            260:260px,
+            280:280px,
+            300:300px,
+            )),
+// scss-docs-start utils-Height in px
+"size-width": (property: width,
+class: size,
+values: (5:5px,
+10:10px,
+20:20px,
+25:25px,
+30:30px,
+40:40px,
+60:60px,
+75:75px,
+80:80px,
+85:85px,
+90:90px,
+100:100px,
+120:120px,
+140:140px,
+160:160px,
+180:180px,
+200:200px,
+240:240px,
+260:260px,
+280:280px,
+300:300px,
+)),
+// scss-docs-start utils-Height in px
+"size-height": (property: height,
+class: size,
+values: (5:5px,
+10:10px,
+20:20px,
+25:25px,
+30:30px,
+40:40px,
+60:60px,
+75:75px,
+80:80px,
+85:85px,
+90:90px,
+100:100px,
+120:120px,
+140:140px,
+160:160px,
+180:180px,
+200:200px,
+240:240px,
+260:260px,
+280:280px,
+300:300px,
+)),
+"vh-viewport": (
+      property: height,
+      class: vh,
+      values: (
+          25:25vh,
+          50:50vh,
+          75:75vh,
+          100: 100vw
+          )
+    ),
+    "width-percentage": (
+      property: width,
+      responsive:true,
+      class: w,
+      values: (
+          25:25%,
+          30:30%,
+          35:35%,
+          40:40%,
+          50:50%,
+          60:60%,
+          75:75%,
+          80:80%,
+          100: 100%
+          )
+    ),
+    "height-percentage": (
+      property: height,
+      responsive:true,
+      class: h,
+      values: (
+          25:25%,
+          30:30%,
+          35:35%,
+          40:40%,
+          50:50%,
+          60:60%,
+          75:75%,
+          80:80%,
+          100: 100%
+          )
+    ),
+    "z-index": (
+      property: z-index,
+      class: z-index,
+      values: (
+          1:1,
+          2:2,
+          3:3,
+          n1: -1,
+          fixed:$zindex-fixed
+          )
+    ),
+    "rotate": (
+      property: transform,
+      class: rotate,
+      values: (
+        0:rotate(0deg),
+          2:rotate(2deg),
+          4:rotate(4deg),
+          6:rotate(5deg),
+          n2:rotate(-2deg),
+          n4:rotate(-4deg),
+          n6:rotate(-5deg),
+          )
+    ),
+    "flip": (
+      property: transform,
+      class: flip,
+      values: (
+        y:translateZ(-1),
+          )
+    ),
+    "rounded-top": (
+      property: border-top-left-radius border-top-right-radius,
+      class: rounded-top,
+      values: (
+        0: 0,
+        null: var(--#{$prefix}border-radius)
+        )
+    ),
+    "rounded-end": (
+      property: border-top-right-radius border-bottom-right-radius,
+      class: rounded-end,
+      values: (
+        0: 0,
+        null: var(--#{$prefix}border-radius)
+        )
+    ),
+    "rounded-bottom": (
+      property: border-bottom-right-radius border-bottom-left-radius,
+      class: rounded-bottom,
+      values: (
+        0: 0,
+        null: var(--#{$prefix}border-radius)
+        )
+    ),
+    "rounded-start": (
+      property: border-bottom-left-radius border-top-left-radius,
+      class: rounded-start,
+      values: (
+        0: 0,
+        null: var(--#{$prefix}border-radius)
+        )
+    ),
+    "rounded-top-start": (
+      property:border-top-left-radius,
+      class: rounded-top-start,
+      values: (
+        0: 0,
+        4: var(--#{$prefix}border-radius-xl),
+        5: var(--#{$prefix}border-radius-2xl)
+        )
+    ),
+    "rounded-top-end": (
+      property:border-top-right-radius,
+      class: rounded-top-end,
+      values: (
+        0: 0,
+        4: var(--#{$prefix}border-radius-xl),
+        5: var(--#{$prefix}border-radius-2xl)
+        )
+    ),
+    "rounded-bottom-start": (
+      property:border-bottom-left-radius,
+      class: rounded-bottom-start,
+      values: (
+        0: 0,
+        4: var(--#{$prefix}border-radius-xl),
+        5: var(--#{$prefix}border-radius-2xl)
+        )
+    ),
+    "rounded-bottom-end": (
+      property:border-bottom-right-radius,
+      class: rounded-bottom-end,
+      values: (
+        0: 0,
+        4: var(--#{$prefix}border-radius-xl),
+        5: var(--#{$prefix}border-radius-2xl)
+        )
+    ),
+    "border": (
+      property: border,
+      values: (
+        null: var(--#{$prefix}border-width) var(--#{$prefix}border-style) var(--#{$prefix}border-color),
+        0: 0,
+      )
+    ),
+    "border-top": (
+      property: border-top,
+      values: (
+        null: var(--#{$prefix}border-width) var(--#{$prefix}border-style) var(--#{$prefix}border-color),
+        0: 0,
+      )
+    ),
+    "border-end": (
+      responsive:true,
+      property: border-right,
+      class: border-end,
+      values: (
+        null: var(--#{$prefix}border-width) var(--#{$prefix}border-style) var(--#{$prefix}border-color),
+        0: 0,
+      )
+    ),
+    "border-bottom": (
+      responsive:true,
+      property: border-bottom,
+      values: (
+        null: var(--#{$prefix}border-width) var(--#{$prefix}border-style) var(--#{$prefix}border-color),
+        0: 0,
+      )
+    ),
+    "border-start": (
+      responsive:true,
+      property: border-left,
+      class: border-start,
+      values: (
+        null: var(--#{$prefix}border-width) var(--#{$prefix}border-style) var(--#{$prefix}border-color),
+        0: 0,
+      )
+    ),
+    "border-color": (
+      property: border-color,
+      class: border,
+      local-vars: (
+        "border-opacity": 1
+      ),
+      values: $utilities-border-colors
+    ),
+    "border-width": (
+      css-var: true,
+      css-variable-name: border-width,
+      class: border,
+      values: $border-widths
+    ),
+    "border-opacity": (
+      css-var: true,
+      class: border-opacity,
+      values: (
+        10: .1,
+        25: .25,
+        50: .5,
+        75: .75,
+        100: 1
+      )
+    ),
+    ),
+    $utilities);
+
+//Other utilities
+.hover-lift{
+  transition: all .25s;
+  &:hover,&:focus{
+    transform: translateY(-4px);
+    
+  }
+  &:not(.btn):not(.shadow-none){
+&:hover{
+  box-shadow: $box-shadow-lg!important;
+}
+  }
+}

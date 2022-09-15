@@ -1,0 +1,19 @@
+.footer{
+    --#{$prefix}body-color-rgb:255,255,255;
+    --#{$prefix}link-color:#{$gray-400};
+    --#{$prefix}link-hover-color:#{$white};
+    .list-unstyled{
+        li{
+            &:not(:last-child){
+                margin-bottom: 1rem;
+            }
+        }
+    }
+    .social-links{
+        a{
+            &:not(:first-child){
+                margin-left: 1rem;
+            }
+        }
+    }
+}
