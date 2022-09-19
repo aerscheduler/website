@@ -21,7 +21,7 @@ export default function HeroDecorative() {
         <div className="row pb-9 pb-lg-11 pt-lg-5">
           <div className="col-lg-11 mx-auto text-center">
             {/* <h1 className="display-4 mb-5 text-white">Connect to your customers in whole new way with worlds #No1 software</h1> */}
-            <h1 className="display-4 mb-5 text-white">Manage your flight school with the best mobile software available</h1>
+            <h1 className="display-4 mb-5 text-white">Integrate your flight program with the best mobile software available</h1>
             <p className="mb-5 lead text-white text-opacity-75 mx-auto w-lg-80">
               AerScheduler is a modern aviation software company. Our mission is to make the lives of aviation schools, clubs, charters, and individuals easier through affordable and modern
               technologies.
@@ -30,12 +30,12 @@ export default function HeroDecorative() {
               <Link href="/demo-request">
                 <a className="btn btn-primary btn-lg">Start for free</a>
               </Link>
-              <div className="d-flex align-items-center ms-4">
+              {/* <div className="d-flex align-items-center ms-4">
                 <div>
                   <VideoPopup videoLink="https://www.youtube.com/watch?v=Ga6RYejo6Hk" />
                 </div>
                 <small className="d-none text-white text-opacity-50 d-sm-block ms-sm-2">See AerScheduler in action</small>
-              </div>
+              </div> */}
             </div>
             <div className="position-relative mx-lg-9 rounded-3 overflow-hidden shadow-lg z-index-1">
               <Image width="1424" height="1014" alt="" className="" src={heroImage} layout="responsive" priority />

@@ -32,8 +32,8 @@ export default function FeatureImageLeft1() {
           Did we mention free? Though we plan on adding paid features to AerScheduler, we plan on keeping a free tier for those who only need to schedule.
         </p>
         <ul className="list-unstyled mb-4 mb-lg-5" data-aos="fade-up" data-aos-delay="200">
-          <ListCheck className="d-flex mb-3 align-items-start" listText="Our smart reservation process makes it easy to find available times for everyone trying to schedule." />
-          <ListCheck className="d-flex mb-3 align-items-start" listText="Add restrictions to students, instructors, and renters. Take control of your fleet." />
+          <ListCheck className="d-flex mb-3 align-items-start" listText="Our smart reservation process makes it easy to find available times for your personnel and resources." />
+          <ListCheck className="d-flex mb-3 align-items-start" listText="Allows you to add restrictions to students, instructors, and renters. Take control of your fleet." />
         </ul>
         <div data-aos="fade-up" data-aos-delay="300">
           <Link href="/#">

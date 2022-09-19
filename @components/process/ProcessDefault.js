@@ -13,8 +13,8 @@ export default function ProcessDefault() {
             </div>
           </div>
           <div className="pe-md-3">
-            <h5 className="mb-3">Download our mobile app</h5>
-            <p className="mb-0 text-muted">Our web app is coming soon. For now, you can download our app for Android or iOS</p>
+            <h5 className="mb-3">Download our app</h5>
+            <p className="mb-0 text-muted">Unlock your aviation program's potential with our app. Download for free on the app store.</p>
           </div>
         </div>
       </div>
@@ -26,7 +26,7 @@ export default function ProcessDefault() {
         </div>
         <div className="pe-md-3">
           <h5 className="mb-3">Create an account</h5>
-          <p className="mb-0 text-muted">Once you're logged in, you can create or join an organization. You can be a member of multiple.</p>
+          <p className="mb-0 text-muted">Once you're logged in, you can create or join an existing organization.</p>
         </div>
       </div>
       <div className="col-md-4 col-xl-3">

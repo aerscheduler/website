@@ -9,6 +9,10 @@ export const appTrello = "/img/integrations/trello.svg";
 export const appZoom = "/img/integrations/zoom.svg";
 export const appDropbox = "/img/integrations/dropbox.svg";
 export const appGmail = "/img/integrations/gmail.svg";
+export const appGoogleCalendar = "/img/integrations/google-calendar.svg";
+export const appStripe = "/img/integrations/stripe.svg";
+export const appCanvas = "/img/integrations/canvas.svg";
+
 export default function Integrations() {
   return (
     <>
@@ -21,7 +25,7 @@ export default function Integrations() {
               appLink="#"
               logoWidth="62"
               logoHeight="62"
-              src={appTrello}
+              src={appGoogleCalendar}
               appName="Google Calendar"
               appDescription="Keep everything in sync by connecting your google calendar to AerScheduler's scheduling system."
             />
@@ -31,9 +35,9 @@ export default function Integrations() {
               appLink="#"
               logoWidth="62"
               logoHeight="62"
-              src={appSlack}
+              src={appStripe}
               appName="Stripe"
-              appDescription="Coming Soon. Connect your card or bank account for automatic billing and reporting."
+              appDescription="Coming Soon. Connect your card or bank account for automatic billing and reporting. Add funds and receive statements."
             />
           </div>
           <div className="col-md-4 col-sm-6 mb-4">
@@ -41,9 +45,9 @@ export default function Integrations() {
               appLink="#"
               logoWidth="62"
               logoHeight="62"
-              src={appZoom}
+              src={appCanvas}
               appName="Canvas"
-              appDescription="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec efficitur turpis, vitae dictum dolor tristique in."
+              appDescription="Coming Soon. Intergate with your canvas account as a student. Automatically pull in course information from canvas."
             />
           </div>
         </div>
@@ -57,7 +61,7 @@ export default function Integrations() {
 
       <section className="position-relative bg-style-1">
         <div className="container py-9 py-lg-11">
-          <CtaDefault link="Get started today" heading="Get started today" subheading="Join over 25000+ customers worldwide" />
+          <CtaDefault link="Get started today" action={"/pricing"} heading="Get started today" subheading="Download from the App Store or the Play Store." />
         </div>
       </section>
     </>

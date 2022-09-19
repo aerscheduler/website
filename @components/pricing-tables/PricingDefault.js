@@ -3,7 +3,7 @@ import ListCheck from "@components/lists/ListCheck";
 export default function PricingDefault() {
   return (
     <div className="row align-items-center justify-content-center">
-      <div className="col-lg-4 col-sm-10 mx-auto" data-aos="fade-up" data-aos-delay="100">
+      {/* <div className="col-lg-4 col-sm-10 mx-auto" data-aos="fade-up" data-aos-delay="100">
         <div className="card mb-4 mb-lg-0 shadow-lg rounded-4 border-0 overflow-hidden">
           <div className="px-4 py-4">
             <h5 className="mb-2">Basic</h5>
@@ -26,35 +26,34 @@ export default function PricingDefault() {
             </ul>
           </div>
         </div>
-      </div>
+      </div> */}
       <div className="col-lg-4 col-sm-10 mx-auto" data-aos="fade-up">
         <div className="card mb-4 mb-lg-0 shadow-lg rounded-4 border-0 overflow-hidden">
-          <span className="badge bg-warning rounded-bottom-0 py-3 fs-6">Best value</span>
+          <span className="badge bg-success rounded-bottom-0 py-3 fs-6">Free</span>
           <div className="px-4 py-4">
-            <h5 className="mb-2">Premium</h5>
-            <p className="text-muted mb-0">For teams that need to create project plans with confidence.</p>
+            <h5 className="mb-2">Basic</h5>
+            <p className="text-muted mb-0">For aviation programs that only need resource and personnel scheduling.</p>
           </div>
           <div className="card-body pt-0 pb-4 px-4">
-            <h1 className="display-5"><span className="fw-light small">US$</span> 19</h1>
+            <h1 className="display-5">
+              <span className="fw-light small">US$</span> 0
+            </h1>
             <small className="text-muted font-monospace mb-4 d-block">Per Month</small>
 
-            <button type="button" className="w-100 btn btn-lg btn-gradient-primary hover-lift">Get Premium Plan</button>
+            <button type="button" className="w-100 btn btn-lg btn-primary hover-lift">
+              Download App
+            </button>
             <ul className="list-unstyled mb-0 pt-4">
-              <ListCheck className="d-flex align-items-center mb-3" listText="Timeline" />
-              <ListCheck className="d-flex align-items-center mb-3" listText="Unlimited dashboards" />
-              <ListCheck className="d-flex align-items-center mb-3" listText="Unlimited tasks" />
-              <ListCheck className="d-flex align-items-center mb-3" listText="Unlimited projects" />
-              <ListCheck className="d-flex align-items-center mb-3" listText="Unlimited messages" />
-              <ListCheck className="d-flex align-items-center mb-3" listText="Unlimited collaborate" />
-              <ListCheck className="d-flex align-items-center mb-3" listText="Unlimited file storage" />
-              <ListCheck className="d-flex align-items-center mb-3" listText="Calendar view" />
-              <ListCheck className="d-flex align-items-center" listText="Assignee & Due dates" />
+              <ListCheck className="d-flex align-items-center mb-3" listText="Unlimited students" />
+              <ListCheck className="d-flex align-items-center mb-3" listText="Unlimited instructors" />
+              <ListCheck className="d-flex align-items-center mb-3" listText="Unlimited resources" />
+              <ListCheck className="d-flex align-items-center mb-3" listText="Unlimited reservations" />
+              <ListCheck className="d-flex align-items-center mb-3" listText="Unlimited locations" />
             </ul>
           </div>
         </div>
-
       </div>
-      <div className="col-lg-4 col-sm-10 mx-auto" data-aos="fade-up" data-aos-delay="150">
+      {/* <div className="col-lg-4 col-sm-10 mx-auto" data-aos="fade-up" data-aos-delay="150">
         <div className="card shadow-lg rounded-4 border-0 overflow-hidden">
 
           <div className="px-4 py-4">
@@ -79,7 +78,7 @@ export default function PricingDefault() {
           </div>
         </div>
 
-      </div>
+      </div> */}
     </div>
   );
 }

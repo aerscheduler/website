@@ -5,8 +5,8 @@ import { useEffect } from "react"
 import Headroom from 'headroom.js'
 import Navbar from "./Navbar"
 import Image from 'next/image'
-export const Logo = '/img/logo.svg'
-export const LogoDark = '/img/logo-white.svg'
+export const Logo = '/img/logos/logo_with_text_dark.png'
+export const LogoDark = '/img/logos/logo_with_text_light.png'
 export default function HeaderDefault() {
 
 

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
-export const footerLogo = "/img/logo-white.svg";
+// export const footerLogo = "/img/logo-white.svg";
+export const Logo = '/img/logos/logo_with_text_light.png'
 export default function FooterDefault() {
   return (
     <footer className="footer bg-dark text-white position-relative overflow-hidden">
@@ -10,7 +11,8 @@ export default function FooterDefault() {
             <div className="mb-4">
               <Link href="/">
                 <a className="text-reset d-table width-120">
-                  <Image src={footerLogo} width="704" height="178" layout="responsive" alt="" />
+                  {/* <Image src={footerLogo} width="704" height="178" layout="responsive" alt="" /> */}
+                  <Image src={Logo} layout="fixed" width="120" height="52" alt="Logo"/>
                 </a>
               </Link>
             </div>
@@ -20,7 +22,7 @@ export default function FooterDefault() {
             </p>
           </div>
           <div className="col-md-3 mx-auto col-lg-2 mb-5">
-            <ul className="list-unstyled">
+            {/* <ul className="list-unstyled">
               <li>
                 <a href="#">About</a>
               </li>
@@ -33,10 +35,10 @@ export default function FooterDefault() {
               <li>
                 <a href="#">Privacy</a>
               </li>
-            </ul>
+            </ul> */}
           </div>
           <div className="col-md-3 mx-auto col-lg-2 mb-5">
-            <ul className="list-unstyled">
+            {/* <ul className="list-unstyled">
               <li>
                 <a href="#">Blog</a>
               </li>
@@ -49,10 +51,10 @@ export default function FooterDefault() {
               <li>
                 <a href="#">Contact</a>
               </li>
-            </ul>
+            </ul> */}
           </div>
           <div className="col-lg-4 mb-5">
-            <div className="d-flex flex-wrap social-links mb-5 align-items-center">
+            {/* <div className="d-flex flex-wrap social-links mb-5 align-items-center">
               <a href="#">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 512 512">
                   <path
@@ -94,8 +96,8 @@ export default function FooterDefault() {
                 </svg>
               </a>
             </div>
-            <h6 className="mb-4 text-capitalize fw-bold">Subscribe to newsletter</h6>
-            <form className="mb-3">
+            <h6 className="mb-4 text-capitalize fw-bold">Subscribe to newsletter</h6> */}
+            {/* <form className="mb-3">
               <div className="mb-2">
                 <input type="text" className="form-control border-0 bg-white text-secondary" placeholder="Enter your email address" />
               </div>
@@ -104,8 +106,8 @@ export default function FooterDefault() {
                   Subscribe
                 </button>
               </div>
-            </form>
-            <small className="text-muted">© Copyright 2022. AerScheduler </small>
+            </form> */}
+            <small className="text-muted">© Copyright 2022. AerScheduler</small>
           </div>
         </div>
       </div>

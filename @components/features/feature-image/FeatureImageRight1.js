@@ -21,16 +21,15 @@ export default function FeatureImageRight1() {
       </div>
       <div className="col-lg-5 col-md-6 order-md-1 ms-md-auto">
         <h2 className="position-relative mb-4 fs-1" data-aos="fade-right">
-          Manage your planes, simulators, and even... classrooms.
+          Manage your planes, simulators, and classrooms.
         </h2>
         <p className="lead mb-4" data-aos="fade-right" data-aos-delay="100">
           Add your schedulable resources with just a few clicks. No hand holding. Just add them through the app and they'll be ready for take off.
         </p>
         <ul className="list-unstyled mb-4 mb-lg-5" data-aos="fade-right" data-aos-delay="150">
-          <ListCheck className="d-flex mb-3 align-items-start" listText="Aircraft auto update hobbs and tach time with each reservation." />
-          <ListCheck className="d-flex mb-3 align-items-start" listText="Ramp out and in process." />
-          <ListCheck className="d-flex mb-3 align-items-start" listText="Reserve a classroom for ground study" />
-          <ListCheck className="d-flex mb-3 align-items-start" listText="We support solo flights, dual flights, ground instruction, rentals, and more." />
+          <ListCheck className="d-flex mb-3 align-items-start" listText="The hobbs and tach time are automatically updated with each reservation." />
+          <ListCheck className="d-flex mb-3 align-items-start" listText="Ability to dispatch your fleet in and out." />
+          <ListCheck className="d-flex mb-3 align-items-start" listText="Support for solo flights, dual flights, ground instruction, rentals, and more." />
         </ul>
         <div data-aos="fade-right" data-aos-delay="200">
           <Link href="/#">
