@@ -4,8 +4,8 @@ import { useEffect } from "react";
 import Headroom from "headroom.js";
 import Navbar from "./Navbar";
 import Image from "next/image";
-export const Logo = "/img/logos/logo_with_text_dark.png";
-export const LogoDark = "/img/logos/logo_with_text_light.png";
+export const Logo = "/img/logos/text_light.png";
+export const LogoDark = "/img/logos/text_dark.png";
 
 export default function HeaderCombine() {
   useEffect(() => {
@@ -20,10 +20,10 @@ export default function HeaderCombine() {
         <Link href="/">
           <a className="navbar-brand">
             <div className="logo-light">
-              <Image src={Logo} layout="responsive" width="120" height="44" alt="Logo" />
+              <Image src={LogoDark} layout="responsive" width="200" height="20" alt="Logo" />
             </div>
             <div className="logo-dark">
-              <Image src={LogoDark} layout="responsive" width="120" height="44" alt="Logo" />
+              <Image src={Logo} layout="responsive" width="200" height="20" alt="Logo" />
             </div>
           </a>
         </Link>

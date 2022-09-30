@@ -7,7 +7,7 @@
 
 .navbar-brand {
   position: relative;
-  width: 6rem;
+  width: 12rem;
   padding:  0 0;
   margin: 0.3rem 0;
 
@@ -75,7 +75,7 @@ body.dark-mode{
     &#{$infix} {
       @include media-breakpoint-up($next) {
         .navbar-brand{
-          max-width:8rem;
+          max-width:12rem;
         }
         &.headroom--top {
           padding: 1.25rem 0;

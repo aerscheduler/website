@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 // export const footerLogo = "/img/logo-white.svg";
-export const Logo = "/img/logos/logo_with_text_light.png";
+export const Logo = "/img/logos/text_light.png";
 export default function FooterDefault() {
   return (
     <footer className="footer bg-dark text-white position-relative overflow-hidden">
@@ -12,7 +12,7 @@ export default function FooterDefault() {
               <Link href="/">
                 <a className="text-reset d-table width-120">
                   {/* <Image src={footerLogo} width="704" height="178" layout="responsive" alt="" /> */}
-                  <Image src={Logo} layout="fixed" width="120" height="52" alt="Logo" />
+                  <Image src={Logo} layout="fixed" width="200" height="20" alt="Logo" />
                 </a>
               </Link>
             </div>
