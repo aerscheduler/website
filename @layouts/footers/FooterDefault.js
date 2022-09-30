@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 // export const footerLogo = "/img/logo-white.svg";
-export const Logo = '/img/logos/logo_with_text_light.png'
+export const Logo = "/img/logos/logo_with_text_light.png";
 export default function FooterDefault() {
   return (
     <footer className="footer bg-dark text-white position-relative overflow-hidden">
@@ -12,7 +12,7 @@ export default function FooterDefault() {
               <Link href="/">
                 <a className="text-reset d-table width-120">
                   {/* <Image src={footerLogo} width="704" height="178" layout="responsive" alt="" /> */}
-                  <Image src={Logo} layout="fixed" width="120" height="52" alt="Logo"/>
+                  <Image src={Logo} layout="fixed" width="120" height="52" alt="Logo" />
                 </a>
               </Link>
             </div>
@@ -22,20 +22,24 @@ export default function FooterDefault() {
             </p>
           </div>
           <div className="col-md-3 mx-auto col-lg-2 mb-5">
-            {/* <ul className="list-unstyled">
-              <li>
+            <ul className="list-unstyled">
+              {/* <li>
                 <a href="#">About</a>
               </li>
               <li>
                 <a href="#">Career</a>
+              </li> */}
+              <li>
+                <Link href={`/terms-and-conditions`}>
+                  <a aria-label="Terms and Conditions">Terms and Conditions</a>
+                </Link>
               </li>
               <li>
-                <a href="#">Terms</a>
+                <Link href={`/privacy`}>
+                  <a aria-label="Privacy">Privacy</a>
+                </Link>
               </li>
-              <li>
-                <a href="#">Privacy</a>
-              </li>
-            </ul> */}
+            </ul>
           </div>
           <div className="col-md-3 mx-auto col-lg-2 mb-5">
             {/* <ul className="list-unstyled">
