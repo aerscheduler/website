@@ -27,7 +27,7 @@ export default function HeroDecorative() {
               technologies.
             </p>
             <div className="mb-7 d-flex justify-content-center align-items-center">
-              <Link href="/demo-request">
+              <Link href="/download">
                 <a className="btn btn-primary btn-lg">Start for free</a>
               </Link>
               {/* <div className="d-flex align-items-center ms-4">

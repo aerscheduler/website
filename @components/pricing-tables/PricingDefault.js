@@ -1,4 +1,5 @@
 import ListCheck from "@components/lists/ListCheck";
+import Link from "next/link";
 
 export default function PricingDefault() {
   return (
@@ -29,7 +30,7 @@ export default function PricingDefault() {
       </div> */}
       <div className="col-lg-4 col-sm-10 mx-auto" data-aos="fade-up">
         <div className="card mb-4 mb-lg-0 shadow-lg rounded-4 border-0 overflow-hidden">
-          <span className="badge bg-success rounded-bottom-0 py-3 fs-6">Free</span>
+          <span className="badge bg-warning rounded-bottom-0 py-3 fs-6">Free</span>
           <div className="px-4 py-4">
             <h5 className="mb-2">Basic</h5>
             <p className="text-muted mb-0">For aviation programs that only need resource and personnel scheduling.</p>
@@ -40,9 +41,9 @@ export default function PricingDefault() {
             </h1>
             <small className="text-muted font-monospace mb-4 d-block">Per Month</small>
 
-            <button type="button" className="w-100 btn btn-lg btn-primary hover-lift">
-              Download App
-            </button>
+            <Link href="/download">
+              <a className="w-100 btn btn-lg btn-primary hover-lift">Download App</a>
+            </Link>
             <ul className="list-unstyled mb-0 pt-4">
               <ListCheck className="d-flex align-items-center mb-3" listText="Unlimited students" />
               <ListCheck className="d-flex align-items-center mb-3" listText="Unlimited instructors" />

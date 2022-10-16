@@ -7,7 +7,7 @@ export const FeatureImage3 = "/img/shots/08.png";
 export default function FeatureImageLeft1() {
   return (
     <div className="row align-items-center">
-      <div className="col-md-6 pe-md-5 pe-lg-7 col-sm-9 mb-6 mb-lg-0" data-aos="fade-up" data-aos-delay="100">
+      {/* <div className="col-md-6 pe-md-5 pe-lg-7 col-sm-9 mb-6 mb-lg-0" data-aos="fade-up" data-aos-delay="100">
         <div className="row align-items-center">
           <div className="col-6">
             <div className="position-relative overflow-hidden rounded-3 shadow-lg">
@@ -23,7 +23,7 @@ export default function FeatureImageLeft1() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       <div className="col-md-6 col-lg-5 mx-auto">
         <h2 className="position-relative ms-md-n3 ms-lg-0 ms-0 me-lg-n5 fs-1 mb-4" data-aos="fade-up">
           FREE, easy, fast, and mobile friendly scheduling.
@@ -36,7 +36,7 @@ export default function FeatureImageLeft1() {
           <ListCheck className="d-flex mb-3 align-items-start" listText="Allows you to add restrictions to students, instructors, and renters. Take control of your fleet." />
         </ul>
         <div data-aos="fade-up" data-aos-delay="300">
-          <Link href="/#">
+          <Link href="/pricing">
             <a className="fw-bold">
               Learn More About Our App
               <span className="material-symbols-rounded fs-5 ms-2 align-middle lh-1">arrow_forward</span>

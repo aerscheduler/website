@@ -1,0 +1,27 @@
+import DownloadCard from "@components/downloads/DownloadCard";
+import PageHeaderDefault from "@components/page-headers/PageHeaderDefault";
+import Layout from "@layouts/LayoutDefault";
+export const appStoreBadge = "/img/app_store_badges/app-store-badge.svg";
+export const playStoreBadge = "/img/app_store_badges/google-play-badge.png";
+
+export default function Download() {
+  return (
+    <>
+      <PageHeaderDefault pageTitle="Download AerScheduler for Free" breadcrumbActive="Download" />
+
+      <div className="container pb-9 pb-lg-11 position-relative mt-n12">
+        <div className="row mb-4">
+          <div className="col-md-4 col-sm-6 mb-4">
+            <DownloadCard appLink="https://www.apple.com/app-store/" logoWidth="40" logoHeight="20" src={appStoreBadge} appName="iOS Support" appDescription="Download for your iPhone or iPad" />
+          </div>
+          <div className="col-md-4 col-sm-6 mb-4">
+            <DownloadCard appLink="https://play.google.com/store/games?hl=en_US&gl=US" logoWidth="40" logoHeight="20" src={playStoreBadge} appName="Android Support" appDescription="Download for your android phone or tablet" />
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+Download.getLayout = function getLayout(page) {
+  return <Layout>{page}</Layout>;
+};

@@ -22,7 +22,7 @@ export default function Integrations() {
         <div className="row mb-4">
           <div className="col-md-4 col-sm-6 mb-4">
             <IntegrationCard
-              appLink="#"
+              appLink="https://www.google.com/calendar"
               logoWidth="62"
               logoHeight="62"
               src={appGoogleCalendar}
@@ -32,7 +32,7 @@ export default function Integrations() {
           </div>
           <div className="col-md-4 col-sm-6 mb-4">
             <IntegrationCard
-              appLink="#"
+              appLink="https://stripe.com/"
               logoWidth="62"
               logoHeight="62"
               src={appStripe}
@@ -42,7 +42,7 @@ export default function Integrations() {
           </div>
           <div className="col-md-4 col-sm-6 mb-4">
             <IntegrationCard
-              appLink="#"
+              appLink="https://www.instructure.com/canvas"
               logoWidth="62"
               logoHeight="62"
               src={appCanvas}
@@ -51,12 +51,6 @@ export default function Integrations() {
             />
           </div>
         </div>
-        {/* <div className="text-center">
-          <button type="button" className="btn btn-primary hover-lift">
-            Lead More Apps
-            <span className="material-symbols-rounded align-middle fs-5 ms-2">more_horiz</span>
-          </button>
-        </div> */}
       </div>
 
       <section className="position-relative bg-style-1">

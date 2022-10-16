@@ -148,6 +148,7 @@ export default function IndexDecorative() {
         <div className="container py-9 py-lg-11">
           <CtaVertical
             link="Start for free today"
+            action="/download"
             heading="Integrate your aviation program with free scheduling."
             subheading="Did we mention free?"
             text="AerScheduler is the new way to manage your fleet, personnel, and scheduling all from your mobile device."

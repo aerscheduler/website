@@ -106,12 +106,11 @@ export default function Navbar() {
             <a className="nav-link">integrations</a>
           </ActiveLink>
         </li>
-        {/*
         <li className="nav-item">
-          <ActiveLink href="/blog" activeClassName="active">
-            <a className="nav-link">Blog</a>
+          <ActiveLink href="/download" activeClassName="active">
+            <a className="nav-link">Download</a>
           </ActiveLink>
-        </li> */}
+        </li>
       </ul>
       <ul className="navbar-nav ms-xl-auto">
         {/* <li className="nav-item dropdown mb-3 mb-lg-0">
@@ -144,7 +143,7 @@ export default function Navbar() {
         {/* </div> */}
         {/* </li> */}
         <li className="nav-item mb-3 mb-lg-0">
-          <ActiveLink activeClassName="active" href="/pricing">
+          <ActiveLink activeClassName="active" href="/download">
             <a className="btn btn-secondary btn-sm hover-lift">
               Start For Free
               <span className="align-middle material-symbols-rounded fs-5 ms-1 d-none d-xl-inline-block">arrow_forward</span>
@@ -156,7 +155,7 @@ export default function Navbar() {
             <a className="nav-link">Sign In</a>
           </ActiveLink>
         </li> */}
-        <li className="mt-4 mt-lg-0 nav-item d-flex align-items-center justify-content-lg-center flex-lg-column h-100 ms-0 ms-xl-3">
+        {/* <li className="mt-4 mt-lg-0 nav-item d-flex align-items-center justify-content-lg-center flex-lg-column h-100 ms-0 ms-xl-3">
           <label className="dark-mode-checkbox d-flex align-items-center justify-content-center rounded-circle nav-link p-0" labelfor="ChangeTheme">
             <input type="checkbox" className="appearance-none" id="ChangeTheme" />
 
@@ -166,7 +165,7 @@ export default function Navbar() {
             </span>
             <span className="ms-1 d-lg-none">Dark Mode</span>
           </label>
-        </li>
+        </li> */}
       </ul>
     </>
   );

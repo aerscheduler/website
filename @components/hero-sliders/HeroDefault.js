@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import "material-symbols";
-export const HeroStaticBG = "/img/img1.jpg";
+export const HeroStaticBG = "/img/img1.png";
 import VideoPopup from "@components/lightbox/VideoPopup";
 import FeatureIconTiny from "@components/features/feature-icons/FeatureIconTiny";
 export default function HeroDefault() {
@@ -10,12 +10,12 @@ export default function HeroDefault() {
       <div className="container position-relative">
         <div className="row align-items-center">
           <div className="col-lg-6 col-md-10 text-center text-lg-start ms-lg-0 me-lg-auto mx-md-auto">
-            <h1 className="mb-4 display-3 position-relative z-index-2">Software to manage your flight program.</h1>
+            <h1 className="mb-4 display-3 position-relative z-index-2">Flight school scheduling software.</h1>
             <p className="mb-5 w-lg-75 lead">
               Our mission is to make the lives of those managing or attending flight programs easier through modern technology.
             </p>
             <div className="d-flex justify-content-lg-start justify-content-center mb-3">
-              <Link href="/pricing">
+              <Link href="/download">
                 <a className="btn hover-lift mb-2 btn-primary btn-lg d-flex align-items-center">
                   Start for free
                   <span className="material-symbols-rounded align-middle ms-2">arrow_forward</span>
