@@ -12,10 +12,26 @@ export default function Download() {
       <div className="container pb-9 pb-lg-11 position-relative mt-n12">
         <div className="row mb-4">
           <div className="col-md-4 col-sm-6 mb-4">
-            <DownloadCard appLink="https://www.apple.com/app-store/" logoWidth="40" logoHeight="20" src={appStoreBadge} appName="iOS Support" appDescription="Download for your iPhone or iPad" />
+            <DownloadCard
+              appLink="https://apps.apple.com/us/app/aerscheduler/id6444074155"
+              logoWidth="40"
+              logoHeight="20"
+              src={appStoreBadge}
+              appName="iOS Support"
+              appLinkLabel="Download"
+              appDescription="Download for your iPhone or iPad"
+            />
           </div>
           <div className="col-md-4 col-sm-6 mb-4">
-            <DownloadCard appLink="https://play.google.com/store/games?hl=en_US&gl=US" logoWidth="40" logoHeight="20" src={playStoreBadge} appName="Android Support" appDescription="Download for your android phone or tablet" />
+            <DownloadCard
+              appLink="https://play.google.com/store/apps/details?id=com.aerscheduler.app&hl=en_US&gl=US"
+              logoWidth="40"
+              logoHeight="20"
+              src={playStoreBadge}
+              appName="Android Support"
+              appLinkLabel="Download"
+              appDescription="Download for your android phone or tablet"
+            />
           </div>
         </div>
       </div>
