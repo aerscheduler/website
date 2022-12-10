@@ -5,9 +5,7 @@ export default function DownloadCard({ src, logoWidth, logoHeight, appDescriptio
   return (
     <Link href={appLink}>
       <a className="card card-body p-4 border-0 shadow hover-lift">
-        <div className="mb-4">
-          <Image src={src} alt="" width={logoWidth} height={logoHeight} layout="responsive" />
-        </div>
+        <div className="mb-4">{src && <Image src={src} alt="" width={logoWidth} height={logoHeight} layout="responsive" />}</div>
         <h4 className="mb-3">{appName}</h4>
         <p className="mb-4">{appDescription}</p>
         <div>

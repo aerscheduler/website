@@ -12,7 +12,7 @@ export const FaqsApi = [
   {
     id: "3",
     question: "Can I use AerScheduler on my computer?",
-    answer: "Not at the moment. We will be releasing a desktop friendly application so you can use AerScheduler from your browser.",
+    answer: "Yes you can! You can access AerScheduler by going to https://app.aerscheduler.com",
   },
   {
     id: "4",

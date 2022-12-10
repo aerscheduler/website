@@ -150,11 +150,11 @@ export default function Navbar() {
             </a>
           </ActiveLink>
         </li>
-        {/* <li className="nav-item">
-          <ActiveLink activeClassName="active" href="/auth/signin">
+        <li className="nav-item">
+          <ActiveLink activeClassName="active" href="https://app.aerscheduler.com">
             <a className="nav-link">Sign In</a>
           </ActiveLink>
-        </li> */}
+        </li>
         {/* <li className="mt-4 mt-lg-0 nav-item d-flex align-items-center justify-content-lg-center flex-lg-column h-100 ms-0 ms-xl-3">
           <label className="dark-mode-checkbox d-flex align-items-center justify-content-center rounded-circle nav-link p-0" labelfor="ChangeTheme">
             <input type="checkbox" className="appearance-none" id="ChangeTheme" />
