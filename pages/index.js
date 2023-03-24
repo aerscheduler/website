@@ -14,7 +14,7 @@ export default function IndexDecorative() {
   return (
     <>
       <Head>
-        <title>AerScheduler | Aviation Program Scheduling Software</title>
+        <title>AerScheduler | Flight School Management Software</title>
       </Head>
       {/* <HeroDecorative /> */}
       <HeroDefault />

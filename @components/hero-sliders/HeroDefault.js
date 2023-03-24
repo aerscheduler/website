@@ -10,9 +10,12 @@ export default function HeroDefault() {
       <div className="container position-relative">
         <div className="row align-items-center">
           <div className="col-lg-6 col-md-10 text-center text-lg-start ms-lg-0 me-lg-auto mx-md-auto">
-            <h1 className="mb-4 display-3 position-relative z-index-2">Flight school scheduling software.</h1>
-            <p className="mb-5 w-lg-75 lead">
-              Our mission is to make the lives of those managing or attending flight programs easier through modern technology.
+            <h1 className="mb-4 display-3 position-relative z-index-2">Flight School Management Software</h1>
+            <p className="w-lg-75 lead">
+              Scheduling, Maintenance, and Payments.
+            </p>
+            <p className="mb-5 w-lg-75">
+              Try us out for free. No credit card required.
             </p>
             <div className="d-flex justify-content-lg-start justify-content-center mb-3">
               <Link href="/download">

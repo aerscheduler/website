@@ -2,7 +2,8 @@ export const FaqsApi = [
   {
     id: "1",
     question: "Is this app completely free?",
-    answer: "We plan to keep scheduling completely free. As we add more features like bililng, maintenance, lessons, .etc, we will charge a fair price for those features.",
+    answer:
+      "We plan to keep scheduling free from a monthly subscription. The only fees are for the credit card processing fees + .05% per transaction. Though, you don't need to use our payment system if you don't want to.",
   },
   {
     id: "2",
@@ -32,7 +33,7 @@ export const FaqsApi = [
   {
     id: "7",
     question: "Can my reservations integrate with my Google Calendar?",
-    answer: "Yes, you can integrate your Google Calendar by going to settings from within the app.",
+    answer: "Yes, you can integrate your Google Calendar by going to settings from within the iOS app.",
   },
   {
     id: "8",

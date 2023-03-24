@@ -16,7 +16,7 @@ export default function Download() {
               appLink="https://app.aerscheduler.com"
               logoWidth="40"
               logoHeight="20"
-              appName="Desktop Browser Support"
+              appName="Desktop Browser"
               appLinkLabel="Try now"
               appDescription="Use AerScheduler on your computer"
             />
@@ -27,7 +27,7 @@ export default function Download() {
               logoWidth="40"
               logoHeight="20"
               // src={appStoreBadge}
-              appName="iOS Support"
+              appName="iOS"
               appLinkLabel="Download"
               appDescription="Download for your iPhone or iPad"
             />
@@ -38,7 +38,7 @@ export default function Download() {
               logoWidth="40"
               logoHeight="20"
               // src={playStoreBadge}
-              appName="Android Support"
+              appName="Android"
               appLinkLabel="Download"
               appDescription="Download for your android phone or tablet"
             />

@@ -40,7 +40,7 @@ export default function Integrations() {
               appDescription="Coming Soon. Connect your card or bank account for automatic billing and reporting. Add funds and receive statements."
             />
           </div>
-          <div className="col-md-4 col-sm-6 mb-4">
+          {/* <div className="col-md-4 col-sm-6 mb-4">
             <IntegrationCard
               appLink="https://www.instructure.com/canvas"
               logoWidth="62"
@@ -49,7 +49,7 @@ export default function Integrations() {
               appName="Canvas"
               appDescription="Coming Soon. Intergate with your canvas account as a student. Automatically pull in course information from canvas."
             />
-          </div>
+          </div> */}
         </div>
       </div>
 
