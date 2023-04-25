@@ -17,7 +17,7 @@ export default function FooterDefault() {
               </Link>
             </div>
             <p className="text-muted">
-              AerScheduler is an easy way to manage your planes, pilots, scheduling, payments, documents, maintenance, and more. It's free to use and only takes a few minutes to get started
+              AerScheduler is an easy way to manage your planes, pilots, scheduling, payments, documents, maintenance, and more. It's free to use and only takes a few minutes to get started.
             </p>
           </div>
           <div className="col-md-3 mx-auto col-lg-2 mb-5">

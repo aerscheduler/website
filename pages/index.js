@@ -151,7 +151,7 @@ export default function IndexDecorative() {
             action="https://app.aerscheduler.com"
             heading="Perfect for small flight schools, clubs, and independent CFIs."
             subheading="Did we mention free?"
-            text="AerScheduler is an easy way to manage your planes, pilots, scheduling, payments, documents, maintenance, and more. It's free to use and only takes a few minutes to get started"
+            text="AerScheduler is an easy way to manage your planes, pilots, scheduling, payments, documents, maintenance, and more. It's free to use and only takes a few minutes to get started."
           />
         </div>
       </section>
