@@ -43,7 +43,7 @@ export default function ProcessDefault() {
             </div>
           </div>
           <div className="pe-md-3 d-flex align-items-center justify-content-center flex-column">
-            <h5 className="mb-3">Start runnning your organization</h5>
+            <h5 className="mb-3 text-center">Start runnning your organization</h5>
             <p className="mb-0 text-muted text-center">Create reservations, accept payments, set up maintenance, upload documents, .etc. </p>
           </div>
         </div>
