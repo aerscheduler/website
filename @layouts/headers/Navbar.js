@@ -96,14 +96,14 @@ export default function Navbar() {
             </div>
           </div>
         </li> */}
-        <li className="nav-item" style={{marginLeft: "30px"}}>
+        {/* <li className="nav-item" style={{marginLeft: "30px"}}>
           <ActiveLink href="/pricing" activeClassName="active">
             <a className="nav-link">Pricing</a>
           </ActiveLink>
-        </li>
+        </li> */}
         <li className="nav-item">
           <ActiveLink href="/integrations" activeClassName="active">
-            <a className="nav-link">integrations</a>
+            <a className="nav-link">Integrations</a>
           </ActiveLink>
         </li>
         <li className="nav-item">
@@ -143,9 +143,9 @@ export default function Navbar() {
         {/* </div> */}
         {/* </li> */}
         <li className="nav-item mb-3 mb-lg-0">
-          <ActiveLink activeClassName="active" href="/download">
+          <ActiveLink activeClassName="active" href="https://app.aerscheduler.com">
             <a className="btn btn-secondary btn-sm hover-lift">
-              Start For Free
+              Create an account
               <span className="align-middle material-symbols-rounded fs-5 ms-1 d-none d-xl-inline-block">arrow_forward</span>
             </a>
           </ActiveLink>

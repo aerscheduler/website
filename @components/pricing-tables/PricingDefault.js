@@ -41,7 +41,7 @@ export default function PricingDefault() {
             </h1>
             <small className="text-muted font-monospace mb-4 d-block">Per Month</small>
 
-            <Link href="/download">
+            <Link href="https://app.aerscheduler.com">
               <a className="w-100 btn btn-lg btn-primary hover-lift">Download App</a>
             </Link>
             <ul className="list-unstyled mb-0 pt-4">

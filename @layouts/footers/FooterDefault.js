@@ -17,8 +17,7 @@ export default function FooterDefault() {
               </Link>
             </div>
             <p className="text-muted">
-              AerScheduler is a modern aviation software company. Our mission is to make the lives of aviation schools, clubs, charters, and individuals easier through affordable and modern
-              technologies.
+              AerScheduler is an easy way to manage your planes, pilots, scheduling, payments, documents, maintenance, and more. It's free to use and only takes a few minutes to get started
             </p>
           </div>
           <div className="col-md-3 mx-auto col-lg-2 mb-5">
@@ -37,7 +36,7 @@ export default function FooterDefault() {
           </div>
           <div className="col-md-3 mx-auto col-lg-2 mb-5"></div>
           <div className="col-lg-4 mb-5">
-            <small className="text-muted">© Copyright 2022. AerScheduler</small>
+            <small className="text-muted">© Copyright 2023. AerScheduler</small>
           </div>
         </div>
       </div>

@@ -22,7 +22,7 @@ export default function Integrations() {
         <div className="row mb-4">
           <div className="col-md-4 col-sm-6 mb-4">
             <IntegrationCard
-              appLink="https://www.google.com/calendar"
+              appLink="https://app.aerscheduler.com/#/settings"
               logoWidth="62"
               logoHeight="62"
               src={appGoogleCalendar}
@@ -32,12 +32,12 @@ export default function Integrations() {
           </div>
           <div className="col-md-4 col-sm-6 mb-4">
             <IntegrationCard
-              appLink="https://stripe.com/"
+              appLink="https://app.aerscheduler.com/#/organization-settings/billing"
               logoWidth="62"
               logoHeight="62"
               src={appStripe}
               appName="Stripe"
-              appDescription="Coming Soon. Connect your card or bank account for automatic billing and reporting. Add funds and receive statements."
+              appDescription="Create invoices and collect payments with Stripe. Automatically send invoices to your customers."
             />
           </div>
           {/* <div className="col-md-4 col-sm-6 mb-4">
@@ -55,7 +55,7 @@ export default function Integrations() {
 
       <section className="position-relative bg-style-1">
         <div className="container py-9 py-lg-11">
-          <CtaDefault link="Get started today" action={"/pricing"} heading="Get started today" subheading="Download from the App Store or the Play Store." />
+          <CtaDefault link="Create an account" action={"https://app.aerscheduler.com"} heading="Get started today" subheading="Download from the App Store or the Play Store." />
         </div>
       </section>
     </>

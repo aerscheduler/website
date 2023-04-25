@@ -36,7 +36,7 @@ export default function IndexDecorative() {
           <div className="mb-6 mb-lg-9 mx-auto text-center w-lg-50">
             <h6 className="bg-primary bg-opacity-25 text-primary d-table mx-auto rounded-pill px-3 py-2 mb-4">Core features</h6>
             <h2 className="display-5" data-aos="fade-up">
-              See what AerScheduler can do for your flight program
+              See What <strong>AerScheduler</strong> Can Do For You.
             </h2>
           </div>
           <FeatureTabHorizontal />
@@ -77,7 +77,7 @@ export default function IndexDecorative() {
                 icon={<span className="material-symbols-rounded align-middle fs-3">verified_user</span>}
                 color="danger"
                 title="Secure & Reliable"
-                description="We have systems in place to backup your data daily and make sure we are up and running over 99.9% of the time."
+                description="We have systems in place to make sure your sensitive data is encrypted and backed up to the cloud daily."
               />
             </div>
             <div className="col-sm-6 col-xl-3 mb-6 mb-sm-0" data-aos="fade-up">
@@ -85,7 +85,7 @@ export default function IndexDecorative() {
                 icon={<span className="material-symbols-rounded align-middle fs-3">credit_score</span>}
                 color="secondary"
                 title="Affordable"
-                description="Our scheduling feature is completely free to use and we don't plan on changing that. More features will be available with our premium package."
+                description="No more monthly subscriptions. The only thing you pay for is a .5% fee if you use our payment processing."
               />
             </div>
             <div className="col-sm-6 col-xl-3" data-aos="fade-up">
@@ -147,11 +147,11 @@ export default function IndexDecorative() {
       <section className="bg-style-1">
         <div className="container py-9 py-lg-11">
           <CtaVertical
-            link="Start for free today"
-            action="/download"
-            heading="Integrate your aviation program with free scheduling."
+            link="Create an account"
+            action="https://app.aerscheduler.com"
+            heading="Perfect for small flight schools, clubs, and independent CFIs."
             subheading="Did we mention free?"
-            text="AerScheduler is the new way to manage your fleet, personnel, and scheduling all from your mobile device."
+            text="AerScheduler is an easy way to manage your planes, pilots, scheduling, payments, documents, maintenance, and more. It's free to use and only takes a few minutes to get started"
           />
         </div>
       </section>

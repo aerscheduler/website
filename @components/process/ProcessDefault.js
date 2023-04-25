@@ -6,38 +6,46 @@ export default function ProcessDefault() {
   return (
     <div className="row justify-content-around">
       <div className="col-md-4 col-xl-3 mb-6 mb-md-0">
-        <div>
+        <div className="d-flex align-items-center justify-content-center flex-column">
           <div className="position-relative size-160 d-flex align-items-center justify-content-center">
             <div className="position-relative w-100 h-auto">
               <Image src={processImage1} width="228" height="183" alt="" layout="responsive" />
             </div>
           </div>
-          <div className="pe-md-3">
-            <h5 className="mb-3">Download our app</h5>
-            <p className="mb-0 text-muted">Unlock your aviation program's potential with our app. Download for free on the app store.</p>
+          <div className="pe-md-3 d-flex align-items-center justify-content-center flex-column">
+            <h5 className="mb-3">
+              Go to our <a href="/download">app</a>
+            </h5>
+            <p className="mb-0 text-muted text-center">
+              If you are using iOS or Android, download AerScheduler from the app store. If you're using your web browser, go to the <a href="https://app.aerscheduler.com">web app</a>.
+            </p>
           </div>
         </div>
       </div>
       <div className="col-md-4 col-xl-3 mb-6 mb-md-0">
-        <div className="position-relative size-160 d-flex align-items-center justify-content-center">
-          <div className="position-relative w-100 h-auto">
-            <Image src={processImage2} width="239" height="181" alt="" layout="responsive" />
+        <div className="d-flex align-items-center justify-content-center flex-column">
+          <div className="position-relative size-160 d-flex align-items-center justify-content-center">
+            <div className="position-relative w-100 h-auto">
+              <Image src={processImage2} width="239" height="181" alt="" layout="responsive" />
+            </div>
           </div>
-        </div>
-        <div className="pe-md-3">
-          <h5 className="mb-3">Create an account</h5>
-          <p className="mb-0 text-muted">Once you're logged in, you can create or join an existing organization.</p>
+          <div className="pe-md-3 d-flex align-items-center justify-content-center flex-column">
+            <h5 className="mb-3 text-center">Create an account and an organization</h5>
+            <p className="mb-0 text-muted text-center">Create or join an organization. Invite people to join, add resources, and configure your organization's settings.</p>
+          </div>
         </div>
       </div>
       <div className="col-md-4 col-xl-3">
-        <div className="position-relative size-160 d-flex align-items-center justify-content-center">
-          <div className="position-relative w-100 h-auto">
-            <Image src={processImage3} width="262" height="180" alt="" layout="responsive" />
+        <div className="d-flex align-items-center justify-content-center flex-column">
+          <div className="position-relative size-160 d-flex align-items-center justify-content-center">
+            <div className="position-relative w-100 h-auto">
+              <Image src={processImage3} width="262" height="180" alt="" layout="responsive" />
+            </div>
           </div>
-        </div>
-        <div className="pe-md-3">
-          <h5 className="mb-3">Start scheduling</h5>
-          <p className="mb-0 text-muted">Invite personnel, add resources, set up your organization's settings, and start scheduling.</p>
+          <div className="pe-md-3 d-flex align-items-center justify-content-center flex-column">
+            <h5 className="mb-3">Start runnning your organization</h5>
+            <p className="mb-0 text-muted text-center">Create reservations, accept payments, set up maintenance, upload documents, .etc. </p>
+          </div>
         </div>
       </div>
     </div>

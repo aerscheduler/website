@@ -11,16 +11,22 @@ export default function HeroDefault() {
         <div className="row align-items-center">
           <div className="col-lg-6 col-md-10 text-center text-lg-start ms-lg-0 me-lg-auto mx-md-auto">
             <h1 className="mb-4 display-3 position-relative z-index-2">Flight School Management Software</h1>
-            <p className="w-lg-75 lead">
-              Scheduling, Maintenance, and Payments.
-            </p>
+            <p className="w-lg-75 lead">Scheduling, payments, maintenance, and more.</p>
             <p className="mb-5 w-lg-75">
-              Try us out for free. No credit card required.
+              We have a .5% fee{" "}
+              <strong>
+                <em>if</em>
+              </strong>{" "}
+              you use our payment processing. Besides that, every other feature{" "}
+              <strong>
+                <em>free</em>
+              </strong>
+              .
             </p>
             <div className="d-flex justify-content-lg-start justify-content-center mb-3">
-              <Link href="/download">
+              <Link href="https://app.aerscheduler.com">
                 <a className="btn hover-lift mb-2 btn-primary btn-lg d-flex align-items-center">
-                  Start for free
+                  Create an account
                   <span className="material-symbols-rounded align-middle ms-2">arrow_forward</span>
                 </a>
               </Link>

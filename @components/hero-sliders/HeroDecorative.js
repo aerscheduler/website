@@ -23,12 +23,11 @@ export default function HeroDecorative() {
             {/* <h1 className="display-4 mb-5 text-white">Connect to your customers in whole new way with worlds #No1 software</h1> */}
             <h1 className="display-4 mb-5 text-white">Integrate your flight program with the best mobile software available</h1>
             <p className="mb-5 lead text-white text-opacity-75 mx-auto w-lg-80">
-              AerScheduler is a modern aviation software company. Our mission is to make the lives of aviation schools, clubs, charters, and individuals easier through affordable and modern
-              technologies.
+              AerScheduler is an easy way to manage your planes, pilots, scheduling, payments, documents, maintenance, and more. It's free to use and only takes a few minutes to get started
             </p>
             <div className="mb-7 d-flex justify-content-center align-items-center">
-              <Link href="/download">
-                <a className="btn btn-primary btn-lg">Start for free</a>
+              <Link href="https://app.aerscheduler.com">
+                <a className="btn btn-primary btn-lg">Create an account</a>
               </Link>
               {/* <div className="d-flex align-items-center ms-4">
                 <div>
