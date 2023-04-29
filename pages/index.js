@@ -9,11 +9,20 @@ import ProcessDefault from "@components/process/ProcessDefault";
 import TestimonialRating from "@components/testimonials/TestimonialRating";
 import LayoutCombine from "@layouts/LayoutCombine";
 import Head from "next/head";
+import Script from "next/script";
 
 export default function IndexDecorative() {
   return (
     <>
       <Head>
+        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-3W52Y6MHJ5"></Script>
+        <Script>
+          {`window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-3W52Y6MHJ5');`}
+        </Script>
         <title>AerScheduler | Flight School Management Software</title>
       </Head>
       {/* <HeroDecorative /> */}
