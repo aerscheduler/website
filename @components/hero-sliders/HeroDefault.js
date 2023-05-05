@@ -23,11 +23,18 @@ export default function HeroDefault() {
               </strong>
               .
             </p>
-            <div className="d-flex justify-content-lg-start justify-content-center mb-3">
+            <div className="d-flex flex-wrap justify-content-lg-start justify-content-center mb-3">
               <Link href="https://app.aerscheduler.com">
                 <a className="btn hover-lift mb-2 btn-primary btn-lg d-flex align-items-center">
                   Create an account
                   <span className="material-symbols-rounded align-middle ms-2">arrow_forward</span>
+                </a>
+              </Link>
+              <div style={{ marginRight: "10px" }}></div>
+              <Link href="https://calendly.com/aerscheduler/demo">
+                <a className="btn hover-lift mb-2 btn-lg d-flex align-items-center">
+                  Book a demo
+                  <span className="material-symbols-rounded align-middle ms-2">event</span>
                 </a>
               </Link>
             </div>
