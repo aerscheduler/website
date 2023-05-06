@@ -16,7 +16,7 @@ export default function HeaderCombine() {
   });
   return (
     <nav className="navbar navbar-expand-lg navbar-transparent navbar-sticky navbar-light">
-      <div className="container-fluid position-relative">
+      <div className="container-fluid position-relative" style={{maxWidth: "1400px"}}>
         <Link href="/">
           <a className="navbar-brand">
             <div className="logo-light">
