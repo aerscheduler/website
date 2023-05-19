@@ -16,7 +16,7 @@ export const appCanvas = "/img/integrations/canvas.svg";
 export default function Integrations() {
   return (
     <>
-      <PageHeaderDefault pageTitle="Integration made easy" breadcrumbActive="Integrations" />
+      <PageHeaderDefault pageTitle="Integration" breadcrumbActive="Integrations" />
 
       <div className="container pb-9 pb-lg-11 position-relative mt-n12">
         <div className="row mb-4">

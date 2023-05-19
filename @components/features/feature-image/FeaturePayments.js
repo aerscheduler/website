@@ -28,6 +28,7 @@ export default function FeaturePayments() {
           Use our payment integration to pay with card or ACH. In addition to standard credit card and ACH fees, we add a small .5% fee to each transaction. That's how we keep everything else free!
         </p>
         <ul className="list-unstyled mb-4 mb-lg-5" data-aos="fade-right" data-aos-delay="150">
+          <ListCheck className="d-flex mb-3 align-items-start" listText="Save payment methods and auto pay." />
           <ListCheck className="d-flex mb-3 align-items-start" listText="Automatically send invoices after reservations are completed." />
           <ListCheck className="d-flex mb-3 align-items-start" listText="Support for one-time payments for guest reservations." />
           <ListCheck className="d-flex mb-3 align-items-start" listText="Pay with Apple Pay and Google Pay." />

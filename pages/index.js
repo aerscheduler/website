@@ -94,7 +94,7 @@ export default function IndexDecorative() {
                 icon={<span className="material-symbols-rounded align-middle fs-3">credit_score</span>}
                 color="secondary"
                 title="Affordable"
-                description="No more monthly subscriptions. The only thing you pay for is a .5% fee if you use our payment processing."
+                description="No more monthly subscriptions. The only thing you pay us for is a .5% fee if you use our payment processing."
               />
             </div>
             <div className="col-sm-6 col-xl-3" data-aos="fade-up">

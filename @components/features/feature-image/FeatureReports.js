@@ -11,17 +11,17 @@ export default function FeatureReports() {
                 </div>
             </div> */}
       {/* <div className="col-lg-5 col-md-6 ms-lg-auto"> */}
-      <div className="col-md-6 col-lg-5 mx-auto">
+      <div className="col-md-5 col-lg-6 mx-auto">
         <h2 className="position-relative fs-1 mb-4" data-aos="fade-up">
-          View reports in a table.
+          View Dashboards and Reports
         </h2>
         <p className="lead d-lg-block mb-4" data-aos="fade-up" data-aos-delay="100">
-          View reservations, personnel, resources, and invoices.
+          Get quick insights into your business with our dashboards and reports. We're constantly adding new reports and features to help you run your business.
         </p>
         <ul className="list-unstyled mb-5" data-aos="fade-up" data-aos-delay="200">
-          <ListCheck className="d-flex mb-3 align-items-start" listText="Sort and filter by columns and values" />
-          <ListCheck className="d-flex mb-3 align-items-start" listText="Coming soon: exporting to PDF" />
-          <ListCheck className="d-flex mb-3 align-items-start" listText="Coming soon: detailed reports for each pilot and plane." />
+          <ListCheck className="d-flex mb-3 align-items-start" listText="View flight times, active users, payment collected, and more." />
+          <ListCheck className="d-flex mb-3 align-items-start" listText="Sort and filter by columns and values in the report tables." />
+          <ListCheck className="d-flex mb-3 align-items-start" listText="View dashboards for specific members." />
         </ul>
         <div data-aos="fade-up" data-aos-delay="300">
           <Link href="https://app.aerscheduler.com">
