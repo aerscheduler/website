@@ -31,7 +31,7 @@ export default function HeroDefault() {
                 </a>
               </Link>
               <div style={{ marginRight: "10px" }}></div>
-              <Link href="https://calendly.com/aerscheduler/demo">
+              <Link href="https://calendly.com/aerscheduler/onboarding">
                 <a className="btn hover-lift mb-2 btn-lg d-flex align-items-center">
                   Book a demo
                   <span className="material-symbols-rounded align-middle ms-2">event</span>
