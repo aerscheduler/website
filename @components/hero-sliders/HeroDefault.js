@@ -49,7 +49,7 @@ export default function HeroDefault() {
           <div className="col-lg-6 col-md-10 mx-auto mx-lg-0 position-relative">
             <div className="position-relative w-100 p-3 p-lg-5">
               <div className="position-relative w-100 h-auto">
-                <Image priority layout="responsive" width="690px" height="690px" className="rounded-5" src={HeroStaticBG} alt="" />
+                <Image priority layout="responsive" width="690px" height="690px" className="rounded-5" src={HeroStaticBG} alt="Dashboard example" />
               </div>
               {/**Feature Icon */}
               <div className="bg-white rotate-4 shadow-lg position-absolute end-0 top-0 width-220 h-auto text-dark rounded-4 p-3">
