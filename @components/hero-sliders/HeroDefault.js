@@ -1,12 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import "material-symbols";
-export const HeroStaticBG = "/img/img1.png";
+export const HeroStaticBG = "/images/mockup1.png";
 import VideoPopup from "@components/lightbox/VideoPopup";
+
 import FeatureIconTiny from "@components/features/feature-icons/FeatureIconTiny";
 export default function HeroDefault() {
   return (
-    <section className="pt-12 pt-lg-15 pb-7 bg-blur position-relative overflow-hidden">
+    <section className="hero-page pt-12 pt-lg-15 pb-7 bg-blur position-relative overflow-hidden">
       <div className="container position-relative">
         <div className="row align-items-center">
           <div className="col-lg-6 col-md-10 text-center text-lg-start ms-lg-0 me-lg-auto mx-md-auto">
