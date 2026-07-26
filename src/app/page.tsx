@@ -37,7 +37,7 @@ export default function HomePage() {
             </h1>
             <p className="animate-fade-up-delay-2 mt-5 max-w-md text-lg leading-relaxed text-muted-foreground">
               Schedule aircraft, manage instructors and renters, and keep billing
-              square — on the web and in native iOS & Android apps.
+              square on the web and in native iOS & Android apps.
             </p>
             <div className="animate-fade-up-delay-3 mt-8 flex flex-wrap items-center gap-3">
               <Button href={SIGNUP_URL} size="lg">
@@ -61,17 +61,37 @@ export default function HomePage() {
 
       {/* Value strip */}
       <section className="border-y border-border bg-white">
-        <div className="mx-auto grid max-w-6xl gap-6 px-4 py-10 sm:grid-cols-3 sm:px-6">
-          {[
-            ["Self-serve in minutes", "Create an account and book your first aircraft today."],
-            [`$${PRICE_PER_AIRCRAFT}/mo per aircraft`, "Simulators and classrooms are always free."],
-            ["Native iOS & Android", "The same operation in your pocket — not a mobile website."],
-          ].map(([title, body]) => (
-            <div key={title}>
-              <p className="text-sm font-semibold text-foreground">{title}</p>
-              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{body}</p>
-            </div>
-          ))}
+        <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:py-16">
+          <div className="grid gap-10 sm:grid-cols-3 sm:gap-0">
+            <ValuePoint
+              href={SIGNUP_URL}
+              eyebrow="Get started"
+              title="Self-serve in minutes"
+              body="Create an account and book your first aircraft today. No demo queue."
+            />
+            <ValuePoint
+              href="/pricing"
+              eyebrow="Pricing"
+              title={
+                <>
+                  <span className="tabular-nums">${PRICE_PER_AIRCRAFT}</span>
+                  <span className="text-[0.55em] font-semibold tracking-normal text-muted-foreground">
+                    /mo
+                  </span>{" "}
+                  per aircraft
+                </>
+              }
+              body="Simulators and classrooms are always free on your bill."
+              rule
+            />
+            <ValuePoint
+              href="/features/mobile"
+              eyebrow="Mobile"
+              title="Native iOS & Android"
+              body="The same operation in your pocket, not a mobile website."
+              rule
+            />
+          </div>
         </div>
       </section>
 
@@ -85,7 +105,7 @@ export default function HomePage() {
                 Everything your operation needs to fly.
               </h2>
               <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-                Scheduling, roster, billing, and maintenance on one data layer —
+                Scheduling, roster, billing, and maintenance on one data layer,
                 so a reservation becomes an invoice without a spreadsheet in between.
               </p>
             </div>
@@ -106,7 +126,7 @@ export default function HomePage() {
               href="/features/fleet"
               icon={<Plane className="size-5" />}
               title="Fleet"
-              body="Aircraft, sims, and rooms — with rates and grounding."
+              body="Aircraft, sims, and rooms, with rates and grounding."
             />
             <TeaserCard
               href="/features/billing"
@@ -133,12 +153,12 @@ export default function HomePage() {
           <div className="order-1 lg:order-2">
             <p className="text-sm font-semibold text-primary">Native mobile</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
-              Built for the ramp — not a shrunk-down desktop.
+              Built for the ramp, not a shrunk-down desktop.
             </h2>
             <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
               Students book from their phone. Instructors check the day on the go.
               Dispatchers aren&apos;t chained to a front-desk PC. Same schedule,
-              same invoices — in real native apps for iOS and Android.
+              same invoices in real native apps for iOS and Android.
             </p>
             <ul className="mt-6 space-y-3">
               {[
@@ -170,7 +190,7 @@ export default function HomePage() {
               </h2>
               <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
                 Pay for aircraft. Simulators and ground-school rooms are free.
-                Start with a {TRIAL_DAYS}-day trial — no card required.
+                Start with a {TRIAL_DAYS}-day trial. No card required.
               </p>
               <ul className="mt-6 space-y-3">
                 {[
@@ -224,7 +244,7 @@ export default function HomePage() {
             </h2>
             <p className="mt-3 text-base leading-relaxed text-white/65">
               No demo queue. Create an account, add a tail, and put something on
-              the schedule today — then open it on your phone.
+              the schedule today, then open it on your phone.
             </p>
           </div>
           <Button href={SIGNUP_URL} size="lg" className="bg-white text-brand-surface hover:bg-white/90">
@@ -234,6 +254,45 @@ export default function HomePage() {
         </div>
       </section>
     </>
+  );
+}
+
+function ValuePoint({
+  href,
+  eyebrow,
+  title,
+  body,
+  rule,
+}: {
+  href: string;
+  eyebrow: string;
+  title: ReactNode;
+  body: string;
+  rule?: boolean;
+}) {
+  return (
+    <Link
+      href={href}
+      className={`group relative block rounded-xl sm:px-8 sm:py-1 lg:px-10 ${
+        rule
+          ? "sm:before:absolute sm:before:inset-y-2 sm:before:left-0 sm:before:w-px sm:before:bg-border"
+          : ""
+      }`}
+    >
+      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
+        {eyebrow}
+      </p>
+      <p className="mt-3 text-xl font-semibold tracking-tight text-brand-surface transition-colors duration-150 group-hover:text-primary sm:text-[1.35rem]">
+        {title}
+      </p>
+      <p className="mt-2 max-w-[18rem] text-sm leading-relaxed text-muted-foreground">
+        {body}
+      </p>
+      <span className="mt-4 inline-flex items-center gap-0.5 text-sm font-semibold text-primary">
+        Learn more
+        <ChevronRight className="size-3.5 transition-transform duration-150 group-hover:translate-x-0.5" />
+      </span>
+    </Link>
   );
 }
 

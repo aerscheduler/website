@@ -1,4 +1,6 @@
-import type { ReactNode } from "react";
+"use client";
+
+import { useState, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
 /** Shared browser chrome + sidebar rail for feature demos. */
@@ -16,6 +18,8 @@ export function AppMockShell({
   className?: string;
   float?: ReactNode;
 }) {
+  const [nav, setNav] = useState(activeNav);
+
   return (
     <div className={cn("animate-float relative w-full max-w-[560px]", className)}>
       <div className="overflow-hidden rounded-xl border border-border bg-white shadow-lg">
@@ -34,11 +38,16 @@ export function AppMockShell({
           <aside className="hidden w-[52px] shrink-0 flex-col items-center gap-3 border-r border-border py-3 sm:flex">
             <div className="size-7 rounded-md bg-primary/10" />
             {[0, 1, 2, 3, 4].map((i) => (
-              <div
+              <button
                 key={i}
+                type="button"
+                aria-label={`Navigate ${i + 1}`}
+                onClick={() => setNav(i)}
                 className={cn(
-                  "size-6 rounded-md",
-                  i === activeNav ? "bg-primary" : "bg-muted"
+                  "size-6 rounded-md transition-all duration-150",
+                  i === nav
+                    ? "bg-primary shadow-sm"
+                    : "bg-muted hover:bg-muted-foreground/20 active:scale-95"
                 )}
               />
             ))}
@@ -55,10 +64,12 @@ export function MockHeader({
   eyebrow,
   title,
   action,
+  onAction,
 }: {
   eyebrow: string;
   title: string;
   action?: string;
+  onAction?: () => void;
 }) {
   return (
     <div className="flex items-center justify-between border-b border-border px-4 py-3">
@@ -69,9 +80,13 @@ export function MockHeader({
         <p className="text-sm font-semibold text-foreground">{title}</p>
       </div>
       {action && (
-        <div className="rounded-full bg-primary px-3 py-1 text-[11px] font-semibold text-white">
+        <button
+          type="button"
+          onClick={onAction}
+          className="rounded-full bg-primary px-3 py-1 text-[11px] font-semibold text-white transition-all duration-150 hover:bg-primary/90 active:scale-95"
+        >
           {action}
-        </div>
+        </button>
       )}
     </div>
   );
@@ -91,7 +106,7 @@ export function MockFloat({
   return (
     <div
       className={cn(
-        "absolute -bottom-4 -left-3 hidden rounded-lg border border-border bg-white p-3 shadow-md sm:block",
+        "absolute -bottom-4 -left-3 hidden rounded-lg border border-border bg-white p-3 shadow-md transition-shadow duration-200 hover:shadow-lg sm:block",
         className
       )}
     >
@@ -101,5 +116,51 @@ export function MockFloat({
       <p className="mt-1 text-sm font-semibold tabular-nums text-foreground">{value}</p>
       <p className="text-[11px] text-muted-foreground">{meta}</p>
     </div>
+  );
+}
+
+/** Clickable filter / status pill used across demos. */
+export function MockPill({
+  active,
+  children,
+  className,
+  ...props
+}: ButtonHTMLAttributes<HTMLButtonElement> & { active?: boolean }) {
+  return (
+    <button
+      type="button"
+      className={cn(
+        "shrink-0 rounded-full px-2.5 py-1 text-[10px] font-semibold transition-all duration-150 active:scale-95",
+        active
+          ? "bg-primary text-white shadow-sm"
+          : "bg-muted text-muted-foreground hover:bg-[#e8eaef] hover:text-foreground",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+}
+
+/** Row with hover + selected states. */
+export function MockRow({
+  selected,
+  children,
+  className,
+  ...props
+}: ButtonHTMLAttributes<HTMLButtonElement> & { selected?: boolean }) {
+  return (
+    <button
+      type="button"
+      className={cn(
+        "flex w-full items-center gap-3 px-4 py-3 text-left transition-colors duration-150",
+        selected ? "bg-primary/[0.06]" : "hover:bg-[#f7f8fa] active:bg-muted/80",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </button>
   );
 }

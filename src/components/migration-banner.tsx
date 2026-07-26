@@ -39,7 +39,7 @@ export function MigrationBanner() {
           >
             See how schools are moving to AerScheduler
           </Link>
-          <span className="text-muted-foreground"> — including MyFBO.</span>
+          <span className="text-muted-foreground">, including MyFBO.</span>
         </p>
         <button
           type="button"

@@ -6,7 +6,7 @@ import { SIGNUP_URL } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Integrations",
   description:
-    "AerScheduler integrations — Stripe payments today, Google Calendar and QuickBooks coming soon.",
+    "AerScheduler integrations: Stripe payments and Google Calendar today, QuickBooks coming soon.",
 };
 
 type Status = "available" | "coming_soon";
@@ -24,16 +24,16 @@ const INTEGRATIONS: {
     status: "available",
     blurb: "Cards on file, invoices, and online payments for your school.",
     detail:
-      "Accept cards and pay invoices through Stripe. Subscription billing for your school runs through Stripe too — no separate gateway to wire up.",
+      "Accept cards and pay invoices through Stripe. Subscription billing for your school runs through Stripe too. No separate gateway to wire up.",
     logo: "/integrations/stripe.svg",
     logoAlt: "Stripe logo",
   },
   {
     name: "Google Calendar",
-    status: "coming_soon",
+    status: "available",
     blurb: "Push lessons and reservations to personal calendars.",
     detail:
-      "Sync instructor and student schedules out to Google Calendar so flights show up next to everything else. We’re building this next — join and you’ll get it when it ships.",
+      "Sync instructor and student schedules out to Google Calendar so flights show up next to everything else.",
     logo: "/integrations/google-calendar.svg",
     logoAlt: "Google Calendar logo",
   },
@@ -59,9 +59,9 @@ export default function IntegrationsPage() {
             Connect the tools your school already uses.
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-            Payments run on Stripe today. Calendar and accounting connections are
-            next — we&apos;ll ship them into the same self-serve product, not as
-            enterprise add-ons.
+            Stripe payments and Google Calendar sync are live today. QuickBooks
+            is next, shipping into the same self-serve product, not as an
+            enterprise add-on.
           </p>
         </div>
       </section>
@@ -107,7 +107,7 @@ export default function IntegrationsPage() {
               </h2>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 Tell us what you integrate with today. Roadmap priorities follow
-                real school demand — and everything ships to every plan, not a
+                real school demand, and everything ships to every plan, not a
                 premium tier.
               </p>
             </div>

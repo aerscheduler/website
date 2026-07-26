@@ -19,11 +19,15 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Pages
 
-- `/` — landing
-- `/product` — product deep-dive + mobile
-- `/pricing` — per-aircraft pricing
-- `/integrations` — Stripe / Google Calendar / QuickBooks
-- `/migrating/my-fbo` — MyFBO switching guide
+- `/` - landing
+- `/product` - product deep-dive + mobile
+- `/pricing` - per-aircraft pricing
+- `/integrations` - Stripe / Google Calendar / QuickBooks
+- `/features` - feature index + per-feature pages
+- `/migrating/my-fbo` - MyFBO switching guide
+- `/privacy` - privacy policy (canonical; referenced by the apps)
+- `/terms-and-conditions` - terms (canonical; referenced by the apps)
+- `/terms` - permanent redirect to `/terms-and-conditions`
 
 ## Deploy
 

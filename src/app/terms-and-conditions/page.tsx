@@ -4,20 +4,20 @@ import type { Metadata } from "next";
 import { LegalDocument } from "@/components/legal-document";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy",
+  title: "Terms and Conditions",
   description:
-    "AerScheduler privacy policy: how we collect, use, and protect your information.",
+    "AerScheduler terms and conditions for use of the website and applications.",
 };
 
 const html = readFileSync(
-  path.join(process.cwd(), "src/content/privacy.html"),
+  path.join(process.cwd(), "src/content/terms-and-conditions.html"),
   "utf8"
 );
 
-export default function PrivacyPage() {
+export default function TermsAndConditionsPage() {
   return (
     <LegalDocument
-      title="Privacy Policy"
+      title="Terms and Conditions"
       updated="September 29, 2023"
       html={html}
     />

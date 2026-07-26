@@ -8,7 +8,7 @@ import { SIGNUP_URL } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Features",
   description:
-    "Scheduling, billing, fleet, instruction, maintenance, mobile apps, and more — everything AerScheduler includes.",
+    "Scheduling, billing, fleet, instruction, maintenance, mobile apps, and more. Everything AerScheduler includes.",
 };
 
 export default function FeaturesIndexPage() {
@@ -22,7 +22,7 @@ export default function FeaturesIndexPage() {
             Everything your flight school needs to run.
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-            From the dispatch board to the ramp phone — scheduling, people,
+            From the dispatch board to the ramp phone: scheduling, people,
             billing, maintenance, and compliance in one platform.
           </p>
           <Button href={SIGNUP_URL} size="lg" className="mt-8">

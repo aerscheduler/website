@@ -1,4 +1,30 @@
-import type { ReactNode } from "react";
+"use client";
+
+import { useState, type ReactNode } from "react";
+import { cn } from "@/lib/cn";
+
+const DAYS = [
+  { d: "Mon", n: "20" },
+  { d: "Tue", n: "21" },
+  { d: "Wed", n: "22" },
+  { d: "Thu", n: "23" },
+  { d: "Fri", n: "24" },
+];
+
+const RESERVATIONS = [
+  { id: "r1", time: "08:00-10:00", title: "Dual · Cessna 172", meta: "N172SP · Smith", accent: "#1967d2" },
+  { id: "r2", time: "10:30-12:00", title: "Solo · Pattern", meta: "N5287Q", accent: "#2c4589" },
+  { id: "r3", time: "14:00-15:00", title: "Ground · Weather", meta: "Room B", accent: "#9a6a45" },
+  { id: "r4", time: "16:00-17:30", title: "Rental · Cross-country", meta: "N172SP · Lee", accent: "#17876f" },
+];
+
+const TABS = [
+  { id: "home", label: "Home", icon: <HomeIcon /> },
+  { id: "schedule", label: "Schedule", icon: <CalendarIcon /> },
+  { id: "new", label: "New", icon: <PlusIcon /> },
+  { id: "alerts", label: "Alerts", icon: <BellIcon />, badge: true },
+  { id: "search", label: "Search", icon: <SearchIcon /> },
+] as const;
 
 /**
  * Realistic iPhone marketing mock (~19.5:9).
@@ -7,9 +33,13 @@ import type { ReactNode } from "react";
  * match AerScheduler (Home / Calendar / center action / Notifications / Search).
  */
 export function PhoneMock({ className = "" }: { className?: string }) {
+  const [day, setDay] = useState("22");
+  const [selected, setSelected] = useState("r1");
+  const [tab, setTab] = useState("schedule");
+
   return (
     <div className={`relative mx-auto w-[250px] sm:w-[268px] ${className}`}>
-      {/* Outer hardware bezel — tall modern phone proportions */}
+      {/* Outer hardware bezel: tall modern phone proportions */}
       <div className="relative aspect-[9/18] rounded-[2.6rem] bg-[#0b0c10] p-[10px] shadow-[0_20px_50px_-12px_rgba(16,35,63,0.45),0_0_0_1px_rgba(255,255,255,0.08)_inset]">
         {/* Side button hints */}
         <div className="absolute -left-[2px] top-[18%] h-7 w-[3px] rounded-l-sm bg-[#2a2d36]" aria-hidden />
@@ -39,8 +69,8 @@ export function PhoneMock({ className = "" }: { className?: string }) {
             <div className="flex items-center justify-between">
               <button
                 type="button"
-                className="flex size-8 items-center justify-center rounded-full"
-                aria-hidden
+                className="flex size-8 items-center justify-center rounded-full transition-colors hover:bg-muted"
+                aria-label="Menu"
               >
                 <span className="flex flex-col gap-[3px]">
                   <span className="h-[1.5px] w-4 rounded bg-primary" />
@@ -49,9 +79,9 @@ export function PhoneMock({ className = "" }: { className?: string }) {
                 </span>
               </button>
               <p className="text-[15px] font-semibold tracking-tight text-foreground">
-                Schedule
+                {TABS.find((t) => t.id === tab)?.label ?? "Schedule"}
               </p>
-              <div className="flex size-8 items-center justify-center rounded-full bg-muted text-[10px] font-semibold text-muted-foreground">
+              <div className="flex size-8 items-center justify-center rounded-full bg-muted text-[10px] font-semibold text-muted-foreground transition-transform hover:scale-105">
                 AS
               </div>
             </div>
@@ -59,63 +89,52 @@ export function PhoneMock({ className = "" }: { className?: string }) {
 
           {/* Day strip */}
           <div className="mt-4 flex shrink-0 gap-1.5 overflow-hidden px-4">
-            {[
-              { d: "Mon", n: "20" },
-              { d: "Tue", n: "21" },
-              { d: "Wed", n: "22", active: true },
-              { d: "Thu", n: "23" },
-              { d: "Fri", n: "24" },
-            ].map((day) => (
-              <div
-                key={day.n}
-                className={`flex h-[54px] flex-1 flex-col items-center justify-center rounded-2xl text-[10px] ${
-                  day.active
+            {DAYS.map((d) => (
+              <button
+                key={d.n}
+                type="button"
+                onClick={() => setDay(d.n)}
+                className={cn(
+                  "flex h-[54px] flex-1 flex-col items-center justify-center rounded-2xl text-[10px] transition-all duration-150 active:scale-95",
+                  day === d.n
                     ? "bg-primary text-white shadow-sm"
-                    : "bg-muted text-muted-foreground"
-                }`}
+                    : "bg-muted text-muted-foreground hover:bg-[#e8eaef]"
+                )}
               >
-                <span className="font-medium">{day.d}</span>
-                <span className="text-[13px] font-semibold tabular-nums">{day.n}</span>
-              </div>
+                <span className="font-medium">{d.d}</span>
+                <span className="text-[13px] font-semibold tabular-nums">{d.n}</span>
+              </button>
             ))}
           </div>
 
-          {/* Reservation cards — flex-1 so content fills the tall frame */}
-          <div className="mt-4 flex min-h-0 flex-1 flex-col gap-2.5 overflow-hidden px-4 pb-3">
-            <ReservationCard
-              time="08:00 – 10:00"
-              title="Dual · Cessna 172"
-              meta="N172SP · Smith"
-              accent="#1967d2"
-            />
-            <ReservationCard
-              time="10:30 – 12:00"
-              title="Solo · Pattern"
-              meta="N5287Q"
-              accent="#2c4589"
-            />
-            <ReservationCard
-              time="14:00 – 15:00"
-              title="Ground · Weather"
-              meta="Room B"
-              accent="#9a6a45"
-            />
-            <ReservationCard
-              time="16:00 – 17:30"
-              title="Rental · Cross-country"
-              meta="N172SP · Lee"
-              accent="#17876f"
-            />
+          {/* Reservation cards */}
+          <div className="mt-4 flex min-h-0 flex-1 flex-col justify-start gap-2 overflow-y-auto px-4 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {RESERVATIONS.map((r) => (
+              <ReservationCard
+                key={r.id}
+                time={r.time}
+                title={r.title}
+                meta={r.meta}
+                accent={r.accent}
+                selected={selected === r.id}
+                onClick={() => setSelected(r.id)}
+              />
+            ))}
           </div>
 
           {/* Bottom tab bar */}
           <div className="mt-auto shrink-0 border-t border-[#e8eaed] bg-white px-1 pt-1.5">
             <div className="grid grid-cols-5 pb-1">
-              <Tab icon={<HomeIcon />} label="Home" />
-              <Tab icon={<CalendarIcon />} label="Schedule" active />
-              <Tab icon={<PlusIcon />} label="New" />
-              <Tab icon={<BellIcon />} label="Alerts" badge />
-              <Tab icon={<SearchIcon />} label="Search" />
+              {TABS.map((t) => (
+                <Tab
+                  key={t.id}
+                  icon={t.icon}
+                  label={t.label}
+                  active={tab === t.id}
+                  badge={"badge" in t && t.badge}
+                  onClick={() => setTab(t.id)}
+                />
+              ))}
             </div>
             <div className="flex justify-center pb-2.5 pt-1">
               <div className="h-[4px] w-[108px] rounded-full bg-black" />
@@ -124,8 +143,8 @@ export function PhoneMock({ className = "" }: { className?: string }) {
         </div>
       </div>
 
-      {/* Floating badge */}
-      <div className="absolute -right-3 top-[14%] rounded-lg border border-border bg-white px-2.5 py-2 shadow-md sm:-right-6">
+      {/* Floating badge: lower-right, clear of chrome and day strip */}
+      <div className="absolute -right-2 bottom-[16%] z-10 rounded-lg border border-border bg-white px-2.5 py-2 shadow-md transition-shadow hover:shadow-lg sm:-right-5 sm:bottom-[18%]">
         <p className="text-[9px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
           Native apps
         </p>
@@ -140,28 +159,40 @@ function ReservationCard({
   title,
   meta,
   accent,
+  selected,
+  onClick,
 }: {
   time: string;
   title: string;
   meta: string;
   accent: string;
+  selected?: boolean;
+  onClick?: () => void;
 }) {
   return (
-    <div className="flex overflow-hidden rounded-2xl border border-[#e8eaed] bg-white shadow-[0_1px_2px_rgba(16,24,40,0.04)]">
-      <div className="w-[4px] shrink-0" style={{ backgroundColor: accent }} />
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "flex w-full shrink-0 items-stretch overflow-hidden rounded-2xl border bg-white text-left shadow-[0_1px_2px_rgba(16,24,40,0.04)] transition-all duration-150 active:scale-[0.99]",
+        selected
+          ? "border-primary/30 shadow-sm ring-1 ring-primary/20"
+          : "border-[#e8eaed] hover:border-primary/20"
+      )}
+    >
+      <div className="w-[4px] shrink-0 self-stretch" style={{ backgroundColor: accent }} />
       <div className="min-w-0 flex-1 px-3 py-2.5">
-        <div className="flex items-start justify-between gap-2">
-          <p className="truncate text-[12px] font-semibold text-foreground">{title}</p>
-          <p className="shrink-0 text-[10px] font-medium tabular-nums text-muted-foreground">
-            {time.split(" – ")[0]}
+        <div className="flex items-baseline justify-between gap-2">
+          <p className="truncate text-[12px] font-semibold leading-snug text-foreground">
+            {title}
+          </p>
+          <p className="shrink-0 text-[10px] font-semibold tabular-nums leading-snug text-muted-foreground">
+            {time}
           </p>
         </div>
-        <p className="mt-0.5 text-[10px] text-muted-foreground">{meta}</p>
-        <p className="mt-1 text-[9px] font-medium tabular-nums text-muted-foreground/80">
-          {time}
-        </p>
+        <p className="mt-1 truncate text-[10px] leading-snug text-muted-foreground">{meta}</p>
       </div>
-    </div>
+    </button>
   );
 }
 
@@ -170,14 +201,20 @@ function Tab({
   label,
   active,
   badge,
+  onClick,
 }: {
   icon: ReactNode;
   label: string;
   active?: boolean;
   badge?: boolean;
+  onClick?: () => void;
 }) {
   return (
-    <div className="relative flex flex-col items-center gap-0.5 py-1">
+    <button
+      type="button"
+      onClick={onClick}
+      className="relative flex flex-col items-center gap-0.5 py-1 transition-transform active:scale-95"
+    >
       {active && (
         <span className="absolute -top-1.5 h-[2px] w-6 rounded-full bg-primary" />
       )}
@@ -194,7 +231,7 @@ function Tab({
       >
         {label}
       </span>
-    </div>
+    </button>
   );
 }
 

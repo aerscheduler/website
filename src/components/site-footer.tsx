@@ -10,7 +10,7 @@ export function SiteFooter() {
         <div>
           <Logo />
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
-            Schedule aircraft, manage your team, and keep billing square — on the
+            Schedule aircraft, manage your team, and keep billing square on the
             web and in native iOS & Android apps.
           </p>
         </div>
@@ -49,7 +49,7 @@ export function SiteFooter() {
             <Link href="/privacy" className="hover:text-foreground">
               Privacy
             </Link>
-            <Link href="/terms" className="hover:text-foreground">
+            <Link href="/terms-and-conditions" className="hover:text-foreground">
               Terms
             </Link>
             <a href={`mailto:${SUPPORT_EMAIL}`} className="hover:text-foreground">

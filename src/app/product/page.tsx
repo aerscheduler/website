@@ -22,7 +22,7 @@ import { StoreBadges } from "@/components/store-badges";
 export const metadata: Metadata = {
   title: "Product",
   description:
-    "Dispatch, fleet, billing, and native iOS & Android apps — the AerScheduler platform for flight schools, clubs, and FBOs.",
+    "Dispatch, fleet, billing, and native iOS & Android apps. The AerScheduler platform for flight schools, clubs, and FBOs.",
 };
 
 export default function ProductPage() {
@@ -37,7 +37,7 @@ export default function ProductPage() {
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
             AerScheduler connects scheduling, people, fleet, and money so your
-            school runs from a single source of truth — on the web and in native
+            school runs from a single source of truth on the web and in native
             mobile apps.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
@@ -56,7 +56,7 @@ export default function ProductPage() {
       <ProductSection
         eyebrow="Scheduling & dispatch"
         title="A board that feels like the ramp."
-        body="Lane views for aircraft and sims, conflict-aware booking, and ramp-in close-out that drafts the invoice — so dispatch isn’t a calendar plus a spreadsheet."
+        body="Lane views for aircraft and sims, conflict-aware booking, and ramp-in close-out that drafts the invoice, so dispatch isn’t a calendar plus a spreadsheet."
         points={[
           "Day and week boards by resource",
           "Dual, solo, rental, ground, and sim reservations",
@@ -70,7 +70,7 @@ export default function ProductPage() {
       <ProductSection
         eyebrow="Native iOS & Android"
         title="If you can do it at the desk, you should be able to do it on your phone."
-        body="Real native apps — not a mobile website. Students book lessons, instructors see their day, and owners aren’t stuck finding a computer to move a flight."
+        body="Real native apps, not a mobile website. Students book lessons, instructors see their day, and owners aren’t stuck finding a computer to move a flight."
         points={[
           "Book and reschedule from anywhere",
           "Live aircraft and instructor availability",
@@ -97,7 +97,7 @@ export default function ProductPage() {
             <Capability
               icon={<Plane className="size-5" />}
               title="Fleet & facilities"
-              body="Aircraft with wet/dry rates, Hobbs and tach, grounding that blocks the board. Simulators and classrooms are first-class — and free on your bill."
+              body="Aircraft with wet/dry rates, Hobbs and tach, grounding that blocks the board. Simulators and classrooms are first-class, and free on your bill."
             />
             <Capability
               icon={<Users className="size-5" />}
@@ -107,7 +107,7 @@ export default function ProductPage() {
             <Capability
               icon={<CreditCard className="size-5" />}
               title="Billing"
-              body="Flights become invoices. Cards on file for renters — collect payment without a separate billing tool."
+              body="Flights become invoices. Cards on file for renters. Collect payment without a separate billing tool."
             />
             <Capability
               icon={<Wrench className="size-5" />}
@@ -117,12 +117,12 @@ export default function ProductPage() {
             <Capability
               icon={<CalendarDays className="size-5" />}
               title="Self-serve onboarding"
-              body={`School, club, FBO, or solo instructor paths. ${TRIAL_DAYS}-day trial, no sales call — a bookable aircraft in minutes.`}
+              body={`School, club, FBO, or solo instructor paths. ${TRIAL_DAYS}-day trial, no sales call. A bookable aircraft in minutes.`}
             />
             <Capability
               icon={<Smartphone className="size-5" />}
               title="One operation everywhere"
-              body="Web for the desk. Native apps for the ramp. No “we’ll build mobile later” — it’s already how the product ships."
+              body="Web for the desk. Native apps for the ramp. No “we’ll build mobile later.” It’s already how the product ships."
             />
           </div>
         </div>
@@ -135,7 +135,7 @@ export default function ProductPage() {
               See it with your own fleet.
             </h2>
             <p className="mt-2 text-white/65">
-              Create an account and run the real product — web and mobile.
+              Create an account and run the real product: web and mobile.
             </p>
           </div>
           <Button href={SIGNUP_URL} size="lg" className="bg-white text-brand-surface hover:bg-white/90">

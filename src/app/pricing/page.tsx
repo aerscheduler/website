@@ -44,7 +44,7 @@ export default function PricingPage() {
             Pricing that stays out of the way.
           </h1>
           <p className="mt-4 max-w-xl text-lg leading-relaxed text-muted-foreground">
-            One clear number. Pay for the aircraft you fly — not seats, not
+            One clear number. Pay for the aircraft you fly, not seats, not
             modules, not a sales conversation.
           </p>
         </div>
@@ -65,7 +65,7 @@ export default function PricingPage() {
             </div>
             <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
               Simulators and ground-school rooms are free. Start with a{" "}
-              {TRIAL_DAYS}-day trial — no credit card to begin.
+              {TRIAL_DAYS}-day trial. No credit card to begin.
             </p>
             <Button href={SIGNUP_URL} size="lg" className="mt-8">
               Start free trial
@@ -148,11 +148,11 @@ export default function PricingPage() {
               },
               {
                 q: "Are the mobile apps included?",
-                a: "Yes. Native iOS and Android apps are included with every plan — same price, no mobile surcharge.",
+                a: "Yes. Native iOS and Android apps are included with every plan. Same price, no mobile surcharge.",
               },
               {
                 q: "What about Google Calendar or QuickBooks?",
-                a: "Those integrations are coming soon. Stripe payments are available today. See the Integrations page for status.",
+                a: "Google Calendar sync is available today, along with Stripe payments. QuickBooks is coming soon. See the Integrations page for status.",
               },
             ].map((faq) => (
               <div key={faq.q} className="py-5">

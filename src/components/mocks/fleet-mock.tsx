@@ -1,12 +1,23 @@
-import { AppMockShell, MockFloat, MockHeader } from "@/components/mocks/shell";
+"use client";
+
+import { useState } from "react";
+import {
+  AppMockShell,
+  MockFloat,
+  MockHeader,
+  MockRow,
+} from "@/components/mocks/shell";
+
+const FLEET = [
+  { tail: "N172SP", type: "Cessna 172S", rate: "$165/hr wet", status: "Available", ok: true },
+  { tail: "N5287Q", type: "Piper PA-28", rate: "$140/hr wet", status: "Grounded", ok: false },
+  { tail: "SIM-01", type: "Redbird TD2", rate: "Free on plan", status: "Bookable", ok: true },
+  { tail: "Room B", type: "Classroom", rate: "Free on plan", status: "Bookable", ok: true },
+];
 
 export function FleetMock() {
-  const fleet = [
-    { tail: "N172SP", type: "Cessna 172S", rate: "$165/hr wet", status: "Available", ok: true },
-    { tail: "N5287Q", type: "Piper PA-28", rate: "$140/hr wet", status: "Grounded", ok: false },
-    { tail: "SIM-01", type: "Redbird TD2", rate: "Free on plan", status: "Bookable", ok: true },
-    { tail: "Room B", type: "Classroom", rate: "Free on plan", status: "Bookable", ok: true },
-  ];
+  const [selected, setSelected] = useState("N172SP");
+  const [flash, setFlash] = useState(false);
 
   return (
     <AppMockShell
@@ -14,14 +25,26 @@ export function FleetMock() {
       activeNav={1}
       float={<MockFloat label="This month" value="$40" meta="2 aircraft · sims free" />}
     >
-      <MockHeader eyebrow="Resources" title="Fleet & facilities" action="+ Add" />
+      <MockHeader
+        eyebrow="Resources"
+        title="Fleet & facilities"
+        action={flash ? "Added" : "+ Add"}
+        onAction={() => {
+          setFlash(true);
+          window.setTimeout(() => setFlash(false), 1200);
+        }}
+      />
       <div className="divide-y divide-border">
-        {fleet.map((a) => (
-          <div key={a.tail} className="flex items-center gap-3 px-4 py-3">
+        {FLEET.map((a) => (
+          <MockRow
+            key={a.tail}
+            selected={selected === a.tail}
+            onClick={() => setSelected(a.tail)}
+          >
             <div
-              className={`flex size-9 shrink-0 items-center justify-center rounded-lg ${
-                a.ok ? "bg-primary/10 text-primary" : "bg-[#c4142f]/10 text-[#c4142f]"
-              }`}
+              className={`flex size-9 shrink-0 items-center justify-center rounded-lg transition-transform duration-150 ${
+                selected === a.tail ? "scale-105" : ""
+              } ${a.ok ? "bg-primary/10 text-primary" : "bg-[#c4142f]/10 text-[#c4142f]"}`}
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
                 <path
@@ -47,7 +70,7 @@ export function FleetMock() {
             >
               {a.status}
             </span>
-          </div>
+          </MockRow>
         ))}
       </div>
     </AppMockShell>

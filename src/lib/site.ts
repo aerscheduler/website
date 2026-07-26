@@ -1,4 +1,4 @@
-/** Marketing site constants — app.aerscheduler.com is the product host. */
+/** Marketing site constants. App host: app.aerscheduler.com. */
 export const APP_URL =
   process.env.NEXT_PUBLIC_APP_URL ?? "https://app.aerscheduler.com";
 

@@ -7,14 +7,14 @@ import { PRICE_PER_AIRCRAFT, SIGNUP_URL, TRIAL_DAYS } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Migrating from MyFBO",
   description:
-    "MyFBO is shutting down in August 2026. Back up your data, then set up AerScheduler yourself in minutes — no sales call.",
+    "MyFBO is shutting down in August 2026. Back up your data, then set up AerScheduler yourself in minutes. No sales call.",
 };
 
 const STEPS = [
   {
     n: "1",
     title: "Back up your MyFBO data",
-    body: "While your account is still live, download MyFBO’s database backup (.bak). Keep a copy you control — that file is your history no matter where you land.",
+    body: "While your account is still live, download MyFBO’s database backup (.bak). Keep a copy you control. That file is your history no matter where you land.",
   },
   {
     n: "2",
@@ -24,7 +24,7 @@ const STEPS = [
   {
     n: "3",
     title: "Run both systems in parallel",
-    body: "Keep MyFBO online while your team practices on AerScheduler. Cut over when dispatch and billing feel right — on your timeline.",
+    body: "Keep MyFBO online while your team practices on AerScheduler. Cut over when dispatch and billing feel right, on your timeline.",
   },
   {
     n: "4",
@@ -53,7 +53,7 @@ export default function MigratingMyFboPage() {
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
             MyFBO is shutting down in August 2026. Before you choose a next home,
-            secure your data. Then set up AerScheduler yourself — no demo queue,
+            secure your data. Then set up AerScheduler yourself. No demo queue,
             no sales call.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
@@ -66,8 +66,8 @@ export default function MigratingMyFboPage() {
             </Button>
           </div>
           <p className="mt-4 text-sm text-muted-foreground">
-            Also looking at other platforms? This playbook works for any switch —
-            more guides coming under{" "}
+            Also looking at other platforms? This playbook works for any switch.
+            More guides coming under{" "}
             <span className="font-medium text-foreground">/migrating</span>.
           </p>
         </div>
@@ -82,7 +82,7 @@ export default function MigratingMyFboPage() {
             </div>
             <div>
               <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">
-                Do this first — back up your MyFBO data
+                Do this first: back up your MyFBO data
               </h2>
               <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
                 Whatever platform you move to, download MyFBO’s{" "}
@@ -102,7 +102,7 @@ export default function MigratingMyFboPage() {
             A simple migration playbook
           </h2>
           <p className="mt-3 max-w-2xl text-muted-foreground">
-            Four steps. Self-serve the whole way — AerScheduler is built so you
+            Four steps. Self-serve the whole way. AerScheduler is built so you
             can stand up a working schedule in one sitting.
           </p>
           <ol className="mt-12 grid gap-4 md:grid-cols-2">
@@ -133,7 +133,7 @@ export default function MigratingMyFboPage() {
               {
                 icon: <Rocket className="size-5" />,
                 title: "Live in minutes",
-                body: "Competitors often gate setup behind a demo. AerScheduler is fully self-serve — add a plane and book it today.",
+                body: "Competitors often gate setup behind a demo. AerScheduler is fully self-serve. Add a plane and book it today.",
               },
               {
                 icon: <Layers className="size-5" />,
@@ -183,8 +183,8 @@ export default function MigratingMyFboPage() {
             Need help mapping a CSV export? Email{" "}
             <a href="mailto:support@aerscheduler.com" className="font-medium text-primary hover:underline">
               support@aerscheduler.com
-            </a>{" "}
-            — we still keep signup self-serve.
+            </a>
+            . We still keep signup self-serve.
           </p>
         </div>
       </section>
@@ -199,7 +199,7 @@ export default function MigratingMyFboPage() {
             {[
               {
                 q: "Is MyFBO really shutting down?",
-                a: "Yes — August 2026. Download your .bak backup while your account is still active so your history isn’t stranded on a server that goes dark.",
+                a: "Yes. August 2026. Download your .bak backup while your account is still active so your history isn’t stranded on a server that goes dark.",
               },
               {
                 q: "Do I need a demo to start AerScheduler?",
