@@ -10,7 +10,7 @@ export function PhoneMock({ className = "" }: { className?: string }) {
   return (
     <div className={`relative mx-auto w-[250px] sm:w-[268px] ${className}`}>
       {/* Outer hardware bezel — tall modern phone proportions */}
-      <div className="relative aspect-[9/19.5] rounded-[2.6rem] bg-[#0b0c10] p-[10px] shadow-[0_20px_50px_-12px_rgba(16,35,63,0.45),0_0_0_1px_rgba(255,255,255,0.08)_inset]">
+      <div className="relative aspect-[9/18] rounded-[2.6rem] bg-[#0b0c10] p-[10px] shadow-[0_20px_50px_-12px_rgba(16,35,63,0.45),0_0_0_1px_rgba(255,255,255,0.08)_inset]">
         {/* Side button hints */}
         <div className="absolute -left-[2px] top-[18%] h-7 w-[3px] rounded-l-sm bg-[#2a2d36]" aria-hidden />
         <div className="absolute -left-[2px] top-[26%] h-12 w-[3px] rounded-l-sm bg-[#2a2d36]" aria-hidden />
