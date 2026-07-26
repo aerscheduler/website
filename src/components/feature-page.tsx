@@ -2,8 +2,19 @@ import Link from "next/link";
 import { Check, ChevronRight } from "lucide-react";
 import { Button } from "@/components/button";
 import { PhoneMock } from "@/components/phone-mock";
-import { ProductMock } from "@/components/product-mock";
 import { StoreBadges } from "@/components/store-badges";
+import {
+  ScheduleMock,
+  BillingMock,
+  FleetMock,
+  PeopleMock,
+  ComplianceMock,
+  InstructionMock,
+  MaintenanceMock,
+  SelfBookingMock,
+  ReportsMock,
+  IntegrationsMock,
+} from "@/components/mocks";
 import { FEATURES, type Feature, type FeatureSlug } from "@/lib/features";
 import { SIGNUP_URL } from "@/lib/site";
 
@@ -109,33 +120,35 @@ export function FeaturePage({ feature }: { feature: Feature }) {
 }
 
 function FeatureVisual({ slug }: { slug: FeatureSlug }) {
-  if (slug === "mobile") {
-    return (
-      <div className="flex flex-col items-center gap-6">
-        <PhoneMock />
-        <StoreBadges />
-      </div>
-    );
+  switch (slug) {
+    case "scheduling":
+      return <ScheduleMock />;
+    case "self-booking":
+      return <SelfBookingMock />;
+    case "fleet":
+      return <FleetMock />;
+    case "people-roles":
+      return <PeopleMock />;
+    case "compliance":
+      return <ComplianceMock />;
+    case "instruction":
+      return <InstructionMock />;
+    case "billing":
+      return <BillingMock />;
+    case "maintenance":
+      return <MaintenanceMock />;
+    case "reports":
+      return <ReportsMock />;
+    case "integrations":
+      return <IntegrationsMock />;
+    case "mobile":
+      return (
+        <div className="flex flex-col items-center gap-6">
+          <PhoneMock />
+          <StoreBadges />
+        </div>
+      );
+    default:
+      return <ScheduleMock />;
   }
-  if (slug === "scheduling" || slug === "self-booking" || slug === "fleet") {
-    return <ProductMock />;
-  }
-  return (
-    <div className="w-full max-w-md rounded-2xl border border-border bg-white p-6 shadow-lg">
-      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-        In the product
-      </p>
-      <p className="mt-3 text-lg font-semibold text-brand-surface">
-        {FEATURES[slug].title}
-      </p>
-      <ul className="mt-5 space-y-3">
-        {FEATURES[slug].bullets.slice(0, 3).map((b) => (
-          <li key={b} className="flex gap-2 text-sm text-muted-foreground">
-            <Check className="mt-0.5 size-4 shrink-0 text-primary" />
-            {b}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
 }

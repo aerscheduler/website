@@ -1,0 +1,10 @@
+export { ScheduleMock } from "@/components/mocks/schedule-mock";
+export { BillingMock } from "@/components/mocks/billing-mock";
+export { FleetMock } from "@/components/mocks/fleet-mock";
+export { PeopleMock } from "@/components/mocks/people-mock";
+export { ComplianceMock } from "@/components/mocks/compliance-mock";
+export { InstructionMock } from "@/components/mocks/instruction-mock";
+export { MaintenanceMock } from "@/components/mocks/maintenance-mock";
+export { SelfBookingMock } from "@/components/mocks/self-booking-mock";
+export { ReportsMock } from "@/components/mocks/reports-mock";
+export { IntegrationsMock } from "@/components/mocks/integrations-mock";

@@ -1,0 +1,41 @@
+import { AppMockShell, MockFloat, MockHeader } from "@/components/mocks/shell";
+
+export function IntegrationsMock() {
+  const items = [
+    { name: "Stripe", status: "Connected", ok: true, detail: "Invoices & cards" },
+    { name: "Google Calendar", status: "Coming soon", ok: false, detail: "Personal sync" },
+    { name: "QuickBooks", status: "Coming soon", ok: false, detail: "Ledger export" },
+  ];
+
+  return (
+    <AppMockShell
+      path="/settings"
+      activeNav={0}
+      float={<MockFloat label="Payments" value="Live" meta="Stripe connected" />}
+    >
+      <MockHeader eyebrow="Settings" title="Integrations" />
+      <div className="divide-y divide-border">
+        {items.map((item) => (
+          <div key={item.name} className="flex items-center gap-3 px-4 py-4">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted text-[11px] font-bold text-muted-foreground">
+              {item.name.slice(0, 2).toUpperCase()}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-[12px] font-semibold text-foreground">{item.name}</p>
+              <p className="text-[10px] text-muted-foreground">{item.detail}</p>
+            </div>
+            <span
+              className={`rounded-full px-2 py-0.5 text-[9px] font-semibold ${
+                item.ok
+                  ? "bg-success/10 text-success"
+                  : "bg-muted text-muted-foreground"
+              }`}
+            >
+              {item.status}
+            </span>
+          </div>
+        ))}
+      </div>
+    </AppMockShell>
+  );
+}
