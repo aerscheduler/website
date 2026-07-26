@@ -1,7 +1,13 @@
 Dockerfile
 .dockerignore
+.gitignore
 node_modules
 npm-debug.log
-README.md
 .next
 .git
+_legacy
+_refs
+.DS_Store
+README.md
+*.md
+!public/**
