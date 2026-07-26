@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 import {
   Check,
   ChevronRight,
@@ -88,29 +89,33 @@ export default function HomePage() {
                 so a reservation becomes an invoice without a spreadsheet in between.
               </p>
             </div>
-            <Button href="/product" variant="secondary">
-              Explore product
+            <Button href="/features" variant="secondary">
+              Explore features
               <ChevronRight className="size-4 opacity-80" />
             </Button>
           </div>
 
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <TeaserCard
+              href="/features/scheduling"
               icon={<CalendarDays className="size-5" />}
               title="Dispatch"
               body="Lane boards, conflict-aware booking, ramp-in close-out."
             />
             <TeaserCard
+              href="/features/fleet"
               icon={<Plane className="size-5" />}
               title="Fleet"
               body="Aircraft, sims, and rooms — with rates and grounding."
             />
             <TeaserCard
+              href="/features/billing"
               icon={<CreditCard className="size-5" />}
               title="Billing"
               body="Flights draft invoices. Cards on file when you're ready."
             />
             <TeaserCard
+              href="/features/mobile"
               icon={<Smartphone className="size-5" />}
               title="Native apps"
               body="iOS and Android for students, instructors, and the desk."
@@ -233,21 +238,26 @@ export default function HomePage() {
 }
 
 function TeaserCard({
+  href,
   icon,
   title,
   body,
 }: {
+  href: string;
   icon: ReactNode;
   title: string;
   body: string;
 }) {
   return (
-    <article className="rounded-xl border border-border bg-white p-5 shadow-sm">
+    <Link
+      href={href}
+      className="rounded-xl border border-border bg-white p-5 shadow-sm transition-colors hover:border-primary/30"
+    >
       <div className="inline-flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
         {icon}
       </div>
       <h3 className="mt-4 font-semibold tracking-tight text-foreground">{title}</h3>
       <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{body}</p>
-    </article>
+    </Link>
   );
 }
