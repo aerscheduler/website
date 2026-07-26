@@ -1,9 +1,24 @@
-/** Marketing site constants. App host: app.aerscheduler.com. */
+/**
+ * Marketing site constants.
+ *
+ * APP_URL is where Google OAuth and signup/login CTAs land. Points at app —
+ * once console is cut over onto that host, the handoff just works. Override
+ * with NEXT_PUBLIC_APP_URL for local/staging against console if needed.
+ */
 export const APP_URL =
   process.env.NEXT_PUBLIC_APP_URL ?? "https://app.aerscheduler.com";
 
+export const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ?? "https://api.aerscheduler.com";
+
 export const SIGNUP_URL = `${APP_URL}/signup`;
 export const LOGIN_URL = `${APP_URL}/login`;
+
+/**
+ * Full-page Google OAuth via the API (no popup). Lands on APP_URL after Google
+ * signs the user in — swapping APP_URL is all it takes to retarget console→app.
+ */
+export const GOOGLE_SIGNIN_URL = `${API_URL}/auth/google/start?return_to=${encodeURIComponent(APP_URL)}`;
 
 export const APP_STORE_URL =
   "https://apps.apple.com/us/app/aerscheduler/id6444074155";
@@ -15,4 +30,9 @@ export const TRIAL_DAYS = 14;
 
 export const SITE_NAME = "AerScheduler";
 export const SITE_TAGLINE = "The command deck for your flight school.";
+export const SITE_URL = "https://www.aerscheduler.com";
 export const SUPPORT_EMAIL = "support@aerscheduler.com";
+
+/** Longer default meta description for SEO. */
+export const SITE_DESCRIPTION =
+  "Flight school management software for aircraft scheduling, billing, maintenance, and compliance. Native iOS and Android apps. Self-serve from $20/mo per aircraft.";

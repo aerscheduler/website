@@ -1,14 +1,22 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/button";
-import { FEATURE_GROUPS, FEATURES } from "@/lib/features";
+import { FEATURE_GROUPS, FEATURES, featureHref } from "@/lib/features";
 import { SIGNUP_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Features",
+  title: "Flight School Software Features",
   description:
-    "Scheduling, billing, fleet, instruction, maintenance, mobile apps, and more. Everything AerScheduler includes.",
+    "Explore AerScheduler features: aircraft scheduling, self-booking, billing, maintenance, compliance, instruction, reports, and native mobile apps.",
+  alternates: { canonical: "/features" },
+  openGraph: {
+    title: "Flight School Software Features",
+    description:
+      "Scheduling, billing, fleet, instruction, maintenance, mobile apps, and more.",
+    url: "/features",
+  },
 };
 
 export default function FeaturesIndexPage() {
@@ -16,10 +24,10 @@ export default function FeaturesIndexPage() {
     <>
       <section className="relative overflow-hidden border-b border-border">
         <div className="hero-mesh pointer-events-none absolute inset-0 opacity-60" aria-hidden />
-        <div className="relative mx-auto max-w-6xl px-4 pb-14 pt-16 sm:px-6 lg:pt-20">
-          <p className="text-sm font-semibold text-primary">Features</p>
-          <h1 className="mt-3 max-w-3xl text-4xl font-semibold tracking-tight text-brand-surface sm:text-5xl">
-            Everything your flight school needs to run.
+        <div className="relative mx-auto max-w-6xl px-4 pb-14 pt-12 sm:px-6 lg:pt-16">
+          <Breadcrumbs items={[{ name: "Features", href: "/features" }]} />
+          <h1 className="mt-6 max-w-3xl text-4xl font-semibold tracking-tight text-brand-surface sm:text-5xl">
+            Flight school software features
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
             From the dispatch board to the ramp phone: scheduling, people,
@@ -45,7 +53,7 @@ export default function FeaturesIndexPage() {
                   return (
                     <Link
                       key={slug}
-                      href={`/features/${slug}`}
+                      href={featureHref(slug)}
                       className="rounded-xl border border-border bg-[#fafbfc] p-5 transition-colors hover:border-primary/30 hover:bg-white"
                     >
                       <p className="font-semibold text-foreground">{f.navLabel}</p>

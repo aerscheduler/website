@@ -1,12 +1,20 @@
 import type { Metadata } from "next";
 import { ChevronRight } from "lucide-react";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/button";
 import { SIGNUP_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Integrations",
+  title: "Flight School Software Integrations",
   description:
-    "AerScheduler integrations: Stripe payments and Google Calendar today, QuickBooks coming soon.",
+    "AerScheduler integrates with Stripe and Google Calendar today. QuickBooks Online is coming soon. Connect the tools your flight school already uses.",
+  alternates: { canonical: "/integrations" },
+  openGraph: {
+    title: "Flight School Software Integrations",
+    description:
+      "Stripe and Google Calendar available now. QuickBooks coming soon.",
+    url: "/integrations",
+  },
 };
 
 type Status = "available" | "coming_soon";
@@ -53,10 +61,10 @@ export default function IntegrationsPage() {
     <>
       <section className="relative overflow-hidden border-b border-border">
         <div className="hero-mesh pointer-events-none absolute inset-0 opacity-60" aria-hidden />
-        <div className="relative mx-auto max-w-6xl px-4 pb-14 pt-16 sm:px-6 lg:pt-20">
-          <p className="text-sm font-semibold text-primary">Integrations</p>
-          <h1 className="mt-3 max-w-3xl text-4xl font-semibold tracking-tight text-brand-surface sm:text-5xl">
-            Connect the tools your school already uses.
+        <div className="relative mx-auto max-w-6xl px-4 pb-14 pt-12 sm:px-6 lg:pt-16">
+          <Breadcrumbs items={[{ name: "Integrations", href: "/integrations" }]} />
+          <h1 className="mt-6 max-w-3xl text-4xl font-semibold tracking-tight text-brand-surface sm:text-5xl">
+            Flight school software integrations
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
             Stripe payments and Google Calendar sync are live today. QuickBooks

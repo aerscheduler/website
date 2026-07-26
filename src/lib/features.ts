@@ -250,6 +250,12 @@ export const FEATURE_GROUPS: FeatureGroup[] = [
 
 export const FEATURE_LIST = Object.values(FEATURES);
 
+/** Feature detail pages live under /features/[slug], except integrations. */
+export function featureHref(slug: FeatureSlug): string {
+  if (slug === "integrations") return "/integrations";
+  return `/features/${slug}`;
+}
+
 export function getFeature(slug: string): Feature | undefined {
   return FEATURES[slug as FeatureSlug];
 }

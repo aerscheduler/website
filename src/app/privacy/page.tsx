@@ -6,7 +6,9 @@ import { LegalDocument } from "@/components/legal-document";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "AerScheduler privacy policy: how we collect, use, and protect your information.",
+    "Read the AerScheduler privacy policy. How we collect, use, and protect personal information for our flight school management software and apps.",
+  alternates: { canonical: "/privacy" },
+  robots: { index: true, follow: true },
 };
 
 const html = readFileSync(

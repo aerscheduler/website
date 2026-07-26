@@ -10,6 +10,7 @@ import {
   Users,
   Wrench,
 } from "lucide-react";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/button";
 import { PhoneMock } from "@/components/phone-mock";
 import { ProductMock } from "@/components/product-mock";
@@ -20,9 +21,16 @@ import {
 import { StoreBadges } from "@/components/store-badges";
 
 export const metadata: Metadata = {
-  title: "Product",
+  title: "Flight School Management Product",
   description:
-    "Dispatch, fleet, billing, and native iOS & Android apps. The AerScheduler platform for flight schools, clubs, and FBOs.",
+    "Aircraft dispatch, fleet, billing, maintenance, and native iOS & Android apps. See how AerScheduler runs a flight school from desk to ramp.",
+  alternates: { canonical: "/product" },
+  openGraph: {
+    title: "Flight School Management Product",
+    description:
+      "Dispatch, fleet, billing, and native mobile apps for flight schools, clubs, and FBOs.",
+    url: "/product",
+  },
 };
 
 export default function ProductPage() {
@@ -30,10 +38,11 @@ export default function ProductPage() {
     <>
       <section className="relative overflow-hidden border-b border-border">
         <div className="hero-mesh pointer-events-none absolute inset-0 opacity-70" aria-hidden />
-        <div className="relative mx-auto max-w-6xl px-4 pb-12 pt-16 sm:px-6 lg:pt-20">
-          <p className="text-sm font-semibold text-primary">Product</p>
+        <div className="relative mx-auto max-w-6xl px-4 pb-12 pt-12 sm:px-6 lg:pt-16">
+          <Breadcrumbs items={[{ name: "Product", href: "/product" }]} />
+          <p className="mt-6 text-sm font-semibold text-primary">Product</p>
           <h1 className="mt-3 max-w-3xl text-4xl font-semibold tracking-tight text-brand-surface sm:text-5xl">
-            One platform for the desk, the ramp, and every phone in your hangar.
+            Flight school management software for desk, ramp, and mobile
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
             AerScheduler connects scheduling, people, fleet, and money so your

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import {
@@ -9,23 +10,40 @@ import {
   Smartphone,
 } from "lucide-react";
 import { Button } from "@/components/button";
-import { HeroDemoCycle } from "@/components/hero-demo-cycle";
+import { ProductMock } from "@/components/product-mock";
 import { PhoneMock } from "@/components/phone-mock";
 import { StoreBadges } from "@/components/store-badges";
 import {
   PRICE_PER_AIRCRAFT,
   SIGNUP_URL,
+  SITE_DESCRIPTION,
+  SITE_NAME,
   TRIAL_DAYS,
-  LOGIN_URL,
+  GOOGLE_SIGNIN_URL,
 } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: {
+    absolute: `${SITE_NAME} | Flight School Management Software`,
+  },
+  description: SITE_DESCRIPTION,
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: `${SITE_NAME} | Flight School Management Software`,
+    description: SITE_DESCRIPTION,
+    url: "/",
+  },
+};
 
 export default function HomePage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="hero-mesh pointer-events-none absolute inset-0 opacity-90" aria-hidden />
-        <div className="pointer-events-none absolute inset-0 grid-lines opacity-40" aria-hidden />
+      <section className="relative">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+          <div className="hero-mesh absolute inset-0 opacity-90" />
+          <div className="absolute inset-0 grid-lines opacity-40" />
+        </div>
 
         <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 pb-20 pt-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:pb-28 lg:pt-20">
           <div>
@@ -44,8 +62,15 @@ export default function HomePage() {
                 Get started
                 <ChevronRight className="size-4 opacity-80" />
               </Button>
-              <Button href={LOGIN_URL} variant="secondary" size="lg">
-                Sign in
+              <Button href={GOOGLE_SIGNIN_URL} variant="secondary" size="lg">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/brand/google.png"
+                  alt=""
+                  aria-hidden
+                  className="size-4"
+                />
+                Sign up with Google
               </Button>
             </div>
             <p className="animate-fade-up-delay-3 mt-4 text-sm text-muted-foreground">
@@ -54,7 +79,7 @@ export default function HomePage() {
           </div>
 
           <div className="animate-fade-up-delay-2 flex justify-center lg:justify-end">
-            <HeroDemoCycle className="animate-float" />
+            <ProductMock />
           </div>
         </div>
       </section>
@@ -85,7 +110,7 @@ export default function HomePage() {
               rule
             />
             <ValuePoint
-              href="/features/mobile"
+              href="/app"
               eyebrow="Mobile"
               title="Native iOS & Android"
               body="The same operation in your pocket, not a mobile website."
@@ -135,7 +160,7 @@ export default function HomePage() {
               body="Flights draft invoices. Cards on file when you're ready."
             />
             <TeaserCard
-              href="/features/mobile"
+              href="/app"
               icon={<Smartphone className="size-5" />}
               title="Native apps"
               body="iOS and Android for students, instructors, and the desk."
@@ -175,6 +200,12 @@ export default function HomePage() {
             </ul>
             <div className="mt-8">
               <StoreBadges />
+            </div>
+            <div className="mt-6">
+              <Button href="/app" variant="secondary">
+                App download page
+                <ChevronRight className="size-4 opacity-80" />
+              </Button>
             </div>
           </div>
         </div>

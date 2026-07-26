@@ -6,7 +6,9 @@ import { LegalDocument } from "@/components/legal-document";
 export const metadata: Metadata = {
   title: "Terms and Conditions",
   description:
-    "AerScheduler terms and conditions for use of the website and applications.",
+    "AerScheduler terms and conditions for use of the website, web app, and native iOS and Android applications.",
+  alternates: { canonical: "/terms-and-conditions" },
+  robots: { index: true, follow: true },
 };
 
 const html = readFileSync(

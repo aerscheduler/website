@@ -15,7 +15,13 @@ import {
   ReportsMock,
   IntegrationsMock,
 } from "@/components/mocks";
-import { FEATURES, type Feature, type FeatureSlug } from "@/lib/features";
+import { Breadcrumbs } from "@/components/breadcrumbs";
+import {
+  FEATURES,
+  featureHref,
+  type Feature,
+  type FeatureSlug,
+} from "@/lib/features";
 import { SIGNUP_URL } from "@/lib/site";
 
 export function FeaturePage({ feature }: { feature: Feature }) {
@@ -27,12 +33,21 @@ export function FeaturePage({ feature }: { feature: Feature }) {
     <>
       <section className="relative overflow-hidden border-b border-border">
         <div className="hero-mesh pointer-events-none absolute inset-0 opacity-60" aria-hidden />
-        <div className="relative mx-auto max-w-6xl px-4 pb-14 pt-16 sm:px-6 lg:grid lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-12 lg:pb-20 lg:pt-20">
+        <div className="relative mx-auto max-w-6xl px-4 pb-14 pt-12 sm:px-6 lg:grid lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-12 lg:pb-20 lg:pt-16">
           <div>
-            <p className="text-sm font-semibold text-primary">{feature.eyebrow}</p>
+            <Breadcrumbs
+              items={[
+                { name: "Features", href: "/features" },
+                { name: feature.navLabel, href: featureHref(feature.slug) },
+              ]}
+            />
+            <p className="mt-6 text-sm font-semibold text-primary">{feature.eyebrow}</p>
             <h1 className="mt-3 max-w-2xl text-4xl font-semibold tracking-tight text-brand-surface sm:text-5xl">
-              {feature.headline}
+              {feature.title}
             </h1>
+            <p className="mt-3 max-w-2xl text-xl font-medium tracking-tight text-brand-surface/80">
+              {feature.headline}
+            </p>
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground">
               {feature.summary}
             </p>
@@ -84,7 +99,7 @@ export function FeaturePage({ feature }: { feature: Feature }) {
               {related.map((f) => (
                 <Link
                   key={f.slug}
-                  href={`/features/${f.slug}`}
+                  href={featureHref(f.slug)}
                   className="rounded-xl border border-border bg-white p-5 shadow-sm transition-colors hover:border-primary/30"
                 >
                   <p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">

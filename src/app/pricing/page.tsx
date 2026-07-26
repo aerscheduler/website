@@ -1,11 +1,20 @@
 import type { Metadata } from "next";
 import { Check, ChevronRight } from "lucide-react";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/button";
+import { JsonLd } from "@/components/json-ld";
+import { faqJsonLd, PRICING_FAQS } from "@/lib/seo";
 import { PRICE_PER_AIRCRAFT, SIGNUP_URL, TRIAL_DAYS } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Pricing",
-  description: `$${PRICE_PER_AIRCRAFT}/mo per aircraft. Simulators and rooms free. ${TRIAL_DAYS}-day trial, no credit card.`,
+  title: "Flight School Software Pricing",
+  description: `Simple flight school software pricing at $${PRICE_PER_AIRCRAFT}/mo per aircraft. Simulators and classrooms free. ${TRIAL_DAYS}-day free trial, no credit card, no sales call.`,
+  alternates: { canonical: "/pricing" },
+  openGraph: {
+    title: "Flight School Software Pricing",
+    description: `$${PRICE_PER_AIRCRAFT}/mo per aircraft. Sims and rooms free. ${TRIAL_DAYS}-day trial.`,
+    url: "/pricing",
+  },
 };
 
 const INCLUDED = [
@@ -35,13 +44,15 @@ const FEATURES = [
 export default function PricingPage() {
   return (
     <>
+      <JsonLd data={faqJsonLd(PRICING_FAQS)} />
       <section className="relative overflow-hidden border-b border-border">
         <div className="hero-mesh pointer-events-none absolute inset-0 opacity-70" aria-hidden />
         <div className="pointer-events-none absolute inset-0 grid-lines opacity-30" aria-hidden />
 
-        <div className="relative mx-auto max-w-6xl px-4 pb-8 pt-16 sm:px-6 lg:pt-20">
-          <h1 className="max-w-2xl text-4xl font-semibold tracking-tight text-brand-surface sm:text-5xl">
-            Pricing that stays out of the way.
+        <div className="relative mx-auto max-w-6xl px-4 pb-8 pt-12 sm:px-6 lg:pt-16">
+          <Breadcrumbs items={[{ name: "Pricing", href: "/pricing" }]} />
+          <h1 className="mt-6 max-w-2xl text-4xl font-semibold tracking-tight text-brand-surface sm:text-5xl">
+            Flight school software pricing: ${PRICE_PER_AIRCRAFT}/mo per aircraft
           </h1>
           <p className="mt-4 max-w-xl text-lg leading-relaxed text-muted-foreground">
             One clear number. Pay for the aircraft you fly, not seats, not
@@ -129,32 +140,7 @@ export default function PricingPage() {
             Pricing questions
           </h2>
           <dl className="mt-10 divide-y divide-border">
-            {[
-              {
-                q: "When does billing start?",
-                a: `After your ${TRIAL_DAYS}-day trial. We'll remind you before it ends. No card is required to start.`,
-              },
-              {
-                q: "Do simulators count toward the bill?",
-                a: "No. Only aircraft are billed. Simulators and ground-school rooms are free.",
-              },
-              {
-                q: "What if I add or remove an aircraft mid-month?",
-                a: "Quantity is prorated. Your subscription follows the size of your flying fleet.",
-              },
-              {
-                q: "Is there a per-user fee?",
-                a: "No. Instructors, students, renters, and dispatchers are unlimited.",
-              },
-              {
-                q: "Are the mobile apps included?",
-                a: "Yes. Native iOS and Android apps are included with every plan. Same price, no mobile surcharge.",
-              },
-              {
-                q: "What about Google Calendar or QuickBooks?",
-                a: "Google Calendar sync is available today, along with Stripe payments. QuickBooks is coming soon. See the Integrations page for status.",
-              },
-            ].map((faq) => (
+            {PRICING_FAQS.map((faq) => (
               <div key={faq.q} className="py-5">
                 <dt className="font-semibold text-foreground">{faq.q}</dt>
                 <dd className="mt-2 text-sm leading-relaxed text-muted-foreground">{faq.a}</dd>

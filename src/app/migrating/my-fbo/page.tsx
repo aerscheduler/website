@@ -1,13 +1,23 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ChevronRight, Download, Layers, Rocket, Users } from "lucide-react";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/button";
+import { JsonLd } from "@/components/json-ld";
+import { faqJsonLd, MYFBO_MIGRATION_FAQS } from "@/lib/seo";
 import { PRICE_PER_AIRCRAFT, SIGNUP_URL, TRIAL_DAYS } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Migrating from MyFBO",
+  title: "Migrating from MyFBO to AerScheduler",
   description:
-    "MyFBO is shutting down in August 2026. Back up your data, then set up AerScheduler yourself in minutes. No sales call.",
+    "MyFBO is shutting down in August 2026. Back up your data and set up AerScheduler yourself in minutes. Self-serve migration guide for flight schools.",
+  alternates: { canonical: "/migrating/my-fbo" },
+  openGraph: {
+    title: "Migrating from MyFBO to AerScheduler",
+    description:
+      "Self-serve playbook for flight schools leaving MyFBO. No sales call required.",
+    url: "/migrating/my-fbo",
+  },
 };
 
 const STEPS = [
@@ -44,12 +54,19 @@ const MAP = [
 export default function MigratingMyFboPage() {
   return (
     <>
+      <JsonLd data={faqJsonLd(MYFBO_MIGRATION_FAQS)} />
       <section className="relative overflow-hidden border-b border-border">
         <div className="hero-mesh pointer-events-none absolute inset-0 opacity-60" aria-hidden />
-        <div className="relative mx-auto max-w-6xl px-4 pb-16 pt-16 sm:px-6 lg:pt-20">
-          <p className="text-sm font-semibold text-primary">Switching guides</p>
+        <div className="relative mx-auto max-w-6xl px-4 pb-16 pt-12 sm:px-6 lg:pt-16">
+          <Breadcrumbs
+            items={[
+              { name: "Resources", href: "/resources" },
+              { name: "Migrating from MyFBO", href: "/migrating/my-fbo" },
+            ]}
+          />
+          <p className="mt-6 text-sm font-semibold text-primary">Switching guides</p>
           <h1 className="mt-3 max-w-3xl text-4xl font-semibold tracking-tight text-brand-surface sm:text-5xl">
-            Migrating from MyFBO
+            Migrating from MyFBO to AerScheduler
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
             MyFBO is shutting down in August 2026. Before you choose a next home,
@@ -196,24 +213,7 @@ export default function MigratingMyFboPage() {
             Migration questions
           </h2>
           <dl className="mt-10 divide-y divide-border">
-            {[
-              {
-                q: "Is MyFBO really shutting down?",
-                a: "Yes. August 2026. Download your .bak backup while your account is still active so your history isn’t stranded on a server that goes dark.",
-              },
-              {
-                q: "Do I need a demo to start AerScheduler?",
-                a: "No. Create an account, pick your persona (school, club, FBO, or solo instructor), and follow the in-app setup. You can be booking in minutes.",
-              },
-              {
-                q: "Can you import my MyFBO .bak automatically?",
-                a: "Not yet as a one-click importer. Back up the file regardless, then recreate fleet and people in AerScheduler (or send exports to support).",
-              },
-              {
-                q: "How much does AerScheduler cost?",
-                a: `$${PRICE_PER_AIRCRAFT} per aircraft per month after a ${TRIAL_DAYS}-day free trial. Simulators and rooms are free. Unlimited users.`,
-              },
-            ].map((faq) => (
+            {MYFBO_MIGRATION_FAQS.map((faq) => (
               <div key={faq.q} className="py-5">
                 <dt className="font-semibold text-foreground">{faq.q}</dt>
                 <dd className="mt-2 text-sm leading-relaxed text-muted-foreground">{faq.a}</dd>

@@ -1,12 +1,21 @@
 import Link from "next/link";
 import { Logo } from "@/components/logo";
-import { FEATURE_GROUPS, FEATURES } from "@/lib/features";
+import { FEATURE_GROUPS, FEATURES, featureHref } from "@/lib/features";
+import { RESOURCE_GROUPS } from "@/lib/resources";
 import { SUPPORT_EMAIL } from "@/lib/site";
+
+const COMPANY = [
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+  { href: "/product", label: "Product" },
+  { href: "/app", label: "iOS & Android" },
+  { href: "/login", label: "Login" },
+];
 
 export function SiteFooter() {
   return (
     <footer className="border-t border-border bg-[#fafbfc]">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[1fr_2.2fr]">
+      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[1fr_2.4fr]">
         <div>
           <Logo />
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
@@ -14,7 +23,7 @@ export function SiteFooter() {
             web and in native iOS & Android apps.
           </p>
         </div>
-        <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-5">
           {FEATURE_GROUPS.map((group) => (
             <div key={group.title}>
               <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
@@ -24,7 +33,7 @@ export function SiteFooter() {
                 {group.items.map((slug) => (
                   <li key={slug}>
                     <Link
-                      href={`/features/${slug}`}
+                      href={featureHref(slug)}
                       className="text-sm text-foreground/80 transition-colors hover:text-primary"
                     >
                       {FEATURES[slug].navLabel}
@@ -34,17 +43,60 @@ export function SiteFooter() {
               </ul>
             </div>
           ))}
+          <div>
+            <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+              Company
+            </h3>
+            <ul className="mt-4 space-y-2.5">
+              {COMPANY.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="text-sm text-foreground/80 transition-colors hover:text-primary"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <h3 className="mt-8 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+              Resources
+            </h3>
+            <ul className="mt-4 space-y-2.5">
+              <li>
+                <Link
+                  href="/resources"
+                  className="text-sm text-foreground/80 transition-colors hover:text-primary"
+                >
+                  All resources
+                </Link>
+              </li>
+              {RESOURCE_GROUPS.flatMap((group) => group.items).map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="text-sm text-foreground/80 transition-colors hover:text-primary"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
       <div className="border-t border-border">
         <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-5 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <p>© {new Date().getFullYear()} AerScheduler. All rights reserved.</p>
           <div className="flex flex-wrap gap-4">
+            <Link href="/features" className="hover:text-foreground">
+              Features
+            </Link>
             <Link href="/pricing" className="hover:text-foreground">
               Pricing
             </Link>
-            <Link href="/migrating/my-fbo" className="hover:text-foreground">
-              Switching
+            <Link href="/integrations" className="hover:text-foreground">
+              Integrations
             </Link>
             <Link href="/privacy" className="hover:text-foreground">
               Privacy

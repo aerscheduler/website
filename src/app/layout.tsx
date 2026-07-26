@@ -1,9 +1,16 @@
 import type { Metadata } from "next";
 import { Instrument_Sans } from "next/font/google";
 import { MigrationBanner } from "@/components/migration-banner";
+import { JsonLd } from "@/components/json-ld";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { SITE_NAME, SITE_TAGLINE } from "@/lib/site";
+import {
+  organizationJsonLd,
+  siteNavigationJsonLd,
+  softwareApplicationJsonLd,
+  websiteJsonLd,
+} from "@/lib/seo";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const instrument = Instrument_Sans({
@@ -13,18 +20,68 @@ const instrument = Instrument_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME} · Flight School Management Software`,
-    template: `%s · ${SITE_NAME}`,
+    default: `${SITE_NAME} | Flight School Management Software`,
+    template: `%s | ${SITE_NAME}`,
   },
-  description: SITE_TAGLINE,
-  metadataBase: new URL("https://aerscheduler.com"),
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  keywords: [
+    "flight school management software",
+    "aircraft scheduling software",
+    "flight school scheduling",
+    "FBO software",
+    "pilot training management",
+    "aircraft dispatch",
+    "flight school billing",
+    "MyFBO alternative",
+    "Flight Schedule Pro alternative",
+  ],
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
   openGraph: {
-    title: SITE_NAME,
-    description: SITE_TAGLINE,
-    siteName: SITE_NAME,
     type: "website",
+    locale: "en_US",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} | Flight School Management Software`,
+    description: SITE_DESCRIPTION,
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: `${SITE_NAME} - flight school management software`,
+      },
+    ],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_NAME} | Flight School Management Software`,
+    description: SITE_DESCRIPTION,
+    images: ["/opengraph-image"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.png", type: "image/png", sizes: "512x512" },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+  },
+  category: "technology",
 };
 
 export default function RootLayout({
@@ -35,6 +92,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${instrument.variable} font-sans antialiased`}>
+        <JsonLd data={organizationJsonLd()} />
+        <JsonLd data={websiteJsonLd()} />
+        <JsonLd data={softwareApplicationJsonLd()} />
+        <JsonLd data={siteNavigationJsonLd()} />
         <MigrationBanner />
         <SiteHeader />
         <main>{children}</main>
