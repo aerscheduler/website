@@ -9,7 +9,7 @@ import {
   Smartphone,
 } from "lucide-react";
 import { Button } from "@/components/button";
-import { ProductMock } from "@/components/product-mock";
+import { HeroDemoCycle } from "@/components/hero-demo-cycle";
 import { PhoneMock } from "@/components/phone-mock";
 import { StoreBadges } from "@/components/store-badges";
 import {
@@ -54,7 +54,7 @@ export default function HomePage() {
           </div>
 
           <div className="animate-fade-up-delay-2 flex justify-center lg:justify-end">
-            <ProductMock />
+            <HeroDemoCycle className="animate-float" />
           </div>
         </div>
       </section>

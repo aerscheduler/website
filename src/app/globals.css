@@ -140,6 +140,35 @@ body {
   animation: float-soft 6s ease-in-out infinite;
 }
 
+/* Pause nested float when the hero cycle wrapper is already floating */
+.hero-demo-cycle .animate-float {
+  animation: none;
+}
+
+/* Lock mock chrome height so cycling demos don't resize the hero */
+.hero-demo-cycle [data-mock-shell] > .overflow-hidden.rounded-xl {
+  display: flex;
+  height: 400px;
+  flex-direction: column;
+}
+
+.hero-demo-cycle [data-mock-body] {
+  min-height: 0 !important;
+  flex: 1;
+  overflow: hidden;
+}
+
+.hero-demo-cycle [data-mock-body] > div:last-child {
+  min-height: 0 !important;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .hero-demo-cycle [data-mock-shell] > .overflow-hidden.rounded-xl {
+    height: 430px;
+  }
+}
+
 .grid-lines {
   background-image: linear-gradient(to right, rgba(227, 229, 234, 0.7) 1px, transparent 1px);
   background-size: calc(100% / 4) 100%;

@@ -21,7 +21,10 @@ export function AppMockShell({
   const [nav, setNav] = useState(activeNav);
 
   return (
-    <div className={cn("animate-float relative w-full max-w-[560px]", className)}>
+    <div
+      data-mock-shell
+      className={cn("animate-float relative w-full max-w-[560px]", className)}
+    >
       <div className="overflow-hidden rounded-xl border border-border bg-white shadow-lg">
         <div className="flex items-center gap-2 border-b border-border px-3 py-2.5">
           <div className="flex gap-1.5">
@@ -34,7 +37,7 @@ export function AppMockShell({
           </div>
         </div>
 
-        <div className="flex min-h-[300px]">
+        <div data-mock-body className="flex min-h-[340px]">
           <aside className="hidden w-[52px] shrink-0 flex-col items-center gap-3 border-r border-border py-3 sm:flex">
             <div className="size-7 rounded-md bg-primary/10" />
             {[0, 1, 2, 3, 4].map((i) => (
@@ -52,7 +55,7 @@ export function AppMockShell({
               />
             ))}
           </aside>
-          <div className="flex min-w-0 flex-1 flex-col">{children}</div>
+          <div className="flex min-h-[340px] min-w-0 flex-1 flex-col">{children}</div>
         </div>
       </div>
       {float}
