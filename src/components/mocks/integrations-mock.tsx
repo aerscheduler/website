@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { AppMockShell, MockFloat, MockHeader } from "@/components/mocks/shell";
 
 export function IntegrationsMock() {
@@ -37,7 +36,8 @@ export function IntegrationsMock() {
         {items.map((item) => (
           <div key={item.name} className="flex items-center gap-3 px-4 py-4">
             <div className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-white p-1">
-              <Image
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={item.logo}
                 alt=""
                 width={28}
