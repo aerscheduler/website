@@ -22,8 +22,18 @@ export const GOOGLE_SIGNIN_URL = `${API_URL}/auth/google/start?return_to=${encod
 
 export const APP_STORE_URL =
   "https://apps.apple.com/us/app/aerscheduler/id6444074155";
-export const PLAY_STORE_URL =
-  "https://play.google.com/store/apps/details?id=com.aerscheduler.app&hl=en_US&gl=US";
+
+/**
+ * TODO(android): Android is off the marketing site until the app is back on
+ * Google Play. The old Play developer account was closed for inactivity in
+ * Oct 2024 and this listing now 404s, so every Android claim on the site was
+ * unshippable. Search the repo for TODO(android) to restore: uncomment this
+ * URL (the package name may change if com.aerscheduler.app can't be reclaimed),
+ * re-add the Play badge in components/store-badges.tsx, and put "& Android"
+ * back into the copy and JSON-LD.
+ */
+// export const PLAY_STORE_URL =
+//   "https://play.google.com/store/apps/details?id=com.aerscheduler.app&hl=en_US&gl=US";
 
 export const PRICE_PER_AIRCRAFT = 20;
 export const TRIAL_DAYS = 14;
@@ -35,4 +45,4 @@ export const SUPPORT_EMAIL = "support@aerscheduler.com";
 
 /** Longer default meta description for SEO. */
 export const SITE_DESCRIPTION =
-  "Flight school management software for aircraft scheduling, billing, maintenance, and compliance. Native iOS and Android apps. Self-serve from $20/mo per aircraft.";
+  "Flight school management software for aircraft scheduling, billing, maintenance, and compliance. Native iOS app. Self-serve from $20/mo per aircraft.";

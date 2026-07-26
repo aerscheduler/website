@@ -9,12 +9,12 @@ import { PRICE_PER_AIRCRAFT, SIGNUP_URL, SITE_NAME, TRIAL_DAYS } from "@/lib/sit
 
 export const metadata: Metadata = {
   title: "Flight School Scheduling Software",
-  description: `${SITE_NAME} is flight school scheduling software with dispatch boards, self-booking, billing, maintenance, and native iOS & Android apps. From $${PRICE_PER_AIRCRAFT}/mo per aircraft.`,
+  description: `${SITE_NAME} is flight school scheduling software with dispatch boards, self-booking, billing, maintenance, and a native iOS app. From $${PRICE_PER_AIRCRAFT}/mo per aircraft.`,
   alternates: { canonical: "/resources/flight-school-scheduling-software" },
   openGraph: {
     title: "Flight School Scheduling Software",
     description:
-      "Dispatch, self-booking, billing, and mobile apps for flight schools.",
+      "Dispatch, self-booking, billing, and a mobile app for flight schools.",
     url: "/resources/flight-school-scheduling-software",
   },
 };
@@ -34,7 +34,7 @@ const MUST_HAVES = [
   ],
   [
     "Mobile that people use",
-    "Native iOS and Android apps so instructors and students stay in the system off-desk.",
+    "A native iOS app so instructors and students stay in the system off-desk.",
   ],
   [
     "Compliance on the board",
@@ -56,8 +56,8 @@ const FAQS = [
     a: "AerScheduler understands aircraft resources, dual vs solo, grounding, rates, and invoices. A calendar app does not.",
   },
   {
-    q: "Does AerScheduler include mobile apps?",
-    a: "Yes. Native iOS and Android apps are included with every plan.",
+    q: "Does AerScheduler include a mobile app?",
+    a: "Yes. The native iOS app is included with every plan.",
   },
 ];
 
@@ -122,7 +122,7 @@ export default function SchedulingSoftwareGuidePage() {
           <p className="mt-4 text-base leading-relaxed text-muted-foreground">
             AerScheduler is built as a command deck for the school: lane-board
             dispatch, student self-booking, fleet grounding, currency checks,
-            flight-to-invoice billing, and native apps. Pricing is{" "}
+            flight-to-invoice billing, and a native app. Pricing is{" "}
             ${PRICE_PER_AIRCRAFT} per aircraft per month after a {TRIAL_DAYS}-day
             trial. Simulators and classrooms are free.
           </p>
@@ -137,7 +137,7 @@ export default function SchedulingSoftwareGuidePage() {
             </Link>
             , or the{" "}
             <Link href="/app" className="font-medium text-primary hover:underline">
-              mobile apps
+              mobile app
             </Link>
             .
           </p>

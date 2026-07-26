@@ -9,12 +9,12 @@ import { PRICE_PER_AIRCRAFT, SIGNUP_URL, SITE_NAME, TRIAL_DAYS } from "@/lib/sit
 
 export const metadata: Metadata = {
   title: "Best MyFBO Alternative for Flight Schools",
-  description: `Looking for a MyFBO alternative? ${SITE_NAME} is self-serve flight school software with scheduling, billing, native apps, and $${PRICE_PER_AIRCRAFT}/mo per aircraft pricing.`,
+  description: `Looking for a MyFBO alternative? ${SITE_NAME} is self-serve flight school software with scheduling, billing, a native app, and $${PRICE_PER_AIRCRAFT}/mo per aircraft pricing.`,
   alternates: { canonical: "/resources/myfbo-alternative" },
   openGraph: {
     title: "Best MyFBO Alternative for Flight Schools",
     description:
-      "Self-serve scheduling, billing, and native apps. No demo required.",
+      "Self-serve scheduling, billing, and a native app. No demo required.",
     url: "/resources/myfbo-alternative",
   },
 };
@@ -22,11 +22,11 @@ export const metadata: Metadata = {
 const FAQS = [
   {
     q: "What should I look for in a MyFBO alternative?",
-    a: "Scheduling that works for dispatch, clear pricing, native mobile apps, billing that closes out flights, and a way to start without waiting on a sales team.",
+    a: "Scheduling that works for dispatch, clear pricing, a native mobile app, billing that closes out flights, and a way to start without waiting on a sales team.",
   },
   {
     q: "Is AerScheduler a full MyFBO replacement?",
-    a: "AerScheduler covers scheduling, fleet, people, billing, maintenance, compliance, and native apps. Start with the migration playbook and map your MyFBO workflows before cutover.",
+    a: "AerScheduler covers scheduling, fleet, people, billing, maintenance, compliance, and a native app. Start with the migration playbook and map your MyFBO workflows before cutover.",
   },
   {
     q: "Do I need a demo to switch?",
@@ -88,7 +88,7 @@ export default function MyFboAlternativePage() {
               "Lane-board scheduling and student self-booking",
               "Fleet, rates, grounding, and maintenance squawks",
               "Invoices and Stripe payments",
-              "Native iOS and Android apps plus web",
+              "A native iOS app plus web",
               `$${PRICE_PER_AIRCRAFT}/mo per aircraft · sims and rooms free · ${TRIAL_DAYS}-day trial`,
               "Self-serve signup with no sales call",
             ].map((item) => (

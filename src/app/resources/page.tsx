@@ -45,7 +45,7 @@ const GUIDES = [
   {
     href: "/features",
     title: "Features",
-    body: "Scheduling, billing, maintenance, compliance, and native apps broken down by capability.",
+    body: "Scheduling, billing, maintenance, compliance, and the native app broken down by capability.",
   },
 ];
 

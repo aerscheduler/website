@@ -54,9 +54,9 @@ const FEATURE_SEO: Record<
       "Log squawks, ground aircraft on the schedule, and track airworthiness reminders for your fleet.",
   },
   mobile: {
-    title: "Flight School iOS & Android Apps",
+    title: "Flight School iOS App",
     description:
-      "Native AerScheduler apps for booking, invoices, documents, and squawks. The same operation as the web desk.",
+      "The native AerScheduler app for booking, invoices, documents, and squawks. The same operation as the web desk.",
   },
   reports: {
     title: "Flight School Reports & Analytics",

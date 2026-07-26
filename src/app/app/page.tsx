@@ -4,19 +4,14 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/button";
 import { PhoneMock } from "@/components/phone-mock";
 import { StoreBadges } from "@/components/store-badges";
-import {
-  APP_STORE_URL,
-  PLAY_STORE_URL,
-  SIGNUP_URL,
-  SITE_NAME,
-} from "@/lib/site";
+import { APP_STORE_URL, SIGNUP_URL, SITE_NAME } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "iOS & Android App",
-  description: `Download the ${SITE_NAME} native iOS and Android apps. Book aircraft, pay invoices, log squawks, and run your flight school from your phone.`,
+  title: "iOS App",
+  description: `Download the ${SITE_NAME} native iOS app. Book aircraft, pay invoices, log squawks, and run your flight school from your phone.`,
   alternates: { canonical: "/app" },
   openGraph: {
-    title: `${SITE_NAME} iOS & Android App`,
+    title: `${SITE_NAME} iOS App`,
     description:
       "Native flight school apps for booking, invoices, documents, and squawks.",
     url: "/app",
@@ -32,11 +27,11 @@ export default function AppPage() {
           <div>
             <Breadcrumbs items={[{ name: "App", href: "/app" }]} />
             <h1 className="mt-6 max-w-xl text-4xl font-semibold tracking-tight text-brand-surface sm:text-5xl">
-              Native iOS &amp; Android apps for your flight school
+              A native iOS app for your flight school
             </h1>
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground">
               Book lessons, check the board, pay invoices, and log squawks from
-              your phone. The same operation as the web desk, not a mobile website.
+              your iPhone. The same operation as the web desk, not a mobile website.
             </p>
             <div className="mt-8">
               <StoreBadges />
@@ -61,6 +56,7 @@ export default function AppPage() {
                   Download on the App Store
                 </a>
               </li>
+              {/* TODO(android): restore alongside PLAY_STORE_URL in lib/site.ts
               <li>
                 <a
                   href={PLAY_STORE_URL}
@@ -71,6 +67,7 @@ export default function AppPage() {
                   Get it on Google Play
                 </a>
               </li>
+              */}
             </ul>
           </div>
           <div className="mt-12 flex justify-center lg:mt-0 lg:justify-end">

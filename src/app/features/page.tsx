@@ -9,12 +9,12 @@ import { SIGNUP_URL } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Flight School Software Features",
   description:
-    "Explore AerScheduler features: aircraft scheduling, self-booking, billing, maintenance, compliance, instruction, reports, and native mobile apps.",
+    "Explore AerScheduler features: aircraft scheduling, self-booking, billing, maintenance, compliance, instruction, reports, and a native mobile app.",
   alternates: { canonical: "/features" },
   openGraph: {
     title: "Flight School Software Features",
     description:
-      "Scheduling, billing, fleet, instruction, maintenance, mobile apps, and more.",
+      "Scheduling, billing, fleet, instruction, maintenance, the mobile app, and more.",
     url: "/features",
   },
 };

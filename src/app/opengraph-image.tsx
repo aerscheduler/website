@@ -70,8 +70,8 @@ export default function OpenGraphImage() {
               maxWidth: 820,
             }}
           >
-            Schedule, bill, maintain, and run your school on web and native iOS
-            & Android. From $20/mo per aircraft.
+            Schedule, bill, maintain, and run your school on web and native
+            iOS. From $20/mo per aircraft.
           </div>
         </div>
 

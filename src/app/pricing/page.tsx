@@ -22,7 +22,7 @@ const INCLUDED = [
   "Aircraft, simulator, and classroom scheduling",
   "Invoices and online payments",
   "Maintenance squawks and reminders",
-  "Native iOS & Android apps + web",
+  "Native iOS app + web",
   "Proration when fleet size changes",
 ];
 

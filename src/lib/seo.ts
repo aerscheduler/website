@@ -1,6 +1,5 @@
 import {
   APP_STORE_URL,
-  PLAY_STORE_URL,
   PRICE_PER_AIRCRAFT,
   SITE_DESCRIPTION,
   SITE_NAME,
@@ -35,7 +34,8 @@ export function organizationJsonLd() {
     logo: absoluteUrl("/brand/logo-blue.png"),
     email: SUPPORT_EMAIL,
     description: SITE_DESCRIPTION,
-    sameAs: [APP_STORE_URL, PLAY_STORE_URL],
+    // TODO(android): add PLAY_STORE_URL back here when the Play listing is live.
+    sameAs: [APP_STORE_URL],
     contactPoint: {
       "@type": "ContactPoint",
       email: SUPPORT_EMAIL,
@@ -61,10 +61,11 @@ export function softwareApplicationJsonLd() {
     "@type": "SoftwareApplication",
     name: SITE_NAME,
     applicationCategory: "BusinessApplication",
-    operatingSystem: "Web, iOS, Android",
+    // TODO(android): restore "Android" and PLAY_STORE_URL when the Play listing is live.
+    operatingSystem: "Web, iOS",
     description: SITE_DESCRIPTION,
     url: SITE_URL,
-    downloadUrl: [APP_STORE_URL, PLAY_STORE_URL],
+    downloadUrl: [APP_STORE_URL],
     offers: {
       "@type": "Offer",
       price: String(PRICE_PER_AIRCRAFT),
@@ -135,8 +136,8 @@ export const PRICING_FAQS = [
     a: "No. Instructors, students, renters, and dispatchers are unlimited.",
   },
   {
-    q: "Are the mobile apps included?",
-    a: "Yes. Native iOS and Android apps are included with every plan. Same price, no mobile surcharge.",
+    q: "Is the mobile app included?",
+    a: "Yes. The native iOS app is included with every plan. Same price, no mobile surcharge.",
   },
   {
     q: "What about Google Calendar or QuickBooks?",

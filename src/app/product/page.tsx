@@ -23,12 +23,12 @@ import { StoreBadges } from "@/components/store-badges";
 export const metadata: Metadata = {
   title: "Flight School Management Product",
   description:
-    "Aircraft dispatch, fleet, billing, maintenance, and native iOS & Android apps. See how AerScheduler runs a flight school from desk to ramp.",
+    "Aircraft dispatch, fleet, billing, maintenance, and a native iOS app. See how AerScheduler runs a flight school from desk to ramp.",
   alternates: { canonical: "/product" },
   openGraph: {
     title: "Flight School Management Product",
     description:
-      "Dispatch, fleet, billing, and native mobile apps for flight schools, clubs, and FBOs.",
+      "Dispatch, fleet, billing, and a native mobile app for flight schools, clubs, and FBOs.",
     url: "/product",
   },
 };
@@ -46,8 +46,8 @@ export default function ProductPage() {
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
             AerScheduler connects scheduling, people, fleet, and money so your
-            school runs from a single source of truth on the web and in native
-            mobile apps.
+            school runs from a single source of truth on the web and in the
+            native mobile app.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button href={SIGNUP_URL} size="lg">
@@ -77,9 +77,9 @@ export default function ProductPage() {
 
       {/* Mobile */}
       <ProductSection
-        eyebrow="Native iOS & Android"
+        eyebrow="Native iOS"
         title="If you can do it at the desk, you should be able to do it on your phone."
-        body="Real native apps, not a mobile website. Students book lessons, instructors see their day, and owners aren’t stuck finding a computer to move a flight."
+        body="A real native app, not a mobile website. Students book lessons, instructors see their day, and owners aren’t stuck finding a computer to move a flight."
         points={[
           "Book and reschedule from anywhere",
           "Live aircraft and instructor availability",
@@ -131,7 +131,7 @@ export default function ProductPage() {
             <Capability
               icon={<Smartphone className="size-5" />}
               title="One operation everywhere"
-              body="Web for the desk. Native apps for the ramp. No “we’ll build mobile later.” It’s already how the product ships."
+              body="Web for the desk. A native app for the ramp. No “we’ll build mobile later.” It’s already how the product ships."
             />
           </div>
         </div>

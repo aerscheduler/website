@@ -48,7 +48,7 @@ const MAP = [
   ["Aircraft & instructors", "Fleet, rates, grounding, instructor availability"],
   ["Members & students", "Roster, invite codes, roles, documents"],
   ["Invoicing & balances", "Flight → invoice, cards on file, online payments"],
-  ["Web-only access", "Web console plus native iOS and Android apps"],
+  ["Web-only access", "Web console plus a native iOS app"],
 ];
 
 export default function MigratingMyFboPage() {

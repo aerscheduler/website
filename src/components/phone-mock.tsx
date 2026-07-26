@@ -146,9 +146,9 @@ export function PhoneMock({ className = "" }: { className?: string }) {
       {/* Floating badge: lower-right, clear of chrome and day strip */}
       <div className="absolute -right-2 bottom-[16%] z-10 rounded-lg border border-border bg-white px-2.5 py-2 shadow-md transition-shadow hover:shadow-lg sm:-right-5 sm:bottom-[18%]">
         <p className="text-[9px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-          Native apps
+          Native app
         </p>
-        <p className="mt-0.5 text-xs font-semibold text-foreground">iOS & Android</p>
+        <p className="mt-0.5 text-xs font-semibold text-foreground">iOS</p>
       </div>
     </div>
   );

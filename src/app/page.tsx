@@ -55,7 +55,7 @@ export default function HomePage() {
             </h1>
             <p className="animate-fade-up-delay-2 mt-5 max-w-md text-lg leading-relaxed text-muted-foreground">
               Schedule aircraft, manage instructors and renters, and keep billing
-              square on the web and in native iOS & Android apps.
+              square on the web and in a native iOS app.
             </p>
             <div className="animate-fade-up-delay-3 mt-8 flex flex-wrap items-center gap-3">
               <Button href={SIGNUP_URL} size="lg">
@@ -112,7 +112,7 @@ export default function HomePage() {
             <ValuePoint
               href="/app"
               eyebrow="Mobile"
-              title="Native iOS & Android"
+              title="Native iOS"
               body="The same operation in your pocket, not a mobile website."
               rule
             />
@@ -162,8 +162,8 @@ export default function HomePage() {
             <TeaserCard
               href="/app"
               icon={<Smartphone className="size-5" />}
-              title="Native apps"
-              body="iOS and Android for students, instructors, and the desk."
+              title="Native app"
+              body="iOS for students, instructors, and the desk."
             />
           </div>
         </div>
@@ -183,7 +183,7 @@ export default function HomePage() {
             <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
               Students book from their phone. Instructors check the day on the go.
               Dispatchers aren&apos;t chained to a front-desk PC. Same schedule,
-              same invoices in real native apps for iOS and Android.
+              same invoices in a real native app for iOS.
             </p>
             <ul className="mt-6 space-y-3">
               {[
@@ -226,7 +226,7 @@ export default function HomePage() {
               <ul className="mt-6 space-y-3">
                 {[
                   "Unlimited instructors, students, and renters",
-                  "Web console + native iOS & Android included",
+                  "Web console + native iOS app included",
                   "Prorated when you add or remove a tail",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-2.5 text-sm text-foreground">

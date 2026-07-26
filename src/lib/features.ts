@@ -54,7 +54,7 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
     eyebrow: "Students & renters",
     headline: "Students and renters book themselves without calling the desk.",
     summary:
-      "Approved members pick an aircraft, an instructor when needed, and a time that works. The same flow on web and in the native apps.",
+      "Approved members pick an aircraft, an instructor when needed, and a time that works. The same flow on web and in the native app.",
     bullets: [
       "Role-aware booking for students, renters, and instructors",
       "Aircraft + instructor pairing with availability-aware times",
@@ -175,14 +175,14 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
   },
   mobile: {
     slug: "mobile",
-    title: "Mobile Apps",
-    navLabel: "Mobile Apps",
-    eyebrow: "iOS & Android",
+    title: "Mobile App",
+    navLabel: "Mobile App",
+    eyebrow: "iOS",
     headline: "Built for the ramp, not a shrunk-down desktop.",
     summary:
-      "Native iOS and Android apps for booking, invoices, documents, and squawks. The same operation as the web desk, in your pocket.",
+      "A native iOS app for booking, invoices, documents, and squawks. The same operation as the web desk, in your pocket.",
     bullets: [
-      "Real native apps, not a mobile website",
+      "A real native app, not a mobile website",
       "Book and manage lessons from anywhere",
       "Pay invoices and keep documents current",
       "Log squawks and check the day on the go",

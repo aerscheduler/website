@@ -7,12 +7,12 @@ import { PRICE_PER_AIRCRAFT, SIGNUP_URL, SITE_NAME, TRIAL_DAYS } from "@/lib/sit
 
 export const metadata: Metadata = {
   title: "AerScheduler vs Flight Schedule Pro",
-  description: `Compare ${SITE_NAME} and Flight Schedule Pro for flight schools: self-serve setup, per-aircraft pricing, native apps, and who each product fits best.`,
+  description: `Compare ${SITE_NAME} and Flight Schedule Pro for flight schools: self-serve setup, per-aircraft pricing, a native app, and who each product fits best.`,
   alternates: { canonical: "/compare/flight-schedule-pro" },
   openGraph: {
     title: "AerScheduler vs Flight Schedule Pro",
     description:
-      "Self-serve vs demo-led. Per-aircraft pricing. Native apps included.",
+      "Self-serve vs demo-led. Per-aircraft pricing. Native app included.",
     url: "/compare/flight-schedule-pro",
   },
 };
@@ -30,7 +30,7 @@ const ROWS: [string, string, string][] = [
   ],
   [
     "Mobile",
-    "Native iOS and Android apps included",
+    "Native iOS app included",
     "iOS app available; check current Android status",
   ],
   [
@@ -114,7 +114,7 @@ export default function CompareFspPage() {
         <ul className="mt-4 list-disc space-y-2 pl-5 text-muted-foreground">
           <li>You want to start today without booking a demo</li>
           <li>You prefer simple per-aircraft pricing with unlimited seats</li>
-          <li>Native iOS and Android for the whole team matters</li>
+          <li>A native iOS app for the whole team matters</li>
           <li>You&apos;re leaving MyFBO and need a clean self-serve path</li>
         </ul>
 

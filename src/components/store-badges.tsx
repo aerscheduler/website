@@ -1,11 +1,14 @@
 import Image from "next/image";
-import {
-  APP_STORE_URL,
-  PLAY_STORE_URL,
-} from "@/lib/site";
+import { APP_STORE_URL } from "@/lib/site";
 import { cn } from "@/lib/cn";
 
-/** Official App Store / Google Play badges (same assets as the previous marketing site). */
+/**
+ * Official App Store badge (same asset as the previous marketing site).
+ *
+ * TODO(android): the Google Play badge lives just below, commented out. The
+ * /brand/google-play-badge.png asset is intentionally still in the repo so
+ * restoring it is uncomment-only.
+ */
 export function StoreBadges({ className }: { className?: string }) {
   return (
     <div className={cn("flex flex-wrap items-center gap-3", className)}>
@@ -24,6 +27,7 @@ export function StoreBadges({ className }: { className?: string }) {
           className="h-[42px] w-auto"
         />
       </a>
+      {/* TODO(android): restore alongside PLAY_STORE_URL in lib/site.ts
       <a
         href={PLAY_STORE_URL}
         target="_blank"
@@ -39,6 +43,7 @@ export function StoreBadges({ className }: { className?: string }) {
           className="h-[56px] w-auto"
         />
       </a>
+      */}
     </div>
   );
 }

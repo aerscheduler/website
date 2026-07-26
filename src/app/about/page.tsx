@@ -7,7 +7,7 @@ import { SIGNUP_URL, SITE_NAME, SUPPORT_EMAIL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "About",
-  description: `${SITE_NAME} builds flight school management software for scheduling, billing, maintenance, and compliance. Self-serve, with native iOS and Android apps.`,
+  description: `${SITE_NAME} builds flight school management software for scheduling, billing, maintenance, and compliance. Self-serve, with a native iOS app.`,
   alternates: { canonical: "/about" },
   openGraph: {
     title: `About ${SITE_NAME}`,
@@ -31,7 +31,7 @@ export default function AboutPage() {
             AerScheduler is flight school management software for owners,
             instructors, students, and dispatchers. Schedule aircraft, run
             billing, track maintenance, and stay current on compliance from the
-            web or native mobile apps.
+            web or the native mobile app.
           </p>
         </div>
       </section>
@@ -53,8 +53,7 @@ export default function AboutPage() {
             </p>
             <p>
               The desk and the ramp should share one system. That means a real
-              web console and native iOS &amp; Android apps, not a mobile
-              afterthought.
+              web console and a native iOS app, not a mobile afterthought.
             </p>
           </div>
 
