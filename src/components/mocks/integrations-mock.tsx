@@ -1,10 +1,29 @@
+import Image from "next/image";
 import { AppMockShell, MockFloat, MockHeader } from "@/components/mocks/shell";
 
 export function IntegrationsMock() {
   const items = [
-    { name: "Stripe", status: "Connected", ok: true, detail: "Invoices & cards" },
-    { name: "Google Calendar", status: "Coming soon", ok: false, detail: "Personal sync" },
-    { name: "QuickBooks", status: "Coming soon", ok: false, detail: "Ledger export" },
+    {
+      name: "Stripe",
+      status: "Connected",
+      ok: true,
+      detail: "Invoices & cards",
+      logo: "/integrations/stripe.svg",
+    },
+    {
+      name: "Google Calendar",
+      status: "Coming soon",
+      ok: false,
+      detail: "Personal sync",
+      logo: "/integrations/google-calendar.svg",
+    },
+    {
+      name: "QuickBooks",
+      status: "Coming soon",
+      ok: false,
+      detail: "Ledger export",
+      logo: "/integrations/quickbooks.svg",
+    },
   ];
 
   return (
@@ -17,8 +36,14 @@ export function IntegrationsMock() {
       <div className="divide-y divide-border">
         {items.map((item) => (
           <div key={item.name} className="flex items-center gap-3 px-4 py-4">
-            <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted text-[11px] font-bold text-muted-foreground">
-              {item.name.slice(0, 2).toUpperCase()}
+            <div className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-white p-1">
+              <Image
+                src={item.logo}
+                alt=""
+                width={28}
+                height={28}
+                className="size-7 object-contain"
+              />
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-[12px] font-semibold text-foreground">{item.name}</p>

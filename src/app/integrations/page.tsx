@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import type { ReactNode } from "react";
-import { Calendar, ChevronRight, CreditCard, BookOpen } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/button";
 import { SIGNUP_URL } from "@/lib/site";
 
@@ -17,15 +16,17 @@ const INTEGRATIONS: {
   status: Status;
   blurb: string;
   detail: string;
-  icon: ReactNode;
+  logo: string;
+  logoAlt: string;
 }[] = [
   {
     name: "Stripe",
     status: "available",
-    blurb: "Cards on file, invoices, and Connect for school collections.",
+    blurb: "Cards on file, invoices, and online payments for your school.",
     detail:
       "Accept cards and pay invoices through Stripe. Subscription billing for your school runs through Stripe too — no separate gateway to wire up.",
-    icon: <CreditCard className="size-5" />,
+    logo: "/integrations/stripe.svg",
+    logoAlt: "Stripe logo",
   },
   {
     name: "Google Calendar",
@@ -33,7 +34,8 @@ const INTEGRATIONS: {
     blurb: "Push lessons and reservations to personal calendars.",
     detail:
       "Sync instructor and student schedules out to Google Calendar so flights show up next to everything else. We’re building this next — join and you’ll get it when it ships.",
-    icon: <Calendar className="size-5" />,
+    logo: "/integrations/google-calendar.svg",
+    logoAlt: "Google Calendar logo",
   },
   {
     name: "QuickBooks",
@@ -41,7 +43,8 @@ const INTEGRATIONS: {
     blurb: "Send closed-out flights and invoices into your books.",
     detail:
       "Close the loop from ramp-in to accounting without CSV exports. QuickBooks Online integration is on the roadmap.",
-    icon: <BookOpen className="size-5" />,
+    logo: "/integrations/quickbooks.svg",
+    logoAlt: "QuickBooks logo",
   },
 ];
 
@@ -72,8 +75,15 @@ export default function IntegrationsPage() {
                 className="flex flex-col rounded-xl border border-border bg-white p-6 shadow-sm"
               >
                 <div className="flex items-start justify-between gap-3">
-                  <div className="inline-flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                    {item.icon}
+                  <div className="inline-flex size-12 items-center justify-center rounded-xl border border-border bg-white p-2 shadow-sm">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={item.logo}
+                      alt={item.logoAlt}
+                      width={40}
+                      height={40}
+                      className="size-10 object-contain"
+                    />
                   </div>
                   <StatusPill status={item.status} />
                 </div>
