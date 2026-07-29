@@ -114,7 +114,7 @@ export function SiteHeader() {
                   </div>
                   <div className="flex items-center justify-between gap-3 border-t border-border bg-[#fafbfc] px-5 py-3">
                     <p className="text-xs text-muted-foreground">
-                      Stripe &amp; Google Calendar available · QuickBooks coming soon
+                      Stripe, Google Calendar &amp; QuickBooks available
                     </p>
                     <Link
                       href="/features"

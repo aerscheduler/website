@@ -26,9 +26,9 @@ const ITEMS = [
   },
   {
     name: "QuickBooks",
-    status: "Coming soon",
-    ok: false,
-    detail: "Ledger export",
+    status: "Connected",
+    ok: true,
+    detail: "Sales Receipts",
     logo: "/integrations/quickbooks.svg",
   },
 ];

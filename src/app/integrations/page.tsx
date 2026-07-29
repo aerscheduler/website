@@ -7,12 +7,12 @@ import { SIGNUP_URL } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Flight School Software Integrations",
   description:
-    "AerScheduler integrates with Stripe and Google Calendar today. QuickBooks Online is coming soon. Connect the tools your flight school already uses.",
+    "AerScheduler integrates with Stripe, Google Calendar, and QuickBooks Online. Connect the tools your flight school already uses — on every plan.",
   alternates: { canonical: "/integrations" },
   openGraph: {
     title: "Flight School Software Integrations",
     description:
-      "Stripe and Google Calendar available now. QuickBooks coming soon.",
+      "Stripe, Google Calendar, and QuickBooks Online — available now on every plan.",
     url: "/integrations",
   },
 };
@@ -47,10 +47,10 @@ const INTEGRATIONS: {
   },
   {
     name: "QuickBooks",
-    status: "coming_soon",
-    blurb: "Send closed-out flights and invoices into your books.",
+    status: "available",
+    blurb: "Paid invoices post to QuickBooks as Sales Receipts.",
     detail:
-      "Close the loop from ramp-in to accounting without CSV exports. QuickBooks Online integration is on the roadmap.",
+      "Connect QuickBooks Online from Settings. Paid AerScheduler invoices sync as Sales Receipts — matched to customers by email, without CSV exports.",
     logo: "/integrations/quickbooks.svg",
     logoAlt: "QuickBooks logo",
   },
@@ -67,9 +67,8 @@ export default function IntegrationsPage() {
             Flight school software integrations
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-            Stripe payments and Google Calendar sync are live today. QuickBooks
-            is next, shipping into the same self-serve product, not as an
-            enterprise add-on.
+            Stripe payments, Google Calendar sync, and QuickBooks Online are live
+            today — in the same self-serve product, not as an enterprise add-on.
           </p>
         </div>
       </section>

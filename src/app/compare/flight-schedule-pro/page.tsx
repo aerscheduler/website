@@ -45,7 +45,7 @@ const ROWS: [string, string, string][] = [
   ],
   [
     "Integrations",
-    "Stripe & Google Calendar available; QuickBooks coming",
+    "Stripe, Google Calendar & QuickBooks Online",
     "Broad ecosystem depending on plan",
   ],
   [

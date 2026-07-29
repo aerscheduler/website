@@ -141,7 +141,7 @@ export const PRICING_FAQS = [
   },
   {
     q: "What about Google Calendar or QuickBooks?",
-    a: "Google Calendar sync is available today, along with Stripe payments. QuickBooks is coming soon. See the Integrations page for status.",
+    a: "Google Calendar sync, Stripe payments, and QuickBooks Online are available today. Paid invoices sync to QuickBooks as Sales Receipts. See the Integrations page for details.",
   },
 ];
 

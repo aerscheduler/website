@@ -216,11 +216,11 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
     eyebrow: "Connect",
     headline: "Connect the tools your school already uses.",
     summary:
-      "Stripe payments and Google Calendar sync run today. QuickBooks is next, shipped to every plan, not locked behind enterprise.",
+      "Stripe payments, Google Calendar sync, and QuickBooks Online run today — shipped to every plan, not locked behind enterprise.",
     bullets: [
       "Stripe for invoices, cards, and school collections (available now)",
       "Google Calendar sync (available now)",
-      "QuickBooks Online (coming soon)",
+      "QuickBooks Online — paid invoices as Sales Receipts (available now)",
       "Request other tools; roadmap follows real school demand",
       "No premium tier for integrations",
     ],
