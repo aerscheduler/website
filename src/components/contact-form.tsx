@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { AlertCircle, ArrowRight, Check, Loader2 } from "lucide-react";
 import { API_URL, SUPPORT_EMAIL } from "@/lib/site";
 import { CONTACT_TOPICS, isContactTopic, type ContactTopic } from "@/lib/contact";
@@ -48,7 +47,6 @@ function validate(values: Record<FieldName, string>): FieldErrors {
 const EMPTY: Record<FieldName, string> = { name: "", email: "", organization: "", message: "" };
 
 export function ContactForm() {
-  const searchParams = useSearchParams();
   const formId = useId();
 
   const [values, setValues] = useState(EMPTY);
@@ -63,10 +61,15 @@ export function ContactForm() {
   // Deep links like /contact?topic=integration preselect the reason for
   // writing in, so the "Request an integration" buttons around the site land
   // people on a form that already knows why they're here.
+  //
+  // Read from window rather than useSearchParams: that hook opts the whole
+  // subtree out of prerendering, which meant the served HTML for /contact
+  // carried a placeholder skeleton instead of the form. Doing it here in an
+  // effect keeps the page static AND puts the real form in the HTML.
   useEffect(() => {
-    const requested = searchParams.get("topic");
+    const requested = new URLSearchParams(window.location.search).get("topic");
     if (requested && isContactTopic(requested)) setTopic(requested);
-  }, [searchParams]);
+  }, []);
 
   // Move focus to the confirmation so screen reader users aren't left on a
   // submit button that no longer exists.

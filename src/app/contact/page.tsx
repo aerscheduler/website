@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Clock, Mail, MessageSquare, Plug, Sparkles } from "lucide-react";
@@ -131,9 +130,7 @@ export default function ContactPage() {
 
             {/* The form. */}
             <div className="order-2 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:self-start">
-              <Suspense fallback={<FormSkeleton />}>
-                <ContactForm />
-              </Suspense>
+              <ContactForm />
             </div>
 
             {/* Supporting detail: why you'd write in, and the ways that aren't a form. */}
@@ -221,9 +218,4 @@ export default function ContactPage() {
       </section>
     </>
   );
-}
-
-/** Matches the form's footprint so the page doesn't jump when it hydrates. */
-function FormSkeleton() {
-  return <div aria-hidden className="h-[640px] rounded-2xl border border-border bg-white shadow-lg" />;
 }
