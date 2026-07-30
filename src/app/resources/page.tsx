@@ -6,12 +6,12 @@ import { SITE_NAME } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Resources",
-  description: `Guides for flight school scheduling software, MyFBO alternatives, and switching platforms. From ${SITE_NAME}.`,
+  description: `Guides for flight school scheduling software, QuickBooks Online, MyFBO alternatives, and switching platforms. From ${SITE_NAME}.`,
   alternates: { canonical: "/resources" },
   openGraph: {
     title: `Resources | ${SITE_NAME}`,
     description:
-      "Guides on flight school software, migrations, and platform comparisons.",
+      "Guides on flight school software, QuickBooks, migrations, and platform comparisons.",
     url: "/resources",
   },
 };
@@ -26,6 +26,11 @@ const GUIDES = [
     href: "/resources/flight-school-scheduling-software",
     title: "Flight school scheduling software",
     body: "What modern flight school scheduling software should include: dispatch, self-booking, billing, and mobile.",
+  },
+  {
+    href: "/resources/quickbooks-integration",
+    title: "QuickBooks Online integration",
+    body: "How paid AerScheduler invoices sync to QuickBooks Online as Sales Receipts — without CSV exports.",
   },
   {
     href: "/compare/flight-schedule-pro",
@@ -59,8 +64,8 @@ export default function ResourcesPage() {
           Resources for flight schools
         </h1>
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-          Guides on scheduling software, migrations, and how AerScheduler fits
-          when you&apos;re choosing a platform.
+          Guides on scheduling software, QuickBooks Online, migrations, and how
+          AerScheduler fits when you&apos;re choosing a platform.
         </p>
 
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

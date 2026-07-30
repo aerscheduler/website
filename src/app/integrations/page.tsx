@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/button";
@@ -26,6 +27,8 @@ const INTEGRATIONS: {
   detail: string;
   logo: string;
   logoAlt: string;
+  learnMoreHref?: string;
+  learnMoreLabel?: string;
 }[] = [
   {
     name: "Stripe",
@@ -53,6 +56,8 @@ const INTEGRATIONS: {
       "Connect QuickBooks Online from Settings. Paid AerScheduler invoices sync as Sales Receipts — matched to customers by email, without CSV exports.",
     logo: "/integrations/quickbooks.svg",
     logoAlt: "QuickBooks logo",
+    learnMoreHref: "/resources/quickbooks-integration",
+    learnMoreLabel: "How QuickBooks sync works",
   },
 ];
 
@@ -103,6 +108,15 @@ export default function IntegrationsPage() {
                 <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
                   {item.detail}
                 </p>
+                {item.learnMoreHref ? (
+                  <Link
+                    href={item.learnMoreHref}
+                    className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
+                  >
+                    {item.learnMoreLabel ?? "Learn more"}
+                    <ChevronRight className="size-3.5" />
+                  </Link>
+                ) : null}
               </article>
             ))}
           </div>

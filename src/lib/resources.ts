@@ -25,6 +25,11 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
         description: "What modern flight school software should include.",
       },
       {
+        href: "/resources/quickbooks-integration",
+        label: "QuickBooks integration",
+        description: "Paid invoices sync to QuickBooks Online as Sales Receipts.",
+      },
+      {
         href: "/migrating/my-fbo",
         label: "Migrating from MyFBO",
         description: "Self-serve playbook: backup, setup, cut over.",
