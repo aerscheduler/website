@@ -4,6 +4,7 @@ import { ChevronRight, Download, Layers, Rocket, Users } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/button";
 import { JsonLd } from "@/components/json-ld";
+import { contactHref } from "@/lib/contact";
 import { faqJsonLd, MYFBO_MIGRATION_FAQS } from "@/lib/seo";
 import { PRICE_PER_AIRCRAFT, SIGNUP_URL, TRIAL_DAYS } from "@/lib/site";
 
@@ -197,11 +198,11 @@ export default function MigratingMyFboPage() {
             ))}
           </div>
           <p className="mt-4 text-sm text-muted-foreground">
-            Need help mapping a CSV export? Email{" "}
-            <a href="mailto:support@aerscheduler.com" className="font-medium text-primary hover:underline">
-              support@aerscheduler.com
-            </a>
-            . We still keep signup self-serve.
+            Need help mapping a CSV export?{" "}
+            <Link href={contactHref("migration")} className="font-medium text-primary hover:underline">
+              Send us the details
+            </Link>{" "}
+            and we&apos;ll walk through it. We still keep signup self-serve.
           </p>
         </div>
       </section>

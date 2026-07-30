@@ -2,7 +2,6 @@ import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { FEATURE_GROUPS, FEATURES, featureHref } from "@/lib/features";
 import { RESOURCE_GROUPS } from "@/lib/resources";
-import { SUPPORT_EMAIL } from "@/lib/site";
 
 const COMPANY = [
   { href: "/about", label: "About" },
@@ -104,9 +103,9 @@ export function SiteFooter() {
             <Link href="/terms-and-conditions" className="hover:text-foreground">
               Terms
             </Link>
-            <a href={`mailto:${SUPPORT_EMAIL}`} className="hover:text-foreground">
+            <Link href="/contact" className="hover:text-foreground">
               Support
-            </a>
+            </Link>
           </div>
         </div>
       </div>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/button";
+import { contactHref } from "@/lib/contact";
 import { SIGNUP_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -133,7 +134,7 @@ export default function IntegrationsPage() {
               </p>
             </div>
             <div className="mt-6 flex flex-wrap gap-3 md:mt-0 md:shrink-0">
-              <Button href="mailto:support@aerscheduler.com" variant="secondary">
+              <Button href={contactHref("integration")} variant="secondary">
                 Request an integration
               </Button>
               <Button href={SIGNUP_URL}>

@@ -278,10 +278,19 @@ export default function HomePage() {
               the schedule today, then open it on your phone.
             </p>
           </div>
-          <Button href={SIGNUP_URL} size="lg" className="bg-white text-brand-surface hover:bg-white/90">
-            Get started
-            <ChevronRight className="size-4 opacity-80" />
-          </Button>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button href={SIGNUP_URL} size="lg" className="bg-white text-brand-surface hover:bg-white/90">
+              Get started
+              <ChevronRight className="size-4 opacity-80" />
+            </Button>
+            <Button
+              href="/contact"
+              size="lg"
+              className="border border-white/25 bg-transparent text-white hover:bg-white/10"
+            >
+              Talk to us
+            </Button>
+          </div>
         </div>
       </section>
     </>

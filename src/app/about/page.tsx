@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/button";
-import { SIGNUP_URL, SITE_NAME, SUPPORT_EMAIL } from "@/lib/site";
+import { SIGNUP_URL, SITE_NAME } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "About",
@@ -77,12 +77,9 @@ export default function AboutPage() {
           </div>
           <p className="mt-6 text-sm text-muted-foreground">
             Questions?{" "}
-            <a
-              href={`mailto:${SUPPORT_EMAIL}`}
-              className="font-medium text-primary hover:underline"
-            >
-              {SUPPORT_EMAIL}
-            </a>
+            <Link href="/contact" className="font-medium text-primary hover:underline">
+              Send us a message
+            </Link>
             {" · "}
             <Link href="/product" className="font-medium text-primary hover:underline">
               Product overview
