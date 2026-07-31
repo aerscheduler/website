@@ -148,7 +148,7 @@ export function ContactForm() {
       <div
         ref={successRef}
         tabIndex={-1}
-        className="rounded-2xl border border-border bg-white p-8 shadow-lg outline-none sm:p-10"
+        className="relative overflow-hidden rounded-2xl border border-border bg-white p-6 shadow-lg outline-none sm:p-8 md:p-10"
       >
         <div className="flex size-12 items-center justify-center rounded-full bg-success/10">
           <Check className="size-6 text-success" aria-hidden />
@@ -184,7 +184,9 @@ export function ContactForm() {
       ref={formRef}
       onSubmit={handleSubmit}
       noValidate
-      className="rounded-2xl border border-border bg-white p-6 shadow-lg sm:p-8"
+      // `relative overflow-hidden` keeps the honeypot from widening the page on
+      // mobile — an absolute `-left-[9999px]` child otherwise expands scroll width.
+      className="relative overflow-hidden rounded-2xl border border-border bg-white p-5 shadow-lg sm:p-8"
     >
       {status.kind === "failed" && (
         <div
@@ -218,7 +220,7 @@ export function ContactForm() {
               <label
                 key={option.value}
                 className={cn(
-                  "cursor-pointer rounded-full border px-3.5 py-2 text-sm font-medium transition-all duration-200",
+                  "max-w-full cursor-pointer rounded-full border px-3 py-2 text-sm font-medium transition-all duration-200",
                   "focus-within:ring-2 focus-within:ring-primary/40 focus-within:ring-offset-2",
                   active
                     ? "border-primary bg-primary text-primary-foreground shadow-sm"
@@ -320,11 +322,13 @@ export function ContactForm() {
       </div>
 
       {/*
-        Honeypot. Hidden from sight, from the accessibility tree, and from tab
-        order — a person can never fill it in, so anything in it is a bot that
-        filled every input on the page.
+        Honeypot. Clipped to a 1×1 box so it never expands page scroll width
+        the way an off-canvas absolute position would on mobile.
       */}
-      <div aria-hidden className="pointer-events-none absolute -left-[9999px] opacity-0">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-0 top-0 h-px w-px overflow-hidden opacity-0"
+      >
         <label htmlFor={`${formId}-website`}>Website</label>
         <input
           ref={honeypotRef}

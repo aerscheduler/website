@@ -106,7 +106,7 @@ export default function ContactPage() {
           <div className="hero-mesh absolute inset-0 opacity-40" />
         </div>
 
-        <div className="relative mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:py-20">
+        <div className="relative mx-auto max-w-6xl px-5 py-14 sm:px-6 lg:px-8 lg:py-20">
           <Breadcrumbs items={[{ name: "Contact", href: "/contact" }]} />
 
           {/*
@@ -116,8 +116,8 @@ export default function ContactPage() {
             back out as the usual two columns, with the form spanning both rows
             of the left-hand stack.
           */}
-          <div className="mt-8 flex flex-col gap-10 lg:grid lg:grid-cols-[0.9fr_1.1fr] lg:gap-x-14 lg:gap-y-10">
-            <div className="order-1 lg:col-start-1 lg:row-start-1">
+          <div className="mt-8 flex min-w-0 flex-col gap-10 lg:grid lg:grid-cols-[0.9fr_1.1fr] lg:gap-x-14 lg:gap-y-10">
+            <div className="order-1 min-w-0 lg:col-start-1 lg:row-start-1">
               <h1 className="text-4xl font-semibold leading-[1.1] tracking-tight text-brand-surface sm:text-5xl">
                 Talk to us
               </h1>
@@ -129,19 +129,19 @@ export default function ContactPage() {
             </div>
 
             {/* The form. */}
-            <div className="order-2 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:self-start">
+            <div className="order-2 min-w-0 lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:self-start">
               <ContactForm />
             </div>
 
             {/* Supporting detail: why you'd write in, and the ways that aren't a form. */}
-            <div className="order-3 lg:col-start-1 lg:row-start-2">
+            <div className="order-3 min-w-0 lg:col-start-1 lg:row-start-2">
               <ul className="space-y-6">
                 {REASONS.map((reason) => (
-                  <li key={reason.title} className="flex gap-4">
+                  <li key={reason.title} className="flex gap-3 sm:gap-4">
                     <span className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-border bg-white shadow-sm">
                       <reason.icon className="size-[18px] text-primary" aria-hidden />
                     </span>
-                    <div>
+                    <div className="min-w-0">
                       <h2 className="text-[15px] font-semibold text-foreground">{reason.title}</h2>
                       <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{reason.body}</p>
                     </div>
@@ -150,18 +150,20 @@ export default function ContactPage() {
               </ul>
 
               <div className="mt-10 space-y-4 border-t border-border pt-8">
-                <div className="flex items-center gap-3 text-sm">
-                  <Mail className="size-4 shrink-0 text-muted-foreground" aria-hidden />
-                  <span className="text-muted-foreground">Prefer email?</span>
+                <div className="flex flex-col gap-1 text-sm sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-3 sm:gap-y-1">
+                  <span className="inline-flex items-center gap-3 text-muted-foreground">
+                    <Mail className="size-4 shrink-0" aria-hidden />
+                    Prefer email?
+                  </span>
                   <a
                     href={`mailto:${SUPPORT_EMAIL}`}
-                    className="font-semibold text-primary hover:underline"
+                    className="break-all font-semibold text-primary hover:underline sm:break-normal"
                   >
                     {SUPPORT_EMAIL}
                   </a>
                 </div>
-                <div className="flex items-center gap-3 text-sm">
-                  <Clock className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+                <div className="flex items-start gap-3 text-sm sm:items-center">
+                  <Clock className="mt-0.5 size-4 shrink-0 text-muted-foreground sm:mt-0" aria-hidden />
                   <span className="text-muted-foreground">
                     Replies within one business day, Mon–Fri.
                   </span>
@@ -187,7 +189,7 @@ export default function ContactPage() {
       </section>
 
       <section className="border-b border-border">
-        <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:py-20">
+        <div className="mx-auto max-w-3xl px-5 py-16 sm:px-6 lg:px-8 lg:py-20">
           <h2 className="text-3xl font-semibold tracking-tight text-brand-surface">
             Before you write in
           </h2>
