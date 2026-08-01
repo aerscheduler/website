@@ -31,6 +31,10 @@ const FORBIDDEN = [
   { pattern: /accessToken/i, why: "the session-token envelope; keys are the published credential" },
   { pattern: /AERSCHEDULER_TOKEN/, why: "stale env var name — keys use AERSCHEDULER_KEY" },
   { pattern: /\bsign in for a token\b/i, why: "describes the session flow" },
+  // Claims about UI that does not exist yet. The docs shipped pointing at
+  // "Settings -> API keys" for a day; there is no such screen. Delete this rule
+  // when the console screen lands, not before.
+  { pattern: /Settings\s*(?:→|&rarr;|->)\s*API keys/i, why: "points at a console screen that does not exist yet" },
 ];
 
 const walk = (dir, out = []) => {
