@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "node scripts/check-docs-auth.mjs && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "check:docs-auth": "node scripts/check-docs-auth.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

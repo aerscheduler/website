@@ -4,7 +4,7 @@
     "title": "AerScheduler API",
     "version": "1.0.0",
     "summary": "Schedule aircraft, close out flights, and bill for them — from your own software.",
-    "description": "The AerScheduler REST API. Everything the mobile app and the web console can do, your own software can do too — schedule aircraft, close flights out, invoice them, and pull the numbers back.\n\nThis is the same API our own clients use. There is no separate \"public\" tier and no second implementation to fall behind.\n\n## Getting started\n\n```bash\n# 1. Sign in. The token is good for 30 days.\ncurl -s -X POST https://api.aerscheduler.com/auth \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"email\":\"you@yourschool.com\",\"password\":\"…\"}'\n\n# 2. Use it.\ncurl -s https://api.aerscheduler.com/resources/planes \\\n  -H \"Authorization: Bearer $TOKEN\"\n```\n\n## Conventions\n\nEvery one of these holds across the whole API, so you can write one client wrapper and stop thinking about it:\n\n- **Responses are wrapped.** A body-bearing success is `{ \"data\": … }`. An error is `{ \"message\": \"…\" }`, and the message is written to be safe to show a user. A few endpoints noted individually break this: `/health`, the CSV export, and the OAuth redirects.\n- **Status codes mean what they say.** `200` read or update, `201` created, `204` done with nothing to return, `400` your request was wrong, `401` sign in again, `403` signed in but not allowed, `404` no such thing, `429` slow down.\n- **`401` and `403` are different.** `401` means the token is dead — get a new one. `403` means the token is fine and the answer is still no; retrying will not help.\n- **Collections are `GET /thing`, items are `GET /thing/{id}`.** Create is `POST` to the collection, update is `PATCH` to the item, delete is `DELETE` on the item. Where a resource deviates, the endpoint says so.\n- **Your organization is implied.** The token carries it. You never pass an organization id, and you can never read another organization's records.\n- **Ids are integers** and stable for the life of the record.\n- **Money is in cents**, as an integer. Never a float.\n\n## Time zones\n\nScheduling is anchored to the **airport's** time zone, not the caller's device. A booking made at 7am at the field is 7am at the field regardless of where the person making it happens to be.\n\nIn practice that means: send `start` and `end` with an **explicit UTC offset or `Z`**. A bare local datetime like `2026-08-04T15:00:00` is rejected — it would be read in the server's zone and silently book a different instant than the person picked. Send `timeZoneName` (an IANA zone) alongside so the booking knows which zone it was made in.\n\n## Reservation types\n\nWhich `type` a caller may create depends on the roles they hold. Roles are additive: an instructor who is also a technician may create both sets.\n\n| Role | May create |\n|---|---|\n| owner, admin, dispatcher | solo, dual, ground, guest, sim, rental, maintenance |\n| instructor | solo, dual, ground, guest, sim |\n| student | solo, dual, ground, sim |\n| renter | rental |\n| technician | maintenance |\n\n## Rate limits\n\nLimits are applied per signed-in account, not per IP, so a whole school behind one office address does not share one budget.\n\n| | Limit |\n|---|---|\n| Per account | 300 requests/minute, 5,000/hour |\n| Unauthenticated | 100 requests per 5 minutes, per IP |\n| Sign-in and password reset | Tighter still, per IP and per email address |\n\nEvery response carries `RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset`. A `429` carries `Retry-After` in seconds — honour it rather than retrying on a fixed interval.\n\n## Pagination\n\n**Every list is capped at 1,000 rows**, whether or not you ask for a limit. Pass `limit` and `offset` to page:\n\n```\nGET /reservations?startDate=…&endDate=…&limit=100&offset=200\n```\n\nEvery list response carries a `pagination` object beside `data`:\n\n```json\n{\n  \"data\": [ … ],\n  \"pagination\": { \"total\": 7823, \"limit\": 1000, \"offset\": 0, \"returned\": 1000, \"hasMore\": true }\n}\n```\n\n- `total` — how many there are in all, before the page was taken.\n- `returned` — how many are in `data` right now.\n- `hasMore` — whether another page exists. **Check it.** It is how you find out a collection is bigger than one page, and some of ours are: our largest school has over 7,000 reservations.\n\nAsking for more than 1,000 gives you 1,000 rather than an error, so you never need to know the ceiling to write a working request. `offset` past the end returns an empty `data` and `hasMore: false`.\n\nCursor pagination is coming and will be additive — `limit`/`offset` will keep working.\n\n## Versioning\n\n**The unprefixed paths are v1.** `https://api.aerscheduler.com/reservations` is the v1 reservations endpoint; there is no `/v1/` to add and adding one will 404. That is deliberate — a version segment you never change is decoration, and we would rather not pretend.\n\nThis document describes **v1.0.0**, which you can read at `info.version` in the spec.\n\n**What can change under you, without notice:**\n\n- New endpoints.\n- New fields on an existing response.\n- New optional request parameters.\n- New values in an enum you are already handling.\n\nSo parse leniently: ignore fields you do not recognise, and do not assume an enum is closed. An integration that breaks when we add a field is an integration that will break.\n\n**What will never change within v1:**\n\n- An endpoint disappearing, or moving.\n- A field disappearing from a response, or changing type.\n- A previously optional request parameter becoming required.\n- A success status code changing.\n\nAnything in that second list means **v2**, which would be served alongside v1 at `/v2/…` rather than replacing it. You would get notice by email before it existed, and v1 would keep working for a stated period afterwards — we are not going to break a customer's software to save ourselves a route table.\n\n**Deprecations** are announced in the changelog and carry a `Deprecation` header on the affected endpoint before anything is removed.",
+    "description": "The AerScheduler REST API. Everything the mobile app and the web console can do, your own software can do too — schedule aircraft, close flights out, invoice them, and pull the numbers back.\n\nThis is the same API our own clients use. There is no separate \"public\" tier and no second implementation to fall behind.\n\n## Getting started\n\n**The API is used with an API key.** Create one in the console at\n**Settings → API keys**, or with `POST /apiKeys` while signed in. The secret is\nshown once.\n\n```bash\nexport AERSCHEDULER_KEY=ask_live_…\n\ncurl -s https://api.aerscheduler.com/resources/planes \\\n  -H \"Authorization: Bearer $AERSCHEDULER_KEY\"\n```\n\nThat is the whole setup. There is no sign-in step and no token to refresh: a key\nis a long-lived credential you store once, and it keeps working until you revoke\nit or its expiry passes.\n\nKeys carry **roles**, so a key is scoped to what it actually needs. A key that\nreads the schedule should be a `dispatcher`, not an `admin`. Every permission\nrule that applies to a person holding those roles applies to the key.\n\nCreating and revoking keys requires a signed-in administrator — a key cannot mint\nanother key, so a leaked key cannot issue itself replacements.\n\n## Conventions\n\nEvery one of these holds across the whole API, so you can write one client wrapper and stop thinking about it:\n\n- **Responses are wrapped.** A body-bearing success is `{ \"data\": … }`. An error is `{ \"message\": \"…\" }`, and the message is written to be safe to show a user. A few endpoints noted individually break this: `/health`, the CSV export, and the OAuth redirects.\n- **Status codes mean what they say.** `200` read or update, `201` created, `204` done with nothing to return, `400` your request was wrong, `401` sign in again, `403` signed in but not allowed, `404` no such thing, `429` slow down.\n- **`401` and `403` are different.** `401` means the token is dead — get a new one. `403` means the token is fine and the answer is still no; retrying will not help.\n- **Collections are `GET /thing`, items are `GET /thing/{id}`.** Create is `POST` to the collection, update is `PATCH` to the item, delete is `DELETE` on the item. Where a resource deviates, the endpoint says so.\n- **Your organization is implied.** The token carries it. You never pass an organization id, and you can never read another organization's records.\n- **Ids are integers** and stable for the life of the record.\n- **Money is in cents**, as an integer. Never a float.\n\n## Time zones\n\nScheduling is anchored to the **airport's** time zone, not the caller's device. A booking made at 7am at the field is 7am at the field regardless of where the person making it happens to be.\n\nIn practice that means: send `start` and `end` with an **explicit UTC offset or `Z`**. A bare local datetime like `2026-08-04T15:00:00` is rejected — it would be read in the server's zone and silently book a different instant than the person picked. Send `timeZoneName` (an IANA zone) alongside so the booking knows which zone it was made in.\n\n## Reservation types\n\nWhich `type` a caller may create depends on the roles they hold. Roles are additive: an instructor who is also a technician may create both sets.\n\n| Role | May create |\n|---|---|\n| owner, admin, dispatcher | solo, dual, ground, guest, sim, rental, maintenance |\n| instructor | solo, dual, ground, guest, sim |\n| student | solo, dual, ground, sim |\n| renter | rental |\n| technician | maintenance |\n\n## Rate limits\n\nLimits are applied per signed-in account, not per IP, so a whole school behind one office address does not share one budget.\n\n| | Limit |\n|---|---|\n| Per account | 300 requests/minute, 5,000/hour |\n| Unauthenticated | 100 requests per 5 minutes, per IP |\n| Unauthenticated endpoints | Tighter still, and limited per IP |\n\nEvery response carries `RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset`. A `429` carries `Retry-After` in seconds — honour it rather than retrying on a fixed interval.\n\n## Pagination\n\n**Every list is capped at 1,000 rows**, whether or not you ask for a limit. Pass `limit` and `offset` to page:\n\n```\nGET /reservations?startDate=…&endDate=…&limit=100&offset=200\n```\n\nEvery list response carries a `pagination` object beside `data`:\n\n```json\n{\n  \"data\": [ … ],\n  \"pagination\": { \"total\": 7823, \"limit\": 1000, \"offset\": 0, \"returned\": 1000, \"hasMore\": true }\n}\n```\n\n- `total` — how many there are in all, before the page was taken.\n- `returned` — how many are in `data` right now.\n- `hasMore` — whether another page exists. **Check it.** It is how you find out a collection is bigger than one page, and some of ours are: our largest school has over 7,000 reservations.\n\nAsking for more than 1,000 gives you 1,000 rather than an error, so you never need to know the ceiling to write a working request. `offset` past the end returns an empty `data` and `hasMore: false`.\n\nCursor pagination is coming and will be additive — `limit`/`offset` will keep working.\n\n## Versioning\n\n**The unprefixed paths are v1.** `https://api.aerscheduler.com/reservations` is the v1 reservations endpoint; there is no `/v1/` to add and adding one will 404. That is deliberate — a version segment you never change is decoration, and we would rather not pretend.\n\nThis document describes **v1.0.0**, which you can read at `info.version` in the spec.\n\n**What can change under you, without notice:**\n\n- New endpoints.\n- New fields on an existing response.\n- New optional request parameters.\n- New values in an enum you are already handling.\n\nSo parse leniently: ignore fields you do not recognise, and do not assume an enum is closed. An integration that breaks when we add a field is an integration that will break.\n\n**What will never change within v1:**\n\n- An endpoint disappearing, or moving.\n- A field disappearing from a response, or changing type.\n- A previously optional request parameter becoming required.\n- A success status code changing.\n\nAnything in that second list means **v2**, which would be served alongside v1 at `/v2/…` rather than replacing it. You would get notice by email before it existed, and v1 would keep working for a stated period afterwards — we are not going to break a customer's software to save ourselves a route table.\n\n**Deprecations** are announced in the changelog and carry a `Deprecation` header on the affected endpoint before anything is removed.",
     "contact": {
       "name": "AerScheduler support",
       "email": "support@aerscheduler.com",
@@ -433,31 +433,6 @@
             "description": "The key id. Not the secret."
           }
         ]
-      }
-    },
-    "/auth/session": {
-      "get": {
-        "tags": [
-          "Service"
-        ],
-        "summary": "Check whether your credential is still valid",
-        "description": "A cheap liveness probe. Answers 200 if the credential is good and 401 if it is not — nothing else. Works for an API key as well as a session, so an integration can check its key without making a real request.",
-        "operationId": "checkSession",
-        "responses": {
-          "200": {
-            "description": "The credential is valid."
-          },
-          "401": {
-            "description": "Revoked, expired, or unknown.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
       }
     },
     "/users": {
@@ -2722,6 +2697,74 @@
               "type": "integer"
             },
             "description": "The membership id. Note this is NOT the user id."
+          }
+        ]
+      }
+    },
+    "/orgUsers/{orgUserId}/users": {
+      "get": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Get the person behind a membership",
+        "description": "Resolves a membership id to the underlying person. Useful when you have an `orgUserId` from a booking and want the account behind it — the two ids are different and are not interchangeable.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "That membership is not in your organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getUserForOrgUser",
+        "parameters": [
+          {
+            "name": "orgUserId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The membership id."
           }
         ]
       }
@@ -5857,6 +5900,127 @@
       }
     },
     "/invoices": {
+      "post": {
+        "tags": [
+          "Invoices"
+        ],
+        "summary": "Create an invoice",
+        "description": "Bills a member for something that isn't a flight — a checkout fee, a headset, a late cancellation. Line items are validated against the organization before anything is written.\n\nFor billing a completed flight, use `POST /reservations/{id}/invoices` instead: it prices the booking from the meters you recorded.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Invoice"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "The invoice.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Invoice"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A line item or the customer failed validation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "createInvoice",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The invoice.",
+                "properties": {
+                  "orgUserId": {
+                    "type": "integer",
+                    "description": "Who is being billed."
+                  },
+                  "items": {
+                    "type": "array",
+                    "description": "Line items. Amounts are in cents.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "description": {
+                          "type": "string"
+                        },
+                        "amount": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  },
+                  "dueAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "When payment is due."
+                  }
+                },
+                "required": [
+                  "orgUserId",
+                  "items"
+                ]
+              }
+            }
+          }
+        }
+      },
       "get": {
         "tags": [
           "Invoices"
@@ -11893,82 +12057,6 @@
       }
     },
     "/reports/views/{viewId}": {
-      "get": {
-        "tags": [
-          "Reports"
-        ],
-        "summary": "Get a saved report view",
-        "description": "Fetches one saved report view by id.",
-        "responses": {
-          "200": {
-            "description": "Success.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/ReportDefinition"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "No token, an expired token, or a malformed one. Sign in again.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Authenticated, but not allowed to do this.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "No such saved report view, or it belongs to another organization.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Rate limited. `Retry-After` says how long to wait.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        },
-        "operationId": "getReportDefinition",
-        "parameters": [
-          {
-            "name": "viewId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            },
-            "description": "The saved view id."
-          }
-        ]
-      },
       "patch": {
         "tags": [
           "Reports"

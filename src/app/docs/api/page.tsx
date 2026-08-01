@@ -50,7 +50,19 @@ const FAQS = [
   },
   {
     q: "How do I authenticate with the AerScheduler API?",
-    a: "POST your email and password to /auth and you get back a bearer token valid for 30 days. Send it as an Authorization: Bearer header on every other request. The token is scoped to one organization; POST /organizations/switch/{orgId} returns a token for another.",
+    a: "With an API key. Create one in the console under Settings → API keys, or with POST /apiKeys while signed in as an administrator. Send it as an Authorization: Bearer header on every request. The secret is shown once — store it then, because only a hash is kept.",
+  },
+  {
+    q: "Who can create an API key?",
+    a: "An administrator, signed in to the console. A key cannot create or revoke another key, even one with the admin role — so a leaked key can never issue itself replacements.",
+  },
+  {
+    q: "What can an API key do?",
+    a: "Exactly what the roles you gave it allow. A key behaves like a member holding those roles, and every permission rule that applies to a person applies to it. Give a key the least it needs — a key that reads the schedule should be a dispatcher, not an admin. The owner role cannot be granted to a key.",
+  },
+  {
+    q: "Do keys expire?",
+    a: "Only if you set an expiry when you create one. Otherwise a key works until you revoke it, which takes effect on the very next request. Revoked keys stay listed as revoked rather than disappearing, so anything they created still has something to point at.",
   },
   {
     q: "Is there an OpenAPI specification?",
@@ -67,7 +79,7 @@ const FAQS = [
 ];
 
 const QUICK_FACTS = [
-  { icon: KeyRound, label: "Auth", value: "Bearer token, 30-day expiry" },
+  { icon: KeyRound, label: "Auth", value: "API key, no expiry by default" },
   { icon: Terminal, label: "Format", value: "JSON over HTTPS, OpenAPI 3.1" },
   { icon: Gauge, label: "Limits", value: "300/min per account" },
   { icon: Clock, label: "Version", value: `v${API_VERSION}` },
@@ -136,30 +148,31 @@ export default function ApiDocsPage() {
         <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6" id="quickstart">
           <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">Quickstart</h2>
           <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
-            Two calls to your first result: sign in for a token, then use it. The token is good for
-            30 days, so an integration signs in rarely rather than on every request.
+            One credential, then you&rsquo;re working. Create an API key in the console under{" "}
+            <strong className="text-foreground">Settings &rarr; API keys</strong> — the secret is
+            shown once — and send it on every request. There is no sign-in step and no token to
+            refresh.
           </p>
 
           <div className="mt-6 space-y-4">
             <CodeBlock
-              label="1 — Sign in"
-              code={`curl -s -X POST ${API_BASE_URL}/auth \\
-  -H 'Content-Type: application/json' \\
-  -d '{"email":"you@yourschool.com","password":"…"}'
-
-# → { "auth": { "accessToken": "eyJ…" }, "data": { … } }`}
+              label="1 — Store your key"
+              code={`# Created in the console: Settings → API keys.
+# Shown once — we keep only a hash, so save it now.
+export AERSCHEDULER_KEY=ask_live_…`}
             />
             <CodeBlock
               label="2 — List your aircraft"
               code={`curl -s ${API_BASE_URL}/resources/planes \\
-  -H "Authorization: Bearer $AERSCHEDULER_TOKEN"
+  -H "Authorization: Bearer $AERSCHEDULER_KEY"
 
-# → { "data": [ { "id": 12, "name": "N12345", … } ] }`}
+# → { "data": [ { "id": 12, "name": "N12345", … } ],
+#     "pagination": { "total": 6, "hasMore": false, … } }`}
             />
             <CodeBlock
               label="3 — Book one"
               code={`curl -s -X POST ${API_BASE_URL}/reservations \\
-  -H "Authorization: Bearer $AERSCHEDULER_TOKEN" \\
+  -H "Authorization: Bearer $AERSCHEDULER_KEY" \\
   -H 'Content-Type: application/json' \\
   -d '{
     "title": "Discovery flight",
@@ -321,7 +334,7 @@ export default function ApiDocsPage() {
                   {[
                     ["Per account", "300 requests / minute, 5,000 / hour"],
                     ["Unauthenticated", "100 requests / 5 minutes, per IP"],
-                    ["Sign-in, password reset", "Tighter still — per IP and per email address"],
+                    ["Unauthenticated endpoints", "Tighter still, and limited per IP"],
                   ].map(([what, limit]) => (
                     <tr key={what} className="border-b border-border/70 last:border-0">
                       <td className="w-56 py-2.5 pr-4 font-medium text-foreground">{what}</td>
