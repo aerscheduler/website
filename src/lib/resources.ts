@@ -1,4 +1,8 @@
 
+// developers.ts imports only the ResourceLink *type* back from here, which is
+// erased at compile time, so this pair is not a runtime cycle.
+import { DEVELOPER_LINKS } from "@/lib/developers";
+
 /** Resource / guide links for nav, footer, and resources index. */
 export type ResourceLink = {
   href: string;
@@ -58,6 +62,13 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
         description: "Revenue by aircraft, instructor, customer, and lesson type.",
       },
     ],
+  },
+  {
+    // Sits in Resources as well as Features: somebody hunting for the API will
+    // try one or the other, and there's no cost to being findable from both.
+    // Defined in lib/developers.ts so the two menus can't drift apart.
+    title: "Developers",
+    items: DEVELOPER_LINKS,
   },
   {
     title: "Compare",

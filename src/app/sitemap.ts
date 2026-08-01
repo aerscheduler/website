@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { FEATURE_LIST } from "@/lib/features";
+import { apiDocRoutes } from "@/lib/developers";
 import { SITE_URL } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -66,5 +67,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  return [...staticEntries, ...featureRoutes];
+  // API reference: the hub, then one page per area. Generated from the OpenAPI
+  // document rather than listed by hand, so a new tag in the spec becomes an
+  // indexed page without anyone remembering to add it here.
+  const apiDocEntries: MetadataRoute.Sitemap = apiDocRoutes().map((path) => ({
+    url: `${SITE_URL}${path}`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    // The hub is the page worth ranking; the per-area references support it.
+    priority: path === "/docs/api" ? 0.85 : 0.7,
+  }));
+
+  return [...staticEntries, ...featureRoutes, ...apiDocEntries];
 }

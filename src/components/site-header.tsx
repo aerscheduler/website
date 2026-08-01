@@ -15,6 +15,7 @@ import { Button } from "@/components/button";
 import { FEATURE_GROUPS, FEATURES, featureHref } from "@/lib/features";
 import { INTEGRATION_LINKS } from "@/lib/integrations";
 import { RESOURCE_GROUPS } from "@/lib/resources";
+import { DEVELOPER_LINKS } from "@/lib/developers";
 import { SIGNUP_URL } from "@/lib/site";
 import { cn } from "@/lib/cn";
 
@@ -38,12 +39,14 @@ const NAV_FEATURE_GROUPS = FEATURE_GROUPS.map((group) => ({
 })).filter((group) => group.items.length > 0);
 
 const PANEL_WIDTH: Record<MegaId, number> = {
-  features: 720,
+  // Five columns since Developers joined: the panel grows sideways rather than
+  // wrapping a fifth group onto a lonely second row.
+  features: 880,
   integrations: 380,
-  // Matches `features` so the third group (Reporting) sits beside the other two
-  // instead of wrapping onto a second row — the panel grows sideways, which
-  // there is room for, rather than downwards, which there isn't.
-  resources: 720,
+  // Four groups here for the same reason (Guides, Reporting, Developers,
+  // Compare) — the panel grows sideways, which there is room for, rather than
+  // downwards, which there isn't.
+  resources: 880,
 };
 
 export function SiteHeader() {
@@ -194,7 +197,7 @@ export function SiteHeader() {
                       contentRefs.current.features = el;
                     }}
                   >
-                    <div className="grid grid-cols-2 gap-0 p-3 lg:grid-cols-4">
+                    <div className="grid grid-cols-2 gap-0 p-3 lg:grid-cols-5">
                       {NAV_FEATURE_GROUPS.map((group) => (
                         <div key={group.title} className="px-3 py-3">
                           <p className="px-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
@@ -218,10 +221,33 @@ export function SiteHeader() {
                           </ul>
                         </div>
                       ))}
+
+                      {/* Developers gets its own column rather than a line in
+                          "Everywhere": the API is a different kind of thing to
+                          a feature page, and somebody looking for it is looking
+                          for exactly it. */}
+                      <div className="px-3 py-3">
+                        <p className="px-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                          Developers
+                        </p>
+                        <ul className="mt-2 space-y-0.5">
+                          {DEVELOPER_LINKS.map((item) => (
+                            <li key={item.href}>
+                              <Link
+                                href={item.href}
+                                className="block rounded-lg px-2 py-2 text-sm font-medium text-foreground hover:bg-muted"
+                                onClick={closeMega}
+                              >
+                                {item.label}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
                     <div className="flex items-center justify-between gap-3 border-t border-border bg-[#fafbfc] px-5 py-3">
                       <p className="text-xs text-muted-foreground">
-                        Scheduling, billing, MX &amp; mobile in one place
+                        Scheduling, billing, MX, mobile &amp; a full REST API
                       </p>
                       <Link
                         href="/features"
@@ -287,9 +313,9 @@ export function SiteHeader() {
                     }}
                   >
                     {/* One column per group. The panel is a fixed width, so
-                        these are not viewport-responsive — three groups, three
+                        these are not viewport-responsive — four groups, four
                         columns. */}
-                    <div className="grid grid-cols-3 gap-0 p-3">
+                    <div className="grid grid-cols-4 gap-0 p-3">
                       {RESOURCE_GROUPS.map((group) => (
                         <div key={group.title} className="px-3 py-3">
                           <p className="px-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
@@ -398,6 +424,21 @@ export function SiteHeader() {
                 ))}
               </div>
             ))}
+            <div>
+              <p className="px-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                Developers
+              </p>
+              {DEVELOPER_LINKS.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className="block rounded-lg px-2 py-2 text-sm text-foreground hover:bg-muted"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
             <Link
               href="/features"
               onClick={() => setOpen(false)}
