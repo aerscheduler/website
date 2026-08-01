@@ -4,7 +4,7 @@
     "title": "AerScheduler API",
     "version": "1.0.0",
     "summary": "Schedule aircraft, close out flights, and bill for them — from your own software.",
-    "description": "The AerScheduler REST API. Everything the mobile app and the web console can do, your own software can do too — schedule aircraft, close flights out, invoice them, and pull the numbers back.\n\nThis is the same API our own clients use. There is no separate \"public\" tier and no second implementation to fall behind.\n\n## Getting started\n\n```bash\n# 1. Sign in. The token is good for 30 days.\ncurl -s -X POST https://api.aerscheduler.com/auth \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"email\":\"you@yourschool.com\",\"password\":\"…\"}'\n\n# 2. Use it.\ncurl -s https://api.aerscheduler.com/resources/planes \\\n  -H \"Authorization: Bearer $TOKEN\"\n```\n\n## Conventions\n\nEvery one of these holds across the whole API, so you can write one client wrapper and stop thinking about it:\n\n- **Responses are wrapped.** A body-bearing success is `{ \"data\": … }`. An error is `{ \"message\": \"…\" }`, and the message is written to be safe to show a user. A few endpoints noted individually break this: `/health`, the CSV export, and the OAuth redirects.\n- **Status codes mean what they say.** `200` read or update, `201` created, `204` done with nothing to return, `400` your request was wrong, `401` sign in again, `403` signed in but not allowed, `404` no such thing, `429` slow down.\n- **`401` and `403` are different.** `401` means the token is dead — get a new one. `403` means the token is fine and the answer is still no; retrying will not help.\n- **Collections are `GET /thing`, items are `GET /thing/{id}`.** Create is `POST` to the collection, update is `PATCH` to the item, delete is `DELETE` on the item. Where a resource deviates, the endpoint says so.\n- **Your organization is implied.** The token carries it. You never pass an organization id, and you can never read another organization's records.\n- **Ids are integers** and stable for the life of the record.\n- **Money is in cents**, as an integer. Never a float.\n\n## Time zones\n\nScheduling is anchored to the **airport's** time zone, not the caller's device. A booking made at 7am at the field is 7am at the field regardless of where the person making it happens to be.\n\nIn practice that means: send `start` and `end` with an **explicit UTC offset or `Z`**. A bare local datetime like `2026-08-04T15:00:00` is rejected — it would be read in the server's zone and silently book a different instant than the person picked. Send `timeZoneName` (an IANA zone) alongside so the booking knows which zone it was made in.\n\n## Reservation types\n\nWhich `type` a caller may create depends on the roles they hold. Roles are additive: an instructor who is also a technician may create both sets.\n\n| Role | May create |\n|---|---|\n| owner, admin, dispatcher | solo, dual, ground, guest, sim, rental, maintenance |\n| instructor | solo, dual, ground, guest, sim |\n| student | solo, dual, ground, sim |\n| renter | rental |\n| technician | maintenance |\n\n## Rate limits\n\nLimits are applied per signed-in account, not per IP, so a whole school behind one office address does not share one budget.\n\n| | Limit |\n|---|---|\n| Per account | 300 requests/minute, 5,000/hour |\n| Unauthenticated | 100 requests per 5 minutes, per IP |\n| Sign-in and password reset | Tighter still, per IP and per email address |\n\nEvery response carries `RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset`. A `429` carries `Retry-After` in seconds — honour it rather than retrying on a fixed interval.\n\n## Pagination\n\nThere isn't any yet, and you should know that before you build against a list endpoint. Every collection returns its full set. Date-ranged endpoints (`/reservations`, the reports) are the ones to lean on for large data — `/reservations` requires a window for exactly this reason. Cursor pagination is planned, and will be additive: an unpaginated request will keep returning what it returns today.\n\n## Versioning\n\nThis document describes **v1.0.0**. Additive changes — new endpoints, new fields on an existing response — ship without notice, so parse leniently and ignore fields you do not recognise. Anything that would break a working integration gets a new major version and an announcement first.",
+    "description": "The AerScheduler REST API. Everything the mobile app and the web console can do, your own software can do too — schedule aircraft, close flights out, invoice them, and pull the numbers back.\n\nThis is the same API our own clients use. There is no separate \"public\" tier and no second implementation to fall behind.\n\n## Getting started\n\n```bash\n# 1. Sign in. The token is good for 30 days.\ncurl -s -X POST https://api.aerscheduler.com/auth \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"email\":\"you@yourschool.com\",\"password\":\"…\"}'\n\n# 2. Use it.\ncurl -s https://api.aerscheduler.com/resources/planes \\\n  -H \"Authorization: Bearer $TOKEN\"\n```\n\n## Conventions\n\nEvery one of these holds across the whole API, so you can write one client wrapper and stop thinking about it:\n\n- **Responses are wrapped.** A body-bearing success is `{ \"data\": … }`. An error is `{ \"message\": \"…\" }`, and the message is written to be safe to show a user. A few endpoints noted individually break this: `/health`, the CSV export, and the OAuth redirects.\n- **Status codes mean what they say.** `200` read or update, `201` created, `204` done with nothing to return, `400` your request was wrong, `401` sign in again, `403` signed in but not allowed, `404` no such thing, `429` slow down.\n- **`401` and `403` are different.** `401` means the token is dead — get a new one. `403` means the token is fine and the answer is still no; retrying will not help.\n- **Collections are `GET /thing`, items are `GET /thing/{id}`.** Create is `POST` to the collection, update is `PATCH` to the item, delete is `DELETE` on the item. Where a resource deviates, the endpoint says so.\n- **Your organization is implied.** The token carries it. You never pass an organization id, and you can never read another organization's records.\n- **Ids are integers** and stable for the life of the record.\n- **Money is in cents**, as an integer. Never a float.\n\n## Time zones\n\nScheduling is anchored to the **airport's** time zone, not the caller's device. A booking made at 7am at the field is 7am at the field regardless of where the person making it happens to be.\n\nIn practice that means: send `start` and `end` with an **explicit UTC offset or `Z`**. A bare local datetime like `2026-08-04T15:00:00` is rejected — it would be read in the server's zone and silently book a different instant than the person picked. Send `timeZoneName` (an IANA zone) alongside so the booking knows which zone it was made in.\n\n## Reservation types\n\nWhich `type` a caller may create depends on the roles they hold. Roles are additive: an instructor who is also a technician may create both sets.\n\n| Role | May create |\n|---|---|\n| owner, admin, dispatcher | solo, dual, ground, guest, sim, rental, maintenance |\n| instructor | solo, dual, ground, guest, sim |\n| student | solo, dual, ground, sim |\n| renter | rental |\n| technician | maintenance |\n\n## Rate limits\n\nLimits are applied per signed-in account, not per IP, so a whole school behind one office address does not share one budget.\n\n| | Limit |\n|---|---|\n| Per account | 300 requests/minute, 5,000/hour |\n| Unauthenticated | 100 requests per 5 minutes, per IP |\n| Sign-in and password reset | Tighter still, per IP and per email address |\n\nEvery response carries `RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset`. A `429` carries `Retry-After` in seconds — honour it rather than retrying on a fixed interval.\n\n## Pagination\n\n**Every list is capped at 1,000 rows**, whether or not you ask for a limit. Pass `limit` and `offset` to page:\n\n```\nGET /reservations?startDate=…&endDate=…&limit=100&offset=200\n```\n\nEvery list response carries a `pagination` object beside `data`:\n\n```json\n{\n  \"data\": [ … ],\n  \"pagination\": { \"total\": 7823, \"limit\": 1000, \"offset\": 0, \"returned\": 1000, \"hasMore\": true }\n}\n```\n\n- `total` — how many there are in all, before the page was taken.\n- `returned` — how many are in `data` right now.\n- `hasMore` — whether another page exists. **Check it.** It is how you find out a collection is bigger than one page, and some of ours are: our largest school has over 7,000 reservations.\n\nAsking for more than 1,000 gives you 1,000 rather than an error, so you never need to know the ceiling to write a working request. `offset` past the end returns an empty `data` and `hasMore: false`.\n\nCursor pagination is coming and will be additive — `limit`/`offset` will keep working.\n\n## Versioning\n\n**The unprefixed paths are v1.** `https://api.aerscheduler.com/reservations` is the v1 reservations endpoint; there is no `/v1/` to add and adding one will 404. That is deliberate — a version segment you never change is decoration, and we would rather not pretend.\n\nThis document describes **v1.0.0**, which you can read at `info.version` in the spec.\n\n**What can change under you, without notice:**\n\n- New endpoints.\n- New fields on an existing response.\n- New optional request parameters.\n- New values in an enum you are already handling.\n\nSo parse leniently: ignore fields you do not recognise, and do not assume an enum is closed. An integration that breaks when we add a field is an integration that will break.\n\n**What will never change within v1:**\n\n- An endpoint disappearing, or moving.\n- A field disappearing from a response, or changing type.\n- A previously optional request parameter becoming required.\n- A success status code changing.\n\nAnything in that second list means **v2**, which would be served alongside v1 at `/v2/…` rather than replacing it. You would get notice by email before it existed, and v1 would keep working for a stated period afterwards — we are not going to break a customer's software to save ourselves a route table.\n\n**Deprecations** are announced in the changelog and carry a `Deprecation` header on the affected endpoint before anything is removed.",
     "contact": {
       "name": "AerScheduler support",
       "email": "support@aerscheduler.com",
@@ -29,8 +29,8 @@
   ],
   "tags": [
     {
-      "name": "Authentication",
-      "description": "Signing in, tokens, and account creation."
+      "name": "API keys",
+      "description": "Credentials that let your software act on your organization's behalf."
     },
     {
       "name": "Organizations",
@@ -102,394 +102,16 @@
     }
   ],
   "paths": {
-    "/auth": {
-      "post": {
-        "tags": [
-          "Authentication"
-        ],
-        "summary": "Sign in",
-        "description": "Exchanges an email and password for a bearer token valid for **30 days**. Send that token as `Authorization: Bearer <token>` on every other request.\n\nThe token is scoped to one organization — whichever is active for the account. If the account belongs to several, switch with `POST /organizations/switch/{orgId}`, which returns a fresh token scoped to the new one.",
-        "operationId": "signIn",
-        "security": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "description": "Credentials.",
-                "properties": {
-                  "email": {
-                    "type": "string",
-                    "format": "email"
-                  },
-                  "password": {
-                    "type": "string",
-                    "format": "password"
-                  }
-                },
-                "required": [
-                  "email",
-                  "password"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Signed in.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuthEnvelope"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Invalid email or password. Deliberately identical whether or not the account exists.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Too many sign-in attempts. Limited per IP and per email address.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
+    "/apiKeys": {
       "get": {
         "tags": [
-          "Authentication"
+          "API keys"
         ],
-        "summary": "Get the current session",
-        "description": "Returns the signed-in user, their active organization, and a refreshed token.",
+        "summary": "List your API keys",
+        "description": "Every key in your organization, with its roles, when it was last used, and whether it is active, expired, or revoked.\n\nSecrets are not included and cannot be: only a hash is stored, so a key that has been lost has to be revoked and replaced.",
         "responses": {
           "200": {
-            "description": "The current session.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuthEnvelope"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "No token, an expired token, or a malformed one. Sign in again.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Authenticated, but not allowed to do this.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Rate limited. `Retry-After` says how long to wait.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        },
-        "operationId": "getSession"
-      },
-      "delete": {
-        "tags": [
-          "Authentication"
-        ],
-        "summary": "Sign out a device",
-        "description": "Removes a push-notification device token. Bearer tokens are stateless and are not revoked by this call.",
-        "responses": {
-          "204": {
-            "description": "Success. No body."
-          },
-          "401": {
-            "description": "No token, an expired token, or a malformed one. Sign in again.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Authenticated, but not allowed to do this.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Rate limited. `Retry-After` says how long to wait.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        },
-        "operationId": "signOut",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "description": "The device token to forget.",
-                "properties": {
-                  "token": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/auth/session": {
-      "get": {
-        "tags": [
-          "Authentication"
-        ],
-        "summary": "Check whether a token is still valid",
-        "description": "A cheap liveness probe for a stored token. Answers 200 if the token is good and 401 if it is not — nothing else. Use it to decide whether to prompt for sign-in without making a real request.",
-        "operationId": "checkSession",
-        "responses": {
-          "200": {
-            "description": "The token is valid."
-          },
-          "401": {
-            "description": "The token is expired or invalid.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/auth/forgot-password": {
-      "post": {
-        "tags": [
-          "Authentication"
-        ],
-        "summary": "Request a password reset",
-        "description": "Emails a reset link. Always answers 204, whether or not the address exists — telling the caller which addresses are registered would be an account-enumeration hole.",
-        "operationId": "forgotPassword",
-        "security": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "description": "The address to send to.",
-                "properties": {
-                  "email": {
-                    "type": "string",
-                    "format": "email"
-                  }
-                },
-                "required": [
-                  "email"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "Accepted."
-          },
-          "400": {
-            "description": "No email supplied.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Too many requests.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/auth/reset-password": {
-      "post": {
-        "tags": [
-          "Authentication"
-        ],
-        "summary": "Redeem a password reset token",
-        "description": "Sets a new password using the token from the reset email.",
-        "operationId": "resetPassword",
-        "security": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "description": "The token and the new password.",
-                "properties": {
-                  "token": {
-                    "type": "string"
-                  },
-                  "password": {
-                    "type": "string",
-                    "format": "password"
-                  }
-                },
-                "required": [
-                  "token",
-                  "password"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "Password changed."
-          },
-          "400": {
-            "description": "The link has expired or the token is invalid.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/users": {
-      "post": {
-        "tags": [
-          "Authentication"
-        ],
-        "summary": "Create an account",
-        "description": "Registers a person and returns a token immediately. A verification email is sent; some endpoints stay closed until the address is verified.",
-        "operationId": "signUp",
-        "security": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "description": "The new account.",
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "email": {
-                    "type": "string",
-                    "format": "email"
-                  },
-                  "password": {
-                    "type": "string",
-                    "format": "password"
-                  }
-                },
-                "required": [
-                  "name",
-                  "email",
-                  "password"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Account created.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuthEnvelope"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "The address is already registered, or the password is too weak.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Too many sign-ups from this address.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
-      "get": {
-        "tags": [
-          "Members"
-        ],
-        "summary": "List users",
-        "description": "Every person in your organization, as `User` records. Prefer `GET /orgUsers`, which carries roles.",
-        "responses": {
-          "200": {
-            "description": "The users.",
+            "description": "The keys.",
             "content": {
               "application/json": {
                 "schema": {
@@ -498,7 +120,214 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/User"
+                        "$ref": "#/components/schemas/ApiKey"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listApiKeys",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "API keys"
+        ],
+        "summary": "Create an API key",
+        "description": "Mints a key and returns the secret **once**. Store it immediately — it is hashed on our side and this is the only response that will ever contain it.\n\nThe roles you assign are real: the key behaves like a member holding exactly those roles, and every permission rule that applies to a person applies to it. Give it the least it needs — a key that only reads schedules should be `dispatcher`, not `admin`.\n\nRequires the **admin** role, and requires a signed-in session: a key cannot mint another key, so a leaked key cannot be used to issue itself replacements.",
+        "responses": {
+          "201": {
+            "description": "The key. **`secret` appears here and nowhere else, ever.**",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ApiKeyWithSecret"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "No name, no roles, an unknown role, or an expiry in the past.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "createApiKey",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The key to create.",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 80,
+                    "description": "How you'll recognise it in the list.",
+                    "example": "Zapier sync"
+                  },
+                  "roles": {
+                    "type": "array",
+                    "description": "Roles the key acts with. At least one. `owner` cannot be granted to a key.",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "admin",
+                        "dispatcher",
+                        "instructor",
+                        "student",
+                        "renter",
+                        "technician"
+                      ]
+                    },
+                    "example": [
+                      "dispatcher"
+                    ]
+                  },
+                  "expiresAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Optional expiry. A key with a deliberate lifetime is a better key."
+                  }
+                },
+                "required": [
+                  "name",
+                  "roles"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apiKeys/roles": {
+      "get": {
+        "tags": [
+          "API keys"
+        ],
+        "summary": "List grantable roles",
+        "description": "The roles a key may be given, so a UI doesn't have to hardcode them.",
+        "responses": {
+          "200": {
+            "description": "The grantable roles.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "admin",
+                          "dispatcher",
+                          "instructor",
+                          "student",
+                          "renter",
+                          "technician"
+                        ]
                       }
                     }
                   }
@@ -537,7 +366,186 @@
             }
           }
         },
-        "operationId": "listUsers"
+        "operationId": "listApiKeyRoles"
+      }
+    },
+    "/apiKeys/{apiKeyId}": {
+      "delete": {
+        "tags": [
+          "API keys"
+        ],
+        "summary": "Revoke an API key",
+        "description": "Takes effect on the next request — there is no cache to wait out. The key stays in the list marked `revoked` rather than disappearing, so anything it created still has something to point at.\n\nRequires the **admin** role and a signed-in session.",
+        "responses": {
+          "204": {
+            "description": "Success. No body."
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such key in your organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "revokeApiKey",
+        "parameters": [
+          {
+            "name": "apiKeyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The key id. Not the secret."
+          }
+        ]
+      }
+    },
+    "/auth/session": {
+      "get": {
+        "tags": [
+          "Service"
+        ],
+        "summary": "Check whether your credential is still valid",
+        "description": "A cheap liveness probe. Answers 200 if the credential is good and 401 if it is not — nothing else. Works for an API key as well as a session, so an integration can check its key without making a real request.",
+        "operationId": "checkSession",
+        "responses": {
+          "200": {
+            "description": "The credential is valid."
+          },
+          "401": {
+            "description": "Revoked, expired, or unknown.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "List users",
+        "description": "Every person in your organization, as `User` records. Prefer `GET /orgUsers`, which carries roles.",
+        "responses": {
+          "200": {
+            "description": "The users.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/User"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listUsers",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          }
+        ]
       },
       "patch": {
         "tags": [
@@ -909,6 +917,9 @@
                       "items": {
                         "$ref": "#/components/schemas/Resource"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -956,6 +967,29 @@
               "type": "integer"
             },
             "description": "The user id."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
           }
         ]
       }
@@ -966,19 +1000,61 @@
           "Availability"
         ],
         "summary": "Get your recurring availability",
-        "description": "Your standing weekly availability pattern.",
+        "description": "Your standing weekly availability pattern, keyed by day of week — an object, not a list, so it is not paged.",
         "responses": {
           "200": {
-            "description": "Success.",
+            "description": "Your weekly pattern.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
                     "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Availability"
+                      "type": "object",
+                      "description": "One entry per weekday; each is the list of windows you are normally free.",
+                      "properties": {
+                        "monday": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Availability"
+                          }
+                        },
+                        "tuesday": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Availability"
+                          }
+                        },
+                        "wednesday": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Availability"
+                          }
+                        },
+                        "thursday": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Availability"
+                          }
+                        },
+                        "friday": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Availability"
+                          }
+                        },
+                        "saturday": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Availability"
+                          }
+                        },
+                        "sunday": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Availability"
+                          }
+                        }
                       }
                     }
                   }
@@ -1102,6 +1178,9 @@
                       "items": {
                         "$ref": "#/components/schemas/Organization"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -1139,123 +1218,32 @@
             }
           }
         },
-        "operationId": "listOrganizations"
-      },
-      "post": {
-        "tags": [
-          "Organizations"
-        ],
-        "summary": "Create an organization",
-        "description": "Creates an organization, makes you its owner, and returns a token scoped to it. Its first location is created at the same time.",
-        "responses": {
-          "201": {
-            "description": "Created.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuthEnvelope"
-                }
-              }
-            }
+        "operationId": "listOrganizations",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
           },
-          "400": {
-            "description": "Validation failed.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "No token, an expired token, or a malformed one. Sign in again.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Authenticated, but not allowed to do this.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Rate limited. `Retry-After` says how long to wait.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
           }
-        },
-        "operationId": "createOrganization",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "description": "The new organization.",
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "organizationType": {
-                    "type": "string",
-                    "example": "flight school"
-                  },
-                  "about": {
-                    "type": "string"
-                  },
-                  "showInDirectory": {
-                    "type": "boolean"
-                  },
-                  "details": {
-                    "type": "object",
-                    "properties": {
-                      "email": {
-                        "type": "string"
-                      },
-                      "phone": {
-                        "type": "string"
-                      },
-                      "address": {
-                        "$ref": "#/components/schemas/Address"
-                      }
-                    }
-                  },
-                  "location": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string"
-                      },
-                      "address": {
-                        "$ref": "#/components/schemas/Address"
-                      }
-                    }
-                  }
-                },
-                "required": [
-                  "name",
-                  "details",
-                  "location"
-                ]
-              }
-            }
-          }
-        }
+        ]
       },
       "patch": {
         "tags": [
@@ -1442,157 +1430,6 @@
               "type": "integer"
             },
             "description": "The organization id."
-          }
-        ]
-      }
-    },
-    "/organizations/switch/{orgId}": {
-      "post": {
-        "tags": [
-          "Organizations"
-        ],
-        "summary": "Switch active organization",
-        "description": "Returns a NEW token scoped to the given organization. Because a token carries exactly one organization, this is how a multi-organization integration moves between them — the old token keeps working and stays pointed at the old one.",
-        "responses": {
-          "200": {
-            "description": "Switched.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuthEnvelope"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "No token, an expired token, or a malformed one. Sign in again.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Authenticated, but not allowed to do this.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Rate limited. `Retry-After` says how long to wait.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        },
-        "operationId": "switchOrganization",
-        "parameters": [
-          {
-            "name": "orgId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            },
-            "description": "The organization to switch to."
-          }
-        ]
-      }
-    },
-    "/organizations/join/{orgCode}": {
-      "post": {
-        "tags": [
-          "Organizations"
-        ],
-        "summary": "Join an organization by code",
-        "description": "Joins using the six-character code. If the organization is private this raises a join request for an administrator to approve instead, and answers 201.",
-        "responses": {
-          "200": {
-            "description": "Joined.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuthEnvelope"
-                }
-              }
-            }
-          },
-          "201": {
-            "description": "A request to join was raised and is awaiting approval.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "You already belong to this organization.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "No token, an expired token, or a malformed one. Sign in again.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Authenticated, but not allowed to do this.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Rate limited. `Retry-After` says how long to wait.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        },
-        "operationId": "joinOrganization",
-        "parameters": [
-          {
-            "name": "orgCode",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "The organization's join code."
           }
         ]
       }
@@ -1863,6 +1700,9 @@
                       "items": {
                         "$ref": "#/components/schemas/User"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -1900,7 +1740,32 @@
             }
           }
         },
-        "operationId": "listGuests"
+        "operationId": "listGuests",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          }
+        ]
       }
     },
     "/organizations/ratings": {
@@ -1923,6 +1788,9 @@
                       "items": {
                         "type": "object"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -1960,7 +1828,32 @@
             }
           }
         },
-        "operationId": "listRatings"
+        "operationId": "listRatings",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -2214,6 +2107,9 @@
                       "items": {
                         "type": "object"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -2251,7 +2147,32 @@
             }
           }
         },
-        "operationId": "listInvitations"
+        "operationId": "listInvitations",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          }
+        ]
       }
     },
     "/joinRequests": {
@@ -2274,6 +2195,9 @@
                       "items": {
                         "type": "object"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -2311,7 +2235,32 @@
             }
           }
         },
-        "operationId": "listJoinRequests"
+        "operationId": "listJoinRequests",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          }
+        ]
       }
     },
     "/joinRequests/{id}/accept": {
@@ -2532,6 +2481,9 @@
                       "items": {
                         "$ref": "#/components/schemas/OrganizationUser"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -2669,6 +2621,29 @@
               "type": "boolean"
             },
             "description": "Filter by grounded state."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
           }
         ]
       }
@@ -2895,6 +2870,9 @@
                       "items": {
                         "$ref": "#/components/schemas/Reservation"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -3022,6 +3000,29 @@
               ]
             },
             "description": "Sort direction on start time. Defaults to `desc`."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
           }
         ]
       },
@@ -3504,6 +3505,9 @@
                       "items": {
                         "$ref": "#/components/schemas/Reservation"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -3571,6 +3575,29 @@
               "format": "date-time"
             },
             "description": "End of the window, ISO 8601."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
           }
         ]
       }
@@ -3595,6 +3622,9 @@
                       "items": {
                         "$ref": "#/components/schemas/Reservation"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -3662,6 +3692,29 @@
               "format": "date-time"
             },
             "description": "End of the window, ISO 8601."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
           }
         ]
       }
@@ -4083,6 +4136,9 @@
                       "items": {
                         "$ref": "#/components/schemas/Availability"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -4141,6 +4197,29 @@
               "format": "date-time"
             },
             "description": "End of the window, ISO 8601."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
           }
         ]
       }
@@ -4165,6 +4244,9 @@
                       "items": {
                         "$ref": "#/components/schemas/Availability"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -4232,6 +4314,29 @@
               "format": "date-time"
             },
             "description": "End of the window, ISO 8601."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
           }
         ]
       }
@@ -4256,6 +4361,9 @@
                       "items": {
                         "$ref": "#/components/schemas/Availability"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -4323,6 +4431,29 @@
               "format": "date-time"
             },
             "description": "End of the window, ISO 8601."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
           }
         ]
       }
@@ -4347,6 +4478,9 @@
                       "items": {
                         "$ref": "#/components/schemas/Resource"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -4412,6 +4546,29 @@
               "type": "string"
             },
             "description": "Comma-separated location ids."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
           }
         ]
       }
@@ -4436,6 +4593,9 @@
                       "items": {
                         "$ref": "#/components/schemas/Resource"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -4501,6 +4661,29 @@
               "type": "string"
             },
             "description": "Comma-separated location ids."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
           }
         ]
       }
@@ -4525,6 +4708,9 @@
                       "items": {
                         "$ref": "#/components/schemas/Resource"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -4581,6 +4767,29 @@
               "type": "string"
             },
             "description": "Comma-separated location ids."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
           }
         ]
       }
@@ -4896,6 +5105,9 @@
                       "items": {
                         "$ref": "#/components/schemas/Squawk"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -4981,6 +5193,29 @@
               "format": "date-time"
             },
             "description": "End of the window, ISO 8601."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
           }
         ]
       },
@@ -5276,6 +5511,9 @@
                       "items": {
                         "$ref": "#/components/schemas/Squawk"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -5332,6 +5570,29 @@
               "type": "boolean"
             },
             "description": "Filter on resolved state."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
           }
         ]
       }
@@ -5356,6 +5617,9 @@
                       "items": {
                         "$ref": "#/components/schemas/MaintenanceReminder"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -5393,7 +5657,32 @@
             }
           }
         },
-        "operationId": "listReminders"
+        "operationId": "listReminders",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          }
+        ]
       }
     },
     "/maintenance/reminders/{maintenanceReminderId}": {
@@ -5587,6 +5876,9 @@
                       "items": {
                         "$ref": "#/components/schemas/Invoice"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -5673,6 +5965,29 @@
               "type": "boolean"
             },
             "description": "Filter on paid state."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
           }
         ]
       }
@@ -5956,6 +6271,9 @@
                       "items": {
                         "$ref": "#/components/schemas/Invoice"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -6042,6 +6360,29 @@
               "type": "boolean"
             },
             "description": "Filter on paid state."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
           }
         ]
       }
@@ -6222,6 +6563,9 @@
                       "items": {
                         "$ref": "#/components/schemas/Announcement"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -6259,7 +6603,32 @@
             }
           }
         },
-        "operationId": "listAnnouncements"
+        "operationId": "listAnnouncements",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -6540,6 +6909,9 @@
                       "items": {
                         "$ref": "#/components/schemas/Notification"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -6601,6 +6973,29 @@
               ]
             },
             "description": "Filter by read state. Defaults to `all`."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
           }
         ]
       },
@@ -6820,6 +7215,9 @@
                       "items": {
                         "$ref": "#/components/schemas/Currency"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -6857,7 +7255,32 @@
             }
           }
         },
-        "operationId": "listCurrencies"
+        "operationId": "listCurrencies",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          }
+        ]
       }
     },
     "/currencies/{currencyId}": {
@@ -7129,6 +7552,9 @@
                       "items": {
                         "$ref": "#/components/schemas/Currency"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -7176,6 +7602,29 @@
               "type": "integer"
             },
             "description": "The currency type id."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
           }
         ]
       }
@@ -7620,6 +8069,9 @@
                       "items": {
                         "$ref": "#/components/schemas/UserDocument"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -7667,6 +8119,29 @@
               "type": "integer"
             },
             "description": "The membership id."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
           }
         ]
       }
@@ -8232,6 +8707,9 @@
                       "items": {
                         "$ref": "#/components/schemas/Location"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -8270,7 +8748,31 @@
           }
         },
         "operationId": "listLocations",
-        "parameters": []
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -8621,6 +9123,9 @@
                       "items": {
                         "$ref": "#/components/schemas/Resource"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -8659,7 +9164,31 @@
           }
         },
         "operationId": "listResources",
-        "parameters": []
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -9027,6 +9556,9 @@
                       "items": {
                         "$ref": "#/components/schemas/CurrencyType"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -9065,7 +9597,31 @@
           }
         },
         "operationId": "listCurrencyTypes",
-        "parameters": []
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -9445,6 +10001,9 @@
                       "items": {
                         "$ref": "#/components/schemas/DocumentType"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -9483,7 +10042,31 @@
           }
         },
         "operationId": "listDocumentTypes",
-        "parameters": []
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -9830,6 +10413,9 @@
                       "items": {
                         "$ref": "#/components/schemas/Group"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -9868,7 +10454,31 @@
           }
         },
         "operationId": "listMemberGroups",
-        "parameters": []
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -10239,6 +10849,9 @@
                       "items": {
                         "$ref": "#/components/schemas/Group"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -10277,7 +10890,31 @@
           }
         },
         "operationId": "listResourceGroups",
-        "parameters": []
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -10633,6 +11270,9 @@
                       "items": {
                         "$ref": "#/components/schemas/MaintenanceReminderTemplate"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -10671,7 +11311,31 @@
           }
         },
         "operationId": "listMaintenanceReminderTemplates",
-        "parameters": []
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -11066,6 +11730,9 @@
                       "items": {
                         "$ref": "#/components/schemas/ReportDefinition"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -11104,7 +11771,31 @@
           }
         },
         "operationId": "listReportDefinitions",
-        "parameters": []
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -11447,8 +12138,8 @@
       "bearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "bearerFormat": "JWT",
-        "description": "A bearer token from `POST /auth`, valid for 30 days. Send it as `Authorization: Bearer <token>`.\n\nThe token is scoped to a single organization. To act on another, call `POST /organizations/switch/{orgId}` and use the token it returns."
+        "bearerFormat": "AerScheduler API key",
+        "description": "An API key, sent as `Authorization: Bearer ask_live_…`.\n\nCreate one at **Settings → API keys** in the console, or with `POST /apiKeys`. The secret is shown once and stored only as a hash, so if you lose it you revoke the key and mint another.\n\nA key is scoped to one organization and carries the roles you gave it — every permission rule that applies to a member holding those roles applies to the key. Grant the least it needs."
       }
     },
     "schemas": {
@@ -11497,6 +12188,167 @@
               }
             },
             "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "ApiKey": {
+        "type": "object",
+        "description": "A credential that lets software act on your organization's behalf. The secret is never included — only a hash is stored.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier, stable for the life of the record."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the record was created."
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the record last changed."
+          },
+          "name": {
+            "type": "string",
+            "description": "How you recognise it.",
+            "example": "Zapier sync"
+          },
+          "prefix": {
+            "type": "string",
+            "description": "The displayable head of the key. Not a secret, and not enough to reconstruct one.",
+            "example": "ask_live_7f3a9c"
+          },
+          "roles": {
+            "type": "array",
+            "description": "What the key can do. These are real roles — every rule that applies to a member holding them applies to the key.",
+            "items": {
+              "type": "string",
+              "enum": [
+                "admin",
+                "dispatcher",
+                "instructor",
+                "student",
+                "renter",
+                "technician"
+              ]
+            }
+          },
+          "status": {
+            "type": "string",
+            "description": "Whether the key currently works.",
+            "enum": [
+              "active",
+              "expired",
+              "revoked"
+            ]
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "description": "When it stops working. Null means no expiry.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "revokedAt": {
+            "format": "date-time",
+            "description": "When it was revoked. Null while live.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "lastUsedAt": {
+            "format": "date-time",
+            "description": "When it last authenticated a request, to the nearest minute. Null if never used — which is how you find keys to turn off.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "createdBy": {
+            "type": "object",
+            "description": "The administrator who minted it. Null if they have since left.",
+            "properties": {},
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "ApiKeyWithSecret": {
+        "type": "object",
+        "description": "A newly created key. This is the ONLY response that ever contains the secret — store it now.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier, stable for the life of the record."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the record was created."
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the record last changed."
+          },
+          "name": {
+            "type": "string",
+            "description": "How you recognise it."
+          },
+          "prefix": {
+            "type": "string",
+            "description": "The displayable head of the key."
+          },
+          "roles": {
+            "type": "array",
+            "description": "What the key can do.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "description": "When it stops working.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "secret": {
+            "type": "string",
+            "description": "The key itself. Send it as `Authorization: Bearer <secret>`. We store only a hash, so if you lose this you must revoke the key and mint another.",
+            "example": "ask_live_kJ8vN2pQxR4tY7wA1sD3fG5hJ6kL9mZ0"
+          }
+        },
+        "additionalProperties": true
+      },
+      "Pagination": {
+        "type": "object",
+        "description": "Where this page sits in the whole collection. Present on every list response.",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "description": "How many there are in all, before this page was taken."
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Rows requested for this page. 1000 unless you asked for fewer."
+          },
+          "offset": {
+            "type": "integer",
+            "description": "Rows skipped to reach this page."
+          },
+          "returned": {
+            "type": "integer",
+            "description": "Rows actually in `data`."
+          },
+          "hasMore": {
+            "type": "boolean",
+            "description": "Whether another page exists. Check this — some collections are larger than one page."
           }
         },
         "additionalProperties": true
@@ -12865,43 +13717,6 @@
             "items": {
               "$ref": "#/components/schemas/Location"
             }
-          }
-        },
-        "additionalProperties": true
-      },
-      "AuthEnvelope": {
-        "type": "object",
-        "description": "Returned by every endpoint that establishes a session.",
-        "properties": {
-          "auth": {
-            "type": "object",
-            "description": "The credential to send on subsequent requests.",
-            "properties": {
-              "accessToken": {
-                "type": "string",
-                "description": "Bearer token. Valid for 30 days."
-              }
-            },
-            "additionalProperties": true
-          },
-          "data": {
-            "type": "object",
-            "description": "Who you are and where.",
-            "properties": {
-              "user": {
-                "$ref": "#/components/schemas/User"
-              },
-              "organization": {
-                "$ref": "#/components/schemas/Organization"
-              },
-              "organizations": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Organization"
-                }
-              }
-            },
-            "additionalProperties": true
           }
         },
         "additionalProperties": true
