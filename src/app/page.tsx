@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/button";
 import { ProductMock } from "@/components/product-mock";
 import { PhoneMock } from "@/components/phone-mock";
+import { ReportsMock } from "@/components/mocks";
 import { StoreBadges } from "@/components/store-badges";
 import {
   PRICE_PER_AIRCRAFT,
@@ -169,8 +170,51 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Mobile spotlight */}
+      {/* Reports spotlight — the newest thing worth showing, and the one
+          competitors do worst. Mirrors the mobile spotlight's layout with the
+          visual on the opposite side so the page alternates down the scroll. */}
       <section className="border-t border-border bg-white">
+        <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:gap-16 lg:py-28">
+          <div>
+            <p className="text-sm font-semibold text-primary">Reports &amp; dashboards</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
+              The numbers behind the schedule.
+            </h2>
+            <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
+              Reports across revenue, hours, instruction, and compliance — and a
+              dashboard you build yourself, where every figure opens the report
+              behind it.
+            </p>
+            <ul className="mt-6 space-y-3">
+              {[
+                "Booked vs flown vs billed, per tail",
+                "Revenue by aircraft, instructor, or lesson type",
+                "Save a view, pin it to the board, export it",
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-2.5 text-sm text-foreground">
+                  <Check className="mt-0.5 size-4 shrink-0 text-primary" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Button href="/features/reports">
+                Explore reporting
+                <ChevronRight className="size-4 opacity-80" />
+              </Button>
+              <Button href="/resources/flight-school-reports" variant="secondary">
+                Reporting guide
+              </Button>
+            </div>
+          </div>
+          <div className="flex justify-center lg:justify-end">
+            <ReportsMock />
+          </div>
+        </div>
+      </section>
+
+      {/* Mobile spotlight */}
+      <section className="border-t border-border bg-[#fafbfc]">
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:gap-16 lg:py-28">
           <div className="order-2 flex justify-center lg:order-1">
             <PhoneMock className="animate-float" />
@@ -211,8 +255,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Pricing teaser */}
-      <section className="border-t border-border bg-[#fafbfc]">
+      {/* Pricing teaser.
+          `overflow-hidden` because the price card's glow is `-inset-6` (24px)
+          inside a 16px mobile gutter, which pushed the whole document 8px wider
+          than the viewport and gave the homepage a horizontal scroll on a
+          phone. The glow is translucent and well inside the container at
+          desktop widths, so clipping it costs nothing visually. */}
+      <section className="overflow-hidden border-t border-border bg-white">
         <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-28">
           <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.05fr]">
             <div>

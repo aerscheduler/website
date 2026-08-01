@@ -1,3 +1,4 @@
+
 export type FeatureSlug =
   | "scheduling"
   | "self-booking"
@@ -193,20 +194,22 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
   },
   reports: {
     slug: "reports",
-    title: "Reports & Insights",
+    title: "Reports & Dashboards",
     navLabel: "Reports",
     eyebrow: "Insights",
-    headline: "How the school is flying: hours, instruction, and open work.",
+    headline: "Every report you need, and a dashboard you build yourself.",
     summary:
-      "KPIs for flight time, instruction, payments, members, and unresolved squawks, so owners aren’t guessing from the calendar.",
+      "Revenue, utilization, instructor activity, squawks, currency — filter any report the way you think about it, save it, export it, schedule it by email, and pin it to a dashboard where every number opens the report behind it.",
     bullets: [
-      "Flight time and instruction given / received",
-      "Scheduled vs completed activity",
-      "Pending vs processed payments",
-      "Active members and open squawks",
-      "Date ranges for ops and finance reviews",
+      "Reports across financial, operations, fleet, people, and compliance",
+      "Filter, group, and re-order any report, then save the view for next month",
+      "Build your own dashboard: drag, resize, and give each tile its own date range",
+      "Click any figure to open the report that produced it — same numbers, always",
+      "Export any report to CSV",
+      "Financial reports stay owner-and-admin only; dispatchers see operations",
+      "Email any saved view to your team daily, weekly, or monthly",
     ],
-    personas: ["Owners", "Admins", "Dispatchers"],
+    personas: ["Owners", "Admins", "Dispatchers", "Technicians"],
     related: ["billing", "scheduling", "maintenance", "people-roles"],
   },
   integrations: {

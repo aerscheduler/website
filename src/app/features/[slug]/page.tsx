@@ -59,9 +59,12 @@ const FEATURE_SEO: Record<
       "The native AerScheduler app for booking, invoices, documents, and squawks. The same operation as the web desk.",
   },
   reports: {
-    title: "Flight School Reports & Analytics",
+    // Deliberately commercial-intent ("reporting software", "dashboards") so it
+    // doesn't compete with /resources/flight-school-reports, which owns the
+    // informational query "what reports does a flight school need".
+    title: "Flight School Reporting Software & Dashboards",
     description:
-      "Flight hours, instruction, collections, and maintenance insights across your fleet and school.",
+      "Built-in reports for revenue, aircraft utilization, instructor activity, and compliance — each one filterable and savable, plus a dashboard where every figure opens the report behind it.",
   },
   integrations: {
     title: "Flight School Software Integrations",

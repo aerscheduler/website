@@ -6,16 +6,23 @@ import { SITE_NAME } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Resources",
-  description: `Guides for flight school scheduling software, QuickBooks Online, MyFBO alternatives, and switching platforms. From ${SITE_NAME}.`,
+  description: `Guides for flight school scheduling software, reporting and aircraft utilization, QuickBooks Online, MyFBO alternatives, and switching platforms. From ${SITE_NAME}.`,
   alternates: { canonical: "/resources" },
   openGraph: {
     title: `Resources | ${SITE_NAME}`,
     description:
-      "Guides on flight school software, QuickBooks, migrations, and platform comparisons.",
+      "Guides on flight school software, reporting, QuickBooks, migrations, and platform comparisons.",
     url: "/resources",
   },
 };
 
+/**
+ * Cards for this index.
+ *
+ * Deliberately longer copy than `RESOURCE_GROUPS` in `lib/resources.ts`, which
+ * feeds the nav and footer where one line has to fit. The two lists do have to
+ * be kept in step by hand — a new guide belongs in both.
+ */
 const GUIDES = [
   {
     href: "/resources/myfbo-alternative",
@@ -26,6 +33,21 @@ const GUIDES = [
     href: "/resources/flight-school-scheduling-software",
     title: "Flight school scheduling software",
     body: "What modern flight school scheduling software should include: dispatch, self-booking, billing, and mobile.",
+  },
+  {
+    href: "/resources/flight-school-reports",
+    title: "Flight school reports",
+    body: "The reports worth having — revenue, utilization, instruction, fleet, compliance — and what each one answers.",
+  },
+  {
+    href: "/resources/aircraft-utilization-report",
+    title: "Aircraft utilization reports",
+    body: "Booked vs flown vs billed hours per tail, and what the two gaps between them are quietly costing you.",
+  },
+  {
+    href: "/resources/flight-school-revenue-reporting",
+    title: "Revenue reporting",
+    body: "Billed, collected, and outstanding — cut by aircraft, instructor, customer, or lesson type.",
   },
   {
     href: "/resources/quickbooks-integration",
@@ -64,8 +86,9 @@ export default function ResourcesPage() {
           Resources for flight schools
         </h1>
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-          Guides on scheduling software, QuickBooks Online, migrations, and how
-          AerScheduler fits when you&apos;re choosing a platform.
+          Guides on scheduling software, reporting, QuickBooks Online,
+          migrations, and how AerScheduler fits when you&apos;re choosing a
+          platform.
         </p>
 
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

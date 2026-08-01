@@ -1,3 +1,4 @@
+
 /** Resource / guide links for nav, footer, and resources index. */
 export type ResourceLink = {
   href: string;
@@ -33,6 +34,28 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
         href: "/migrating/my-fbo",
         label: "Migrating from MyFBO",
         description: "Self-serve playbook: backup, setup, cut over.",
+      },
+    ],
+  },
+  {
+    // The pillar page sits first and the two topic guides link back to it, so
+    // the internal linking points somewhere rather than in a ring.
+    title: "Reporting",
+    items: [
+      {
+        href: "/resources/flight-school-reports",
+        label: "Flight school reports",
+        description: "The reports worth having, and what each one answers.",
+      },
+      {
+        href: "/resources/aircraft-utilization-report",
+        label: "Aircraft utilization",
+        description: "Booked vs flown vs billed — and what the gaps cost.",
+      },
+      {
+        href: "/resources/flight-school-revenue-reporting",
+        label: "Revenue reporting",
+        description: "Revenue by aircraft, instructor, customer, and lesson type.",
       },
     ],
   },

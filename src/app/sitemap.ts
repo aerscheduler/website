@@ -25,6 +25,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.85,
       changeFrequency: "monthly",
     },
+    // Reporting cluster: the pillar carries the higher priority, the two topic
+    // guides sit under it and link back to it.
+    {
+      path: "/resources/flight-school-reports",
+      priority: 0.85,
+      changeFrequency: "monthly",
+    },
+    {
+      path: "/resources/aircraft-utilization-report",
+      priority: 0.8,
+      changeFrequency: "monthly",
+    },
+    {
+      path: "/resources/flight-school-revenue-reporting",
+      priority: 0.8,
+      changeFrequency: "monthly",
+    },
     { path: "/compare/flight-schedule-pro", priority: 0.8, changeFrequency: "monthly" },
     { path: "/migrating/my-fbo", priority: 0.85, changeFrequency: "monthly" },
     { path: "/about", priority: 0.7, changeFrequency: "monthly" },
