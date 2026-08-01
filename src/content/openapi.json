@@ -2518,7 +2518,7 @@
           "Members"
         ],
         "summary": "List members",
-        "description": "Every member of your organization with the roles they hold. **This is the endpoint to use for “who is in this organization”** — the per-role routes (`/instructors`, `/students`, and so on) are unimplemented stubs and are not part of this API.",
+        "description": "Every member of your organization with the roles they hold. **This is the endpoint for “who is in this organization”**, including “who are the instructors” — pass the role as a filter rather than looking for a per-role endpoint.\n\nRole filters combine as OR: `?instructor=true&student=true` returns anyone holding either. Roles are additive, so one person can come back under several filters.",
         "responses": {
           "200": {
             "description": "The members.",
@@ -2569,7 +2569,108 @@
             }
           }
         },
-        "operationId": "listOrgUsers"
+        "operationId": "listOrgUsers",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Free-text filter. Matches the fields a person would search on."
+          },
+          {
+            "name": "owner",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Set `true` to include members holding the **owner** role."
+          },
+          {
+            "name": "admin",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Set `true` to include members holding the **admin** role."
+          },
+          {
+            "name": "dispatcher",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Set `true` to include members holding the **dispatcher** role."
+          },
+          {
+            "name": "instructor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Set `true` to include members holding the **instructor** role."
+          },
+          {
+            "name": "student",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Set `true` to include members holding the **student** role."
+          },
+          {
+            "name": "renter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Set `true` to include members holding the **renter** role."
+          },
+          {
+            "name": "technician",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Set `true` to include members holding the **technician** role."
+          },
+          {
+            "name": "noRoles",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Set `true` to return only members with no role at all — the people who have joined but not been set up yet. Overrides every other role filter."
+          },
+          {
+            "name": "groupId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Comma-separated member-group ids to filter by."
+          },
+          {
+            "name": "grounded",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Filter by grounded state."
+          }
+        ]
       }
     },
     "/orgUsers/{orgUserId}": {
