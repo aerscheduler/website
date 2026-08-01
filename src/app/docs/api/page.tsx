@@ -50,11 +50,11 @@ const FAQS = [
   },
   {
     q: "How do I authenticate with the AerScheduler API?",
-    a: "With an API key, and only with an API key. Send it as an Authorization: Bearer header on every request. Creating one is a separate, one-off administrator action — see below — and the secret is shown once, so store it then. Only a hash is kept.",
+    a: "With an API key, and only with an API key. Create one in the web console under Settings → API keys, then send it as an Authorization: Bearer header on every request. The secret is shown once, when you create it, so store it then — only a hash is kept.",
   },
   {
     q: "Who can create an API key?",
-    a: "An administrator, from a signed-in session, with POST /apiKeys. That is deliberately not something a key can do: a key cannot create or revoke another key, even one holding the admin role, so a leaked key can never issue itself replacements. A screen for this in the web console is on the way — until then it is that one call.",
+    a: "Any administrator, from Settings → API keys in the web console. That is deliberately not something a key can do: a key cannot create or revoke another key, even one holding the admin role, so a leaked key can never issue itself replacements.",
   },
   {
     q: "What can an API key do?",
@@ -148,23 +148,18 @@ export default function ApiDocsPage() {
         <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6" id="quickstart">
           <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">Quickstart</h2>
           <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
-            One credential, then you&rsquo;re working. An administrator mints a key once with{" "}
-            <code className="rounded bg-muted px-1 py-0.5 font-mono text-[13px] text-foreground">
-              POST /apiKeys
-            </code>{" "}
-            — the secret comes back in that response and nowhere else — and every request after that
-            just carries it. No sign-in step in your integration, and no token to refresh.
+            One credential, then you&rsquo;re working. An administrator creates a key in the console
+            under <strong className="text-foreground">Settings &rarr; API keys</strong> — the secret
+            is shown once, right there — and every request after that just carries it. No sign-in
+            step in your integration, and no token to refresh.
           </p>
 
           <div className="mt-6 space-y-4">
             <CodeBlock
-              label="1 — An administrator mints the key (once)"
-              code={`curl -s -X POST ${API_BASE_URL}/apiKeys \\
-  -H 'Content-Type: application/json' \\
-  -d '{"name":"Zapier sync","roles":["dispatcher"]}'
-
-# → { "data": { "secret": "ask_live_…", "roles": ["dispatcher"], … } }
-# The secret appears here and nowhere else. Store it now.
+              label="1 — Store the key"
+              code={`# An administrator creates it in the console:
+#   Settings → API keys → Create key
+# The secret is shown once, right there.
 
 export AERSCHEDULER_KEY=ask_live_…`}
             />

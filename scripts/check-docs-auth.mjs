@@ -15,6 +15,10 @@
  * for personal-credential access later. It is simply not what we point people
  * at, so it must not appear in the docs.
  *
+ * There was also a rule here banning "Settings → API keys", because the docs
+ * pointed at that screen before it existed. The screen shipped, so the rule is
+ * gone — a guard against a claim that has become true is just noise.
+ *
  * Run: node scripts/check-docs-auth.mjs   (wired into `npm run build`)
  */
 import { readFileSync, readdirSync, statSync } from "node:fs";
@@ -31,10 +35,6 @@ const FORBIDDEN = [
   { pattern: /accessToken/i, why: "the session-token envelope; keys are the published credential" },
   { pattern: /AERSCHEDULER_TOKEN/, why: "stale env var name — keys use AERSCHEDULER_KEY" },
   { pattern: /\bsign in for a token\b/i, why: "describes the session flow" },
-  // Claims about UI that does not exist yet. The docs shipped pointing at
-  // "Settings -> API keys" for a day; there is no such screen. Delete this rule
-  // when the console screen lands, not before.
-  { pattern: /Settings\s*(?:→|&rarr;|->)\s*API keys/i, why: "points at a console screen that does not exist yet" },
 ];
 
 const walk = (dir, out = []) => {
