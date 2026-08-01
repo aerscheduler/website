@@ -22,12 +22,29 @@ import {
   type Feature,
   type FeatureSlug,
 } from "@/lib/features";
-import { SIGNUP_URL } from "@/lib/site";
+import { signupUrl, type CampaignSource } from "@/lib/site";
+
+/**
+ * Which setup track a feature page hands to the app.
+ *
+ * Someone reading the maintenance page should land on a checklist that starts with
+ * maintenance, not with "add your first aircraft" — see `web/src/lib/onboarding-tracks.ts`.
+ * Features with no track of their own send nothing and get the default order.
+ */
+const FEATURE_SOURCE: Partial<Record<FeatureSlug, CampaignSource>> = {
+  scheduling: "scheduling",
+  "self-booking": "scheduling",
+  billing: "billing",
+  reports: "billing",
+  maintenance: "maintenance",
+  integrations: "quickbooks",
+};
 
 export function FeaturePage({ feature }: { feature: Feature }) {
   const related = feature.related
     .map((slug) => FEATURES[slug])
     .filter(Boolean);
+  const cta = signupUrl(FEATURE_SOURCE[feature.slug]);
 
   return (
     <>
@@ -52,7 +69,7 @@ export function FeaturePage({ feature }: { feature: Feature }) {
               {feature.summary}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button href={SIGNUP_URL} size="lg">
+              <Button href={cta} size="lg">
                 Get started
                 <ChevronRight className="size-4 opacity-80" />
               </Button>
@@ -124,7 +141,7 @@ export function FeaturePage({ feature }: { feature: Feature }) {
             </h2>
             <p className="mt-2 text-white/65">Self-serve. No sales call.</p>
           </div>
-          <Button href={SIGNUP_URL} size="lg" className="bg-white text-brand-surface hover:bg-white/90">
+          <Button href={cta} size="lg" className="bg-white text-brand-surface hover:bg-white/90">
             Get started
             <ChevronRight className="size-4 opacity-80" />
           </Button>

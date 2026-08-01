@@ -15,6 +15,28 @@ export const SIGNUP_URL = `${APP_URL}/signup`;
 export const LOGIN_URL = `${APP_URL}/login`;
 
 /**
+ * Campaign slugs a page can hand to the app.
+ *
+ * The app maps these to a setup-checklist ordering (`web/src/lib/onboarding-tracks.ts`),
+ * so someone who signs up from the QuickBooks page opens on billing → QuickBooks →
+ * first invoice instead of a generic list. Keep the two in step: an unknown slug is
+ * harmless — the app falls back to the default order — but it also does nothing.
+ */
+export type CampaignSource =
+  | "quickbooks"
+  | "billing"
+  | "maintenance"
+  | "clubs"
+  | "scheduling";
+
+/**
+ * A signup link that tells the app which conversation this visitor was already
+ * having. Sits alongside any `utm_*` the ad platform appends — the app keeps both.
+ */
+export const signupUrl = (source?: CampaignSource) =>
+  source ? `${SIGNUP_URL}?src=${source}` : SIGNUP_URL;
+
+/**
  * Full-page Google OAuth via the API (no popup). Lands on APP_URL after Google
  * signs the user in — swapping APP_URL is all it takes to retarget console→app.
  */

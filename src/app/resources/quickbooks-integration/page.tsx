@@ -5,7 +5,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/button";
 import { JsonLd } from "@/components/json-ld";
 import { faqJsonLd } from "@/lib/seo";
-import { PRICE_PER_AIRCRAFT, SIGNUP_URL, SITE_NAME, TRIAL_DAYS } from "@/lib/site";
+import { PRICE_PER_AIRCRAFT, signupUrl, SITE_NAME, TRIAL_DAYS } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "QuickBooks Online Integration for Flight Schools",
@@ -68,7 +68,7 @@ export default function QuickBooksIntegrationPage() {
               customer by email — so your books stay current as flights close out.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button href={SIGNUP_URL} size="lg">
+              <Button href={signupUrl("quickbooks")} size="lg">
                 Start free trial
                 <ChevronRight className="size-4 opacity-80" />
               </Button>
@@ -164,7 +164,7 @@ export default function QuickBooksIntegrationPage() {
             <p className="mt-2 text-sm text-muted-foreground">
               {TRIAL_DAYS}-day trial · ${PRICE_PER_AIRCRAFT}/aircraft/mo · No demo
             </p>
-            <Button href={SIGNUP_URL} size="lg" className="mt-5">
+            <Button href={signupUrl("quickbooks")} size="lg" className="mt-5">
               Get started
               <ChevronRight className="size-4 opacity-80" />
             </Button>

@@ -4,7 +4,7 @@ import { ChevronRight } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/button";
 import { contactHref } from "@/lib/contact";
-import { SIGNUP_URL } from "@/lib/site";
+import { signupUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Flight School Software Integrations",
@@ -137,7 +137,7 @@ export default function IntegrationsPage() {
               <Button href={contactHref("integration")} variant="secondary">
                 Request an integration
               </Button>
-              <Button href={SIGNUP_URL}>
+              <Button href={signupUrl("quickbooks")}>
                 Get started
                 <ChevronRight className="size-4 opacity-80" />
               </Button>

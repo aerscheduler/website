@@ -10,7 +10,7 @@ import {
   REPORT_CATEGORIES,
   REPORTING_ROADMAP,
 } from "@/lib/reports";
-import { PRICE_PER_AIRCRAFT, SIGNUP_URL, SITE_NAME, TRIAL_DAYS } from "@/lib/site";
+import { PRICE_PER_AIRCRAFT, signupUrl, SITE_NAME, TRIAL_DAYS } from "@/lib/site";
 
 const TITLE = "Flight School Reports: What to Track and Why";
 
@@ -87,7 +87,7 @@ export default function FlightSchoolReportsPage() {
               and how to get them without exporting anything to a spreadsheet.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button href={SIGNUP_URL} size="lg">
+              <Button href={signupUrl("billing")} size="lg">
                 Start free trial
                 <ChevronRight className="size-4 opacity-80" />
               </Button>
@@ -270,7 +270,7 @@ export default function FlightSchoolReportsPage() {
             <p className="mt-2 text-sm text-muted-foreground">
               {TRIAL_DAYS}-day trial · ${PRICE_PER_AIRCRAFT}/aircraft/mo · No sales call
             </p>
-            <Button href={SIGNUP_URL} size="lg" className="mt-5">
+            <Button href={signupUrl("billing")} size="lg" className="mt-5">
               Get started
               <ChevronRight className="size-4 opacity-80" />
             </Button>

@@ -5,7 +5,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/button";
 import { JsonLd } from "@/components/json-ld";
 import { breadcrumbJsonLd, faqJsonLd } from "@/lib/seo";
-import { PRICE_PER_AIRCRAFT, SIGNUP_URL, SITE_NAME, TRIAL_DAYS } from "@/lib/site";
+import { PRICE_PER_AIRCRAFT, signupUrl, SITE_NAME, TRIAL_DAYS } from "@/lib/site";
 
 const TITLE = "Flight School Revenue Reporting";
 
@@ -86,7 +86,7 @@ export default function FlightSchoolRevenueReportingPage() {
               the answer is a click rather than an evening with a spreadsheet.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button href={SIGNUP_URL} size="lg">
+              <Button href={signupUrl("billing")} size="lg">
                 Start free trial
                 <ChevronRight className="size-4 opacity-80" />
               </Button>
@@ -234,7 +234,7 @@ export default function FlightSchoolRevenueReportingPage() {
             <p className="mt-2 text-sm text-muted-foreground">
               {TRIAL_DAYS}-day trial · ${PRICE_PER_AIRCRAFT}/aircraft/mo · No demo required
             </p>
-            <Button href={SIGNUP_URL} size="lg" className="mt-5">
+            <Button href={signupUrl("billing")} size="lg" className="mt-5">
               Get started
               <ChevronRight className="size-4 opacity-80" />
             </Button>

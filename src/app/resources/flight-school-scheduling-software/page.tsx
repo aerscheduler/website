@@ -5,7 +5,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/button";
 import { JsonLd } from "@/components/json-ld";
 import { faqJsonLd } from "@/lib/seo";
-import { PRICE_PER_AIRCRAFT, SIGNUP_URL, SITE_NAME, TRIAL_DAYS } from "@/lib/site";
+import { PRICE_PER_AIRCRAFT, signupUrl, SITE_NAME, TRIAL_DAYS } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Flight School Scheduling Software",
@@ -87,7 +87,7 @@ export default function SchedulingSoftwareGuidePage() {
               so the desk and the ramp stay in sync.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button href={SIGNUP_URL} size="lg">
+              <Button href={signupUrl("scheduling")} size="lg">
                 Try AerScheduler
                 <ChevronRight className="size-4 opacity-80" />
               </Button>
