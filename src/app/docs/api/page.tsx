@@ -4,7 +4,8 @@ import { ChevronRight, Terminal, KeyRound, Clock, Gauge } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/button";
 import { JsonLd } from "@/components/json-ld";
-import { CodeBlock, MethodBadge, EndpointPath } from "@/components/api-docs";
+import { CodeBlock, EndpointRow } from "@/components/api-docs";
+import { ApiDocsMobileNav, ApiDocsNav } from "@/components/api-docs-nav";
 import { faqJsonLd } from "@/lib/seo";
 import {
   API_BASE_URL,
@@ -42,7 +43,7 @@ export const metadata: Metadata = {
 const FAQS = [
   {
     q: "Does AerScheduler have an API?",
-    a: `Yes. AerScheduler exposes a REST API covering ${COUNT} endpoints across scheduling, aircraft, maintenance, billing, members, and reporting. It is the same API the AerScheduler mobile app and web console use — there is no separate public tier and no second implementation to fall behind.`,
+    a: `Yes. AerScheduler exposes a REST API covering ${COUNT} endpoints across scheduling, aircraft, maintenance, billing, members, and reporting.`,
   },
   {
     q: "Is the API included in the price?",
@@ -112,18 +113,16 @@ export default function ApiDocsPage() {
               AerScheduler API
             </h1>
             <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-              Everything the app and the console can do, your own software can do too — book aircraft,
-              close flights out, invoice them, and pull the numbers back. {COUNT} endpoints, described
-              in OpenAPI 3.1, included on every plan.
-            </p>
-            <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
-              This is the same API our own clients use. There is no separate &ldquo;public&rdquo; tier and
-              no second implementation to fall behind.
+              Book aircraft, close flights out, invoice them, and pull the numbers back. {COUNT}{" "}
+              endpoints, described in OpenAPI 3.1, included on every plan.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button href="#quickstart" size="lg">
                 Quickstart
                 <ChevronRight className="size-4 opacity-80" />
+              </Button>
+              <Button href="#reference" variant="secondary" size="lg">
+                Browse endpoints
               </Button>
               <Button href={`${API_BASE_URL}/openapi.json`} variant="secondary" size="lg">
                 OpenAPI spec
@@ -189,33 +188,49 @@ export AERSCHEDULER_KEY=ask_live_…`}
         </div>
 
         {/* ------------------------------------------------------------------ */}
-        <div className="border-t border-border bg-[#fafbfc]">
-          <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
-            <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">Reference</h2>
-            <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
-              {COUNT} endpoints across {TAGS.length} areas. Every one was exercised against a live
-              server before publishing, so the status codes here are observed rather than assumed.
-            </p>
+        <div className="border-t border-border bg-[#fafbfc]" id="reference">
+          <ApiDocsMobileNav />
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            <div className="lg:flex lg:gap-10">
+              <ApiDocsNav />
+              <div className="min-w-0 flex-1 py-16">
+                <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">Reference</h2>
+                <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
+                  {COUNT} endpoints across {TAGS.length} areas. Click an endpoint for parameters,
+                  responses, and an example request.
+                </p>
 
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {TAGS.map((tag) => (
-                <Link
-                  key={tag.slug}
-                  href={`/docs/api/${tag.slug}`}
-                  className="group rounded-2xl border border-border bg-white p-5 transition-shadow hover:shadow-md"
-                >
-                  <div className="flex items-baseline justify-between gap-2">
-                    <h3 className="text-base font-semibold text-foreground">{tag.name}</h3>
-                    <span className="shrink-0 text-xs text-muted-foreground">{tag.endpoints.length}</span>
-                  </div>
-                  <p className="mt-1.5 text-sm leading-snug text-muted-foreground">{tag.description}</p>
-                  <div className="mt-3 flex flex-wrap gap-1">
-                    {[...new Set(tag.endpoints.map((e) => e.method))].map((method) => (
-                      <MethodBadge key={method} method={method} />
-                    ))}
-                  </div>
-                </Link>
-              ))}
+                <div className="mt-10 space-y-12">
+                  {TAGS.map((tag) => (
+                    <section key={tag.slug} id={tag.slug} className="scroll-mt-24">
+                      <div className="flex flex-wrap items-baseline justify-between gap-2">
+                        <h3 className="text-lg font-semibold tracking-tight text-brand-surface">
+                          <Link href={`/docs/api/${tag.slug}`} className="hover:underline">
+                            {tag.name}
+                          </Link>
+                        </h3>
+                        <Link
+                          href={`/docs/api/${tag.slug}`}
+                          className="text-sm font-medium text-primary hover:underline"
+                        >
+                          Full reference
+                          <ChevronRight className="ml-0.5 inline size-3.5 align-[-2px]" />
+                        </Link>
+                      </div>
+                      <p className="mt-1 text-sm text-muted-foreground">{tag.description}</p>
+                      <ul className="mt-3 -mx-2">
+                        {tag.endpoints.map((endpoint) => (
+                          <EndpointRow
+                            key={endpoint.slug}
+                            endpoint={endpoint}
+                            href={`/docs/api/${tag.slug}#${endpoint.slug}`}
+                          />
+                        ))}
+                      </ul>
+                    </section>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>

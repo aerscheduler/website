@@ -5,7 +5,8 @@ import { ChevronRight } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/button";
 import { JsonLd } from "@/components/json-ld";
-import { EndpointSection, MethodBadge, EndpointPath } from "@/components/api-docs";
+import { EndpointSection } from "@/components/api-docs";
+import { ApiDocsMobileNav, ApiDocsNav } from "@/components/api-docs-nav";
 import { API_BASE_URL, getTagDoc, getTagDocs } from "@/lib/openapi";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 
@@ -17,6 +18,11 @@ import { SITE_NAME, SITE_URL } from "@/lib/site";
  * API"), each gets its own title, description, and canonical URL, and a page
  * about eight endpoints ranks better than a section of a page about a hundred
  * and forty.
+ *
+ * The sticky left rail (ApiDocsNav) lists every area — same component as the
+ * hub — so readers can scan the whole surface without bouncing back to the
+ * overview cards. Endpoint detail stays on these pages; the nav is pure links
+ * over getTagDocs(), so regenerating OpenAPI keeps it in sync.
  */
 
 export function generateStaticParams() {
@@ -75,7 +81,7 @@ export default async function ApiTagPage({ params }: Props) {
       <article>
         <div className="relative overflow-hidden border-b border-border">
           <div className="hero-mesh pointer-events-none absolute inset-0 opacity-40" aria-hidden />
-          <div className="relative mx-auto max-w-5xl px-4 py-14 sm:px-6">
+          <div className="relative mx-auto max-w-6xl px-4 py-14 sm:px-6">
             <Breadcrumbs
               items={[
                 { name: "API documentation", href: "/docs/api" },
@@ -97,35 +103,11 @@ export default async function ApiTagPage({ params }: Props) {
           </div>
         </div>
 
-        <div className="mx-auto max-w-5xl px-4 sm:px-6">
+        <ApiDocsMobileNav activeSlug={tag.slug} />
+
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="lg:flex lg:gap-10">
-            {/* On this page — a plain anchor list, so it works without JS and
-                gives crawlers the endpoint names as real links. */}
-            <nav
-              className="hidden w-60 shrink-0 py-10 lg:block"
-              aria-label={`${tag.name} endpoints`}
-            >
-              <div className="sticky top-24">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                  On this page
-                </p>
-                <ul className="mt-3 space-y-0.5">
-                  {tag.endpoints.map((endpoint) => (
-                    <li key={endpoint.slug}>
-                      <a
-                        href={`#${endpoint.slug}`}
-                        className="flex items-start gap-2 rounded-lg px-2 py-1.5 hover:bg-muted"
-                      >
-                        <MethodBadge method={endpoint.method} className="mt-0.5" />
-                        <span className="min-w-0 text-xs leading-snug text-muted-foreground">
-                          {endpoint.summary}
-                        </span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </nav>
+            <ApiDocsNav activeSlug={tag.slug} />
 
             <div className="min-w-0 flex-1 py-10">
               {tag.endpoints.map((endpoint) => (
@@ -138,7 +120,7 @@ export default async function ApiTagPage({ params }: Props) {
         {/* Prev / next, so every reference page links onward rather than being
             a leaf that a reader (or a crawler) dead-ends on. */}
         <div className="border-t border-border bg-[#fafbfc]">
-          <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-10 sm:flex-row sm:items-stretch sm:justify-between sm:px-6">
+          <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-10 sm:flex-row sm:items-stretch sm:justify-between sm:px-6">
             {previous ? (
               <Link
                 href={`/docs/api/${previous.slug}`}
@@ -169,28 +151,8 @@ export default async function ApiTagPage({ params }: Props) {
         </div>
 
         <div className="border-t border-border">
-          <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-              All areas
-            </p>
-            <ul className="mt-4 flex flex-wrap gap-2">
-              {all.map((other) => (
-                <li key={other.slug}>
-                  <Link
-                    href={`/docs/api/${other.slug}`}
-                    className={
-                      other.slug === tag.slug
-                        ? "inline-flex rounded-full bg-brand-surface px-3 py-1.5 text-sm font-medium text-white"
-                        : "inline-flex rounded-full border border-border bg-white px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground"
-                    }
-                  >
-                    {other.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-10 flex flex-wrap gap-3">
+          <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+            <div className="flex flex-wrap gap-3">
               <Button href="/docs/api" variant="secondary">
                 API overview
               </Button>
