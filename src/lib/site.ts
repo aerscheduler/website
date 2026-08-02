@@ -15,6 +15,14 @@ export const SIGNUP_URL = `${APP_URL}/signup`;
 export const LOGIN_URL = `${APP_URL}/login`;
 
 /**
+ * The live, no-signup demo. Lands in the real web console on a seeded sample
+ * flight school (see the app's /demo route). This is the lowest-friction way into
+ * the product — a prospect who isn't ready to create an account can look first —
+ * so it sits beside, not instead of, the signup CTAs.
+ */
+export const DEMO_URL = `${APP_URL}/demo`;
+
+/**
  * Campaign slugs a page can hand to the app.
  *
  * The app maps these to a setup-checklist ordering (`web/src/lib/onboarding-tracks.ts`),

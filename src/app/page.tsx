@@ -8,6 +8,7 @@ import {
   CalendarDays,
   CreditCard,
   Smartphone,
+  PlayCircle,
 } from "lucide-react";
 import { Button } from "@/components/button";
 import { ProductMock } from "@/components/product-mock";
@@ -20,7 +21,7 @@ import {
   SITE_DESCRIPTION,
   SITE_NAME,
   TRIAL_DAYS,
-  GOOGLE_SIGNIN_URL,
+  DEMO_URL,
 } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -60,22 +61,17 @@ export default function HomePage() {
             </p>
             <div className="animate-fade-up-delay-3 mt-8 flex flex-wrap items-center gap-3">
               <Button href={SIGNUP_URL} size="lg">
-                Get started
+                Start free trial
                 <ChevronRight className="size-4 opacity-80" />
               </Button>
-              <Button href={GOOGLE_SIGNIN_URL} variant="secondary" size="lg">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/brand/google.png"
-                  alt=""
-                  aria-hidden
-                  className="size-4"
-                />
-                Sign up with Google
+              <Button href={DEMO_URL} variant="secondary" size="lg">
+                <PlayCircle className="size-4 opacity-80" />
+                See the live demo
               </Button>
             </div>
             <p className="animate-fade-up-delay-3 mt-4 text-sm text-muted-foreground">
-              {TRIAL_DAYS}-day free trial · No credit card · No sales call
+              {TRIAL_DAYS}-day free trial · No credit card · Or explore the demo — no
+              signup
             </p>
           </div>
 
@@ -90,10 +86,10 @@ export default function HomePage() {
         <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:py-16">
           <div className="grid gap-10 sm:grid-cols-3 sm:gap-0">
             <ValuePoint
-              href={SIGNUP_URL}
-              eyebrow="Get started"
-              title="Self-serve in minutes"
-              body="Create an account and book your first aircraft today. No demo queue."
+              href={DEMO_URL}
+              eyebrow="Live demo"
+              title="Try it before you sign up"
+              body="Open a sample flight school and click around as any role — no account, no sales call."
             />
             <ValuePoint
               href="/pricing"
@@ -320,24 +316,26 @@ export default function HomePage() {
         <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-8 px-4 py-16 sm:px-6 lg:flex-row lg:items-center lg:py-20">
           <div className="max-w-xl">
             <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-              Two minutes to a bookable aircraft.
+              See it running before you commit.
             </h2>
             <p className="mt-3 text-base leading-relaxed text-white/65">
-              No demo queue. Create an account, add a tail, and put something on
-              the schedule today, then open it on your phone.
+              Open the live demo and walk a real schedule, roster, and reports as any
+              role — nothing to install, no signup. Ready to make it yours? Add a tail
+              and go, or bring your questions.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <Button href={SIGNUP_URL} size="lg" className="bg-white text-brand-surface hover:bg-white/90">
-              Get started
-              <ChevronRight className="size-4 opacity-80" />
+            <Button href={DEMO_URL} size="lg" className="bg-white text-brand-surface hover:bg-white/90">
+              <PlayCircle className="size-4 opacity-80" />
+              Try the live demo
             </Button>
             <Button
-              href="/contact"
+              href={SIGNUP_URL}
               size="lg"
               className="border border-white/25 bg-transparent text-white hover:bg-white/10"
             >
-              Talk to us
+              Start free trial
+              <ChevronRight className="size-4 opacity-80" />
             </Button>
           </div>
         </div>

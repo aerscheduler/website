@@ -9,6 +9,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: { path: string; priority: number; changeFrequency: "weekly" | "monthly" }[] = [
     { path: "", priority: 1, changeFrequency: "weekly" },
     { path: "/pricing", priority: 0.95, changeFrequency: "monthly" },
+    // High-intent: "flight school software demo / try / no signup" are shopping
+    // searches. The page ranks and hands the click straight to the live sandbox.
+    { path: "/demo", priority: 0.95, changeFrequency: "monthly" },
     { path: "/features", priority: 0.95, changeFrequency: "monthly" },
     { path: "/product", priority: 0.9, changeFrequency: "monthly" },
     { path: "/app", priority: 0.9, changeFrequency: "monthly" },

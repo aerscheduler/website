@@ -30,6 +30,7 @@ const MEGA_TRIGGERS: { id: MegaId; label: string }[] = [
 
 const RIGHT_NAV = [
   { href: "/pricing", label: "Pricing" },
+  { href: "/demo", label: "Live demo" },
   { href: "/app", label: "App" },
 ];
 
