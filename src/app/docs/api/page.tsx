@@ -362,14 +362,49 @@ export AERSCHEDULER_KEY=ask_live_…`}
             </h2>
             <div className="mt-4 max-w-2xl space-y-3 text-base leading-relaxed text-muted-foreground">
               <p>
-                There isn&rsquo;t any yet. Every collection returns its full set, so a large school will
-                get a large response.
+                Every list is capped at <strong className="text-foreground">1,000 rows</strong>, whether
+                or not you ask for a limit. Pass <Code>limit</Code> and <Code>offset</Code> to page:
               </p>
+              <CodeBlock
+                label="Page through a list"
+                code={`GET /reservations?startDate=…&endDate=…&limit=100&offset=200`}
+              />
               <p>
-                Lean on the date-ranged endpoints for anything that grows without bound:{" "}
-                <Code>GET /reservations</Code> requires a window for exactly this reason, and the
-                reporting engine takes one too. Cursor pagination is planned and will be additive — an
-                unpaginated request will keep returning what it returns today.
+                Every list response carries a <Code>pagination</Code> object beside <Code>data</Code>:
+              </p>
+              <CodeBlock
+                label="Shape"
+                code={`{
+  "data": [ … ],
+  "pagination": {
+    "total": 7823,
+    "limit": 1000,
+    "offset": 0,
+    "returned": 1000,
+    "hasMore": true
+  }
+}`}
+              />
+              <ul className="list-disc space-y-1.5 pl-5">
+                <li>
+                  <Code>total</Code> — how many there are in all, before the page was taken.
+                </li>
+                <li>
+                  <Code>returned</Code> — how many are in <Code>data</Code> right now.
+                </li>
+                <li>
+                  <Code>hasMore</Code> — whether another page exists.{" "}
+                  <strong className="text-foreground">Check it.</strong> Some collections are bigger
+                  than one page — our largest school has over 7,000 reservations.
+                </li>
+              </ul>
+              <p>
+                Asking for more than 1,000 gives you 1,000 rather than an error.{" "}
+                <Code>offset</Code> past the end returns an empty <Code>data</Code> and{" "}
+                <Code>hasMore: false</Code>. Date-ranged endpoints still matter for anything that grows
+                without bound: <Code>GET /reservations</Code> requires a window, and the reporting
+                engine takes one too. Cursor pagination is planned and will be additive —{" "}
+                <Code>limit</Code>/<Code>offset</Code> will keep working.
               </p>
             </div>
           </div>
