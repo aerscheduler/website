@@ -16,7 +16,8 @@ import { FEATURE_GROUPS, FEATURES, featureHref } from "@/lib/features";
 import { INTEGRATION_LINKS } from "@/lib/integrations";
 import { RESOURCE_GROUPS } from "@/lib/resources";
 import { DEVELOPER_LINKS } from "@/lib/developers";
-import { SIGNUP_URL } from "@/lib/site";
+import { APP_URL, SIGNUP_URL } from "@/lib/site";
+import { useAppAuthStatus } from "@/lib/use-app-auth-status";
 import { cn } from "@/lib/cn";
 
 type MegaId = "features" | "integrations" | "resources";
@@ -50,6 +51,7 @@ const PANEL_WIDTH: Record<MegaId, number> = {
 };
 
 export function SiteHeader() {
+  const signedIn = useAppAuthStatus();
   const [open, setOpen] = useState(false);
   const [activeMega, setActiveMega] = useState<MegaId | null>(null);
   const [panelReady, setPanelReady] = useState(false);
@@ -391,13 +393,22 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
-          <Button href="/login" variant="ghost">
-            Login
-          </Button>
-          <Button href={SIGNUP_URL} variant="primary">
-            Get started
-            <ChevronRight className="size-4 opacity-80" />
-          </Button>
+          {signedIn ? (
+            <Button href={APP_URL} variant="primary">
+              Go to dashboard
+              <ChevronRight className="size-4 opacity-80" />
+            </Button>
+          ) : (
+            <>
+              <Button href="/login" variant="ghost">
+                Login
+              </Button>
+              <Button href={SIGNUP_URL} variant="primary">
+                Get started
+                <ChevronRight className="size-4 opacity-80" />
+              </Button>
+            </>
+          )}
         </div>
 
         <button
@@ -538,13 +549,22 @@ export function SiteHeader() {
           ))}
 
           <div className="mt-2 flex flex-col gap-2 border-t border-border pt-3">
-            <Button href="/login" variant="secondary" className="w-full">
-              Login
-            </Button>
-            <Button href={SIGNUP_URL} variant="primary" className="w-full">
-              Get started
-              <ChevronRight className="size-4 opacity-80" />
-            </Button>
+            {signedIn ? (
+              <Button href={APP_URL} variant="primary" className="w-full">
+                Go to dashboard
+                <ChevronRight className="size-4 opacity-80" />
+              </Button>
+            ) : (
+              <>
+                <Button href="/login" variant="secondary" className="w-full">
+                  Login
+                </Button>
+                <Button href={SIGNUP_URL} variant="primary" className="w-full">
+                  Get started
+                  <ChevronRight className="size-4 opacity-80" />
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </div>
