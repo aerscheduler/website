@@ -106,6 +106,22 @@ export function SiteHeader() {
 
   useEffect(() => () => clearCloseTimer(), [clearCloseTimer]);
 
+  // Lock the page under the mobile menu so a tall Features accordion scrolls
+  // inside the panel instead of dragging the document underneath it.
+  useEffect(() => {
+    if (!open) return;
+    const html = document.documentElement;
+    const body = document.body;
+    const prevHtml = html.style.overflow;
+    const prevBody = body.style.overflow;
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    return () => {
+      html.style.overflow = prevHtml;
+      body.style.overflow = prevBody;
+    };
+  }, [open]);
+
   // Measure active panel content so width/height can morph between menus.
   useLayoutEffect(() => {
     if (!activeMega) {
@@ -397,7 +413,12 @@ export function SiteHeader() {
       <div
         className={cn(
           "border-t border-border bg-white md:hidden",
-          open ? "block" : "hidden"
+          // Fill the viewport under the h-16 bar and scroll inside — otherwise
+          // a long Features list grows the sticky header past the screen and
+          // touch-scroll moves the page underneath the open menu.
+          open
+            ? "block max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain"
+            : "hidden"
         )}
       >
         <div className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-3">
