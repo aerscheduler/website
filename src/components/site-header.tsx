@@ -16,7 +16,7 @@ import { FEATURE_GROUPS, FEATURES, featureHref } from "@/lib/features";
 import { INTEGRATION_LINKS } from "@/lib/integrations";
 import { RESOURCE_GROUPS } from "@/lib/resources";
 import { DEVELOPER_LINKS } from "@/lib/developers";
-import { APP_URL, SIGNUP_URL } from "@/lib/site";
+import { APP_URL, DEMO_URL, SIGNUP_URL } from "@/lib/site";
 import { useAppAuthStatus } from "@/lib/use-app-auth-status";
 import { cn } from "@/lib/cn";
 
@@ -30,9 +30,51 @@ const MEGA_TRIGGERS: { id: MegaId; label: string }[] = [
 
 const RIGHT_NAV = [
   { href: "/pricing", label: "Pricing" },
-  { href: "/demo", label: "Live demo" },
+  //Straight into the demo, the same target as the hero's "See the live demo"
+  //button. It used to point at /demo, this site's landing page for the demo —
+  //but somebody who clicks "Live demo" in the nav has already decided, and
+  //answering that with a page that asks them to click again is a toll booth.
+  //
+  //The landing page still exists and still earns its place: it ranks for
+  //"flight school software demo / try / no signup", where the reader has NOT
+  //decided and does want the pitch first. It just isn't what this click means.
+  { href: DEMO_URL, label: "Live demo" },
   { href: "/app", label: "App" },
 ];
+
+/**
+ * A right-nav entry, as a router link or a plain anchor depending on where it goes.
+ *
+ * `next/link` does render an absolute URL as an ordinary anchor, but leaning on
+ * that leaves the reader to work out which of these leave the marketing site.
+ * Being explicit costs four lines.
+ */
+function RightNavLink({
+  href,
+  className,
+  onClick,
+  children,
+}: {
+  href: string;
+  className?: string;
+  onClick?: () => void;
+  children: React.ReactNode;
+}) {
+  if (/^https?:\/\//.test(href)) {
+    //Same tab on purpose: the demo IS the product, so this is going deeper in,
+    //not off to somebody else's site.
+    return (
+      <a href={href} className={className} onClick={onClick}>
+        {children}
+      </a>
+    );
+  }
+  return (
+    <Link href={href} className={className} onClick={onClick}>
+      {children}
+    </Link>
+  );
+}
 
 /** Features mega-menu omits Integrations — that has its own trigger. */
 const NAV_FEATURE_GROUPS = FEATURE_GROUPS.map((group) => ({
@@ -382,13 +424,13 @@ export function SiteHeader() {
 
           <div className="ml-auto flex items-center gap-1">
             {RIGHT_NAV.map((item) => (
-              <Link
+              <RightNavLink
                 key={item.href}
                 href={item.href}
                 className="rounded-full px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
               >
                 {item.label}
-              </Link>
+              </RightNavLink>
             ))}
           </div>
         </nav>
@@ -539,14 +581,14 @@ export function SiteHeader() {
           </MobileMegaSection>
 
           {RIGHT_NAV.map((item) => (
-            <Link
+            <RightNavLink
               key={item.href}
               href={item.href}
               onClick={() => setOpen(false)}
               className="rounded-lg px-3 py-2.5 text-sm font-medium text-foreground hover:bg-muted"
             >
               {item.label}
-            </Link>
+            </RightNavLink>
           ))}
 
           <div className="mt-2 flex flex-col gap-2 border-t border-border pt-3">
