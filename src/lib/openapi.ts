@@ -1,10 +1,14 @@
 /**
  * Reads the OpenAPI document into the shapes the docs pages render.
  *
- * `src/content/openapi.json` is written by `server/scripts/generate-openapi.ts`
- * from the server's own source of truth, so these pages cannot drift from the
- * API: regenerating is a step in shipping a server change, and the file is
- * committed so the website builds without reaching for the API.
+ * `src/content/openapi.json` is refreshed from the DEPLOYED API by
+ * `scripts/sync-openapi.mjs` at the start of every build, so these pages cannot
+ * drift from what the API actually serves. The file stays committed only as the
+ * fallback for a build that cannot reach the API — it is no longer the source.
+ *
+ * It used to be, on the theory that regenerating it was a step in shipping a
+ * server change. It is written by the server's generator into a different git
+ * repo, so that step was silently skippable, and got skipped. See the script.
  *
  * Everything here runs at build time. The reference pages are static HTML with
  * the real endpoint text in them — which is the point. A client-rendered spec
