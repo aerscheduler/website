@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { Logo } from "@/components/logo";
 import { FEATURE_GROUPS, FEATURES, featureHref } from "@/lib/features";
@@ -16,76 +17,65 @@ const COMPANY = [
   { href: "/login", label: "Login" },
 ];
 
+/**
+ * Two bands, because the link inventory is lopsided: four short feature groups
+ * and Company run 2–6 items each, while Resources carries fourteen. Stacking
+ * Resources under Company inside a five-column grid stretched that one cell to
+ * twenty rows and left the rest of the footer as empty space.
+ *
+ * Resources keeps its own `RESOURCE_GROUPS` headings in a band underneath, so
+ * every link still ships (they are the site's internal linking) without one
+ * column dragging the footer three screens tall.
+ */
 export function SiteFooter() {
   return (
     <footer className="border-t border-border bg-[#fafbfc]">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[1fr_2.4fr]">
-        <div>
-          <Logo />
-          <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
-            Schedule aircraft, manage your team, and keep billing square on the
-            web and in a native iOS app.
-          </p>
-        </div>
-        <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-5">
-          {FEATURE_GROUPS.map((group) => (
-            <div key={group.title}>
-              <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                {group.title}
-              </h3>
-              <ul className="mt-4 space-y-2.5">
-                {group.items.map((slug) => (
-                  <li key={slug}>
-                    <Link
-                      href={featureHref(slug)}
-                      className="text-sm text-foreground/80 transition-colors hover:text-primary"
-                    >
-                      {FEATURES[slug].navLabel}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+      <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+        <div className="grid gap-10 lg:grid-cols-[1fr_2.4fr]">
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-              Company
-            </h3>
-            <ul className="mt-4 space-y-2.5">
+            <Logo />
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
+              Schedule aircraft, manage your team, and keep billing square on the
+              web and in a native iOS app.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-5">
+            {FEATURE_GROUPS.map((group) => (
+              <FooterColumn key={group.title} title={group.title}>
+                {group.items.map((slug) => (
+                  <FooterLink key={slug} href={featureHref(slug)}>
+                    {FEATURES[slug].navLabel}
+                  </FooterLink>
+                ))}
+              </FooterColumn>
+            ))}
+            <FooterColumn title="Company">
               {COMPANY.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="text-sm text-foreground/80 transition-colors hover:text-primary"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
+                <FooterLink key={item.href} href={item.href}>
+                  {item.label}
+                </FooterLink>
               ))}
-            </ul>
-            <h3 className="mt-8 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-              Resources
-            </h3>
-            <ul className="mt-4 space-y-2.5">
-              <li>
-                <Link
-                  href="/resources"
-                  className="text-sm text-foreground/80 transition-colors hover:text-primary"
-                >
-                  All resources
-                </Link>
-              </li>
-              {RESOURCE_GROUPS.flatMap((group) => group.items).map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="text-sm text-foreground/80 transition-colors hover:text-primary"
-                  >
+            </FooterColumn>
+          </div>
+        </div>
+
+        <div className="mt-12 border-t border-border pt-10">
+          <Link
+            href="/resources"
+            className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-primary"
+          >
+            Resources
+          </Link>
+          <div className="mt-6 grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-4">
+            {RESOURCE_GROUPS.map((group) => (
+              <FooterColumn key={group.title} title={group.title} muted>
+                {group.items.map((item) => (
+                  <FooterLink key={item.href} href={item.href}>
                     {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+                  </FooterLink>
+                ))}
+              </FooterColumn>
+            ))}
           </div>
         </div>
       </div>
@@ -115,5 +105,44 @@ export function SiteFooter() {
         </div>
       </div>
     </footer>
+  );
+}
+
+function FooterColumn({
+  title,
+  muted,
+  children,
+}: {
+  title: string;
+  /** Sub-heading weight, for groups nested under the Resources band. */
+  muted?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <div>
+      <h3
+        className={
+          muted
+            ? "text-xs font-medium text-foreground/70"
+            : "text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground"
+        }
+      >
+        {title}
+      </h3>
+      <ul className="mt-4 space-y-2.5">{children}</ul>
+    </div>
+  );
+}
+
+function FooterLink({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <li>
+      <Link
+        href={href}
+        className="text-sm text-foreground/80 transition-colors hover:text-primary"
+      >
+        {children}
+      </Link>
+    </li>
   );
 }
