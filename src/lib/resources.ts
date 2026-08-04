@@ -47,7 +47,7 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
       {
         href: "/resources/split-billing-shared-flights",
         label: "Split billing & shared flights",
-        description: "One booking, one invoice per person — and why a shared flight isn't a solo.",
+        description: "One booking, one invoice per person, and why a shared flight isn't a solo.",
       },
     ],
   },
