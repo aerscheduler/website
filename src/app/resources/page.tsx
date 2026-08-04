@@ -35,6 +35,11 @@ const GUIDES = [
     body: "What modern flight school scheduling software should include: dispatch, self-booking, billing, and mobile.",
   },
   {
+    href: "/resources/split-billing-shared-flights",
+    title: "Split billing & shared flights",
+    body: "Group ground school billed per student, two pilots splitting a cross-country, and a safety pilot who isn't paying — all on one booking.",
+  },
+  {
     href: "/resources/flight-school-reports",
     title: "Flight school reports",
     body: "The reports worth having — revenue, utilization, instruction, fleet, compliance — and what each one answers.",

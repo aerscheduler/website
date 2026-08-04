@@ -42,6 +42,16 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
     ],
   },
   {
+    title: "Billing",
+    items: [
+      {
+        href: "/resources/split-billing-shared-flights",
+        label: "Split billing & shared flights",
+        description: "One booking, one invoice per person — and why a shared flight isn't a solo.",
+      },
+    ],
+  },
+  {
     // The pillar page sits first and the two topic guides link back to it, so
     // the internal linking points somewhere rather than in a ring.
     title: "Reporting",

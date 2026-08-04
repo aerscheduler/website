@@ -40,7 +40,8 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
       "Day and week boards for every aircraft, sim, and classroom: conflict-aware booking, ramp-in close-out, and a live view for the front desk.",
     bullets: [
       "Lane views across aircraft, simulators, and rooms",
-      "Dual, solo, rental, ground, sim, and maintenance reservations",
+      "Dual, solo, shared, rental, ground, sim, and maintenance reservations",
+      "Several people on one booking — a ground school class, or two pilots sharing a flight",
       "Ramp-out to ramp-in with Hobbs, tach, and fuel, then an invoice draft",
       "Conflict-aware create and edit so double-books don’t leave the desk",
       "Live refresh so the iPad on the counter stays current",
@@ -147,6 +148,8 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
     summary:
       "Close out a flight and the line items write themselves. Collect with saved cards. No separate billing tool taped onto the schedule.",
     bullets: [
+      "Split a booking between everyone on it — each person gets their own invoice",
+      "Charge a class per head, divide a shared aircraft, or bill each pilot for the hours they flew",
       "Auto-drafted itemized invoices from Hobbs/tach close-out",
       "AR dashboard: outstanding, paid, and void",
       "Custom invoices when the flight isn’t the whole story",
