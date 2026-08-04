@@ -572,7 +572,7 @@
           "Members"
         ],
         "summary": "Archive or restore a member",
-        "description": "Retires somebody from the roster, or brings them back. Requires the **admin** role — a dispatcher cannot.\n\nAn archived member **is not notified, ever** — no email, no push, no in-app notice. They are left out of `GET /orgUsers` unless you pass `archived=true`, and they cannot be added to a booking. Nothing is deleted: their flights, invoices and history are untouched, and restoring them is the same call with `false`.\n\nUse this rather than grounding to tidy a roster. **Grounding is a live restriction and emails the member**, so grounding a batch of people who stopped flying years ago sends each of them an unexpected notice.",
+        "description": "Retires somebody from the roster, or brings them back. Requires the **admin** role — a dispatcher cannot.\n\nAn archived member **is not notified, ever** — no email, no push, no in-app notice. They are left out of `GET /orgUsers` unless you pass `archived=true` (which is also how you list them again), and they cannot be added to a booking. Nothing is deleted: their flights, invoices and history are untouched, and restoring them is the same call with `false`.\n\nUse this rather than grounding to tidy a roster. **Grounding is a live restriction and emails the member**, so grounding a batch of people who stopped flying years ago sends each of them an unexpected notice.",
         "responses": {
           "200": {
             "description": "Success.",
