@@ -41,6 +41,10 @@
       "description": "Booking, rescheduling, and closing out flights."
     },
     {
+      "name": "Cost splitting",
+      "description": "How a booking's cost divides when more than one person is on it. Each person is billed separately, so a shared booking produces one invoice per payer. An organization that sets no rules bills one person for the whole booking."
+    },
+    {
       "name": "Availability",
       "description": "When people and aircraft are free."
     },
@@ -560,6 +564,733 @@
             }
           }
         }
+      }
+    },
+    "/users/{userId}/orgUser/archive": {
+      "patch": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Archive or restore a member",
+        "description": "Retires somebody from the roster, or brings them back. Requires the **admin** role — a dispatcher cannot.\n\nAn archived member **is not notified, ever** — no email, no push, no in-app notice. They are left out of `GET /orgUsers` unless you pass `archived=true`, and they cannot be added to a booking. Nothing is deleted: their flights, invoices and history are untouched, and restoring them is the same call with `false`.\n\nUse this rather than grounding to tidy a roster. **Grounding is a live restriction and emails the member**, so grounding a batch of people who stopped flying years ago sends each of them an unexpected notice.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`archived` was missing or not a boolean, or you tried to archive your own membership.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "You are not an owner or admin of this organization, or that person is not a member of it.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "setMemberArchived",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The user id — not the membership id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Whether the member should be archived.",
+                "properties": {
+                  "archived": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "archived"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}/details": {
+      "get": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Get a person's contact details",
+        "description": "Phone numbers, date of birth, address and emergency contacts.\n\nReadable by the person themselves, an **admin** or **dispatcher** of your organization, or an **instructor** the person is assigned to as a student. Anyone else gets 403 — these are home phone numbers and next of kin, not roster data.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/UserDetails"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "You are not allowed to see this person's contact details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getUserContactDetails",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The user id. Use your own to read your own record."
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Update a person's contact details",
+        "description": "Writable by the person themselves and by an **admin** or **dispatcher** — the front desk genuinely does take a corrected number over the counter. Instructors are read-only.\n\nEvery change is written to the audit trail, with phone numbers masked.\n\n**Phone numbers** are normalized to E.164 and validated; an unreal number is a 400, not a silent accept. Omit a field to leave it alone; send `null` or `\"\"` to clear it.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/UserDetails"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A phone number or date was not valid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "You are not allowed to change this person's contact details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "updateUserContactDetails",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The user id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Fields to change. All optional.",
+                "properties": {
+                  "phone": {
+                    "type": "string",
+                    "description": "Primary/mobile number. Any format; stored as E.164."
+                  },
+                  "homePhone": {
+                    "type": "string"
+                  },
+                  "workPhone": {
+                    "type": "string"
+                  },
+                  "dateOfBirth": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "`YYYY-MM-DD`. Cannot be in the future."
+                  },
+                  "preferredName": {
+                    "type": "string"
+                  },
+                  "sex": {
+                    "type": "string"
+                  },
+                  "defaultCountry": {
+                    "type": "string",
+                    "description": "ISO 3166-1 alpha-2 used to read numbers sent without a country code. Defaults to `US`.",
+                    "example": "US"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}/emergencyContacts": {
+      "get": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "List a person's emergency contacts",
+        "description": "Primary first. Same read permissions as `GET /users/{userId}/details`.",
+        "responses": {
+          "200": {
+            "description": "The emergency contacts.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/EmergencyContact"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listEmergencyContacts",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The user id."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Add an emergency contact",
+        "description": "`name` and a valid `phone` are required. Setting `isPrimary` clears it on the others.",
+        "responses": {
+          "201": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/EmergencyContact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A name and a valid phone number are required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "createEmergencyContact",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The user id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The new contact.",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "relationship": {
+                    "type": "string"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "description": "Required. Any format; stored as E.164."
+                  },
+                  "altPhone": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "notes": {
+                    "type": "string"
+                  },
+                  "isPrimary": {
+                    "type": "boolean"
+                  },
+                  "sortOrder": {
+                    "type": "integer"
+                  },
+                  "defaultCountry": {
+                    "type": "string",
+                    "description": "ISO 3166-1 alpha-2 for numbers with no country code."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}/emergencyContacts/{contactId}": {
+      "patch": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Update an emergency contact",
+        "description": "Omit a field to leave it. `phone` may be changed but not cleared.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/EmergencyContact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A field was not valid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "That emergency contact doesn't exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "updateEmergencyContact",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The user id."
+          },
+          {
+            "name": "contactId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The emergency contact id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Fields to change.",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "relationship": {
+                    "type": "string"
+                  },
+                  "phone": {
+                    "type": "string"
+                  },
+                  "altPhone": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "notes": {
+                    "type": "string"
+                  },
+                  "isPrimary": {
+                    "type": "boolean"
+                  },
+                  "sortOrder": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Remove an emergency contact",
+        "description": "Soft-deletes it.",
+        "responses": {
+          "204": {
+            "description": "Success. No body."
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "That emergency contact doesn't exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "deleteEmergencyContact",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The user id."
+          },
+          {
+            "name": "contactId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The emergency contact id."
+          }
+        ]
       }
     },
     "/users/{userId}/approvedResources": {
@@ -2426,6 +3157,15 @@
             "description": "Filter by grounded state."
           },
           {
+            "name": "archived",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Archived members — people the school has retired from the roster — are **left out by default**. Set `true` to list them instead of the current members. There is no value that returns both."
+          },
+          {
             "name": "limit",
             "in": "query",
             "required": false,
@@ -3044,6 +3784,7 @@
                     "type": "string",
                     "enum": [
                       "solo",
+                      "shared",
                       "dual",
                       "ground",
                       "guest",
@@ -3051,7 +3792,7 @@
                       "rental",
                       "maintenance"
                     ],
-                    "description": "What kind of booking. Restricted by the caller's roles — see the table above."
+                    "description": "What kind of booking. Restricted by the caller's roles — see the table above.\n\n`shared` is several pilots with no instructor — two pilots splitting a cross-country, or a safety-pilot arrangement under 91.109. `solo` means ONE occupant (14 CFR 61.87) and takes exactly one person; an instructor aboard makes it a `dual`."
                   },
                   "start": {
                     "type": "string",
@@ -3095,7 +3836,7 @@
                   },
                   "personnel": {
                     "type": "object",
-                    "description": "Who is on the booking. One person cannot fill two seats on the same booking.",
+                    "description": "Who is on the booking. One person cannot fill two seats on the same booking.\n\n**Several people may share a side.** How many depends on the booking type: a `ground` class takes up to 12 students, `sim` up to 6, `dual` and `solo` up to 4, and `rental` up to 4 renters. `maintenance` takes nobody and `guest` takes one guest. Exceeding a limit is a 400 naming the side and the number allowed.\n\n**Order matters.** The first person on a side is the leading payer: they are billed when the organization's rule for a charge is \"one person pays\", and they take the remainder cent of an uneven division.\n\nEveryone listed must be free for the slot and must meet the currency and grounding rules — the booking is refused naming whoever does not, not silently trimmed.",
                     "properties": {
                       "instructors": {
                         "type": "array",
@@ -3999,7 +4740,7 @@
           "Reservations"
         ],
         "summary": "Invoice a reservation",
-        "description": "Generates the bill for a closed-out flight. Requires the **admin** role.",
+        "description": "Generates the bill for a closed-out flight. Requires the **admin** role.\n\n**Returns an ARRAY.** A booking shared between several people produces one invoice PER PAYER — a Stripe invoice bills exactly one customer, so splitting a booking's cost has to be several invoices rather than one invoice with shares underneath it. A booking with one payer returns an array of one.\n\nHow the cost divides is set per organization and per booking type — see the cost-splitting rules in the console. With no rules configured, one person is billed for the whole booking, which is how this endpoint has always behaved.\n\n**Partial success is possible and is not an error.** If the payment processor accepts some invoices and rejects another, the ones that succeeded are real and are returned, with a `warnings` array naming who could not be billed. Call this endpoint again to bill only the payers who still have no invoice — it will not duplicate the ones already raised. A 400 means nothing was billed at all.\n\nA share below the processor's 50-cent minimum is skipped rather than raised, and reported in `warnings`.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -4009,7 +4750,10 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/Invoice"
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Invoice"
+                      }
                     }
                   }
                 }
@@ -4024,7 +4768,10 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/Invoice"
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Invoice"
+                      }
                     }
                   }
                 }
@@ -4032,7 +4779,7 @@
             }
           },
           "400": {
-            "description": "The flight is not closed out, or it is already invoiced.",
+            "description": "The flight is not closed out, every payer is already invoiced, or the organization's split rules cannot be applied to it — for example a booking set to split by each person's own time where somebody's hours have not been entered. The message says what to fix.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4092,6 +4839,445 @@
                 "type": "object",
                 "description": "No fields required.",
                 "properties": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reservations/{id}/payers": {
+      "put": {
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Set who pays what",
+        "description": "Records each person's stake in the cost of a booking: their own meter readings when the charge is split by the time each person flew, their percentage when it is split by set shares, or a waiver for somebody who is on the booking but owes nothing (a safety pilot).\n\n**Replaces the whole set.** Shares have to total 100% across everybody, so merging one person into an existing set is how a total quietly stops adding up. Send everybody every time.\n\nOnly people already on the booking may be given a stake. Refused once the booking has been invoiced — the invoices describe the hours and shares they were computed from, and rewriting those underneath them would leave the money disagreeing with its own record.\n\nWhether the shares total 100%, and whether the individual meter readings add up to what the aircraft actually ran, is checked when the booking is INVOICED rather than here — so a half-finished close-out can still be saved.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Reservation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A stake belongs to nobody, names somebody who isn't on the booking, has a reading that runs backwards, or the booking is already invoiced. The message says which.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "You are not on this booking and are not staff.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "setReservationPayers",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The reservation id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Everyone being billed for this booking.",
+                "properties": {
+                  "payers": {
+                    "type": "array",
+                    "description": "One entry per person. Exactly one of `orgUserId` or `guestId` on each.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "orgUserId": {
+                          "type": "integer",
+                          "description": "The member paying."
+                        },
+                        "guestId": {
+                          "type": "integer",
+                          "description": "The non-member paying."
+                        },
+                        "weightBps": {
+                          "type": "integer",
+                          "description": "Their share in basis points — 6000 is 60%. Only used when the charge is split by set shares."
+                        },
+                        "hobbsOut": {
+                          "type": "integer",
+                          "description": "Their own Hobbs at the start of their leg, in tenths of an hour."
+                        },
+                        "hobbsIn": {
+                          "type": "integer",
+                          "description": "Their own Hobbs at the end of their leg, in tenths of an hour."
+                        },
+                        "tachOut": {
+                          "type": "integer",
+                          "description": "As `hobbsOut`, for a tach-billed aircraft."
+                        },
+                        "tachIn": {
+                          "type": "integer",
+                          "description": "As `hobbsIn`, for a tach-billed aircraft."
+                        },
+                        "instructionMinutes": {
+                          "type": "integer",
+                          "description": "Minutes of instruction attributable to this person."
+                        },
+                        "waived": {
+                          "type": "boolean",
+                          "description": "On the booking but charged nothing."
+                        },
+                        "waivedReason": {
+                          "type": "string",
+                          "description": "Why, e.g. \"Safety pilot\". Under 60 characters."
+                        }
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "payers"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/organizations/splitRules": {
+      "get": {
+        "tags": [
+          "Cost splitting"
+        ],
+        "summary": "Your cost-splitting rules",
+        "description": "How this organization divides a booking's cost when more than one person is on it. Requires the **admin** role.\n\nReturns the stored rules, the effective rule for every bookable type (`resolved`), the vocabulary this server accepts (`apportionments`, `chargeLines`, `bookableTypes`, `personnelLimits`), human copy for each option, the four starting-point `presets`, and worked `examples` computed by the actual billing engine — so an integration can show a customer what a rule will do without reimplementing the arithmetic.\n\nThe rules table is SPARSE. An organization with no rules divides nothing: one person is billed for the whole booking, which is how AerScheduler has always behaved.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "description": "The rules, the resolved plan per booking type, the vocabulary, and worked examples."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getSplitRules"
+      },
+      "put": {
+        "tags": [
+          "Cost splitting"
+        ],
+        "summary": "Set a cost-splitting rule",
+        "description": "Sets how one charge divides, for one booking type or as the organization-wide default. Requires the **admin** role.\n\nSend `apportionment: null` to REMOVE the rule and return that charge to the product default. Absence is meaningful here — an explicit `whole` is not the same thing, because it would survive a later change to what the default is.\n\nOmit `reservationType` (or send null) to set the organization-wide default for that charge.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "description": "The full rule set again — one rule can change what several booking types resolve to."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unknown charge, unknown apportionment, or a booking type that only ever has one person paying.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "setSplitRule",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The rule to set.",
+                "properties": {
+                  "reservationType": {
+                    "type": "string",
+                    "description": "Which booking type, e.g. `ground`. Omit for the organization-wide default."
+                  },
+                  "chargeLine": {
+                    "type": "string",
+                    "description": "`aircraft` (machine or room time) or `instruction`."
+                  },
+                  "apportionment": {
+                    "type": "string",
+                    "description": "`whole` (one person pays), `equal` (divided evenly), `measured` (each pays their own logged time), `full_to_each` (each pays the full amount — this MULTIPLIES what you collect), or `weighted` (set shares). Null removes the rule."
+                  }
+                },
+                "required": [
+                  "chargeLine"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Cost splitting"
+        ],
+        "summary": "Clear all cost-splitting rules",
+        "description": "Removes every rule, returning the organization to one invoice per booking. Requires the **admin** role.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "description": "The now-empty rule set."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "clearSplitRules"
+      }
+    },
+    "/organizations/splitRules/preset": {
+      "post": {
+        "tags": [
+          "Cost splitting"
+        ],
+        "summary": "Apply a starting point",
+        "description": "Replaces the organization's rules with the defaults for a kind of operation. Requires the **admin** role.\n\nReplaces rather than merges: a preset is a statement about the whole shape of an operation, and merging would leave you half-configured as one thing and half as another with no way to tell which rule came from where. `GET` first to see exactly which rules a preset writes.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "description": "The rule set the preset wrote."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Not one of the four presets.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "applySplitPreset",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Which kind of operation you run.",
+                "properties": {
+                  "preset": {
+                    "type": "string",
+                    "description": "`flight_school`, `flying_club`, `fbo` or `partnership`."
+                  }
+                },
+                "required": [
+                  "preset"
+                ]
               }
             }
           }
@@ -13823,6 +15009,195 @@
               "string",
               "null"
             ]
+          },
+          "details": {
+            "$ref": "#/components/schemas/UserDetails"
+          }
+        },
+        "additionalProperties": true
+      },
+      "UserDetails": {
+        "type": "object",
+        "description": "A person's contact record. Returned only to the person themselves, an admin or dispatcher of your organization, or an instructor the person is assigned to as a student — so expect it to be absent on most reads.",
+        "properties": {
+          "phone": {
+            "description": "Primary, SMS-capable number, in **E.164** (`+13035551234`). Numbers sent to this API are normalized to E.164 on write and rejected if they are not real, dialable numbers; a number with no country code is read as US unless you send `defaultCountry`.",
+            "example": "+13035551234",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "phoneCountry": {
+            "description": "ISO 3166-1 alpha-2 country of `phone`, so it can be re-rendered nationally.",
+            "example": "US",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "homePhone": {
+            "description": "Home number, in E.164.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "workPhone": {
+            "description": "Work number, in E.164.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "dateOfBirth": {
+            "description": "Date of birth, `YYYY-MM-DD`. A calendar date — no time, no zone.",
+            "format": "date",
+            "example": "1994-03-17",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "preferredName": {
+            "description": "What they go by, when that isn't their legal first name.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "sex": {
+            "description": "Free text.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "address": {
+            "type": "object",
+            "description": "A postal address.",
+            "properties": {
+              "streetAddress1": {
+                "type": "string",
+                "description": "Street address."
+              },
+              "streetAddress2": {
+                "description": "Suite, unit, or hangar number.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "city": {
+                "type": "string",
+                "description": "City."
+              },
+              "state": {
+                "type": "string",
+                "description": "State or region."
+              },
+              "zipCode": {
+                "type": "string",
+                "description": "Postal code."
+              },
+              "country": {
+                "type": "string",
+                "description": "Country."
+              },
+              "coordinates": {
+                "type": "object",
+                "description": "Geocoded position, when the address could be resolved.",
+                "properties": {
+                  "lat": {
+                    "type": "number",
+                    "description": "Latitude."
+                  },
+                  "lng": {
+                    "type": "number",
+                    "description": "Longitude."
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "additionalProperties": true
+          },
+          "emergencyContacts": {
+            "type": "array",
+            "description": "Everyone on this person's emergency list, primary first.",
+            "items": {
+              "$ref": "#/components/schemas/EmergencyContact"
+            }
+          }
+        },
+        "additionalProperties": true
+      },
+      "EmergencyContact": {
+        "type": "object",
+        "description": "Who to call about a person in an emergency.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier, stable for the life of the record."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the record was created."
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the record last changed."
+          },
+          "name": {
+            "type": "string",
+            "description": "The contact's full name.",
+            "example": "Dana Reyes"
+          },
+          "relationship": {
+            "description": "How they are related. Free text.",
+            "example": "Spouse",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "phone": {
+            "type": "string",
+            "description": "Primary number, in E.164.",
+            "example": "+13035551234"
+          },
+          "altPhone": {
+            "description": "Second number to try, in E.164.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "email": {
+            "description": "Email address.",
+            "format": "email",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "notes": {
+            "description": "Anything else worth knowing when calling.",
+            "maxLength": 300,
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "isPrimary": {
+            "type": "boolean",
+            "description": "True for the one to try first. At most one per person."
+          },
+          "sortOrder": {
+            "type": "integer",
+            "description": "Display order within the person's list."
           }
         },
         "additionalProperties": true
@@ -13863,6 +15238,14 @@
                 "technician"
               ]
             }
+          },
+          "archivedAt": {
+            "description": "When the organization retired this person from its roster; null for a current member. Archived members receive no notifications of any kind, are omitted from member lists unless asked for, and cannot be booked. Distinct from `grounded`, which is a live restriction on somebody who is still here.",
+            "format": "date-time",
+            "type": [
+              "string",
+              "null"
+            ]
           }
         },
         "additionalProperties": true
@@ -13895,6 +15278,7 @@
             "description": "What kind of booking this is. Which types a caller may CREATE depends on their roles — see the Reservation types section.",
             "enum": [
               "solo",
+              "shared",
               "dual",
               "ground",
               "guest",
@@ -14008,6 +15392,17 @@
               }
             },
             "additionalProperties": true
+          },
+          "invoices": {
+            "type": "array",
+            "description": "ONE PER PAYER. A booking shared between several people mints an invoice each — a Stripe invoice bills exactly one customer. A booking with one payer has an array of one, and an un-billed booking has an empty array.\n\nDo not read `invoices[0]` as \"the invoice\": on a split booking that is one person's share. Ask whether EVERY payer has one.",
+            "items": {
+              "$ref": "#/components/schemas/Invoice"
+            }
+          },
+          "invoice": {
+            "$ref": "#/components/schemas/Invoice",
+            "description": "**Deprecated — use `invoices`.** The first non-void invoice, kept so clients written before split billing keep working. On a booking with one payer this is exactly what it always meant; on a split booking it is only ONE person's share, so anything that reports whether a flight has been billed should read `invoices`. This field will be removed."
           },
           "review": {
             "type": "object",
