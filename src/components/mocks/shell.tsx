@@ -2,6 +2,7 @@
 
 import { useState, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
+import { useInView } from "@/lib/use-in-view";
 
 /** Shared browser chrome + sidebar rail for feature demos. */
 export function AppMockShell({
@@ -19,9 +20,16 @@ export function AppMockShell({
   float?: ReactNode;
 }) {
   const [nav, setNav] = useState(activeNav);
+  // `repeat` so the float stops again on the way back out of view; it is idle
+  // decoration, not an entrance, so it is safe to re-trigger.
+  const { ref, inView } = useInView<HTMLDivElement>({ repeat: true, rootMargin: "10% 0px" });
 
   return (
-    <div className={cn("animate-float relative w-full max-w-[560px]", className)}>
+    <div
+      ref={ref}
+      data-inview={inView ? "" : undefined}
+      className={cn("animate-float relative w-full max-w-[560px]", className)}
+    >
       <div className="overflow-hidden rounded-xl border border-border bg-white shadow-lg">
         <div className="flex items-center gap-2 border-b border-border px-3 py-2.5">
           <div className="flex gap-1.5">
@@ -63,21 +71,25 @@ export function AppMockShell({
 export function MockHeader({
   eyebrow,
   title,
+  meta,
   action,
   onAction,
 }: {
   eyebrow: string;
   title: string;
+  /** Optional third line, e.g. the live "2 flown · 1 out · 2 to go" tally. */
+  meta?: ReactNode;
   action?: string;
   onAction?: () => void;
 }) {
   return (
     <div className="flex items-center justify-between border-b border-border px-4 py-3">
-      <div>
+      <div className="min-w-0">
         <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
           {eyebrow}
         </p>
         <p className="text-sm font-semibold text-foreground">{title}</p>
+        {meta && <p className="mt-0.5 truncate text-[11px] text-muted-foreground">{meta}</p>}
       </div>
       {action && (
         <button

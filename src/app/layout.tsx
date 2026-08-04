@@ -91,6 +91,25 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Reveals start hidden in the stylesheet, so the server HTML and the
+            first client paint already agree — no class to add, nothing for
+            React to flag as a hydration mismatch, and no flash of content that
+            appears and then hides.
+
+            The only case that needs rescuing is scripting being off, where the
+            observer never runs and the page would stay blank. `<noscript>` is
+            parsed only in exactly that case. */}
+        <noscript>
+          <style>{`
+            [data-reveal], [data-reveal-group] > * {
+              opacity: 1 !important;
+              transform: none !important;
+            }
+            .animate-float { animation-play-state: running !important; }
+          `}</style>
+        </noscript>
+      </head>
       <body className={`${instrument.variable} font-sans antialiased`}>
         <JsonLd data={organizationJsonLd()} />
         <JsonLd data={websiteJsonLd()} />

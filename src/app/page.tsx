@@ -15,6 +15,8 @@ import { ProductMock } from "@/components/product-mock";
 import { PhoneMock } from "@/components/phone-mock";
 import { ReportsMock } from "@/components/mocks";
 import { StoreBadges } from "@/components/store-badges";
+import { HeroAtmosphere } from "@/components/hero-atmosphere";
+import { Reveal, RevealGroup } from "@/components/reveal";
 import {
   PRICE_PER_AIRCRAFT,
   SIGNUP_URL,
@@ -42,10 +44,7 @@ export default function HomePage() {
     <>
       {/* Hero */}
       <section className="relative">
-        <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-          <div className="hero-mesh absolute inset-0 opacity-90" />
-          <div className="absolute inset-0 grid-lines opacity-40" />
-        </div>
+        <HeroAtmosphere />
 
         <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 pb-20 pt-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:pb-28 lg:pt-20">
           <div>
@@ -84,7 +83,7 @@ export default function HomePage() {
       {/* Value strip */}
       <section className="border-y border-border bg-white">
         <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:py-16">
-          <div className="grid gap-10 sm:grid-cols-3 sm:gap-0">
+          <RevealGroup className="grid gap-10 sm:grid-cols-3 sm:gap-0">
             <ValuePoint
               href={DEMO_URL}
               eyebrow="Live demo"
@@ -113,7 +112,7 @@ export default function HomePage() {
               body="The same operation in your pocket, not a mobile website."
               rule
             />
-          </div>
+          </RevealGroup>
         </div>
       </section>
 
@@ -121,7 +120,7 @@ export default function HomePage() {
       <section className="relative bg-[#fafbfc]">
         <div className="pointer-events-none absolute inset-0 grid-lines opacity-30" aria-hidden />
         <div className="relative mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-24">
-          <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+          <Reveal className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
             <div className="max-w-2xl">
               <h2 className="text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
                 Everything your operation needs to fly.
@@ -135,9 +134,9 @@ export default function HomePage() {
               Explore features
               <ChevronRight className="size-4 opacity-80" />
             </Button>
-          </div>
+          </Reveal>
 
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <RevealGroup className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <TeaserCard
               href="/features/scheduling"
               icon={<CalendarDays className="size-5" />}
@@ -162,7 +161,7 @@ export default function HomePage() {
               title="Native app"
               body="iOS for students, instructors, and the desk."
             />
-          </div>
+          </RevealGroup>
         </div>
       </section>
 
@@ -171,7 +170,7 @@ export default function HomePage() {
           visual on the opposite side so the page alternates down the scroll. */}
       <section className="border-t border-border bg-white">
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:gap-16 lg:py-28">
-          <div>
+          <Reveal>
             <p className="text-sm font-semibold text-primary">Reports &amp; dashboards</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
               The numbers behind the schedule.
@@ -202,20 +201,21 @@ export default function HomePage() {
                 Reporting guide
               </Button>
             </div>
-          </div>
-          <div className="flex justify-center lg:justify-end">
+          </Reveal>
+          {/* The visual lands just after the sentence that sets it up. */}
+          <Reveal delay={120} className="flex justify-center lg:justify-end">
             <ReportsMock />
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* Mobile spotlight */}
       <section className="border-t border-border bg-[#fafbfc]">
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:gap-16 lg:py-28">
-          <div className="order-2 flex justify-center lg:order-1">
+          <Reveal delay={120} className="order-2 flex justify-center lg:order-1">
             <PhoneMock className="animate-float" />
-          </div>
-          <div className="order-1 lg:order-2">
+          </Reveal>
+          <Reveal className="order-1 lg:order-2">
             <p className="text-sm font-semibold text-primary">Native mobile</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
               Built for the ramp, not a shrunk-down desktop.
@@ -247,7 +247,7 @@ export default function HomePage() {
                 <ChevronRight className="size-4 opacity-80" />
               </Button>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -260,7 +260,7 @@ export default function HomePage() {
       <section className="overflow-hidden border-t border-border bg-white">
         <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-28">
           <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.05fr]">
-            <div>
+            <Reveal>
               <h2 className="text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
                 Simple pricing that scales with your fleet.
               </h2>
@@ -280,9 +280,9 @@ export default function HomePage() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </Reveal>
 
-            <div className="relative">
+            <Reveal delay={120} className="relative">
               <div
                 className="pointer-events-none absolute -inset-6 rounded-[28px] bg-[linear-gradient(118deg,rgba(25,103,210,0.18),rgba(14,165,233,0.2),rgba(16,35,63,0.12))]"
                 aria-hidden
@@ -306,7 +306,7 @@ export default function HomePage() {
                   See full pricing
                 </Button>
               </div>
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>
@@ -314,7 +314,7 @@ export default function HomePage() {
       {/* Final CTA */}
       <section className="border-t border-border bg-brand-surface text-white">
         <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-8 px-4 py-16 sm:px-6 lg:flex-row lg:items-center lg:py-20">
-          <div className="max-w-xl">
+          <Reveal className="max-w-xl">
             <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
               See it running before you commit.
             </h2>
@@ -323,8 +323,8 @@ export default function HomePage() {
               role — nothing to install, no signup. Ready to make it yours? Add a tail
               and go, or bring your questions.
             </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-3">
+          </Reveal>
+          <Reveal delay={100} className="flex flex-wrap items-center gap-3">
             <Button href={DEMO_URL} size="lg" className="bg-white text-brand-surface hover:bg-white/90">
               <PlayCircle className="size-4 opacity-80" />
               Try the live demo
@@ -337,7 +337,7 @@ export default function HomePage() {
               Start free trial
               <ChevronRight className="size-4 opacity-80" />
             </Button>
-          </div>
+          </Reveal>
         </div>
       </section>
     </>

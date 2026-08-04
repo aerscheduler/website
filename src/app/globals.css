@@ -26,6 +26,15 @@
     0 12px 28px -6px rgba(16, 24, 40, 0.16), 0 0 0 1px rgba(60, 66, 87, 0.04);
 
   --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+
+  /* Motion. One curve, three durations — every transition on the site picks
+     from these so nothing drifts out of step with anything else. The curve is
+     a decelerating ease-out: fast off the mark, long settle. */
+  --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+  --dur-fast: 180ms;
+  --dur-base: 480ms;
+  --dur-slow: 720ms;
+  --reveal-shift: 14px;
 }
 
 @theme inline {
@@ -72,8 +81,81 @@ body {
   color: var(--brand-surface);
 }
 
-/* Atmospheric hero mesh: blue/cyan/navy only (no purple) */
-.hero-mesh {
+/* ---------------------------------------------------------------------------
+   Hero sky
+
+   Six pre-authored gradients, one per phase of the day; `HeroAtmosphere` fades
+   the visitor's local one to opacity 1. Brand blue stays dominant throughout —
+   warmth only enters at dawn and dusk, which is both what the sky actually does
+   and the only two times a warm hero would not fight the product screenshot
+   sitting on top of it.
+
+   Each sky carries its own drift with a different duration and direction, so
+   the layers never realign into a visible loop.
+--------------------------------------------------------------------------- */
+.sky {
+  opacity: 0;
+  transition: opacity var(--dur-slow) var(--ease-out);
+  will-change: opacity;
+}
+
+.sky--active {
+  opacity: 0.9;
+}
+
+.sky--night {
+  background:
+    radial-gradient(ellipse 70% 55% at 78% 18%, rgba(30, 58, 110, 0.5), transparent 58%),
+    radial-gradient(ellipse 55% 50% at 92% 55%, rgba(16, 35, 63, 0.45), transparent 52%),
+    radial-gradient(ellipse 40% 45% at 60% 88%, rgba(12, 24, 46, 0.3), transparent 55%),
+    linear-gradient(
+      118deg,
+      transparent 32%,
+      rgba(25, 55, 99, 0.3) 46%,
+      rgba(16, 35, 63, 0.42) 56%,
+      rgba(38, 76, 140, 0.32) 64%,
+      rgba(10, 20, 38, 0.24) 76%,
+      transparent 88%
+    );
+  animation: sky-drift-a 26s ease-in-out infinite alternate;
+}
+
+.sky--dawn {
+  background:
+    radial-gradient(ellipse 70% 55% at 78% 18%, rgba(255, 176, 122, 0.42), transparent 58%),
+    radial-gradient(ellipse 55% 50% at 92% 55%, rgba(120, 150, 220, 0.4), transparent 52%),
+    radial-gradient(ellipse 40% 45% at 60% 88%, rgba(25, 103, 210, 0.24), transparent 55%),
+    linear-gradient(
+      118deg,
+      transparent 32%,
+      rgba(255, 196, 150, 0.26) 46%,
+      rgba(148, 163, 224, 0.38) 56%,
+      rgba(90, 140, 220, 0.34) 64%,
+      rgba(30, 58, 110, 0.2) 76%,
+      transparent 88%
+    );
+  animation: sky-drift-b 21s ease-in-out infinite alternate;
+}
+
+.sky--morning {
+  background:
+    radial-gradient(ellipse 70% 55% at 78% 18%, rgba(125, 211, 252, 0.48), transparent 58%),
+    radial-gradient(ellipse 55% 50% at 92% 55%, rgba(56, 160, 235, 0.38), transparent 52%),
+    radial-gradient(ellipse 40% 45% at 60% 88%, rgba(25, 103, 210, 0.2), transparent 55%),
+    linear-gradient(
+      118deg,
+      transparent 32%,
+      rgba(186, 230, 253, 0.3) 46%,
+      rgba(56, 189, 248, 0.4) 56%,
+      rgba(25, 103, 210, 0.32) 64%,
+      rgba(16, 35, 63, 0.16) 76%,
+      transparent 88%
+    );
+  animation: sky-drift-a 18s ease-in-out infinite alternate;
+}
+
+/* The original mesh, kept as the neutral midday state and the SSR default. */
+.sky--midday {
   background:
     radial-gradient(ellipse 70% 55% at 78% 18%, rgba(56, 189, 248, 0.45), transparent 58%),
     radial-gradient(ellipse 55% 50% at 92% 55%, rgba(25, 103, 210, 0.38), transparent 52%),
@@ -87,15 +169,58 @@ body {
       rgba(16, 35, 63, 0.2) 76%,
       transparent 88%
     );
-  animation: mesh-drift 18s ease-in-out infinite alternate;
+  animation: sky-drift-b 18s ease-in-out infinite alternate;
 }
 
-@keyframes mesh-drift {
+.sky--evening {
+  background:
+    radial-gradient(ellipse 70% 55% at 78% 18%, rgba(255, 205, 140, 0.36), transparent 58%),
+    radial-gradient(ellipse 55% 50% at 92% 55%, rgba(56, 150, 225, 0.4), transparent 52%),
+    radial-gradient(ellipse 40% 45% at 60% 88%, rgba(25, 103, 210, 0.24), transparent 55%),
+    linear-gradient(
+      118deg,
+      transparent 32%,
+      rgba(255, 216, 168, 0.24) 46%,
+      rgba(96, 170, 232, 0.4) 56%,
+      rgba(25, 103, 210, 0.34) 64%,
+      rgba(16, 35, 63, 0.2) 76%,
+      transparent 88%
+    );
+  animation: sky-drift-a 23s ease-in-out infinite alternate;
+}
+
+.sky--dusk {
+  background:
+    radial-gradient(ellipse 70% 55% at 78% 18%, rgba(255, 158, 128, 0.4), transparent 58%),
+    radial-gradient(ellipse 55% 50% at 92% 55%, rgba(88, 108, 190, 0.42), transparent 52%),
+    radial-gradient(ellipse 40% 45% at 60% 88%, rgba(16, 35, 63, 0.3), transparent 55%),
+    linear-gradient(
+      118deg,
+      transparent 32%,
+      rgba(255, 180, 150, 0.24) 46%,
+      rgba(110, 130, 200, 0.4) 56%,
+      rgba(46, 88, 160, 0.34) 64%,
+      rgba(16, 35, 63, 0.24) 76%,
+      transparent 88%
+    );
+  animation: sky-drift-b 24s ease-in-out infinite alternate;
+}
+
+@keyframes sky-drift-a {
   from {
     transform: translate3d(0, 0, 0) scale(1);
   }
   to {
     transform: translate3d(-2%, 1.5%, 0) scale(1.04);
+  }
+}
+
+@keyframes sky-drift-b {
+  from {
+    transform: translate3d(0, 0, 0) scale(1.03);
+  }
+  to {
+    transform: translate3d(1.8%, -1.2%, 0) scale(1);
   }
 }
 
@@ -138,6 +263,91 @@ body {
 
 .animate-float {
   animation: float-soft 6s ease-in-out infinite;
+}
+
+/* An idle float below the fold is work the compositor does for nobody. The
+   `<noscript>` block in `layout.tsx` un-pauses it when scripting is off, since
+   nothing would ever set `data-inview` in that case. */
+.animate-float:not([data-inview]) {
+  animation-play-state: paused;
+}
+
+/* ---------------------------------------------------------------------------
+   Scroll reveals
+
+   Hidden by default, so the server HTML and the first client paint agree and
+   React has no hydration mismatch to report. `Reveal` flips `data-revealed`
+   when its observer fires; the `<noscript>` block in `layout.tsx` forces
+   everything visible when scripting is off, so content is never hostage to
+   the animation.
+
+   One-shot by design: `Reveal` disconnects its observer after the first entry,
+   so scrolling back up a finished page is still.
+--------------------------------------------------------------------------- */
+[data-reveal],
+[data-reveal-group] > * {
+  opacity: 0;
+  transform: translateY(var(--reveal-shift));
+  transition:
+    opacity var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
+}
+
+[data-reveal][data-revealed],
+[data-reveal-group][data-revealed] > * {
+  opacity: 1;
+  transform: none;
+}
+
+/* Stagger by position rather than wrapper elements, so a group drops onto an
+   existing grid without adding a box that would break `grid-cols-*`. */
+[data-reveal-group] > *:nth-child(2) {
+  transition-delay: 70ms;
+}
+[data-reveal-group] > *:nth-child(3) {
+  transition-delay: 140ms;
+}
+[data-reveal-group] > *:nth-child(4) {
+  transition-delay: 210ms;
+}
+[data-reveal-group] > *:nth-child(5) {
+  transition-delay: 260ms;
+}
+[data-reveal-group] > *:nth-child(n + 6) {
+  transition-delay: 300ms;
+}
+
+/* ---------------------------------------------------------------------------
+   Reduced motion
+
+   Everything above is decoration. A visitor who has asked their OS to stop
+   animations gets the finished state instantly — including the reveals, which
+   must be forced visible or the page would simply be blank.
+--------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  [data-reveal],
+  [data-reveal-group] > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .sky {
+    transition: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 .grid-lines {
