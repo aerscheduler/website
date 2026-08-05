@@ -18855,6 +18855,14 @@
               "billByHobbsTime": {
                 "type": "boolean",
                 "description": "Bill by Hobbs (true) or tach (false)."
+              },
+              "overnightMinimumTenths": {
+                "description": "This aeroplane's least billable time per night away, in TENTHS of an hour, applied as a floor on a booking that spans nights. `20` bills at least 2.0 hours a night.\n\n`null` means inherit the organization's figure; `0` means exempt this aircraft entirely. The two are not interchangeable — an exempt aeroplane must stay exempt when the school-wide figure changes.",
+                "example": 20,
+                "type": [
+                  "integer",
+                  "null"
+                ]
               }
             },
             "additionalProperties": true
@@ -19260,11 +19268,11 @@
           "end": {
             "type": "string",
             "format": "date-time",
-            "description": "End instant. MUST carry an explicit offset or `Z`."
+            "description": "End instant. MUST carry an explicit offset or `Z`.\n\nMAY fall on a later calendar day than `start`. A school with multi-day bookings enabled can book a trip that keeps the resource for the whole span, and the resource is unavailable for every day in between rather than becoming free again each morning. Do not assume a booking ends on the day it starts."
           },
           "timeZoneName": {
             "type": "string",
-            "description": "IANA zone the booking was made in, e.g. `America/Denver`.",
+            "description": "IANA zone the booking is anchored to, e.g. `America/Denver`. Resolved from the LOCATION, falling back to the organization — not from the caller's device, because how many nights a trip spans decides what it bills.",
             "example": "America/Denver"
           },
           "notes": {
