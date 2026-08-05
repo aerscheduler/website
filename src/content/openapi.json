@@ -78,7 +78,7 @@
     },
     {
       "name": "Training",
-      "description": "Courses, syllabi, enrollments and training records. A course is trained under Part 61 or Part 141; the shape is identical and only the enforcement differs. A **published syllabus version is immutable** — revising it makes a new version, and an enrollment stays pinned to the one it started under. A student's standing against each requirement is a **ledger**: entries are only ever appended, and a correction is a reversing entry rather than an edit, so hours flown are always traceable to the lesson that earned them."
+      "description": "Courses, syllabi, enrolments and training records. A course is trained under Part 61 or Part 141; the shape is identical and only the enforcement differs. A **published syllabus version is immutable** — revising it makes a new version, and an enrolment stays pinned to the one it started under. A student's standing against each requirement is a **ledger**: entries are only ever appended, and a correction is a reversing entry rather than an edit, so hours flown are always traceable to the lesson that earned them."
     },
     {
       "name": "Documents",
@@ -5869,7 +5869,7 @@
           "Training"
         ],
         "summary": "Retire a syllabus version",
-        "description": "Stops new enrollments. Students already on it finish on it. Requires the **admin** role.",
+        "description": "Stops new enrolments. Students already on it finish on it. Requires the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -6725,7 +6725,7 @@
         "tags": [
           "Training"
         ],
-        "summary": "List enrollments",
+        "summary": "List enrolments",
         "description": "Staff see everyone's. **A student always sees only their own**, whatever they ask for — §141.101 gives them the right to their record, and no right to anyone else's.",
         "responses": {
           "200": {
@@ -6861,7 +6861,7 @@
         "tags": [
           "Training"
         ],
-        "summary": "Enroll a student",
+        "summary": "Enrol a student",
         "description": "Pins the student to this syllabus version. A Part 141 course must be published first. Requires the **admin** role.",
         "responses": {
           "200": {
@@ -6927,7 +6927,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "description": "The enrollment.",
+                "description": "The enrolment.",
                 "properties": {
                   "versionId": {
                     "type": "integer"
@@ -6937,7 +6937,7 @@
                   },
                   "enrollmentCertificateNumber": {
                     "type": "string",
-                    "description": "§141.93 certificate of enrollment."
+                    "description": "§141.93 certificate of enrolment."
                   }
                 },
                 "required": [
@@ -7013,7 +7013,7 @@
             "schema": {
               "type": "integer"
             },
-            "description": "The enrollment id."
+            "description": "The enrolment id."
           }
         ]
       }
@@ -7062,7 +7062,7 @@
             }
           },
           "409": {
-            "description": "Requirements are unmet, or the enrollment has already ended.",
+            "description": "Requirements are unmet, or the enrolment has already ended.",
             "content": {
               "application/json": {
                 "schema": {
@@ -7091,7 +7091,7 @@
             "schema": {
               "type": "integer"
             },
-            "description": "The enrollment id."
+            "description": "The enrolment id."
           }
         ],
         "requestBody": {
@@ -7118,7 +7118,7 @@
         "tags": [
           "Training"
         ],
-        "summary": "Terminate or transfer an enrollment",
+        "summary": "Terminate or transfer an enrolment",
         "description": "§141.101 wants the date and the reason. Requires the **admin** role.",
         "responses": {
           "200": {
@@ -7157,7 +7157,7 @@
             }
           },
           "409": {
-            "description": "The enrollment has already ended.",
+            "description": "The enrolment has already ended.",
             "content": {
               "application/json": {
                 "schema": {
@@ -7186,7 +7186,7 @@
             "schema": {
               "type": "integer"
             },
-            "description": "The enrollment id."
+            "description": "The enrolment id."
           }
         ],
         "requestBody": {
@@ -7280,7 +7280,7 @@
             "schema": {
               "type": "integer"
             },
-            "description": "The enrollment id."
+            "description": "The enrolment id."
           }
         ]
       }
@@ -16735,7 +16735,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "description": "The group. The `addNew*` flags auto-enroll future members holding that role.",
+                "description": "The group. The `addNew*` flags auto-enrol future members holding that role.",
                 "properties": {
                   "name": {
                     "type": "string"

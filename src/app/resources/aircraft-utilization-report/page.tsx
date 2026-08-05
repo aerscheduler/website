@@ -39,7 +39,7 @@ const FAQS = [
     // Overnight trips are a legitimate reason for a terrible-looking efficiency figure, and
     // without this the FAQ above reads as though the only causes are things going wrong.
     q: "Do overnight trips make utilization look worse than it is?",
-    a: "Yes, and it is worth knowing before you act on the number. Booked hours measure how long the aircraft was unavailable, so a trip out Friday and back Sunday books around 49 hours and might fly six. That is one booking dragging a whole month's efficiency down, even though the aeroplane was away earning. Filter or group the utilization report by Overnight to read trips and same-day flying apart, and judge trips on billed hours instead.",
+    a: "Yes, and it is worth knowing before you act on the number. Booked hours measure how long the aircraft was unavailable, so a trip out Friday and back Sunday books around 49 hours and might fly six. That is one booking dragging a whole month's efficiency down, even though the aircraft was away earning. Filter or group the utilization report by Overnight to read trips and same-day flying apart, and judge trips on billed hours instead.",
   },
   {
     q: "How do I find flights that were flown but never invoiced?",

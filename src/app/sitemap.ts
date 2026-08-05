@@ -66,6 +66,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
     },
     { path: "/compare/flight-schedule-pro", priority: 0.8, changeFrequency: "monthly" },
+    { path: "/compare/flight-circle", priority: 0.8, changeFrequency: "monthly" },
     { path: "/migrating/my-fbo", priority: 0.85, changeFrequency: "monthly" },
     { path: "/about", priority: 0.7, changeFrequency: "monthly" },
     { path: "/contact", priority: 0.8, changeFrequency: "monthly" },

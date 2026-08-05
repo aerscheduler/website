@@ -59,7 +59,7 @@ const FAQS = [
   },
   {
     q: "Why would I charge a minimum at all?",
-    a: "Because a member who takes an aeroplane away for a long weekend and flies four hours has denied every other member that aircraft for three days and paid for four hours. Every club and FBO handles that somehow. Without a minimum you silently under-bill your most disruptive bookings.",
+    a: "Because a member who takes an aircraft away for a long weekend and flies four hours has denied every other member that aircraft for three days and paid for four hours. Every club and FBO handles that somehow. Without a minimum you silently under-bill your most disruptive bookings.",
   },
   {
     q: "Can I set a different minimum for different aircraft?",
@@ -75,7 +75,7 @@ const FAQS = [
   },
   {
     q: "Why do overnight trips make my utilization look terrible?",
-    a: "Because a trip holds the aircraft for its whole span, so its booked hours are large next to its flown hours. The aeroplane was away earning, not sitting idle, so the utilization report lets you filter or group by Overnight to read the two apart, and points you at billed hours rather than flown hours for trips.",
+    a: "Because a trip holds the aircraft for its whole span, so its booked hours are large next to its flown hours. The aircraft was away earning, not sitting idle, so the utilization report lets you filter or group by Overnight to read the two apart, and points you at billed hours rather than flown hours for trips.",
   },
   {
     q: "Do I have to set a time zone first?",
@@ -113,8 +113,8 @@ export default function Page() {
           </h2>
           <p className="text-muted-foreground">
             Every other booking has to fit inside one contiguous free window, which is how you
-            say &ldquo;this aeroplane flies 08:00 to 18:00&rdquo;. A trip is not a longer
-            booking: an aeroplane taken away for a weekend is not available 08:00 to 18:00 on
+            say &ldquo;this aircraft flies 08:00 to 18:00&rdquo;. A trip is not a longer
+            booking: an aircraft taken away for a weekend is not available 08:00 to 18:00 on
             the Saturday, it is simply gone.
           </p>
           <p className="text-muted-foreground">
@@ -191,7 +191,7 @@ export default function Page() {
           <h2 className="text-2xl font-semibold tracking-tight">Per aircraft, or school-wide</h2>
           <p className="text-muted-foreground">
             Set one figure for the school and override it on any aircraft that needs its own.
-            Zero on an aircraft is an exemption, not a fallback, so a club aeroplane you
+            Zero on an aircraft is an exemption, not a fallback, so a club aircraft you
             deliberately excluded stays excluded when you raise the school-wide minimum later.
           </p>
           <p className="text-muted-foreground">

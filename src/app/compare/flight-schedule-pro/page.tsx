@@ -36,7 +36,22 @@ const ROWS: [string, string, string][] = [
   [
     "Scheduling",
     "Lane dispatch, week views, student self-booking",
-    "Mature scheduling & training workflows",
+    "Mature scheduling workflows",
+  ],
+  [
+    "Training records",
+    "Included. Syllabi, graded lessons, endorsements, Part 61 & 141",
+    "Capable, and often a separately-priced module",
+  ],
+  [
+    "Hour requirements",
+    "Tracked as a ledger — one night cross-country credits four at once",
+    "Lessons are ticked off; hour minimums are not modelled",
+  ],
+  [
+    "Offline lesson grading",
+    "Yes, on iOS",
+    "Yes, on iOS — the capability they are best known for",
   ],
   [
     "Billing",
@@ -74,9 +89,10 @@ export default function CompareFspPage() {
             AerScheduler vs Flight Schedule Pro
           </h1>
           <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-            Both products help flight schools schedule aircraft and people.
-            The biggest differences show up in how you buy, how you start, and
-            how mobile fits the day-to-day.
+            Both products help flight schools schedule aircraft, bill for
+            flights, and keep training records. The biggest differences show up
+            in how you buy, how you start, and what the training record can tell
+            you once the lessons are signed.
           </p>
           <p className="mt-3 text-sm text-muted-foreground">
             Flight Schedule Pro is a long-standing competitor. Details below
@@ -115,6 +131,10 @@ export default function CompareFspPage() {
           <li>You want to start today without booking a demo</li>
           <li>You prefer simple per-aircraft pricing with unlimited seats</li>
           <li>A native iOS app for the whole team matters</li>
+          <li>
+            You want training records that answer whether a student is legal to test, with
+            no separately-priced module
+          </li>
           <li>You&apos;re leaving MyFBO and need a clean self-serve path</li>
         </ul>
 
@@ -122,7 +142,7 @@ export default function CompareFspPage() {
           When Flight Schedule Pro may fit better
         </h2>
         <ul className="mt-4 list-disc space-y-2 pl-5 text-muted-foreground">
-          <li>You already run a large FSP deployment and training is deep</li>
+          <li>You already run a large FSP deployment and moving it would cost more than it saves</li>
           <li>You want a guided enterprise sales process</li>
           <li>You need a specific FSP workflow or integration we don&apos;t cover yet</li>
         </ul>

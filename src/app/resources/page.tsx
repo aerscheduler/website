@@ -75,6 +75,11 @@ const GUIDES = [
     body: "A practical comparison of pricing model, self-serve setup, mobile apps, and who each product fits.",
   },
   {
+    href: "/compare/flight-circle",
+    title: "AerScheduler vs Flight Circle",
+    body: "The closest comparison on this site. Both build syllabi; the difference is whether the record tracks the hours a certificate turns on, or only the lessons.",
+  },
+  {
     href: "/migrating/my-fbo",
     title: "Migrating from MyFBO",
     body: "Step-by-step playbook: back up your data, stand up AerScheduler, run in parallel, then cut over.",

@@ -66,7 +66,7 @@ const FAQS = [
   },
   {
     q: "What about endorsements?",
-    a: "AerScheduler ships the endorsements a Part 61 or 141 aeroplane school actually signs, taken from AC 61-65K Appendix A: pre-solo knowledge and training, the 90-day solo and its renewals, solo cross-country, Class B, the knowledge and practical tests, retests, flight reviews, and instrument proficiency checks. You pick one, it is filled in with the student's name and your certificate number, and the finished wording is stored.",
+    a: "AerScheduler ships the endorsements a Part 61 or 141 aircraft school actually signs, taken from AC 61-65K Appendix A: pre-solo knowledge and training, the 90-day solo and its renewals, solo cross-country, Class B, the knowledge and practical tests, retests, flight reviews, and instrument proficiency checks. You pick one, it is filled in with the student's name and your certificate number, and the finished wording is stored.",
   },
   {
     q: "Why store the wording rather than a reference to the template?",
@@ -196,7 +196,7 @@ export default function Page() {
         <section className="mt-10 space-y-4">
           <h2 className="text-2xl font-semibold tracking-tight">Grading where there is no signal</h2>
           <p className="text-muted-foreground">
-            Instructors debrief at the aeroplane, and ramps have no coverage. The alternative,
+            Instructors debrief at the aircraft, and ramps have no coverage. The alternative,
             &ldquo;I will do it back at the desk&rdquo;, is the single biggest reason training
             records go stale, because the debrief is where the detail still exists.
           </p>

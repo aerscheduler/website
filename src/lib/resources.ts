@@ -104,6 +104,11 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
         description: "Self-serve, pricing, and mobile side-by-side.",
       },
       {
+        href: "/compare/flight-circle",
+        label: "vs Flight Circle",
+        description: "Training records: lessons ticked off, or hours that answer the checkride question.",
+      },
+      {
         href: "/pricing",
         label: "Pricing",
         description: "$20/mo per aircraft. Sims and rooms free.",

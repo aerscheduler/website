@@ -44,7 +44,7 @@ const RULES = [
   {
     name: "Each pays their own time",
     what: "Everyone is billed for the hours they personally flew. You enter each person's meter readings at close-out, and they have to add up to what the aircraft actually ran.",
-    when: "Two pilots splitting a cross-country, or partners sharing an aeroplane.",
+    when: "Two pilots splitting a cross-country, or partners sharing an aircraft.",
     example: "Amy flies 1.4, Ben flies 0.6 → $252 and $108. Still $360 in total.",
   },
   {
@@ -68,7 +68,7 @@ const FAQS = [
   },
   {
     q: "How do two pilots split time on one flight?",
-    a: "Book it as a shared flight and enter each pilot's own Hobbs readings at close-out. Each is billed for the hours they flew, and AerScheduler checks that the individual legs add up to what the aircraft actually ran. If they don't, it tells you rather than quietly billing a different number of hours than the aeroplane flew.",
+    a: "Book it as a shared flight and enter each pilot's own Hobbs readings at close-out. Each is billed for the hours they flew, and AerScheduler checks that the individual legs add up to what the aircraft actually ran. If they don't, it tells you rather than quietly billing a different number of hours than the aircraft flew.",
   },
   {
     q: "Why is a shared flight not just a solo with two people on it?",
@@ -168,7 +168,7 @@ export default function Page() {
             Shared flights, and why they aren&rsquo;t solos
           </h2>
           <p className="text-muted-foreground">
-            When two pilots share an aeroplane with no instructor aboard, whether splitting a
+            When two pilots share an aircraft with no instructor aboard, whether splitting a
             cross-country or one flying under the hood with the other as safety pilot, that is
             a <strong>shared flight</strong>, its own booking type.
           </p>
