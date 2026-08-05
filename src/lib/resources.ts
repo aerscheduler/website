@@ -49,6 +49,11 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
         label: "Split billing & shared flights",
         description: "One booking, one invoice per person, and why a shared flight isn't a solo.",
       },
+      {
+        href: "/resources/overnight-and-multi-day-rentals",
+        label: "Overnight & multi-day rentals",
+        description: "Trips that span nights, and a minimum charge for every night away.",
+      },
     ],
   },
   {
@@ -64,7 +69,7 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
       {
         href: "/resources/aircraft-utilization-report",
         label: "Aircraft utilization",
-        description: "Booked vs flown vs billed — and what the gaps cost.",
+        description: "Booked vs flown vs billed, and what the gaps cost.",
       },
       {
         href: "/resources/flight-school-revenue-reporting",

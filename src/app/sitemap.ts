@@ -29,6 +29,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.85,
       changeFrequency: "monthly",
     },
+    // Billing cluster. Split billing was live for a week without a sitemap entry, which
+    // is the kind of omission nothing complains about — the page renders, the nav links to
+    // it, and it simply is not submitted. A new guide belongs in FOUR places: its own
+    // directory, the resources index, RESOURCE_GROUPS for the nav and footer, and here.
+    {
+      path: "/resources/split-billing-shared-flights",
+      priority: 0.85,
+      changeFrequency: "monthly",
+    },
+    {
+      path: "/resources/overnight-and-multi-day-rentals",
+      priority: 0.85,
+      changeFrequency: "monthly",
+    },
     // Reporting cluster: the pillar carries the higher priority, the two topic
     // guides sit under it and link back to it.
     {

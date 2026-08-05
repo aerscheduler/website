@@ -21,7 +21,7 @@ export const metadata: Metadata = {
  *
  * Deliberately longer copy than `RESOURCE_GROUPS` in `lib/resources.ts`, which
  * feeds the nav and footer where one line has to fit. The two lists do have to
- * be kept in step by hand — a new guide belongs in both.
+ * be kept in step by hand. A new guide belongs in both, plus the sitemap.
  */
 const GUIDES = [
   {
@@ -37,12 +37,17 @@ const GUIDES = [
   {
     href: "/resources/split-billing-shared-flights",
     title: "Split billing & shared flights",
-    body: "Group ground school billed per student, two pilots splitting a cross-country, and a safety pilot who isn't paying — all on one booking.",
+    body: "Group ground school billed per student, two pilots splitting a cross-country, and a safety pilot who isn't paying, all on one booking.",
+  },
+  {
+    href: "/resources/overnight-and-multi-day-rentals",
+    title: "Overnight & multi-day rentals",
+    body: "Book a trip that spans nights, charge a minimum for every night the aircraft is away, and tell the member before they agree to it.",
   },
   {
     href: "/resources/flight-school-reports",
     title: "Flight school reports",
-    body: "The reports worth having — revenue, utilization, instruction, fleet, compliance — and what each one answers.",
+    body: "The reports worth having (revenue, utilization, instruction, fleet, compliance) and what each one answers.",
   },
   {
     href: "/resources/aircraft-utilization-report",
@@ -52,12 +57,12 @@ const GUIDES = [
   {
     href: "/resources/flight-school-revenue-reporting",
     title: "Revenue reporting",
-    body: "Billed, collected, and outstanding — cut by aircraft, instructor, customer, or lesson type.",
+    body: "Billed, collected, and outstanding, cut by aircraft, instructor, customer, or lesson type.",
   },
   {
     href: "/resources/quickbooks-integration",
     title: "QuickBooks Online integration",
-    body: "How paid AerScheduler invoices sync to QuickBooks Online as Sales Receipts — without CSV exports.",
+    body: "How paid AerScheduler invoices sync to QuickBooks Online as Sales Receipts, without CSV exports.",
   },
   {
     href: "/compare/flight-schedule-pro",
