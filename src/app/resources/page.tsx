@@ -45,6 +45,11 @@ const GUIDES = [
     body: "Book a trip that spans nights, charge a minimum for every night the aircraft is away, and tell the member before they agree to it.",
   },
   {
+    href: "/resources/flight-training-records",
+    title: "Flight training records",
+    body: "What a school has to keep: versioned syllabi, hours that move independently of lessons, records frozen at signing, and endorsements from AC 61-65K.",
+  },
+  {
     href: "/resources/flight-school-reports",
     title: "Flight school reports",
     body: "The reports worth having (revenue, utilization, instruction, fleet, compliance) and what each one answers.",

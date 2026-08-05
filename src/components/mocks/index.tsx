@@ -4,6 +4,7 @@ export { FleetMock } from "@/components/mocks/fleet-mock";
 export { PeopleMock } from "@/components/mocks/people-mock";
 export { ComplianceMock } from "@/components/mocks/compliance-mock";
 export { InstructionMock } from "@/components/mocks/instruction-mock";
+export { TrainingMock } from "@/components/mocks/training-mock";
 export { MaintenanceMock } from "@/components/mocks/maintenance-mock";
 export { SelfBookingMock } from "@/components/mocks/self-booking-mock";
 export { ReportsMock } from "@/components/mocks/reports-mock";

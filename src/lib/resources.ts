@@ -57,6 +57,16 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
     ],
   },
   {
+    title: "Training",
+    items: [
+      {
+        href: "/resources/flight-training-records",
+        label: "Flight training records",
+        description: "Versioned syllabi, hours against lessons, and endorsements that hold up.",
+      },
+    ],
+  },
+  {
     // The pillar page sits first and the two topic guides link back to it, so
     // the internal linking points somewhere rather than in a ring.
     title: "Reporting",

@@ -43,6 +43,14 @@ const FEATURE_SEO: Record<
     description:
       "Configure ratings, dual rates, and instructor availability for private, instrument, and commercial training.",
   },
+  training: {
+    // Commercial intent ("software", "tracking"), so it does not compete with
+    // /resources/flight-training-records, which owns the informational query
+    // "what training records does a flight school have to keep".
+    title: "Part 141 & Part 61 Syllabus and Training Records Software",
+    description:
+      "Track flight training against a versioned syllabus: stages, lessons, graded tasks, hour requirements, AC 61-65K endorsements, and records that cannot be edited after signing.",
+  },
   billing: {
     title: "Flight School Billing & Invoicing Software",
     description:

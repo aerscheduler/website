@@ -43,6 +43,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.85,
       changeFrequency: "monthly",
     },
+    {
+      path: "/resources/flight-training-records",
+      priority: 0.85,
+      changeFrequency: "monthly",
+    },
     // Reporting cluster: the pillar carries the higher priority, the two topic
     // guides sit under it and link back to it.
     {

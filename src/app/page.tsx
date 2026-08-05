@@ -7,7 +7,7 @@ import {
   Plane,
   CalendarDays,
   CreditCard,
-  Smartphone,
+  GraduationCap,
   PlayCircle,
   Users,
   MoonStar,
@@ -157,11 +157,14 @@ export default function HomePage() {
               title="Billing"
               body="Flights draft invoices. Cards on file when you're ready."
             />
+            {/* Training took the fourth slot from the native-app card, which was pointing at
+                /app two screens above the mobile spotlight that sells the same thing harder,
+                with a phone mock and the store badges. The grid stays at four. */}
             <TeaserCard
-              href="/app"
-              icon={<Smartphone className="size-5" />}
-              title="Native app"
-              body="iOS for students, instructors, and the desk."
+              href="/features/training"
+              icon={<GraduationCap className="size-5" />}
+              title="Training"
+              body="Syllabi, graded lessons, hours, and endorsements."
             />
           </RevealGroup>
         </div>

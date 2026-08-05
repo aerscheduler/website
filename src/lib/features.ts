@@ -6,6 +6,7 @@ export type FeatureSlug =
   | "people-roles"
   | "compliance"
   | "instruction"
+  | "training"
   | "billing"
   | "maintenance"
   | "mobile"
@@ -142,7 +143,10 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
     slug: "instruction",
     title: "Instruction",
     navLabel: "Instruction",
-    eyebrow: "Training",
+    //Was "Training", which now belongs to the feature that actually is training. This one is
+    //rates, ratings and who may teach whom; two cards both labelled Training sitting next to
+    //each other in "Related features" told a visitor nothing.
+    eyebrow: "Rates & ratings",
     headline: "Ratings, rates, availability, and CFI↔student pairing.",
     summary:
       "Define instruction types and hourly rates, assign instructors and students, and let availability drive what shows as bookable.",
@@ -154,7 +158,29 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
       "Onboarding paths for flight schools and solo CFIs",
     ],
     personas: ["Owners", "Admins", "Instructors", "Students"],
-    related: ["scheduling", "people-roles", "billing", "self-booking"],
+    related: ["training", "scheduling", "people-roles", "billing"],
+  },
+  training: {
+    slug: "training",
+    title: "Training Records & Syllabi",
+    navLabel: "Training & Syllabi",
+    eyebrow: "Part 61 & 141",
+    headline: "The syllabus, the hours, and the endorsements in one record.",
+    summary:
+      "Build or import a syllabus, enroll a student against a version of it, grade lessons off the flights you already booked, and sign the endorsements. Part 61 and Part 141.",
+    bullets: [
+      "Four syllabi to start from: Private, Instrument, Commercial, and CFI",
+      "Stages, lessons, graded tasks, and your own grading scale",
+      "A published version is immutable, so revising it never moves a student's goalposts",
+      "Hour requirements tracked apart from lessons — one night cross-country credits four at once",
+      "Endorsements from AC 61-65K, with expiry on the 90-day solo",
+      "A signed lesson is frozen; a correction supersedes it and the original stays readable",
+      "Pace and silence per student, so somebody who has stopped flying surfaces",
+      "Grade at the aeroplane with no signal; it syncs when there is",
+    ],
+    personas: ["Owners", "Chief instructors", "Instructors", "Students"],
+    related: ["instruction", "people-roles", "compliance", "mobile"],
+    guides: ["/resources/flight-training-records"],
   },
   billing: {
     slug: "billing",
@@ -269,8 +295,14 @@ export const FEATURE_GROUPS: FeatureGroup[] = [
     items: ["scheduling", "self-booking", "fleet"],
   },
   {
+    title: "Train",
+    items: ["training", "instruction"],
+  },
+  {
+    // Compliance sits here rather than under Train: currency and medicals gate a BOOKING,
+    // which is a front-desk concern, where a syllabus gates a certificate.
     title: "Run the school",
-    items: ["people-roles", "compliance", "instruction"],
+    items: ["people-roles", "compliance"],
   },
   {
     title: "Money & MX",

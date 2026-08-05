@@ -14,6 +14,7 @@ import {
   SelfBookingMock,
   ReportsMock,
   IntegrationsMock,
+  TrainingMock,
 } from "@/components/mocks";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import {
@@ -201,6 +202,8 @@ function FeatureVisual({ slug }: { slug: FeatureSlug }) {
       return <ComplianceMock />;
     case "instruction":
       return <InstructionMock />;
+    case "training":
+      return <TrainingMock />;
     case "billing":
       return <BillingMock />;
     case "maintenance":
