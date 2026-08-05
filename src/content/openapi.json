@@ -78,7 +78,7 @@
     },
     {
       "name": "Training",
-      "description": "Courses, syllabi, enrolments and training records. A course is trained under Part 61 or Part 141; the shape is identical and only the enforcement differs. A **published syllabus version is immutable** — revising it makes a new version, and an enrolment stays pinned to the one it started under. A student's standing against each requirement is a **ledger**: entries are only ever appended, and a correction is a reversing entry rather than an edit, so hours flown are always traceable to the lesson that earned them."
+      "description": "Courses, syllabi, enrollments and training records. A course is trained under Part 61 or Part 141; the shape is identical and only the enforcement differs. A **published syllabus version is immutable** — revising it makes a new version, and an enrollment stays pinned to the one it started under. A student's standing against each requirement is a **ledger**: entries are only ever appended, and a correction is a reversing entry rather than an edit, so hours flown are always traceable to the lesson that earned them."
     },
     {
       "name": "Documents",
@@ -5189,6 +5189,15 @@
                   "description": {
                     "type": "string"
                   },
+                  "enrollmentFeeCents": {
+                    "type": "integer",
+                    "description": "What the school charges to enroll, in cents. Omit for a free course."
+                  },
+                  "enrollmentFeeLabel": {
+                    "type": "string",
+                    "maxLength": 60,
+                    "description": "How the fee reads on the invoice line."
+                  },
                   "regulatoryPart": {
                     "type": "string",
                     "enum": [
@@ -5869,7 +5878,7 @@
           "Training"
         ],
         "summary": "Retire a syllabus version",
-        "description": "Stops new enrolments. Students already on it finish on it. Requires the **admin** role.",
+        "description": "Stops new enrollments. Students already on it finish on it. Requires the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -6725,7 +6734,7 @@
         "tags": [
           "Training"
         ],
-        "summary": "List enrolments",
+        "summary": "List enrollments",
         "description": "Staff see everyone's. **A student always sees only their own**, whatever they ask for — §141.101 gives them the right to their record, and no right to anyone else's.",
         "responses": {
           "200": {
@@ -6861,7 +6870,7 @@
         "tags": [
           "Training"
         ],
-        "summary": "Enrol a student",
+        "summary": "Enroll a student",
         "description": "Pins the student to this syllabus version. A Part 141 course must be published first. Requires the **admin** role.",
         "responses": {
           "200": {
@@ -6927,7 +6936,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "description": "The enrolment.",
+                "description": "The enrollment.",
                 "properties": {
                   "versionId": {
                     "type": "integer"
@@ -6937,7 +6946,7 @@
                   },
                   "enrollmentCertificateNumber": {
                     "type": "string",
-                    "description": "§141.93 certificate of enrolment."
+                    "description": "§141.93 certificate of enrollment."
                   }
                 },
                 "required": [
@@ -7013,7 +7022,7 @@
             "schema": {
               "type": "integer"
             },
-            "description": "The enrolment id."
+            "description": "The enrollment id."
           }
         ]
       }
@@ -7062,7 +7071,7 @@
             }
           },
           "409": {
-            "description": "Requirements are unmet, or the enrolment has already ended.",
+            "description": "Requirements are unmet, or the enrollment has already ended.",
             "content": {
               "application/json": {
                 "schema": {
@@ -7091,7 +7100,7 @@
             "schema": {
               "type": "integer"
             },
-            "description": "The enrolment id."
+            "description": "The enrollment id."
           }
         ],
         "requestBody": {
@@ -7118,7 +7127,7 @@
         "tags": [
           "Training"
         ],
-        "summary": "Terminate or transfer an enrolment",
+        "summary": "Terminate or transfer an enrollment",
         "description": "§141.101 wants the date and the reason. Requires the **admin** role.",
         "responses": {
           "200": {
@@ -7157,7 +7166,7 @@
             }
           },
           "409": {
-            "description": "The enrolment has already ended.",
+            "description": "The enrollment has already ended.",
             "content": {
               "application/json": {
                 "schema": {
@@ -7186,7 +7195,7 @@
             "schema": {
               "type": "integer"
             },
-            "description": "The enrolment id."
+            "description": "The enrollment id."
           }
         ],
         "requestBody": {
@@ -7280,7 +7289,7 @@
             "schema": {
               "type": "integer"
             },
-            "description": "The enrolment id."
+            "description": "The enrollment id."
           }
         ]
       }
@@ -7716,6 +7725,82 @@
               "type": "integer"
             },
             "description": "The grant id."
+          }
+        ]
+      }
+    },
+    "/training/enrollments/{enrollmentId}/fee": {
+      "post": {
+        "tags": [
+          "Training"
+        ],
+        "summary": "Bill the course enrollment fee",
+        "description": "Raises an invoice for the fee this enrollment snapshotted when the student enrolled. Refuses if the course had no fee or the fee has already been invoiced — a second invoice for the same fee is not something a refund undoes cleanly. Requires the **manageEnrollment** grant or the **admin** role.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "invoiceId": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "billEnrollmentFee",
+        "parameters": [
+          {
+            "name": "enrollmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The enrollment id."
           }
         ]
       }
@@ -8601,7 +8686,7 @@
           "Training"
         ],
         "summary": "Endorsement templates",
-        "description": "The AC 61-65K Appendix A endorsements a Part 61/141 aircraft school actually signs. Pass `orgUserId` and the student's name is substituted for you; every other `{placeholder}` is left for the instructor, because inventing values would be putting words into a signature.",
+        "description": "The AC 61-65K Appendix A endorsements a Part 61/141 flight school actually signs. Pass `orgUserId` and the student's name is substituted for you; every other `{placeholder}` is left for the instructor, because inventing values would be putting words into a signature.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -16735,7 +16820,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "description": "The group. The `addNew*` flags auto-enrol future members holding that role.",
+                "description": "The group. The `addNew*` flags auto-enroll future members holding that role.",
                 "properties": {
                   "name": {
                     "type": "string"
