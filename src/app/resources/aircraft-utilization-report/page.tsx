@@ -36,6 +36,12 @@ const FAQS = [
     a: "Cancellations, no-shows, weather, and maintenance. A persistent gap means your schedule is optimistic and your fleet looks busier than it earns. AerScheduler reports the gap directly as an efficiency figure per aircraft, and the cancellations report breaks down the reasons.",
   },
   {
+    // Overnight trips are a legitimate reason for a terrible-looking efficiency figure, and
+    // without this the FAQ above reads as though the only causes are things going wrong.
+    q: "Do overnight trips make utilization look worse than it is?",
+    a: "Yes, and it is worth knowing before you act on the number. Booked hours measure how long the aircraft was unavailable, so a trip out Friday and back Sunday books around 49 hours and might fly six. That is one booking dragging a whole month's efficiency down, even though the aeroplane was away earning. Filter or group the utilization report by Overnight to read trips and same-day flying apart, and judge trips on billed hours instead.",
+  },
+  {
     q: "How do I find flights that were flown but never invoiced?",
     a: "Compare flown hours against billed hours. Where flown exceeds billed, flying happened that nobody charged for. AerScheduler surfaces this as a 'flown, not invoiced' count on the dashboard that opens straight into the list of affected flights.",
   },

@@ -68,7 +68,8 @@ export default function ProductPage() {
         body="Lane views for aircraft and sims, conflict-aware booking, and ramp-in close-out that drafts the invoice, so dispatch isn’t a calendar plus a spreadsheet."
         points={[
           "Day and week boards by resource",
-          "Dual, solo, rental, ground, and sim reservations",
+          "Dual, solo, shared, rental, ground, and sim reservations",
+          "Multi-day trips that hold the aircraft all weekend",
           "Student self-booking with approval when you want it",
           "Close out with Hobbs/tach and an invoice draft",
         ]}

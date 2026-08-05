@@ -22,6 +22,7 @@ import {
   type Feature,
   type FeatureSlug,
 } from "@/lib/features";
+import { RESOURCE_LINKS } from "@/lib/resources";
 import { signupUrl, type CampaignSource } from "@/lib/site";
 
 /**
@@ -44,6 +45,12 @@ export function FeaturePage({ feature }: { feature: Feature }) {
   const related = feature.related
     .map((slug) => FEATURES[slug])
     .filter(Boolean);
+  //Resolved by href rather than duplicated on the feature, so a guide can be retitled in one
+  //place. `filter(Boolean)` because a guide that has been removed should vanish from here
+  //rather than render an empty card pointing at a 404.
+  const guides = (feature.guides ?? [])
+    .map((href) => RESOURCE_LINKS.find((link) => link.href === href))
+    .filter((link): link is (typeof RESOURCE_LINKS)[number] => link != null);
   const cta = signupUrl(FEATURE_SOURCE[feature.slug]);
 
   return (
@@ -103,6 +110,35 @@ export function FeaturePage({ feature }: { feature: Feature }) {
               </li>
             ))}
           </ul>
+
+          {/* Sits inside the white "What you get" block rather than in a section of its own
+              so the page keeps alternating backgrounds down the scroll, and so the guides
+              read as the deep end of this feature rather than as a separate detour. */}
+          {guides.length > 0 && (
+            <div className="mt-12 border-t border-border pt-8">
+              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                Go deeper
+              </h3>
+              <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {guides.map((guide) => (
+                  <Link
+                    key={guide.href}
+                    href={guide.href}
+                    className="rounded-xl border border-border bg-[#fafbfc] p-5 transition-colors hover:border-primary/30 hover:bg-white"
+                  >
+                    <p className="font-semibold text-foreground">{guide.label}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                      {guide.description}
+                    </p>
+                    <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary">
+                      Read the guide
+                      <ChevronRight className="size-3.5" />
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 

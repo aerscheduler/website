@@ -22,6 +22,19 @@ export type Feature = {
   bullets: string[];
   personas: string[];
   related: FeatureSlug[];
+  /**
+   * Guide pages that explain one corner of this feature in depth.
+   *
+   * Hrefs only, resolved against `RESOURCE_LINKS` when the page renders, so the label and
+   * description live in exactly one place and a guide renamed in `lib/resources.ts` cannot
+   * leave a stale title on a feature page. An href that no longer resolves is dropped rather
+   * than rendered blank, so deleting a guide degrades to silence.
+   *
+   * Worth having because the two newest billing behaviours (splitting a booking between
+   * people, and charging for a night away) are the kind of thing an operator only believes
+   * once they have seen a worked example, and a bullet has no room for one.
+   */
+  guides?: string[];
 };
 
 export type FeatureGroup = {
@@ -42,12 +55,14 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
       "Lane views across aircraft, simulators, and rooms",
       "Dual, solo, shared, rental, ground, sim, and maintenance reservations",
       "Several people on one booking — a ground school class, or two pilots sharing a flight",
+      "Multi-day trips: out Friday, back Sunday, one reservation, and the tail is gone in between",
       "Ramp-out to ramp-in with Hobbs, tach, and fuel, then an invoice draft",
       "Conflict-aware create and edit so double-books don’t leave the desk",
       "Live refresh so the iPad on the counter stays current",
     ],
     personas: ["Owners", "Admins", "Dispatchers", "Instructors"],
     related: ["self-booking", "fleet", "billing", "mobile"],
+    guides: ["/resources/overnight-and-multi-day-rentals"],
   },
   "self-booking": {
     slug: "self-booking",
@@ -80,10 +95,12 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
       "Simulators and classrooms included, free on your SaaS bill",
       "Ground / return-to-service with a reason, live on the schedule",
       "Approve renters and students per aircraft",
+      "An overnight minimum per tail, or none at all, on top of the school-wide figure",
       "Multi-location home bases when you operate more than one field",
     ],
     personas: ["Owners", "Admins", "Technicians"],
     related: ["scheduling", "maintenance", "billing", "compliance"],
+    guides: ["/resources/overnight-and-multi-day-rentals"],
   },
   "people-roles": {
     slug: "people-roles",
@@ -150,6 +167,7 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
     bullets: [
       "Split a booking between everyone on it — each person gets their own invoice",
       "Charge a class per head, divide a shared aircraft, or bill each pilot for the hours they flew",
+      "An overnight minimum so a weekend away bills for the nights, not just the Hobbs",
       "Auto-drafted itemized invoices from Hobbs/tach close-out",
       "AR dashboard: outstanding, paid, and void",
       "Custom invoices when the flight isn’t the whole story",
@@ -158,6 +176,11 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
     ],
     personas: ["Owners", "Admins", "Students", "Renters", "Instructors"],
     related: ["scheduling", "fleet", "instruction", "integrations"],
+    guides: [
+      "/resources/split-billing-shared-flights",
+      "/resources/overnight-and-multi-day-rentals",
+      "/resources/quickbooks-integration",
+    ],
   },
   maintenance: {
     slug: "maintenance",
@@ -214,6 +237,11 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
     ],
     personas: ["Owners", "Admins", "Dispatchers", "Technicians"],
     related: ["billing", "scheduling", "maintenance", "people-roles"],
+    guides: [
+      "/resources/flight-school-reports",
+      "/resources/aircraft-utilization-report",
+      "/resources/flight-school-revenue-reporting",
+    ],
   },
   integrations: {
     slug: "integrations",

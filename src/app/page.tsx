@@ -9,6 +9,8 @@ import {
   CreditCard,
   Smartphone,
   PlayCircle,
+  Users,
+  MoonStar,
 } from "lucide-react";
 import { Button } from "@/components/button";
 import { ProductMock } from "@/components/product-mock";
@@ -209,8 +211,55 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Mobile spotlight */}
+      {/* Billing edge cases.
+          The two bookings a school actually rings up about, and the two most competitors
+          cannot express: a flight shared between people, and an aircraft kept overnight.
+          Cards rather than a two-column spotlight because both only land once you have seen
+          the arithmetic, and a worked example needs prose room the spotlight bullets don't
+          have. Backgrounds from here down are shifted one step to keep the page alternating. */}
       <section className="border-t border-border bg-[#fafbfc]">
+        <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-24">
+          <Reveal className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+            <div className="max-w-2xl">
+              <p className="text-sm font-semibold text-primary">Billing that matches the flight</p>
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
+                The two bookings other software makes you fake.
+              </h2>
+              <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
+                A flight two people share, and an aircraft somebody keeps for the
+                weekend. Most schools handle both with a spreadsheet and an apology.
+                Here they are just bookings.
+              </p>
+            </div>
+            <Button href="/features/billing" variant="secondary">
+              How billing works
+              <ChevronRight className="size-4 opacity-80" />
+            </Button>
+          </Reveal>
+
+          <RevealGroup className="mt-12 grid gap-4 lg:grid-cols-2">
+            <ExampleCard
+              icon={<Users className="size-5" />}
+              eyebrow="Split billing"
+              title="One flight, one invoice each"
+              body="Put everyone who flew on the booking and pick how the charge divides: evenly, by the hours each pilot flew, per head for a ground school, or a share you set yourself."
+              example="Two renters share the 172. One booking, one close-out, two invoices that add up to exactly what the flight cost. Nobody re-types anything."
+              href="/resources/split-billing-shared-flights"
+            />
+            <ExampleCard
+              icon={<MoonStar className="size-5" />}
+              eyebrow="Overnight & multi-day"
+              title="A weekend away, priced like one"
+              body="Book the whole trip as one reservation and the tail is unavailable for every day of it. Charge a minimum for each night it is away, school-wide or per aircraft."
+              example="Out Friday, back Sunday, 1.5 hours flown. Two nights at a 2.0 hour minimum bills 4.0 hours, and the member reads that on the booking screen before they agree to it."
+              href="/resources/overnight-and-multi-day-rentals"
+            />
+          </RevealGroup>
+        </div>
+      </section>
+
+      {/* Mobile spotlight */}
+      <section className="border-t border-border bg-white">
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:gap-16 lg:py-28">
           <Reveal delay={120} className="order-2 flex justify-center lg:order-1">
             <PhoneMock className="animate-float" />
@@ -257,7 +306,7 @@ export default function HomePage() {
           than the viewport and gave the homepage a horizontal scroll on a
           phone. The glow is translucent and well inside the container at
           desktop widths, so clipping it costs nothing visually. */}
-      <section className="overflow-hidden border-t border-border bg-white">
+      <section className="overflow-hidden border-t border-border bg-[#fafbfc]">
         <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-28">
           <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.05fr]">
             <Reveal>
@@ -377,6 +426,55 @@ function ValuePoint({
       </p>
       <span className="mt-4 inline-flex items-center gap-0.5 text-sm font-semibold text-primary">
         Learn more
+        <ChevronRight className="size-3.5 transition-transform duration-150 group-hover:translate-x-0.5" />
+      </span>
+    </Link>
+  );
+}
+
+/**
+ * A capability with the arithmetic shown.
+ *
+ * Bigger than `TeaserCard` on purpose: split billing and overnight minimums are the two
+ * things an operator reads twice, and the worked example in `example` is what settles it.
+ * The example sits in its own tinted box so it reads as a number rather than more prose.
+ */
+function ExampleCard({
+  icon,
+  eyebrow,
+  title,
+  body,
+  example,
+  href,
+}: {
+  icon: ReactNode;
+  eyebrow: string;
+  title: string;
+  body: string;
+  example: string;
+  href: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="group flex flex-col rounded-2xl border border-border bg-white p-7 shadow-sm transition-colors hover:border-primary/30"
+    >
+      <div className="flex items-center gap-3">
+        <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+          {icon}
+        </span>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
+          {eyebrow}
+        </p>
+      </div>
+      <h3 className="mt-5 text-xl font-semibold tracking-tight text-brand-surface">{title}</h3>
+      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{body}</p>
+      <p className="mt-5 rounded-lg bg-[#fafbfc] px-4 py-3 text-sm leading-relaxed text-foreground">
+        {example}
+      </p>
+      {/* mt-auto so both cards' links sit on the same line however the copy wraps. */}
+      <span className="mt-auto inline-flex items-center gap-0.5 pt-6 text-sm font-semibold text-primary">
+        Read the guide
         <ChevronRight className="size-3.5 transition-transform duration-150 group-hover:translate-x-0.5" />
       </span>
     </Link>
