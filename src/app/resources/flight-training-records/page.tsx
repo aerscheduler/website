@@ -66,7 +66,7 @@ const FAQS = [
   },
   {
     q: "What about endorsements?",
-    a: "AerScheduler ships the endorsements a Part 61 or 141 aircraft school actually signs, taken from AC 61-65K Appendix A: pre-solo knowledge and training, the 90-day solo and its renewals, solo cross-country, Class B, the knowledge and practical tests, retests, flight reviews, and instrument proficiency checks. You pick one, it is filled in with the student's name and your certificate number, and the finished wording is stored.",
+    a: "AerScheduler ships the endorsements a Part 61 or 141 flight school actually signs, taken from AC 61-65K Appendix A: pre-solo knowledge and training, the 90-day solo and its renewals, solo cross-country, Class B, the knowledge and practical tests, retests, flight reviews, and instrument proficiency checks. You pick one, it is filled in with the student's name and your certificate number, and the finished wording is stored.",
   },
   {
     q: "Why store the wording rather than a reference to the template?",
