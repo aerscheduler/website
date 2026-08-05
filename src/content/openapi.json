@@ -8601,7 +8601,7 @@
           "Training"
         ],
         "summary": "Endorsement templates",
-        "description": "The AC 61-65K Appendix A endorsements a Part 61/141 aeroplane school actually signs. Pass `orgUserId` and the student's name is substituted for you; every other `{placeholder}` is left for the instructor, because inventing values would be putting words into a signature.",
+        "description": "The AC 61-65K Appendix A endorsements a Part 61/141 aircraft school actually signs. Pass `orgUserId` and the student's name is substituted for you; every other `{placeholder}` is left for the instructor, because inventing values would be putting words into a signature.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -18857,7 +18857,7 @@
                 "description": "Bill by Hobbs (true) or tach (false)."
               },
               "overnightMinimumTenths": {
-                "description": "This aeroplane's least billable time per night away, in TENTHS of an hour, applied as a floor on a booking that spans nights. `20` bills at least 2.0 hours a night.\n\n`null` means inherit the organization's figure; `0` means exempt this aircraft entirely. The two are not interchangeable — an exempt aeroplane must stay exempt when the school-wide figure changes.",
+                "description": "This aircraft's least billable time per night away, in TENTHS of an hour, applied as a floor on a booking that spans nights. `20` bills at least 2.0 hours a night.\n\n`null` means inherit the organization's figure; `0` means exempt this aircraft entirely. The two are not interchangeable — an exempt aircraft must stay exempt when the school-wide figure changes.",
                 "example": 20,
                 "type": [
                   "integer",
