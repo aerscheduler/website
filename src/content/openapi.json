@@ -4086,7 +4086,7 @@
           "Reservations"
         ],
         "summary": "Cancel a reservation",
-        "description": "Cancels rather than destroys: the booking stays readable with `cancelledAt` set, which is what keeps cancellation reporting honest. Send a `cancellationCategory` so it lands in the right bucket.",
+        "description": "Cancels rather than destroys: the booking stays readable with `cancelledAt` set, which is what keeps cancellation reporting honest. Both fields are required — `cancellationCategory` is what the report counts, `cancellationReason` is the detail that makes a count actionable. Get the current list of categories from `GET /reports/cancellations/categories`; sending a value that isn't on it is rejected.",
         "responses": {
           "204": {
             "description": "Success. No body."
@@ -4154,12 +4154,17 @@
                 "properties": {
                   "cancellationReason": {
                     "type": "string",
-                    "maxLength": 60
+                    "minLength": 1,
+                    "maxLength": 200
                   },
                   "cancellationCategory": {
                     "type": "string"
                   }
-                }
+                },
+                "required": [
+                  "cancellationReason",
+                  "cancellationCategory"
+                ]
               }
             }
           }
@@ -6630,6 +6635,10 @@
                   "maxTransferBps": {
                     "type": "integer",
                     "description": "Ceiling on transferred credit, in basis points. §141.77 allows 5000 from an approved course, 2500 otherwise."
+                  },
+                  "recencyCalendarMonths": {
+                    "type": "integer",
+                    "description": "Training older than this many CALENDAR months stops counting toward this requirement. §61.109(a)(4) wants the three hours of test preparation within 2. Omit or send null for a requirement with no window — but note that omitting it on an update CLEARS an existing window."
                   }
                 },
                 "required": [
@@ -8325,6 +8334,11 @@
                   "notes": {
                     "type": "string",
                     "description": "Required for `manual`."
+                  },
+                  "occurredAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "When the training actually happened. Defaults to now. Send it for transferred hours — a requirement with a recency window judges credit by this date, not by when the row was written."
                   }
                 },
                 "required": [
@@ -11319,7 +11333,7 @@
           "Maintenance"
         ],
         "summary": "List maintenance reminders",
-        "description": "Live reminders across the fleet.",
+        "description": "Live reminders across the fleet, most urgent first.\n\nEach reminder carries a computed `due` block — how many hours are left on the meter, or how many days until the date — so you don't have to recombine the template's interval with the aircraft's meters yourself.",
         "responses": {
           "200": {
             "description": "The reminders.",
@@ -11375,6 +11389,42 @@
         },
         "operationId": "listReminders",
         "parameters": [
+          {
+            "name": "resourceId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Only reminders on these aircraft. Repeat or comma-separate for several."
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter on the computed band: `overdue`, `dueSoon`, `ok` or `resolved`. Repeat or comma-separate for several."
+          },
+          {
+            "name": "resolved",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Filter on signed-off state."
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Free-text over the reminder, its template and the tail number."
+          },
           {
             "name": "limit",
             "in": "query",
@@ -14653,7 +14703,7 @@
           "Search"
         ],
         "summary": "Search across the organization",
-        "description": "One search over aircraft, members, bookings, and locations. The results are narrowed to what your roles allow, per entity type — so this is safe to expose to any member.\n\n`q` is optional: omitting it returns the newest few of each type, which is what a search screen shows before anyone types.",
+        "description": "One search over aircraft, members, bookings, locations, maintenance, compliance and training. The results are narrowed to what your roles allow, per entity type — so this is safe to expose to any member.\n\n`q` is optional: omitting it returns the newest few of each type, which is what a search screen shows before anyone types.\n\nThe response's `types` is the list this caller may search at all, which is not the same as the types that matched: use it for a category filter, and never assume a type is in it.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -14718,9 +14768,9 @@
             "required": false,
             "schema": {
               "type": "string",
-              "example": "resource,orgUser"
+              "example": "person,resource"
             },
-            "description": "Comma-separated entity types to search. Defaults to all."
+            "description": "Comma-separated entity types to search. Unknown names are ignored. Defaults to all."
           },
           {
             "name": "limit",
@@ -20170,32 +20220,125 @@
         },
         "additionalProperties": true
       },
+      "SearchResult": {
+        "type": "object",
+        "description": "One match, flattened to a common shape.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Which kind of record this is.",
+            "enum": [
+              "person",
+              "resource",
+              "location",
+              "rating",
+              "reservation",
+              "announcement",
+              "currency",
+              "document",
+              "squawk",
+              "course",
+              "enrollment",
+              "endorsement"
+            ]
+          },
+          "id": {
+            "type": "integer",
+            "description": "The record's id, within its own type."
+          },
+          "title": {
+            "type": "string",
+            "description": "The line to show.",
+            "example": "N172TS"
+          },
+          "subtitle": {
+            "description": "Context under the title — who, what, or where.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "date": {
+            "format": "date-time",
+            "description": "The date this record turns on, unformatted. See `dateLabel`.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "dateLabel": {
+            "description": "What `date` means.",
+            "example": "Expires",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "timeZone": {
+            "description": "IANA zone `date` belongs to. Null means the reader's own.",
+            "example": "America/Denver",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "badge": {
+            "description": "Status chip.",
+            "example": "Grounded",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "params": {
+            "type": "object",
+            "description": "Ids needed to open this record, keyed by name.",
+            "properties": {},
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
       "SearchResults": {
         "type": "object",
         "description": "Matches across every entity type the caller may see.",
         "properties": {
-          "resources": {
+          "q": {
+            "type": "string",
+            "description": "The query that was run. Empty when browsing."
+          },
+          "types": {
             "type": "array",
+            "description": "Every type this caller may search — the full category list, not just the types that matched. Narrowed by role: a member who cannot read squawks never sees `squawk` here.",
             "items": {
-              "$ref": "#/components/schemas/Resource"
+              "type": "string",
+              "enum": [
+                "person",
+                "resource",
+                "location",
+                "rating",
+                "reservation",
+                "announcement",
+                "currency",
+                "document",
+                "squawk",
+                "course",
+                "enrollment",
+                "endorsement"
+              ]
             }
           },
-          "orgUsers": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/OrganizationUser"
-            }
+          "counts": {
+            "type": "object",
+            "description": "How many matched, per type.",
+            "properties": {},
+            "additionalProperties": true
           },
-          "reservations": {
+          "results": {
             "type": "array",
+            "description": "The matches, grouped by type in the order of `types`.",
             "items": {
-              "$ref": "#/components/schemas/Reservation"
-            }
-          },
-          "locations": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Location"
+              "$ref": "#/components/schemas/SearchResult"
             }
           }
         },
