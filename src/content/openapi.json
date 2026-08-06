@@ -11474,6 +11474,117 @@
         ]
       }
     },
+    "/maintenance/reminders/presets": {
+      "get": {
+        "tags": [
+          "Maintenance"
+        ],
+        "summary": "List inspection presets",
+        "description": "The AVIATES airworthiness inspections — annual, VOR, 100-hour, AD review, transponder, ELT and static/altimeter — plus the shop intervals that come up as often.\n\nReference data, not records: nothing exists until you POST a preset's `payload` to `/maintenance/reminders/templates` like any other template. The intervals are the common case and are editable afterwards; `caveat` says where a default doesn't apply to every aircraft.",
+        "responses": {
+          "200": {
+            "description": "The presets.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/InspectionPreset"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listInspectionPresets",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
+      }
+    },
     "/maintenance/reminders/{maintenanceReminderId}": {
       "get": {
         "tags": [
@@ -19427,14 +19538,15 @@
             ]
           },
           "cancellationReason": {
-            "description": "Free-text reason given at cancellation.",
+            "description": "Free-text detail given at cancellation.",
+            "maxLength": 200,
             "type": [
               "string",
               "null"
             ]
           },
           "cancellationCategory": {
-            "description": "Fixed-list reason. Null on bookings cancelled before this was introduced — reports count those as “Not recorded”, not “Other”.",
+            "description": "Fixed-list reason. Null on bookings cancelled before this was introduced, and on those the system cancelled for you — reports count those as “Not recorded”, not as a category somebody chose. May also read back a RETIRED value such as `other`, which is no longer accepted on write but is still reported on.",
             "type": [
               "string",
               "null"
@@ -19595,6 +19707,111 @@
         },
         "additionalProperties": true
       },
+      "MaintenanceDue": {
+        "type": "object",
+        "description": "How much is left on a reminder, worked out from its template's interval and the aircraft's current meters. Computed on read — it is not stored.",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "description": "What the interval is counted in.",
+            "enum": [
+              "hours",
+              "days",
+              "date",
+              "unknown"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "description": "Which band it is in. `dueSoon` is the template's own warning period, the same threshold that sends the warning notification.",
+            "enum": [
+              "overdue",
+              "dueSoon",
+              "ok",
+              "resolved"
+            ]
+          },
+          "name": {
+            "description": "The template's name, lifted so a row can be rendered without it.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "notes": {
+            "description": "The template's notes.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "grounds": {
+            "type": "boolean",
+            "description": "Whether coming due takes the aircraft off the line."
+          },
+          "dueAt": {
+            "format": "date-time",
+            "description": "When it comes due. Null on a meter-based interval — nobody can know the date.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "daysRemaining": {
+            "description": "Whole days until `dueAt`. Negative means overdue.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "basis": {
+            "description": "Which meter a meter-based interval counts.",
+            "enum": [
+              "tach",
+              "hobbs"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "dueAtHours": {
+            "description": "Meter reading it comes due at, in tenths of an hour.",
+            "example": 3000,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "hoursRemaining": {
+            "description": "Tenths of an hour left on that meter. Negative means overdue.",
+            "example": 124,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "currentHours": {
+            "description": "What the meter reads now, in tenths of an hour.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "progress": {
+            "description": "0 is a fresh interval, 1 is due now, above 1 is overdue.",
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "urgency": {
+            "type": "number",
+            "description": "Sort key — ascending is most urgent first, comparable across all three kinds."
+          }
+        },
+        "additionalProperties": true
+      },
       "MaintenanceReminder": {
         "type": "object",
         "description": "A due-date or due-hours reminder against one aircraft.",
@@ -19635,6 +19852,9 @@
               "string",
               "null"
             ]
+          },
+          "due": {
+            "$ref": "#/components/schemas/MaintenanceDue"
           },
           "resource": {
             "$ref": "#/components/schemas/Resource"
@@ -19727,6 +19947,61 @@
               "string",
               "null"
             ]
+          }
+        },
+        "additionalProperties": true
+      },
+      "InspectionPreset": {
+        "type": "object",
+        "description": "A ready-made inspection interval. Reference data — POST its `payload` to `/maintenance/reminders/templates` to actually create one.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Stable identifier for the preset.",
+            "example": "hundred-hour"
+          },
+          "letter": {
+            "description": "Which letter of the AVIATES mnemonic this covers. Null for the presets outside it.",
+            "example": "1",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name.",
+            "example": "100-hour inspection"
+          },
+          "regulation": {
+            "description": "The rule it comes from.",
+            "example": "§91.409(b)",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "interval": {
+            "type": "string",
+            "description": "The default interval, in words.",
+            "example": "Every 100 hours on the tach, warn 10 hours out"
+          },
+          "caveat": {
+            "description": "Where the default does not apply to every aircraft.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "ground": {
+            "type": "boolean",
+            "description": "Whether the default grounds the aircraft when it comes due."
+          },
+          "payload": {
+            "type": "object",
+            "description": "Exactly the body `POST /maintenance/reminders/templates` accepts.",
+            "properties": {},
+            "additionalProperties": true
           }
         },
         "additionalProperties": true
