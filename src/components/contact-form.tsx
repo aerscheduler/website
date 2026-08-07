@@ -4,6 +4,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { AlertCircle, ArrowRight, Check, Loader2 } from "lucide-react";
 import { API_URL, SUPPORT_EMAIL } from "@/lib/site";
 import { CONTACT_TOPICS, isContactTopic, type ContactTopic } from "@/lib/contact";
+import { trackConversion } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 
 const MESSAGE_MAX = 5000;
@@ -112,6 +113,11 @@ export function ContactForm() {
       });
 
       if (response.ok) {
+        // A contact form submission is a lead, and on a site where most conversions
+        // happen on another origin it is one of the few the marketing site can see
+        // land. `topic` rides along because "switching from MyFBO" and "billing
+        // question" are worth very different amounts.
+        trackConversion("contact_submitted", { topic });
         setStatus({ kind: "sent" });
         setValues(EMPTY);
         return;

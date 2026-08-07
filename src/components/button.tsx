@@ -1,18 +1,66 @@
-import type { AnchorHTMLAttributes } from "react";
+"use client";
+
+import type { AnchorHTMLAttributes, MouseEvent } from "react";
+import { usePathname } from "next/navigation";
 import { cn } from "@/lib/cn";
+import { track, trackConversion } from "@/lib/analytics";
 
 type ButtonProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
   variant?: "primary" | "secondary" | "ghost" | "dark";
   size?: "md" | "lg";
+  /**
+   * Overrides the label reported to analytics. Only needed when the button's visible
+   * text isn't descriptive on its own. Normally the text is the label.
+   */
+  trackAs?: string;
 };
 
+/**
+ * Every call-to-action on the marketing site.
+ *
+ * It is a client component purely so the click can be measured. That measurement is the
+ * only reliable way to see the top of the funnel: the CTA leaves for
+ * `app.aerscheduler.com`, a different origin, so from the marketing site's point of view
+ * the visitor simply vanishes. Recording the click before they go is what connects "read
+ * the pricing page" to "started a signup".
+ *
+ * The destination decides which event fires, so a new CTA anywhere on the site is
+ * measured correctly without the author having to think about analytics.
+ */
 export function Button({
   className,
   variant = "primary",
   size = "md",
   children,
+  trackAs,
+  onClick,
   ...props
 }: ButtonProps) {
+  const pathname = usePathname();
+
+  function handleClick(event: MouseEvent<HTMLAnchorElement>) {
+    const href = props.href ?? "";
+    // The rendered text, which is the label a human would use for this button. Falls
+    // back through `trackAs` and aria-label for icon-only buttons.
+    const label =
+      trackAs ?? event.currentTarget.textContent?.trim().slice(0, 80) ?? props["aria-label"] ?? "";
+
+    const shared = { label, href, from: pathname };
+
+    if (href.includes("/signup")) {
+      // The moment we start paying for: someone leaving to create an account. Reported to
+      // Google and Meta so their bidding optimises for it, since the actual account
+      // creation happens on a domain their tag isn't on.
+      trackConversion("signup_started", shared);
+    } else if (href.includes("/demo")) {
+      trackConversion("demo_opened", shared);
+    } else {
+      track("cta_click", shared);
+    }
+
+    onClick?.(event);
+  }
+
   return (
     <a
       className={cn(
@@ -29,6 +77,7 @@ export function Button({
           "bg-brand-surface text-white shadow-sm hover:bg-brand-surface-2 hover:-translate-y-px",
         className
       )}
+      onClick={handleClick}
       {...props}
     >
       {children}
