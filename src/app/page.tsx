@@ -76,7 +76,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="animate-fade-up-delay-2 flex justify-center lg:justify-end">
+          <div className="animate-fade-up-delay-2 flex min-w-0 justify-center lg:justify-end">
             <ProductMock />
           </div>
         </div>
@@ -208,7 +208,7 @@ export default function HomePage() {
             </div>
           </Reveal>
           {/* The visual lands just after the sentence that sets it up. */}
-          <Reveal delay={120} className="flex justify-center lg:justify-end">
+          <Reveal delay={120} className="flex min-w-0 justify-center lg:justify-end">
             <ReportsMock />
           </Reveal>
         </div>
@@ -268,7 +268,7 @@ export default function HomePage() {
           reports spotlight put its mock on the right. */}
       <section className="border-t border-border bg-white">
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:gap-16 lg:py-28">
-          <Reveal delay={120} className="order-2 flex justify-center lg:order-1">
+          <Reveal delay={120} className="order-2 flex min-w-0 justify-center lg:order-1">
             <MembershipsMock />
           </Reveal>
           <Reveal className="order-1 lg:order-2">
@@ -310,7 +310,7 @@ export default function HomePage() {
       {/* Mobile spotlight */}
       <section className="border-t border-border bg-[#fafbfc]">
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:gap-16 lg:py-28">
-          <Reveal delay={120} className="order-2 flex justify-center lg:order-1">
+          <Reveal delay={120} className="order-2 flex min-w-0 justify-center lg:order-1">
             <PhoneMock className="animate-float" />
           </Reveal>
           <Reveal className="order-1 lg:order-2">

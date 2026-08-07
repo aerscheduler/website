@@ -229,7 +229,7 @@ function ProductSection({
           </ul>
           {extra}
         </div>
-        <div className={`flex justify-center ${reverse ? "lg:order-1" : ""}`}>
+        <div className={`flex min-w-0 justify-center ${reverse ? "lg:order-1" : ""}`}>
           {visual}
         </div>
       </div>

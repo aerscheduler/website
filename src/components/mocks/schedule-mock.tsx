@@ -93,7 +93,10 @@ export function ScheduleMock() {
     selectedTail ?? BLOCKS.find((b) => b.id === selectedBlock)?.tail ?? null;
 
   return (
-    <div ref={ref}>
+    // `min-w-0` so this wrapper, not just the shell inside it, can shrink below the
+    // board's natural width — it is the flex item, and without it the page picks up
+    // a horizontal scroll on a phone.
+    <div ref={ref} className="min-w-0">
       <AppMockShell
         path="/schedule"
         activeNav={2}

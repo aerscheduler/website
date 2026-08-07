@@ -74,6 +74,13 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Decoration bleeds past the viewport on purpose — the hero sky is drawn wider
+     than the page so its gradient never shows an edge, and each mock sits in a
+     glow that extends beyond it. On a phone that bleed became a horizontal
+     scroll of the whole page. `clip` rather than `hidden`: hidden on body makes
+     the element a scroll container, which silently kills `position: sticky`
+     inside it. */
+  overflow-x: clip;
 }
 
 ::selection {

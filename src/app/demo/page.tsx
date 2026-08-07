@@ -149,7 +149,7 @@ export default function DemoPage() {
             </p>
           </div>
 
-          <div className="mt-12 flex justify-center lg:mt-0 lg:justify-end">
+          <div className="mt-12 flex min-w-0 justify-center lg:mt-0 lg:justify-end">
             <ProductMock />
           </div>
         </div>

@@ -28,7 +28,11 @@ export function AppMockShell({
     <div
       ref={ref}
       data-inview={inView ? "" : undefined}
-      className={cn("animate-float relative w-full max-w-[560px]", className)}
+      // `min-w-0` because the board inside is wider than a phone: without it the
+      // shell's min-content width props open the grid track that holds it, and the
+      // whole page picks up a horizontal scroll. Narrow viewports crop the card at
+      // its own rounded edge instead, which reads as a narrow browser window.
+      className={cn("animate-float relative w-full min-w-0 max-w-[560px]", className)}
     >
       <div className="overflow-hidden rounded-xl border border-border bg-white shadow-lg">
         <div className="flex items-center gap-2 border-b border-border px-3 py-2.5">
