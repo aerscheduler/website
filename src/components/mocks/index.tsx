@@ -1,5 +1,6 @@
 export { ScheduleMock } from "@/components/mocks/schedule-mock";
 export { BillingMock } from "@/components/mocks/billing-mock";
+export { MembershipsMock } from "@/components/mocks/memberships-mock";
 export { FleetMock } from "@/components/mocks/fleet-mock";
 export { PeopleMock } from "@/components/mocks/people-mock";
 export { ComplianceMock } from "@/components/mocks/compliance-mock";

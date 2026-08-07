@@ -44,6 +44,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
     },
     {
+      path: "/resources/flying-club-dues-and-fees",
+      priority: 0.85,
+      changeFrequency: "monthly",
+    },
+    {
       path: "/resources/flight-training-records",
       priority: 0.85,
       changeFrequency: "monthly",

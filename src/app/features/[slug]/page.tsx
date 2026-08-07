@@ -56,6 +56,14 @@ const FEATURE_SEO: Record<
     description:
       "Turn closed-out flights into invoices, take cards online with Stripe, and keep accounts receivable current.",
   },
+  memberships: {
+    // Commercial intent ("software", "billing"), so it does not compete with
+    // /resources/flying-club-dues-and-fees, which owns the informational query
+    // "how do flying clubs structure dues and initiation fees".
+    title: "Flying Club Membership & Dues Billing Software",
+    description:
+      "Charge joining fees and recurring dues automatically: membership tiers, monthly or annual billing, prorated first periods, and a record of every period billed, waived or owed.",
+  },
   maintenance: {
     title: "Aircraft Maintenance Squawk Tracking",
     description:

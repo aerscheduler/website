@@ -81,6 +81,10 @@
       "description": "Courses, syllabi, enrollments and training records. A course is trained under Part 61 or Part 141; the shape is identical and only the enforcement differs. A **published syllabus version is immutable** — revising it makes a new version, and an enrollment stays pinned to the one it started under. A student's standing against each requirement is a **ledger**: entries are only ever appended, and a correction is a reversing entry rather than an edit, so hours flown are always traceable to the lesson that earned them."
     },
     {
+      "name": "Memberships",
+      "description": "What a club or an FBO charges people for **belonging**, as opposed to for flying. A plan carries a one-time join fee, recurring dues, or both; a membership is one person's copy of a plan with the money **snapshotted at the moment it started**, so re-pricing a plan never re-prices anybody already on it. Every dues period is a ledger row, and a period is billed because the membership's own cursor says it is owed — never because of what day it happens to be. Dues and join fees are raised as ordinary invoices, so they appear under **Invoices** and in the revenue reports with everything else."
+    },
+    {
       "name": "Documents",
       "description": "Files held against members."
     },
@@ -3170,6 +3174,24 @@
             "description": "Archived members — people the school has retired from the roster — are **left out by default**. Set `true` to list them instead of the current members. There is no value that returns both."
           },
           {
+            "name": "approvedForResourceId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "An aircraft id. Every member returned carries `approvedForResource`, saying whether they are checked out on that aircraft — so you can read approvals for a whole roster in one request instead of one per person."
+          },
+          {
+            "name": "approved",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "With `approvedForResourceId`, set `true` to return **only** the members approved on that aircraft rather than annotating them all. Ignored on its own."
+          },
+          {
             "name": "limit",
             "in": "query",
             "required": false,
@@ -4991,6 +5013,1977 @@
                 "required": [
                   "payers"
                 ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memberships/plans": {
+      "get": {
+        "tags": [
+          "Memberships"
+        ],
+        "summary": "List membership plans",
+        "description": "Every plan the organization offers, with how many members are on each. Requires the **admin** role.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/MembershipPlan"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listMembershipPlans",
+        "parameters": [
+          {
+            "name": "includeArchived",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Include retired plans. Defaults to false."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Memberships"
+        ],
+        "summary": "Create a membership plan",
+        "description": "Tiers are plans — full, associate, social — so a new tier is a new plan rather than a setting. Amounts are in **cents**. Leave `duesCents` empty for a join-fee-only plan, or `joinFeeCents` empty for dues with no fee. Requires the **admin** role.",
+        "responses": {
+          "201": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/MembershipPlan"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The amount, cadence or billing day is not usable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "createMembershipPlan",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The plan.",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 60
+                  },
+                  "description": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 500
+                  },
+                  "joinFeeCents": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "description": "One-time, in cents. Null for no join fee."
+                  },
+                  "joinFeeLabel": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 60,
+                    "description": "How the fee reads on the invoice."
+                  },
+                  "duesCents": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "description": "Recurring, in cents. Null for a plan with no dues."
+                  },
+                  "duesLabel": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 60
+                  },
+                  "duesInterval": {
+                    "type": "string",
+                    "enum": [
+                      "monthly",
+                      "quarterly",
+                      "annual"
+                    ]
+                  },
+                  "duesDayOfMonth": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 1,
+                    "maximum": 28,
+                    "description": "Bill every member on this day. Capped at 28 so every month has one. Null bills each member on their own join anniversary instead."
+                  },
+                  "prorateFirstPeriod": {
+                    "type": "boolean",
+                    "description": "Charge a part-period when somebody joins mid-cycle. Only meaningful with duesDayOfMonth."
+                  },
+                  "autoBillDues": {
+                    "type": "boolean",
+                    "description": "Raise each period's invoice automatically, overnight."
+                  },
+                  "duesDueInDays": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "description": "Days a member gets to pay a dues or joining-fee invoice. Null means no due date. A **term of the money**, so it is snapshotted onto the membership at join."
+                  },
+                  "bookingWindowDays": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "description": "How far ahead a member on this tier may book, in days. Null means no limit. An **entitlement**, so it is read live — relaxing it relaxes it for everyone immediately, unlike dues."
+                  },
+                  "agreementDocumentTypeId": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "description": "The document a member on this plan is expected to have on file. Recorded only — nothing is enforced on it."
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memberships/plans/options": {
+      "get": {
+        "tags": [
+          "Memberships"
+        ],
+        "summary": "Plans a member may be put on",
+        "description": "Names and prices only, for a plan picker. Readable by any member.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listMembershipPlanOptions",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
+      }
+    },
+    "/memberships/plans/{planId}": {
+      "patch": {
+        "tags": [
+          "Memberships"
+        ],
+        "summary": "Update a membership plan",
+        "description": "Including the price. This is safe by design: every membership carries its own snapshot, so changing a plan cannot re-price anybody already on it. Moving an existing member to today's price is a separate, deliberate act. Requires the **admin** role.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/MembershipPlan"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such plan.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "updateMembershipPlan",
+        "parameters": [
+          {
+            "name": "planId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The plan id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Fields to change. Omit a field to leave it alone; send null to clear it.",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 60
+                  },
+                  "description": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "joinFeeCents": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  },
+                  "duesCents": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  },
+                  "duesInterval": {
+                    "type": "string",
+                    "enum": [
+                      "monthly",
+                      "quarterly",
+                      "annual"
+                    ]
+                  },
+                  "duesDayOfMonth": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  },
+                  "prorateFirstPeriod": {
+                    "type": "boolean"
+                  },
+                  "autoBillDues": {
+                    "type": "boolean"
+                  },
+                  "duesDueInDays": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  },
+                  "bookingWindowDays": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memberships/plans/{planId}/archive": {
+      "post": {
+        "tags": [
+          "Memberships"
+        ],
+        "summary": "Retire a plan, or bring it back",
+        "description": "There is no delete. A plan nobody is on is still the answer to what a member was paying two years ago, so retiring it stops it being offered to new members and leaves every historical charge readable. Members already on it keep being billed. Requires the **admin** role.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such plan.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "archiveMembershipPlan",
+        "parameters": [
+          {
+            "name": "planId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The plan id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Which way.",
+                "properties": {
+                  "archived": {
+                    "type": "boolean",
+                    "description": "Defaults to true."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memberships/plans/{planId}/rates": {
+      "get": {
+        "tags": [
+          "Memberships"
+        ],
+        "summary": "A tier's aircraft rates",
+        "description": "Only the aircraft this plan overrides. Anything absent bills at the aircraft's own published rate. Requires the **admin** role.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/MembershipPlanRate"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listMembershipPlanRates",
+        "parameters": [
+          {
+            "name": "planId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The plan id."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
+      }
+    },
+    "/memberships/plans/{planId}/rates/{resourceId}": {
+      "put": {
+        "tags": [
+          "Memberships"
+        ],
+        "summary": "Set or clear a tier's rate for one aircraft",
+        "description": "What members on this tier pay per hour for this aircraft, in cents. **Sending both rates as null clears the override**, returning the aircraft to its published rate.\n\nThe override applies to a booking only when **everyone being billed on it resolves to the same rate** — one pilot, or several on the same tier. Pilots on different tiers, or anyone without an active membership, fall back to the aircraft's own rate rather than being priced off somebody else's tier. Requires the **admin** role.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such plan or aircraft.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "setMembershipPlanRate",
+        "parameters": [
+          {
+            "name": "planId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The plan id."
+          },
+          {
+            "name": "resourceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The aircraft's resource id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The rate, in cents per hour. Wet wins over dry, matching ordinary pricing.",
+                "properties": {
+                  "wetRate": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  },
+                  "dryRate": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memberships": {
+      "get": {
+        "tags": [
+          "Memberships"
+        ],
+        "summary": "List memberships",
+        "description": "Every membership in the organization. Requires the **admin** role.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Membership"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listMemberships",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "pending | active | suspended | cancelled"
+          },
+          {
+            "name": "planId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter to one plan."
+          },
+          {
+            "name": "take",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Page size, 1-200. Defaults to 50."
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Rows to skip."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Memberships"
+        ],
+        "summary": "Put a member on a plan",
+        "description": "Snapshots the plan's prices onto the membership. Starts **pending** unless `start` is true — a membership that begins billing the moment it is created is rarely what the desk wants. A member may hold only one live membership at a time. Requires the **admin** role.",
+        "responses": {
+          "201": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Membership"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "This person already has a live membership.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "createMembership",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The membership.",
+                "properties": {
+                  "orgUserId": {
+                    "type": "integer"
+                  },
+                  "planId": {
+                    "type": "integer"
+                  },
+                  "start": {
+                    "type": "boolean",
+                    "description": "Start it now rather than leaving it pending."
+                  },
+                  "startedAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Backdate the start. Defaults to now."
+                  },
+                  "waiveJoinFee": {
+                    "type": "boolean",
+                    "description": "Join with no join fee — a founding member, or a transfer from another club."
+                  },
+                  "notes": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 500
+                  }
+                },
+                "required": [
+                  "orgUserId",
+                  "planId"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memberships/me": {
+      "get": {
+        "tags": [
+          "Memberships"
+        ],
+        "summary": "The caller's own membership",
+        "description": "What the caller is on, what it costs, when the next period lands, and what they have been billed. Answers **200 with null** when they are not on a plan, which is the ordinary answer at an organization that does not run memberships. Readable by any member.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getMyMembership"
+      }
+    },
+    "/memberships/vocabulary": {
+      "get": {
+        "tags": [
+          "Memberships"
+        ],
+        "summary": "Cadences and statuses",
+        "description": "The billing cadences and membership statuses this server accepts. A vocabulary, not a permission — any member may read it.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getMembershipVocabulary"
+      }
+    },
+    "/memberships/orgUser/{orgUserId}": {
+      "get": {
+        "tags": [
+          "Memberships"
+        ],
+        "summary": "One member's membership",
+        "description": "The live membership for a member, or the most recent one if it has ended. Null when they have never had one. Requires the **admin** role.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": [
+                        "object",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getMembershipForMember",
+        "parameters": [
+          {
+            "name": "orgUserId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The member id."
+          }
+        ]
+      }
+    },
+    "/memberships/{membershipId}": {
+      "get": {
+        "tags": [
+          "Memberships"
+        ],
+        "summary": "Get a membership",
+        "description": "With its recent dues periods and what the next billable period would be. Requires the **admin** role.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Membership"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such membership.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getMembership",
+        "parameters": [
+          {
+            "name": "membershipId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The membership id."
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Memberships"
+        ],
+        "summary": "Update a membership",
+        "description": "Everything that does not change what it costs. `agreementOnFile` records that the member's paperwork is in — it is a record, never a gate, and nothing is blocked when it is missing. Requires the **admin** role.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Membership"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such membership.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "updateMembership",
+        "parameters": [
+          {
+            "name": "membershipId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The membership id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Fields to change.",
+                "properties": {
+                  "autoBillDues": {
+                    "type": "boolean"
+                  },
+                  "notes": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "agreementOnFile": {
+                    "type": "boolean"
+                  },
+                  "agreementDocumentId": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "description": "Must be a document belonging to this member."
+                  },
+                  "nextDueAt": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date-time",
+                    "description": "Move the billing cursor. The escape hatch for a period settled outside the system."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memberships/{membershipId}/status": {
+      "post": {
+        "tags": [
+          "Memberships"
+        ],
+        "summary": "Start, pause, resume or end a membership",
+        "description": "Only an **active** membership accrues dues. Pausing keeps the row and stops the meter, so a member away for the winter does not come back months in arrears. **Cancelled is terminal** — bringing somebody back is a new membership, because reviving one would resume a cursor that has been sitting still and bill every period since. Requires the **admin** role.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "That transition is not allowed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "setMembershipStatus",
+        "parameters": [
+          {
+            "name": "membershipId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The membership id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The new status.",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "pending",
+                      "active",
+                      "suspended",
+                      "cancelled"
+                    ]
+                  },
+                  "reason": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 120
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memberships/{membershipId}/plan": {
+      "post": {
+        "tags": [
+          "Memberships"
+        ],
+        "summary": "Move a member to a different plan",
+        "description": "Takes the new plan's current prices, **from the next period**. Anything already invoiced is untouched. Requires the **admin** role.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The membership has ended, or the plan is retired.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "changeMembershipPlan",
+        "parameters": [
+          {
+            "name": "membershipId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The membership id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The new plan.",
+                "properties": {
+                  "planId": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "planId"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memberships/{membershipId}/joinFee": {
+      "post": {
+        "tags": [
+          "Memberships"
+        ],
+        "summary": "Bill the join fee",
+        "description": "Raises an ordinary invoice for the one-time fee, at the amount snapshotted when the member joined. Billable **once**. Requires the **admin** role.",
+        "responses": {
+          "201": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "There is no join fee, or it has already been invoiced.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "billMembershipJoinFee",
+        "parameters": [
+          {
+            "name": "membershipId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The membership id."
+          }
+        ]
+      }
+    },
+    "/memberships/{membershipId}/dues": {
+      "post": {
+        "tags": [
+          "Memberships"
+        ],
+        "summary": "Bill the next dues period",
+        "description": "**Which** period is decided by the server from the membership's own cursor and is deliberately not accepted from the request — a client that could name the period could bill the same month twice. An outstanding part-period from joining mid-cycle is billed first, at its own price. A period that has already been billed answers 409 rather than raising a second invoice. Requires the **admin** role.",
+        "responses": {
+          "201": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Nothing is owed, or that period has already been billed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "billMembershipDues",
+        "parameters": [
+          {
+            "name": "membershipId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The membership id."
+          }
+        ]
+      }
+    },
+    "/memberships/{membershipId}/dues/skip": {
+      "post": {
+        "tags": [
+          "Memberships"
+        ],
+        "summary": "Waive the next dues period",
+        "description": "Records the period as deliberately not charged — a comped month, or a leave of absence — so nothing comes back for it later. Requires the **admin** role.",
+        "responses": {
+          "201": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "There are no dues to waive.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "skipMembershipDues",
+        "parameters": [
+          {
+            "name": "membershipId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The membership id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Why.",
+                "properties": {
+                  "reason": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 200
+                  }
+                }
               }
             }
           }
@@ -10258,6 +12251,135 @@
             }
           }
         }
+      }
+    },
+    "/resources/{id}/approvedUsers": {
+      "get": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "List who is approved on a resource",
+        "description": "The members checked out to book this aircraft — the read in the opposite direction to `GET /users/{userId}/approvedResources`. Use this rather than asking every member what they are approved for.",
+        "responses": {
+          "200": {
+            "description": "The approved members.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/OrganizationUser"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listResourceApprovedUsers",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The resource id."
+          },
+          {
+            "name": "renter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Set `true` to return only members holding the **renter** role."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
       }
     },
     "/resources/{id}/approve": {
@@ -19464,6 +21586,10 @@
               "string",
               "null"
             ]
+          },
+          "approvedForResource": {
+            "type": "boolean",
+            "description": "Whether this member is checked out on the aircraft named by the request's `approvedForResourceId`. Present only when that filter was passed; absent otherwise."
           }
         },
         "additionalProperties": true
@@ -20071,6 +22197,317 @@
           },
           "reservation": {
             "$ref": "#/components/schemas/Reservation"
+          }
+        },
+        "additionalProperties": true
+      },
+      "MembershipPlan": {
+        "type": "object",
+        "description": "What an organization charges people to belong — a one-time join fee, recurring dues, or both. Tiers are plans: full, associate, social.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier, stable for the life of the record."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the record was created."
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the record last changed."
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name.",
+            "example": "Full member"
+          },
+          "description": {
+            "description": "What the tier includes.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "archivedAt": {
+            "format": "date-time",
+            "description": "When the plan was retired. Retired plans stop being offered to new members; everyone already on one keeps being billed.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "joinFeeCents": {
+            "description": "One-time fee to join, in cents. Null when there is none.",
+            "example": 50000,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "joinFeeLabel": {
+            "description": "How the join fee reads on the invoice.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "duesCents": {
+            "description": "Recurring dues, in cents. Null for a plan with no ongoing cost.",
+            "example": 9500,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "duesLabel": {
+            "description": "How the dues read on the invoice.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "duesInterval": {
+            "type": "string",
+            "description": "How often dues fall due.",
+            "enum": [
+              "monthly",
+              "quarterly",
+              "annual"
+            ],
+            "example": "monthly"
+          },
+          "duesDayOfMonth": {
+            "description": "The day every member on this plan is billed, 1-28. Null bills each member on their own join anniversary instead.",
+            "example": 1,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "prorateFirstPeriod": {
+            "type": "boolean",
+            "description": "Whether somebody joining mid-cycle is charged a part-period for the days they actually get."
+          },
+          "autoBillDues": {
+            "type": "boolean",
+            "description": "Whether each period's invoice is raised automatically, overnight."
+          },
+          "duesDueInDays": {
+            "description": "Days to pay a dues or joining-fee invoice. Null means no due date.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "bookingWindowDays": {
+            "description": "How far ahead a member on this tier may book. Null means no limit.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "memberCount": {
+            "type": "integer",
+            "description": "How many live memberships are on this plan. Not its history."
+          }
+        },
+        "additionalProperties": true
+      },
+      "MembershipPlanRate": {
+        "type": "object",
+        "description": "What one tier pays per hour for one aircraft, overriding the aircraft's published rate. Sparse: only the aircraft a plan disagrees with have a row.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier, stable for the life of the record."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the record was created."
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the record last changed."
+          },
+          "resourceId": {
+            "type": "integer",
+            "description": "The aircraft's resource id."
+          },
+          "dryRate": {
+            "description": "Cents per hour, dry.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "wetRate": {
+            "description": "Cents per hour, wet. Wins over dry, matching ordinary pricing.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": true
+      },
+      "Membership": {
+        "type": "object",
+        "description": "One person's membership of one organization. The money is a **snapshot** taken when it started, so re-pricing the plan never re-prices this member.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier, stable for the life of the record."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the record was created."
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the record last changed."
+          },
+          "status": {
+            "type": "string",
+            "description": "`pending` — set up, not started, bills nothing. `active` — the only status that accrues dues. `suspended` — paused, keeps the row and stops the meter. `cancelled` — over, and terminal.",
+            "enum": [
+              "pending",
+              "active",
+              "suspended",
+              "cancelled"
+            ]
+          },
+          "startedAt": {
+            "format": "date-time",
+            "description": "When the membership began.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "endedAt": {
+            "format": "date-time",
+            "description": "When it was cancelled.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "endedReason": {
+            "description": "Why it ended or paused.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "joinFeeCents": {
+            "description": "The join fee as it stood on the day this member joined, in cents.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "joinFeeStatus": {
+            "type": "string",
+            "description": "`none`, `owed` — never invoiced, or `invoiced`.",
+            "enum": [
+              "none",
+              "owed",
+              "invoiced"
+            ]
+          },
+          "duesCents": {
+            "description": "Dues as they stood on the day this member joined, in cents.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "duesInterval": {
+            "type": "string",
+            "description": "This membership's cadence.",
+            "enum": [
+              "monthly",
+              "quarterly",
+              "annual"
+            ]
+          },
+          "nextDueAt": {
+            "format": "date-time",
+            "description": "The start of the next period that has not been charged. **The billing cursor**: a period is owed because this says so, never because of what day it is. Null on a membership that is not accruing dues.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "autoBillDues": {
+            "type": "boolean",
+            "description": "Whether this member's periods are invoiced automatically."
+          },
+          "agreementOnFileAt": {
+            "format": "date-time",
+            "description": "When staff recorded that the member's agreement is on file. A record only — nothing is gated on it.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "plan": {
+            "$ref": "#/components/schemas/MembershipPlan"
+          },
+          "orgUser": {
+            "$ref": "#/components/schemas/OrganizationUser"
+          },
+          "charges": {
+            "type": "array",
+            "description": "Recent dues periods. Present on a single-membership read.",
+            "items": {
+              "$ref": "#/components/schemas/MembershipCharge"
+            }
+          }
+        },
+        "additionalProperties": true
+      },
+      "MembershipCharge": {
+        "type": "object",
+        "description": "One dues period, and what happened to it. The period is half-open: `periodEnd` is the first day NOT covered.",
+        "properties": {
+          "periodStart": {
+            "type": "string",
+            "format": "date-time",
+            "description": "First day of the period."
+          },
+          "periodEnd": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Day after the last day of the period."
+          },
+          "amountCents": {
+            "type": "integer",
+            "description": "What was charged, in cents. A prorated part-period differs from the membership's dues."
+          },
+          "status": {
+            "type": "string",
+            "description": "`pending` — owed, not yet invoiced. `billed` — an invoice exists. `waived` — deliberately not charged. `failed` — billing was attempted and refused, and the row is kept so it can be retried.",
+            "enum": [
+              "pending",
+              "billed",
+              "waived",
+              "failed"
+            ]
+          },
+          "note": {
+            "description": "Why, when it is not a plain charge.",
+            "type": [
+              "string",
+              "null"
+            ]
           }
         },
         "additionalProperties": true

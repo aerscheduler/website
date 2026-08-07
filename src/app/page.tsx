@@ -15,7 +15,7 @@ import {
 import { Button } from "@/components/button";
 import { ProductMock } from "@/components/product-mock";
 import { PhoneMock } from "@/components/phone-mock";
-import { ReportsMock } from "@/components/mocks";
+import { MembershipsMock, ReportsMock } from "@/components/mocks";
 import { StoreBadges } from "@/components/store-badges";
 import { HeroAtmosphere } from "@/components/hero-atmosphere";
 import { Reveal, RevealGroup } from "@/components/reveal";
@@ -261,8 +261,54 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Mobile spotlight */}
+      {/* Memberships spotlight.
+          Aimed squarely at flying clubs and FBOs, who are a different buyer from a flight
+          school: they are not shopping for a syllabus, they are shopping for a way to stop
+          chasing dues on the 1st. Visual on the LEFT so the page keeps alternating after the
+          reports spotlight put its mock on the right. */}
       <section className="border-t border-border bg-white">
+        <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:gap-16 lg:py-28">
+          <Reveal delay={120} className="order-2 flex justify-center lg:order-1">
+            <MembershipsMock />
+          </Reveal>
+          <Reveal className="order-1 lg:order-2">
+            <p className="text-sm font-semibold text-primary">Clubs &amp; memberships</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
+              Dues collect themselves on the 1st.
+            </h2>
+            <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
+              Set your tiers once — full, associate, social — and every member is billed
+              on schedule. Joining fees, monthly or annual dues, and a part-month for
+              anyone who joins on the 20th.
+            </p>
+            <ul className="mt-6 space-y-3">
+              {[
+                "A plan per tier, priced the way your club actually prices",
+                "Join mid-month and pay for the days you get, not the whole month",
+                "Pause a member for the winter and the meter stops",
+                "Dues land in the same invoices, reports, and QuickBooks sync",
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-2.5 text-sm text-foreground">
+                  <Check className="mt-0.5 size-4 shrink-0 text-primary" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Button href="/features/memberships">
+                Explore memberships
+                <ChevronRight className="size-4 opacity-80" />
+              </Button>
+              <Button href="/resources/flying-club-dues-and-fees" variant="secondary">
+                Dues &amp; fees guide
+              </Button>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Mobile spotlight */}
+      <section className="border-t border-border bg-[#fafbfc]">
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:gap-16 lg:py-28">
           <Reveal delay={120} className="order-2 flex justify-center lg:order-1">
             <PhoneMock className="animate-float" />
@@ -309,7 +355,7 @@ export default function HomePage() {
           than the viewport and gave the homepage a horizontal scroll on a
           phone. The glow is translucent and well inside the container at
           desktop widths, so clipping it costs nothing visually. */}
-      <section className="overflow-hidden border-t border-border bg-[#fafbfc]">
+      <section className="overflow-hidden border-t border-border bg-white">
         <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-28">
           <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.05fr]">
             <Reveal>

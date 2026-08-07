@@ -45,6 +45,11 @@ const GUIDES = [
     body: "Book a trip that spans nights, charge a minimum for every night the aircraft is away, and tell the member before they agree to it.",
   },
   {
+    href: "/resources/flying-club-dues-and-fees",
+    title: "Flying club dues & fees",
+    body: "What clubs charge to join and to stay, the tiers they settle on, and the five awkward cases — mid-month joiners, seasonal members, a comped month — that decide whether dues are a five-minute job.",
+  },
+  {
     href: "/resources/flight-training-records",
     title: "Flight training records",
     body: "What a school has to keep: versioned syllabi, hours that move independently of lessons, records frozen at signing, and endorsements from AC 61-65K.",

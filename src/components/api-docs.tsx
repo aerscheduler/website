@@ -242,7 +242,20 @@ export function Prose({ text, className }: { text: string; className?: string })
   );
 }
 
-function renderInline(text: string): React.ReactNode {
+/**
+ * Exported because tag descriptions render in three other places — the docs hub, the tag
+ * page's lead paragraph, and its prev/next footer — each with its own typography. They used
+ * `{tag.description}` raw, so a spec author writing `**bold**` (which is exactly what the
+ * operation descriptions beside them expect) got literal asterisks on the page. Using
+ * `Prose` there would have imposed its 15px body size on a 18px lead, so the inline
+ * renderer is shared instead of the block one.
+ */
+/** The same text with its markup removed, for meta tags and og:description. */
+export function plainText(text: string): string {
+  return text.replace(/\*\*([^*]+)\*\*/g, "$1").replace(/`([^`]+)`/g, "$1");
+}
+
+export function renderInline(text: string): React.ReactNode {
   // Bold first, then code inside it: the spec writes things like
   // **`startDate` and `endDate` are required**, and matching code first would
   // leave the surrounding asterisks stranded as literal text.

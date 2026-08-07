@@ -54,6 +54,11 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
         label: "Overnight & multi-day rentals",
         description: "Trips that span nights, and a minimum charge for every night away.",
       },
+      {
+        href: "/resources/flying-club-dues-and-fees",
+        label: "Flying club dues & fees",
+        description: "Joining fees, monthly dues, tiers, and the cases that make collecting them a chore.",
+      },
     ],
   },
   {

@@ -4,7 +4,7 @@ import { ChevronRight, Terminal, KeyRound, Clock, Gauge } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/button";
 import { JsonLd } from "@/components/json-ld";
-import { CodeBlock, EndpointRow } from "@/components/api-docs";
+import { CodeBlock, EndpointRow, renderInline } from "@/components/api-docs";
 import { ApiDocsMobileNav, ApiDocsNav } from "@/components/api-docs-nav";
 import { faqJsonLd } from "@/lib/seo";
 import {
@@ -217,7 +217,7 @@ export AERSCHEDULER_KEY=ask_live_…`}
                           <ChevronRight className="ml-0.5 inline size-3.5 align-[-2px]" />
                         </Link>
                       </div>
-                      <p className="mt-1 text-sm text-muted-foreground">{tag.description}</p>
+                      <p className="mt-1 text-sm text-muted-foreground">{renderInline(tag.description)}</p>
                       <ul className="mt-3 -mx-2">
                         {tag.endpoints.map((endpoint) => (
                           <EndpointRow

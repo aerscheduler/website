@@ -8,6 +8,7 @@ export type FeatureSlug =
   | "instruction"
   | "training"
   | "billing"
+  | "memberships"
   | "maintenance"
   | "mobile"
   | "reports"
@@ -206,8 +207,31 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
     guides: [
       "/resources/split-billing-shared-flights",
       "/resources/overnight-and-multi-day-rentals",
+      "/resources/flying-club-dues-and-fees",
       "/resources/quickbooks-integration",
     ],
+  },
+  memberships: {
+    slug: "memberships",
+    title: "Club Memberships & Dues",
+    navLabel: "Memberships & Dues",
+    eyebrow: "Money",
+    headline: "Dues collect themselves. Nobody chases the 1st of the month.",
+    summary:
+      "Set up your tiers once — full, associate, social — and every member is billed on schedule. Joining fees, monthly or annual dues, and a part-month for anyone who joins mid-cycle.",
+    bullets: [
+      "A plan per tier: full, associate, family, social — priced how your club actually prices",
+      "One-time joining fee and recurring dues, together or on their own",
+      "Monthly, quarterly or annual — bill everyone on the same day, or each member on their own anniversary",
+      "Join on the 20th and pay for the days you get, not a whole month",
+      "Dues invoices raise themselves overnight, or wait for you to press the button",
+      "Pause a member for the winter and the meter stops — no arrears when they come back",
+      "Every period is on the record: billed, waived, or still owed",
+      "Dues land in the same invoice list, the same reports, and the same QuickBooks sync as everything else",
+    ],
+    personas: ["Flying clubs", "FBOs", "Owners", "Admins", "Members"],
+    related: ["billing", "people-roles", "reports", "integrations"],
+    guides: ["/resources/flying-club-dues-and-fees", "/resources/split-billing-shared-flights"],
   },
   maintenance: {
     slug: "maintenance",
@@ -307,7 +331,7 @@ export const FEATURE_GROUPS: FeatureGroup[] = [
   },
   {
     title: "Money & MX",
-    items: ["billing", "maintenance"],
+    items: ["billing", "memberships", "maintenance"],
   },
   {
     title: "Everywhere",

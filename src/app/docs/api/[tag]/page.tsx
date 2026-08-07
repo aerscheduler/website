@@ -5,7 +5,7 @@ import { ChevronRight } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/button";
 import { JsonLd } from "@/components/json-ld";
-import { EndpointSection } from "@/components/api-docs";
+import { EndpointSection, plainText, renderInline } from "@/components/api-docs";
 import { ApiDocsMobileNav, ApiDocsNav } from "@/components/api-docs-nav";
 import { API_BASE_URL, getTagDoc, getTagDocs } from "@/lib/openapi";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!tag) return {};
 
   const title = `${tag.name} API — ${SITE_NAME} Reference`;
-  const description = `${tag.description} ${tag.endpoints.length} endpoints with parameters, responses, and example requests. Part of the ${SITE_NAME} flight school API.`;
+  const description = `${plainText(tag.description)} ${tag.endpoints.length} endpoints with parameters, responses, and example requests. Part of the ${SITE_NAME} flight school API.`;
 
   return {
     title,
@@ -92,7 +92,7 @@ export default async function ApiTagPage({ params }: Props) {
               {tag.name}
             </h1>
             <p className="mt-4 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-              {tag.description}
+              {renderInline(tag.description)}
             </p>
             <p className="mt-2 text-sm text-muted-foreground">
               {tag.endpoints.length} endpoint{tag.endpoints.length === 1 ? "" : "s"} · base URL{" "}
@@ -130,7 +130,7 @@ export default async function ApiTagPage({ params }: Props) {
                   Previous
                 </span>
                 <span className="mt-1 block text-base font-semibold text-foreground">{previous.name}</span>
-                <span className="mt-1 block text-sm text-muted-foreground">{previous.description}</span>
+                <span className="mt-1 block text-sm text-muted-foreground">{renderInline(previous.description)}</span>
               </Link>
             ) : (
               <div className="flex-1" />
@@ -144,7 +144,7 @@ export default async function ApiTagPage({ params }: Props) {
                   Next
                 </span>
                 <span className="mt-1 block text-base font-semibold text-foreground">{next.name}</span>
-                <span className="mt-1 block text-sm text-muted-foreground">{next.description}</span>
+                <span className="mt-1 block text-sm text-muted-foreground">{renderInline(next.description)}</span>
               </Link>
             )}
           </div>

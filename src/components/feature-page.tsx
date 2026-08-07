@@ -6,6 +6,7 @@ import { StoreBadges } from "@/components/store-badges";
 import {
   ScheduleMock,
   BillingMock,
+  MembershipsMock,
   FleetMock,
   PeopleMock,
   ComplianceMock,
@@ -37,6 +38,7 @@ const FEATURE_SOURCE: Partial<Record<FeatureSlug, CampaignSource>> = {
   scheduling: "scheduling",
   "self-booking": "scheduling",
   billing: "billing",
+  memberships: "billing",
   reports: "billing",
   maintenance: "maintenance",
   integrations: "quickbooks",
@@ -206,6 +208,8 @@ function FeatureVisual({ slug }: { slug: FeatureSlug }) {
       return <TrainingMock />;
     case "billing":
       return <BillingMock />;
+    case "memberships":
+      return <MembershipsMock />;
     case "maintenance":
       return <MaintenanceMock />;
     case "reports":
