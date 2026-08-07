@@ -11,7 +11,12 @@ import path from "node:path";
  * one dual booking, and one grounded tail to be worth looking at.
  *
  * `scripts/capture-docs-screenshots.mjs` reads this manifest, signs in to the
- * demo organisation, drives each route, and writes `public/docs/<id>.png`.
+ * test organisation, drives each route, and writes `public/docs/<id>.png`.
+ *
+ * A route may carry a `{placeholder}` for a record id: `{reservationId}`,
+ * `{rampedReservationId}`, `{invoiceId}`, `{aircraftId}`, `{groundedAircraftId}`
+ * or `{personId}`. The script resolves each once per run against whatever the
+ * org actually holds, because a hardcoded id pins the manifest to one database.
  *
  * Until a file lands, `<Screenshot>` renders a labelled frame rather than a
  * broken image, so an article is publishable before its pictures exist and no
@@ -49,6 +54,15 @@ export type ScreenshotSpec = {
    */
   crop?: string;
 
+  /**
+   * Selectors to click after navigating, in order, before the crop is taken.
+   *
+   * Roughly a third of these shots are of a dialog, a dropdown or a sheet, and
+   * navigation alone never reaches one. Playwright selector syntax, so
+   * `text=Add inspections` and `[data-doc-shot="x"] button` both work.
+   */
+  open?: string[];
+
 };
 
 export const SCREENSHOTS: ScreenshotSpec[] = [
@@ -64,20 +78,22 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "schedule-month-grid",
     screen: "Calendar, month view",
-    route: "/schedule?view=month",
+    route: "/schedule",
     alt: "Calendar, month view",
     dataState:
-      "A month where at least one day carries four or more bookings, so the three chips plus the plus N more link both show.",
+      "A month where at least one day carries four or more bookings, so the three chips plus the plus N more link both show. The range lives in localStorage (usePersistedState 'view:schedule-range'), NOT in the URL, so ?view=month did nothing and this has to reach Month by clicking the toolbar control.",
     crop: '[data-doc-shot="schedule-month-grid"]',
+    open: ['button[role="tab"]:has-text("Month")'],
   },
   {
     id: "schedule-unassigned-row",
     screen: "Calendar, day view, bottom row",
-    route: "/schedule?view=day",
+    route: "/schedule",
     alt: "Calendar, day view, bottom row",
     dataState:
-      "One dual booked with no aircraft, plus one room booking, so the row is labelled Other rather than Unassigned. Crop to the last row and its label.",
+      "Two or more bookings with no resource on them at all (a dual is the only type the server allows that), spread across the day so the row reads as a row. The label says Unassigned, and that is the honest label here: the lane grid only writes Other when the row also holds a booking whose resource has NO LANE, and every lane is visible to the staff account these are captured from. Seeded by seed-test-org-schedule-states-for-docs.mjs. Clicks Day first, because the range is remembered in localStorage and the month shot runs before this one.",
     crop: '[data-doc-shot="schedule-unassigned-row"]',
+    open: ['button[role="tab"]:has-text("Day")'],
   },
   {
     id: "my-schedule-list",
@@ -85,22 +101,22 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/me/schedule",
     alt: "My schedule",
     dataState:
-      "A student with a booking today, one tomorrow, and one later in the week, so all three day headings render.",
+      "Capture as the STUDENT (DOCS_EMAIL=test-student@aerscheduler.com), who has a booking today, one tomorrow, and one later in the week, so all three day headings render. The default owner account is rostered on nothing but maintenance, so as them this page captures cleanly and quietly shows two weekday headings and no Today or Tomorrow at all.",
     crop: '[data-doc-shot="my-schedule-list"]',
   },
   {
     id: "reservation-detail-panel",
     screen: "Reservation detail panel",
-    route: "/schedule?reservation=<id>",
+    route: "/schedule?reservation={scheduledReservationId}",
     alt: "Reservation detail panel",
     dataState:
-      "A dual that has not ramped out. Instructor and student both listed, notes filled in, a location set so the weather badge renders, Dispatch section showing the Not started badge, and at least a Booked line in the audit timeline.",
+      "A dual that has not ramped out. Instructor and student both listed, notes filled in, a location set so the weather badge renders, and the Dispatch section showing the Not started badge. The Activity timeline is part of this panel but sits below the sheet's fold on a booking this full, so it is not in the frame.",
     crop: '[data-doc-shot="reservation-detail-panel"]',
   },
   {
     id: "reservation-detail-awaiting-signoff",
     screen: "Reservation detail panel, close-out section",
-    route: "/schedule?reservation=<id>",
+    route: "/schedule?reservation={awaitingReviewReservationId}",
     alt: "Reservation detail panel, close-out section",
     dataState:
       "A two person dual that has ramped in, with one of the two pilots already confirmed, so the panel reads Flown. Needs pilot sign-off. 1 of 2 confirmed.",
@@ -112,17 +128,46 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/schedule",
     alt: "New reservation modal, dispatch variant",
     dataState:
-      "Signed in as an admin or dispatcher. Modal open with a title typed, Type set to Dual, an aircraft chosen, and an instructor and a student assigned. A second capture of the same modal with the Type dropdown open showing all eight types.",
+      "Signed in as an admin or dispatcher, which is what makes this the dispatch variant rather than the self one. Dual is already the default type for dispatch, so the steps only have to name the booking and fill the three pickers.",
     crop: '[data-doc-shot="reservation-form-dispatch"]',
+    open: [
+      'button:has-text("New reservation")',
+      "fill:#res-title=Pattern work and three landings",
+      // Each picker is a Popover + cmdk list, so it takes two clicks: open it, then
+      // take an option. The tail is named, because the first one in the fleet may be
+      // grounded or carrying squawks and would head this form with a notice that is a
+      // different screenshot's subject. The people are taken first from their lists,
+      // because the roster differs between the local database and the test org on prod.
+      'button:has-text("Select resource")',
+      '[role="option"]:has-text("{freeTail}")',
+      'button:has-text("Assign instructor")',
+      '[role="option"]',
+      'button:has-text("Assign student")',
+      '[role="option"]',
+    ],
   },
   {
     id: "time-picker-next-available",
     screen: "Booking form, date and time picker",
-    route: "/me/book",
+    route: "/schedule",
     alt: "Booking form, date and time picker",
     dataState:
-      "An aircraft booked solid for the chosen day, so the Start dropdown has no options and the Next available date and time link appears.",
+      "An aircraft booked solid for a whole day, two days out, so the Start dropdown has no options and the Next available date and time link appears. Seeded as an all-day maintenance block by seed-test-org-schedule-states-for-docs.mjs. Shot from the dispatch form rather than /me/book: it is the same picker component, and /me/book is an empty state for the owner account these are captured from, whose roles dispatch bookings rather than sit on them.",
     crop: '[data-doc-shot="time-picker-next-available"]',
+    open: [
+      // Day first, because the range is remembered in localStorage and the month shot
+      // runs before this one, and the arrow's label follows the range.
+      'button[role="tab"]:has-text("Day")',
+      // Step the board forward BEFORE opening the form: the form takes its date from
+      // the board. The fully blocked day is two days out rather than today, so that an
+      // all-day booking is not stretching the hour ruler on either of the two boards
+      // other shots are taken from.
+      'button[aria-label="Next day"]',
+      'button[aria-label="Next day"]',
+      'button:has-text("New reservation")',
+      'button:has-text("Select resource")',
+      '[role="option"]:has-text("{fullyBookedTail}")',
+    ],
   },
   {
     id: "repeat-dropdown-presets",
@@ -130,89 +175,116 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/schedule",
     alt: "Booking form, Repeat control",
     dataState:
-      "A booking form with a Monday date and a start and end time already chosen, Repeat dropdown open on the derived presets, and the summary line reading Repeats every week on Monday with a booking count.",
+      "A booking form with a date and a start time already chosen, then the weekly preset taken, so the control reads Weekly on <day> and the summary line underneath reads Repeats every week on <day> with a booking count. The presets are derived from the start, so an untouched form offers only Does not repeat. The open list itself cannot be in this picture: Radix portals the dropdown to the document body, outside the control this crops to.",
     crop: '[data-doc-shot="repeat-dropdown-presets"]',
+    open: [
+      'button:has-text("New reservation")',
+      // A tail with room left on it today. The Start dropdown is DISABLED when the
+      // chosen aircraft has no free slots on the chosen day, and picking whichever
+      // aeroplane came first in the fleet list landed on one that was out all day.
+      'button:has-text("Select resource")',
+      '[role="option"]:has-text("{freeTail}")',
+      "#smart-start",
+      '[role="option"]',
+      "#repeat",
+      '[role="option"]:has-text("Weekly on")',
+    ],
   },
   {
     id: "drag-callout-conflict",
     screen: "Calendar, day view, block being dragged",
-    route: "/schedule?view=day",
+    route: "/schedule",
     alt: "Calendar, day view, block being dragged",
     dataState:
-      "Two bookings on the same aircraft, one being dragged over the other so the red callout names the clash. A second capture of the hover tooltip on an invoiced block, which needs one closed out and invoiced flight on the same day.",
+      "Two bookings on the same aircraft TOMORROW, the later one dragged back over the earlier one so the red callout names the clash. Tomorrow because a booking whose window has already closed cannot be dragged at all, which rules out every pair on today's board for most of the day. The callout only exists while the block is HELD, so this is the one shot whose step leaves the mouse button down until the crop is taken.",
     crop: '[data-doc-shot="drag-callout-conflict"]',
+    open: [
+      'button[role="tab"]:has-text("Day")',
+      // Tomorrow's board, not today's. A booking whose window has already closed cannot
+      // be picked up at all (the board answers the attempt with a toast rather than the
+      // callout), which rules out every pair on today's board from mid-morning onwards.
+      'button[aria-label="Next day"]',
+      "drag:[aria-label^='{dragSourceTitle}'] => [aria-label^='{dragTargetTitle}']",
+    ],
   },
   {
     id: "ramp-out-modal",
     screen: "Ramp out modal",
-    route: "/schedule?reservation=<id>",
+    route: "/schedule?reservation={scheduledReservationId}",
     alt: "Ramp out modal",
     dataState:
       "A booking with an aircraft that has current Hobbs and tach readings on its record, not yet ramped out, so both fields show prefilled values.",
     crop: '[data-doc-shot="ramp-out-modal"]',
+    open: ['button:has-text("Ramp out")'],
   },
   {
     id: "ramp-in-modal-hours-flown",
     screen: "Ramp in modal",
-    route: "/schedule?reservation=<id>",
+    route: "/schedule?reservation={rampedOutReservationId}",
     alt: "Ramp in modal",
     dataState:
-      "A same day booking that has ramped out, with an ending Hobbs typed that is 1.4 above the out reading so the live Hours flown line renders.",
+      "A same day booking that has ramped out, with an ending Hobbs typed that is 1.4 above the out reading so the live Hours flown line renders. The field arrives prefilled with the OUT reading, so without typing over it the picture is always of a flight of 0.0 hours.",
     crop: '[data-doc-shot="ramp-in-modal-hours-flown"]',
+    open: ['button:has-text("Ramp in")', "fill:#ramp-hobbs={rampInHobbs}"],
   },
   {
     id: "ramp-in-overnight-notice",
     screen: "Ramp in modal, overnight notice",
-    route: "/schedule?reservation=<id>",
+    route: "/schedule?reservation={overnightRampedOutReservationId}",
     alt: "Ramp in modal, overnight notice",
     dataState:
-      "An organization overnight minimum of 2.0 hours, a booking that spanned two nights and has ramped out, and an ending reading 1.5 hours above the out reading, so the notice reads that it will bill 4.0 hours rather than the 1.5 flown.",
+      "An organization overnight minimum of 2.0 hours, a booking that spanned two nights and has ramped out, and an ending reading 1.5 hours above the out reading, so the notice reads that it will bill 4.0 hours rather than the 1.5 flown. The notice is computed from what has just been typed, so the reading has to be entered.",
     crop: '[data-doc-shot="ramp-in-overnight-notice"]',
+    open: ['button:has-text("Ramp in")', "fill:#ramp-hobbs={overnightRampInHobbs}"],
   },
   {
     id: "review-times-modal-ground",
     screen: "Review times modal",
-    route: "/schedule?reservation=<id>",
+    route: "/schedule?reservation={groundReservationId}",
     alt: "Review times modal",
     dataState:
       "A Ground booking in a room that has not been closed out, so the modal is titled Review times and shows instruction time only, with no Hobbs or tach fields.",
     crop: '[data-doc-shot="review-times-modal-ground"]',
+    open: ['button:has-text("Review times")'],
   },
   {
     id: "confirm-review-pin-modal",
     screen: "Confirm review modal",
-    route: "/schedule?reservation=<id>",
+    route: "/schedule?reservation={awaitingReviewReservationId}",
     alt: "Confirm review modal",
     dataState:
-      "A booking that has ramped in, signed in as a pilot on it who has not yet confirmed and who has a PIN set.",
+      "A booking that has ramped in, signed in AS A PILOT ON IT who has not yet confirmed. The default capture account owns and administers the school but is not rostered on any flight, and the console offers nobody else the button, so this one has to be captured with DOCS_EMAIL=test-student@aerscheduler.com.",
     crop: '[data-doc-shot="confirm-review-pin-modal"]',
+    open: ['button:has-text("Confirm review")'],
   },
   {
     id: "guest-close-out-modal",
     screen: "Close out and bill guest modal",
-    route: "/schedule?reservation=<id>",
+    route: "/schedule?reservation={guestReservationId}",
     alt: "Close out and bill guest modal",
     dataState:
       "A Guest flight that has ramped in, with a guest name, email and phone on the record, signed in as an admin or as the instructor on it.",
     crop: '[data-doc-shot="guest-close-out-modal"]',
+    open: ['button:has-text("Close out")'],
   },
   {
     id: "who-pays-what-panel",
     screen: "Who pays what panel",
-    route: "/schedule?reservation=<id>",
+    route: "/schedule?reservation={splitReservationId}",
     alt: "Who pays what panel",
     dataState:
-      "A shared flight with three payers that has ramped in and has not been invoiced. Enter individual legs that add up to 0.2 short of the aircraft hours so the live mismatch warning is visible, and set shares to 90 percent so the share warning is visible too.",
+      "A booking with more than one person billed for it that has ramped in and has not been invoiced. The panel renders itself once there are two payers; it disappears the moment the invoices exist, because the server refuses to change the shares after that. The per-payer leg and share fields have no ids of their own, so the live mismatch warnings are not reachable from a capture step yet. BLOCKED ON A CONSOLE FIX: at the panel's own width the Instruction (hrs) column label is 92px wide in a 66px column, so it runs 26px under Share % and the two headings render on top of each other as unreadable text. The capture itself works; the file was deleted rather than published, because a screenshot of two collided labels reads as a broken image. Widen that column (or shorten the label) in web, then re-run this id.",
     crop: '[data-doc-shot="who-pays-what-panel"]',
   },
   {
     id: "cancel-reservation-dialog",
     screen: "Cancel reservation dialog",
-    route: "/schedule?reservation=<id>",
+    route: "/schedule?reservation={repeatingReservationId}",
     alt: "Cancel reservation dialog",
     dataState:
-      "One occurrence of a repeating booking that has not started, so both the reason type list and the three series scope options render.",
+      "One occurrence of a repeating booking that has not started, so both the reason type list and the three series scope options render. The scope options only appear on a booking that belongs to a series.",
     crop: '[data-doc-shot="cancel-reservation-dialog"]',
+    open: ['button:has-text("Cancel reservation")'],
   },
   {
     id: "cancellations-report",
@@ -226,11 +298,12 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "board-filters-dimmed",
     screen: "Calendar, filters applied",
-    route: "/schedule?view=day",
+    route: "/schedule?personId={boardPersonId}",
     alt: "Calendar, filters applied",
     dataState:
-      "A day with roughly 47 bookings, Personnel filtered to one instructor with about a dozen matches, so matched blocks are bright, the rest are faint, and the header reads 12 of 47 matching.",
+      "A busy day with the Personnel facet pinned to somebody who is on several of the bookings but not all of them, so matched blocks are bright, the rest are faint, and the header reads N of M matching. personId is a real URL facet on the board, and the placeholder resolves to whoever is on the most bookings: pinning the first person in the roster dims everything and reads as a broken filter rather than a filter.",
     crop: '[data-doc-shot="board-filters-dimmed"]',
+    open: ['button[role="tab"]:has-text("Day")'],
   },
   {
     id: "booking-preferences-tab",
@@ -244,11 +317,12 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "overnight-booking-fields",
     screen: "Booking form with multi-day on",
-    route: "/schedule",
+    route: "/schedule?reservation={multiDayReservationId}",
     alt: "Booking form with multi-day on",
     dataState:
-      "Multi-day bookings enabled and an overnight minimum set. Form filled in for a two night trip, so Out on, Back on and Back at all render along with the overnight minimum notice.",
+      "Multi-day bookings enabled on the organization, and a two night trip that has not been dispatched yet, opened for editing. Reached through Edit rather than by filling in a new form: the dates are a calendar popover rather than a typed field, and an existing trip already carries the real Out on, Back on and Back at values the picture is about.",
     crop: '[data-doc-shot="overnight-booking-fields"]',
+    open: ['button:has-text("Edit reservation")'],
   },
   {
     id: "profile-time-zone-card",
@@ -265,8 +339,13 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/schedule",
     alt: "Booking form, airworthiness notice",
     dataState:
-      "An aircraft grounded with a reason, carrying two open squawks, selected in the booking form so the notice renders above the time picker.",
+      "An aircraft grounded with a reason, carrying two open squawks, selected in the booking form so the notice renders above the time picker. The placeholder resolves to whichever grounded tail has the most open squawks, so both halves of the notice have something to say.",
     crop: '[data-doc-shot="airworthiness-notice"]',
+    open: [
+      'button:has-text("New reservation")',
+      'button:has-text("Select resource")',
+      '[role="option"]:has-text("{airworthinessTail}")',
+    ],
   },
   {
     id: "me-book-solo",
@@ -274,8 +353,15 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/me/book",
     alt: "Book a reservation, Solo",
     dataState:
-      "Signed in as a student. At least three aircraft, one grounded and one with an open squawk, so the picker's right-hand column and the notice below it both have something to say.",
+      "Capture as the STUDENT (DOCS_EMAIL=test-student@aerscheduler.com), whose default type is Solo. At least three aircraft, one grounded and one with an open squawk, so the picker's right-hand column and the notice below it both have something to say.",
     crop: '[data-doc-shot="me-book-solo"]',
+    // An aircraft has to be CHOSEN or the form is a column of empty fields and the
+    // airworthiness notice the article's step 2 is about never renders. N44TS is
+    // the grounded tail, which is the case that step describes.
+    open: [
+      '[data-doc-shot="me-book-solo"] button[role="combobox"]:has-text("Select resource")',
+      '[cmdk-item]:has-text("{airworthinessTail}")',
+    ],
   },
   {
     id: "me-book-type-dropdown",
@@ -283,8 +369,9 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/me/book",
     alt: "Book a reservation, Type dropdown open",
     dataState:
-      "Signed in as a student with the Type dropdown open, so the narrowed list (no Rental, no Guest, no Maintenance) is visible.",
+      "Capture as the STUDENT (DOCS_EMAIL=test-student@aerscheduler.com) with the Type dropdown open, so the narrowed list (no Rental, no Guest, no Maintenance) is visible. Signed in as anyone else the list is a different one and the crop element is not even rendered.",
     crop: '[data-doc-shot="me-book-type-dropdown"]',
+    open: ["#res-type"],
   },
   {
     id: "me-book-your-seat",
@@ -292,8 +379,9 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/me/book",
     alt: "Book a reservation, Your seat toggle",
     dataState:
-      "Signed in as a member holding both the instructor and student roles, with Type set to Dual so the toggle renders.",
+      "Capture as the INSTRUCTOR (DOCS_EMAIL=test-instructor@aerscheduler.com), the one test account holding both the instructor and student roles. The toggle only renders for a member who holds both, on a type that has a counterpart, so as anyone else this element does not exist.",
     crop: '[data-doc-shot="me-book-your-seat"]',
+    open: ["#res-type", '[role="option"]:has-text("Dual")'],
   },
   {
     id: "me-book-start-times",
@@ -301,8 +389,15 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/me/book",
     alt: "Book a reservation, Start dropdown open",
     dataState:
-      "An aircraft with two existing bookings on the chosen day, so the 15-minute slots visibly stop and restart around them.",
+      "Capture as the STUDENT (DOCS_EMAIL=test-student@aerscheduler.com). An aircraft with free time left on the day it is captured: the list only offers 15-minute marks where the aircraft AND the member are both free, so a tail booked solid gives the Next available link instead and the dropdown never opens. N28TS is the one the test org keeps open. Run this one in the MORNING if you want the gaps: the list starts at the next free mark from now, so a late-afternoon run photographs one unbroken evening run with nothing to stop and restart around.",
     crop: '[data-doc-shot="me-book-start-times"]',
+    // The Start select is disabled until a resource is chosen, so the aircraft
+    // comes first and the dropdown second.
+    open: [
+      '[data-doc-shot="me-book-solo"] button[role="combobox"]:has-text("Select resource")',
+      '[cmdk-item]:has-text("N28TS")',
+      "#smart-start",
+    ],
   },
   {
     id: "me-book-repeat",
@@ -310,8 +405,21 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/me/book",
     alt: "Book a reservation, Repeat control",
     dataState:
-      "A booking with Start and End filled in and the Repeat control expanded, set to weekly and ending after eight occurrences.",
+      "Capture as the STUDENT (DOCS_EMAIL=test-student@aerscheduler.com). A booking with an aircraft and a start time already chosen, then Repeat set to Custom. The start date is what seeds the weekday chip and the summary line, so without one the dialog opens with nothing selected.",
     crop: '[data-doc-shot="me-book-repeat"]',
+    open: [
+      '[data-doc-shot="me-book-solo"] button[role="combobox"]:has-text("Select resource")',
+      '[cmdk-item]:has-text("N28TS")',
+      "#smart-start",
+      '[role="option"]',
+      "#repeat",
+      '[role="option"]:has-text("Custom")',
+      // The count, by its wrapper rather than by its aria-label: a fill step splits
+      // on the first "=", so a selector carrying one loses everything after it.
+      // Doubles as the blur, since the interval box autofocuses and selects its own
+      // value and a highlighted "1" reads as a field somebody is mid-edit on.
+      "fill:div.flex-1 input.w-20=8",
+    ],
   },
   {
     id: "me-book-maintenance",
@@ -328,7 +436,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/me/schedule",
     alt: "Your schedule",
     dataState:
-      "A member with one booking today, one tomorrow, and two later in the week, so the Today / Tomorrow / weekday grouping is visible.",
+      "Capture as the STUDENT (DOCS_EMAIL=test-student@aerscheduler.com), who has one booking today, one tomorrow, and two later in the week, so the Today / Tomorrow / weekday grouping is visible. As the default owner account this succeeds and shows neither heading.",
     crop: '[data-doc-shot="me-schedule-list"]',
   },
   {
@@ -337,7 +445,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/me/currencies",
     alt: "Your currencies",
     dataState:
-      "A member with one current currency, one expiring within 30 days, one expired, and one never signed off, so all four counts are non-zero and the worst-first order is visible.",
+      "Capture as the STUDENT (DOCS_EMAIL=test-student@aerscheduler.com), the only member in the test org carrying currencies: one current, one expiring within 30 days, one expired, and one never signed off, so all four counts are non-zero and the worst-first order is visible. As the default owner account this captures a four-zero header over Nothing tracked yet.",
     crop: '[data-doc-shot="me-currencies"]',
   },
   {
@@ -346,8 +454,15 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/me/documents",
     alt: "Upload a document modal",
     dataState:
-      "A school with at least three document types, one that expires and one marked restricted, so the expiry field appears and the picker visibly omits the restricted type.",
+      "Capture as the STUDENT (DOCS_EMAIL=test-student@aerscheduler.com). A school with at least three document types, one that expires and one marked restricted, so the expiry field appears and the picker visibly omits the restricted type. FAA medical certificate is the expiring one; Stage check record is the restricted one a member never sees.",
     crop: '[data-doc-shot="me-documents-upload"]',
+    // Expires on is conditional on the chosen type, so a type has to be picked
+    // or the field the article is about is not in the picture.
+    open: [
+      'button:has-text("Upload")',
+      "#doc-type",
+      '[role="option"]:has-text("FAA medical certificate")',
+    ],
   },
   {
     id: "profile-availability",
@@ -355,7 +470,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/me/profile?tab=availability",
     alt: "Profile, Availability tab",
     dataState:
-      "Signed in as an instructor with Tuesday to Saturday switched on with real hours, and Sunday and Monday off showing Unavailable.",
+      "Capture as the INSTRUCTOR (DOCS_EMAIL=test-instructor@aerscheduler.com), with Tuesday to Saturday switched on with real hours, and Sunday and Monday off showing Unavailable. The tab is only built for a member holding the instructor role, so as the default owner account the route renders without it and the crop never appears.",
     crop: '[data-doc-shot="profile-availability"]',
   },
   {
@@ -426,17 +541,28 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     screen: "Settings, Billing, Payouts card",
     route: "/settings?tab=billing",
     alt: "Settings, Billing, Payouts card",
+    // The one spec that cannot be captured in a plain run, and the reason is
+    // structural rather than fixable: this card and `billing-payouts-connected`
+    // are the SAME card in the two states of one boolean, so no single org can
+    // hold both, and the test org has Stripe connected because most of the other
+    // billing shots need it to be.
+    //
+    // Staged by flipping `organizationBillingSettings.stripeEnabled` to false on
+    // the test org, capturing this id alone, and flipping it straight back. Do
+    // that on a LOCAL database, never on the test org in production: there the
+    // column is the one Stripe's own webhook writes, and a hand-edit races it.
     dataState:
-      "An organization with no Stripe account, so the badge reads Not connected and the button reads Connect payouts. Crop to the Payouts card.",
+      "An organization with no Stripe account, so the badge reads Not connected and the button reads Connect payouts. Crop to the Payouts card. Staged locally by setting stripeEnabled false on the test org for this one capture, then restoring it.",
     crop: '[data-doc-shot="billing-payouts-not-connected"]',
   },
   {
     id: "aircraft-rate-fields",
     screen: "Aircraft, edit form",
-    route: "/aircraft/<resourceId>",
+    route: "/aircraft/{aircraftId}",
     alt: "Aircraft, edit form",
     dataState:
       "An aircraft with a wet rate of 165.00 and Bill by Hobbs time on, with the edit form open and scrolled to Rate, Rate basis and the Hobbs toggle.",
+    open: ['button:has-text("Edit")'],
     crop: '[data-doc-shot="aircraft-rate-fields"]',
   },
   {
@@ -451,7 +577,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "close-out-not-started",
     screen: "Reservation detail sheet, Close-out section",
-    route: "/schedule",
+    route: "/schedule?reservation={scheduledReservationId}",
     alt: "Reservation detail sheet, Close-out section",
     dataState:
       "Today's dual booking with an aircraft and an instructor, not yet ramped, so the step badge reads Not started and the Ramp out button is the only action.",
@@ -460,25 +586,27 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "close-out-ramp-in-dialog",
     screen: "Ramp in dialog",
-    route: "/schedule",
+    route: "/schedule?reservation={rampedOutReservationId}",
     alt: "Ramp in dialog",
     dataState:
-      "A booking already ramped out, with the ramp-in dialog open showing Hobbs in, Tach in and Instruction time, prefilled from the ramp-out readings.",
+      "A dual already ramped out, with the ramp-in dialog open showing Hobbs in, Tach in and Instruction time, prefilled from the ramp-out readings. Instruction time only appears on a booking that has an instructor on it.",
     crop: '[data-doc-shot="ramp-in-modal-hours-flown"]',
+    open: ['button:has-text("Ramp in")', "fill:#ramp-hobbs={rampInHobbs}"],
   },
   {
     id: "close-out-overnight-notice",
     screen: "Ramp in dialog with overnight notice",
-    route: "/schedule",
+    route: "/schedule?reservation={overnightRampedOutReservationId}",
     alt: "Ramp in dialog with overnight notice",
     dataState:
-      "A booking that starts Friday and ends Sunday on an org with a 2.0 hour overnight minimum, ramped out, so the ramp-in dialog shows the two nights notice above the save button.",
+      "A booking that spans two nights on an org with a 2.0 hour overnight minimum, ramped out, with an ending reading typed, so the ramp-in dialog shows the two nights notice above the save button.",
     crop: '[data-doc-shot="ramp-in-overnight-notice"]',
+    open: ['button:has-text("Ramp in")', "fill:#ramp-hobbs={overnightRampInHobbs}"],
   },
   {
     id: "close-out-invoice-summary",
     screen: "Reservation detail sheet, invoice summary",
-    route: "/schedule",
+    route: "/schedule?reservation={invoicedReservationId}",
     alt: "Reservation detail sheet, invoice summary",
     dataState:
       "A fully closed out and billed booking split between two payers, so the summary shows line items, a total, and the one of two shares label.",
@@ -487,11 +615,12 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "close-out-bill-guest",
     screen: "Close out and bill guest dialog",
-    route: "/schedule",
+    route: "/schedule?reservation={guestReservationId}",
     alt: "Close out and bill guest dialog",
     dataState:
       "A guest booking with a complete guest record (name, email, phone), ramped out and in, with the Close out and bill guest dialog open.",
     crop: '[data-doc-shot="guest-close-out-modal"]',
+    open: ['button:has-text("Close out")'],
   },
   {
     id: "cost-splitting-summary",
@@ -508,17 +637,39 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/settings?tab=cost-splitting",
     alt: "Cost splitting, per booking type editor",
     dataState:
-      "The editor open on a shared booking type, with both charge lines showing their five options and the server computed worked money example visible, including the amber Each pays in full example.",
+      "The editor open on Sim, the one booking type the Flight school preset leaves with a different rule on each charge line: aircraft split evenly, instruction each pays in full. Opened anywhere else the worked example is an ordinary division and the amber warning never renders.",
     crop: '[data-doc-shot="cost-splitting-edit-modal"]',
+    // Row picked by its own label rather than by position, then the help icon on
+    // the instruction line. The example is a popover portalled to <body>, so it is
+    // not inside the crop element, but it opens over the modal and the crop is a
+    // page clip of that rectangle, so it lands in the picture anyway.
+    open: [
+      'div:has(> div > div > span:text-is("Sim")) button:has-text("Edit")',
+      'button[aria-label="See an example of how instruction is split"]',
+    ],
   },
   {
     id: "invoice-detail-panel",
     screen: "Invoice detail panel",
-    route: "/billing?invoice=<id>",
+    // Opened by clicking the row rather than by `?invoice={invoiceId}`: the
+    // placeholder resolves to whichever invoice the API hands back first, which
+    // here is a voided one with no booking behind it. The panel only says
+    // anything worth photographing for the SPECIFIC invoice described below, so
+    // the row is picked by what it shows: the newest paid one billed to the
+    // renter on the shared flight.
+    //
+    // `?status=paid` rather than a bare `/billing`, and the reason is not the
+    // narrowing. A bare list route is REFILLED FROM localStorage on first paint
+    // (see use-list-query-state), so arriving here after the unbilled shot put
+    // this page on the Unbilled tab, where there are no invoice rows at all and
+    // the step below waited ten seconds for one. Any route that names its own
+    // filters is immune; a bare one inherits whichever spec ran before it.
+    route: "/billing?status=paid",
     alt: "Invoice detail panel",
     dataState:
-      "A paid invoice from a split booking: several line items including a service fee, a linked flight with two people, QuickBooks showing Synced with a Sales Receipt id, and the audit trail populated.",
+      "A paid invoice from a split booking: several line items including a service fee, a linked flight with two people, QuickBooks showing Synced with a Sales Receipt id, and the audit trail populated. The one the open step lands on is the most recent paid invoice whose customer is Test Renter.",
     crop: '[data-doc-shot="invoice-detail-panel"]',
+    open: ['tr:has-text("Test Renter"):has-text("Paid")'],
   },
   {
     id: "create-invoice-dialog",
@@ -526,8 +677,30 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/billing",
     alt: "New invoice dialog",
     dataState:
-      "The dialog open with a member selected, two line items (a headset rental and a checkride fee), a memo, a due date, and the running total.",
+      "The dialog open with a member selected, two line items (a headset rental and a checkride fee), a memo, a due date, and the running total. Nothing here is stored state: the dialog always opens blank, so the whole invoice is typed by the steps below.",
     crop: '[data-doc-shot="create-invoice-dialog"]',
+    // Nothing reaches this dialog prefilled. Bill on an unbilled flight used to open
+    // it with a draft and no longer does (it prices the booking outright), so a
+    // click-only path photographs an empty form under a paragraph about line items.
+    //
+    // The due date is the 1st of NEXT month rather than a day in this one: pressing
+    // the calendar's next arrow and taking its first "1" lands on a real future date
+    // whatever month the capture runs in, where clicking a number in the visible grid
+    // would go stale or pick a date already past.
+    open: [
+      'button:has-text("New invoice")',
+      "#invoice-customer button",
+      '[cmdk-item]:has-text("Test Student")',
+      "fill:#invoice-item-0=Headset rental",
+      "fill:div:has(> #invoice-item-0) input.pl-7=65.00",
+      'button:has-text("Add line item")',
+      "fill:#invoice-item-1=Checkride fee",
+      "fill:div:has(> #invoice-item-1) input.pl-7=175.00",
+      "fill:#invoice-memo=Supplies and checkride fee for August.",
+      'button:has-text("No due date")',
+      ".rdp-button_next",
+      'button:text-is("1")',
+    ],
   },
   {
     id: "my-invoices",
@@ -535,17 +708,20 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/me/invoices",
     alt: "My invoices",
     dataState:
-      "A member with one outstanding invoice and three paid ones, so both summary cards have a figure and the table shows a mix of statuses.",
+      "Capture as the STUDENT (DOCS_EMAIL=test-student@aerscheduler.com). This page is the signed-in member's OWN invoices, and the owner has none of their own, so run as the owner it is an empty state. A member with one outstanding invoice and three paid ones, so both summary cards have a figure and the table shows a mix of statuses.",
     crop: '[data-doc-shot="my-invoices"]',
   },
   {
     id: "pay-invoice-dialog",
     screen: "Pay invoice dialog",
-    route: "/me/invoices?invoice=<id>",
+    // `?invoice=` only opens the read-only drawer; Pay now is a button inside it,
+    // and the dialog it opens has no URL of its own.
+    route: "/me/invoices",
     alt: "Pay invoice dialog",
     dataState:
-      "An outstanding invoice open with the Stripe card form showing. Use a Stripe test card only, and never capture a real member's name or amount.",
+      "Capture as the STUDENT (DOCS_EMAIL=test-student@aerscheduler.com): the owner has no invoices of their own and the page is empty. An outstanding invoice open with the Stripe card form showing. Use a Stripe test card only, and never capture a real member's name or amount.",
     crop: '[data-doc-shot="pay-invoice-dialog"]',
+    open: ['tr:has-text("Outstanding")', 'button:has-text("Pay $")'],
   },
   {
     id: "payment-methods-autopay",
@@ -553,7 +729,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/me/profile?tab=payments",
     alt: "Profile, Payment methods",
     dataState:
-      "One saved test card set as default with autopay on, so the Autopay card reads that new invoices are charged automatically and the card shows brand, last four and expiry.",
+      "One saved test card set as default with autopay on, so the Autopay card reads that new invoices are charged automatically and the card shows brand, last four and expiry. NOT YET STAGEABLE: a saved card lives in Stripe, not in our database, and nobody in the test org has one, so every account captured here so far photographs the empty state (autopay off, No cards saved yet) under an article about autopay being on. The earlier file was deleted for that reason. Save a Stripe TEST card against a test member first (see the stripe-local skill), then capture as whoever holds it.",
     crop: '[data-doc-shot="payment-methods-autopay"]',
   },
   {
@@ -571,17 +747,28 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/settings?tab=memberships",
     alt: "Membership plan editor",
     dataState:
-      "A saved plan open for editing with a join fee, quarterly dues, Bill everyone on the same day set to the 1st, prorate on, days to pay set, a booking window, and at least one per aircraft tier rate filled in.",
+      "A saved plan open for editing with a join fee, quarterly dues, Bill everyone on the same day set to the 1st, prorate on, days to pay set, a booking window, and at least one per aircraft tier rate filled in. Full member is the plan that carries all of them.",
     crop: '[data-doc-shot="membership-plan-editor"]',
+    // The plan is chosen by its own name, not by row order. The second click is
+    // on the dialog heading and does nothing: the editor autofocuses Plan name
+    // and SELECTS its text, so without it the picture opens on a blue highlight.
+    open: [
+      'div:has(> div > div > h3:text-is("Full member")) button:has-text("Edit")',
+      '[role="dialog"] h2:has-text("Edit plan")',
+    ],
   },
   {
     id: "person-membership-card",
     screen: "Person record, Billing tab",
-    route: "/people/<orgUserId>?tab=billing",
+    // Reached by name from the roster rather than by id. The subject has to be a
+    // specific member (the one carrying the membership), and `{personId}` resolves
+    // to whichever org user the API returns first, which is the owner.
+    route: "/people",
     alt: "Person record, Billing tab",
     dataState:
       "A member on an active plan with the join fee billed, at least three dues periods in history (one waived, one failed), autopay on, and two invoices in the Invoices card below.",
     crop: '[data-doc-shot="person-membership-card"]',
+    open: ['a:has-text("Test Student")', 'nav[aria-label="Member"] button:has-text("Billing")'],
   },
   {
     id: "quickbooks-setup",
@@ -589,7 +776,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/settings/integrations/quickbooks",
     alt: "Settings, Integrations, QuickBooks Online",
     dataState:
-      "Signed in as the owner of a connected sandbox company, with an income item chosen, Sync paid invoices on, and an activity feed holding at least one success, one skipped and one error entry.",
+      "Owner, on the not-yet-connected page: the three-step strip, the subtitle and Connect QuickBooks, which is the step the article puts this image under. The CONNECTED version of this screen cannot be staged locally and the file on disk is deliberately the disconnected one. Connecting needs a real Intuit sandbox company and a real OAuth sign-in, and a hand-written settings row does not stand in: the Configuration section loads Products and Services live from Intuit, so a fabricated token leaves the income item reading 'No active items in QuickBooks' next to a Sync toggle that is on, which is a picture of a broken integration rather than a working one. Capture the connected state only from an org that is genuinely connected.",
     crop: '[data-doc-shot="quickbooks-setup"]',
   },
   {
@@ -626,6 +813,9 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     alt: "Add inspections, Standard set",
     dataState:
       "Two or more aircraft so Applies to has options. Modal open on Standard set with all seven AVIATES rows ticked, the two Also common rows unticked, and the regulation and caveat lines visible.",
+    // Standard set is the mode the modal opens on, and it ticks the AVIATES rows
+    // itself, so the header button is the whole path.
+    open: ['button:has-text("Add inspections")'],
     crop: '[data-doc-shot="add-inspections-standard-set"]',
   },
   {
@@ -635,6 +825,16 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     alt: "Add inspections, Recurring",
     dataState:
       "Modal open in Recurring mode with a name typed, On the meter selected, Count tach time chosen, Every 100 and Warn me 10 filled, and Grounds the aircraft switched on.",
+    // Every 100 and Warn 10 are the form's own defaults, so only the mode, the
+    // basis, the meter and the grounds switch need a click. Name is left on its
+    // placeholder: the steps click, they cannot type.
+    open: [
+      'button:has-text("Add inspections")',
+      'button:has-text("Repeats on hours")',
+      'button:has-text("On the meter")',
+      'button:has-text("Count tach time")',
+      "#insp-grounds",
+    ],
     crop: '[data-doc-shot="add-inspections-recurring"]',
   },
   {
@@ -644,6 +844,23 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     alt: "Add inspections, When was it last done?",
     dataState:
       "Modal open in Recurring mode with a Date and a Meter reading typed and two aircraft selected under Applies to, so the amber shared-meter warning is on screen. Crop to the When was it last done? box plus the warning.",
+    // The warning renders on `lastDoneHours !== "" && targets.length > 1`, so it
+    // needs BOTH halves: two tails picked, and a reading typed. The chips are
+    // matched on `font-mono`, which is what tells a tail chip apart from the
+    // segmented controls above it; plain `[aria-pressed=false]` also matches
+    // "On the calendar" and "Count Hobbs Time", and `.first()` would click one
+    // of those instead. Each click flips a chip to pressed, so the same selector
+    // picks a different tail the second time.
+    //
+    // The Date half of the state above stays unfilled: `#insp-last-date` is a
+    // picker button rather than an input, and a `fill:` step on it throws.
+    open: [
+      'button:has-text("Add inspections")',
+      'button:has-text("Repeats on hours")',
+      "button.font-mono[aria-pressed=\"false\"]",
+      "button.font-mono[aria-pressed=\"false\"]",
+      "fill:#insp-last-hours=5800.0",
+    ],
     crop: '[data-doc-shot="add-inspections-last-done"]',
   },
   {
@@ -653,12 +870,16 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     alt: "Sign off",
     dataState:
       "An overdue hour-based inspection that carries the Grounds flag, on an aircraft currently auto-grounded with the reason Maintenance, so the modal shows the tach reading field and the return-to-service line.",
+    // All inspections is sorted worst-first by the server, so the first Sign off
+    // on the page belongs to the most urgent row, which is where the overdue
+    // hour-based item lives.
+    open: ['[data-doc-shot="maintenance-all-inspections"] button:has-text("Sign off")'],
     crop: '[data-doc-shot="sign-off-inspection-modal"]',
   },
   {
     id: "aircraft-maintenance-tab",
     screen: "Aircraft detail, Maintenance",
-    route: "/aircraft/:resourceId?tab=maintenance",
+    route: "/aircraft/{aircraftId}?tab=maintenance",
     alt: "Aircraft detail, Maintenance",
     dataState:
       "One aircraft with at least five tracked inspections including one overdue and one due soon, plus two open squawks, viewed as an admin so Add, Sign off, Log and Resolve all render.",
@@ -667,7 +888,9 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "aircraft-grounded-banner",
     screen: "Aircraft detail header, grounded",
-    route: "/aircraft/:resourceId",
+    // The banner only renders on a grounded tail, and the fleet's first tail is
+    // not one, so this asks for a grounded aircraft by name.
+    route: "/aircraft/{groundedAircraftId}",
     alt: "Aircraft detail header, grounded",
     dataState:
       "An aircraft grounded by hand with a typed reason such as \"Prop strike\", viewed as an admin so the red banner sits above Edit, Approve renters and Return to service.",
@@ -676,10 +899,14 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "ground-aircraft-modal",
     screen: "Ground aircraft",
-    route: "/aircraft/:resourceId",
+    // {aircraftId} resolves to a tail that is NOT grounded, which is what makes
+    // the header button read Ground rather than Return to service.
+    route: "/aircraft/{aircraftId}",
     alt: "Ground aircraft",
     dataState:
       "An aircraft that is not currently grounded, with the Ground dialog open and the Reason box empty so its placeholder text is readable.",
+    open: ['button:has-text("Ground")'],
+    crop: '[data-doc-shot="ground-aircraft-modal"]',
   },
   {
     id: "log-squawk-modal",
@@ -688,6 +915,17 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     alt: "Log a squawk",
     dataState:
       "Two or more aircraft in the fleet. Dialog open with a realistic title and description typed and an aircraft picked, opened from the Maintenance page rather than from a tail so the Aircraft picker is visible.",
+    // From the page header, not from a tail, so the Aircraft combobox is on
+    // screen rather than a fixed row. Title and Description stay on their
+    // placeholders: the steps click, they cannot type.
+    open: [
+      'button:has-text("Log a squawk")',
+      '[data-doc-shot="log-squawk-modal"] [role="combobox"]',
+      // The popover is portalled out of the modal, so the option cannot be
+      // scoped to the crop. It closes on select and the tail lands in the
+      // trigger, which is the part the picture is of.
+      '[role="option"]',
+    ],
     crop: '[data-doc-shot="log-squawk-modal"]',
   },
   {
@@ -706,6 +944,9 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     alt: "Squawk detail panel",
     dataState:
       "A squawk with a full description, a named reporter, and a verified timestamp already set from the iOS app, so the Verified row renders alongside Reported.",
+    // The card opens the panel; scoped to the list so the page header's own
+    // buttons cannot be what gets clicked.
+    open: ['[data-doc-shot="maintenance-squawks-open"] [role="button"]'],
     crop: '[data-doc-shot="squawk-detail-panel"]',
   },
   {
@@ -715,6 +956,9 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     alt: "Resolve squawk",
     dataState:
       "An open squawk with the Resolve dialog open, Completed defaulted to today, and notes partly typed so the character counter is visible.",
+    // Resolve on the first open card. The counter renders whether or not the
+    // notes have been typed into, so an empty box still shows it.
+    open: ['[data-doc-shot="maintenance-squawks-open"] button:has-text("Resolve")'],
     crop: '[data-doc-shot="resolve-squawk-modal"]',
   },
   {
@@ -725,6 +969,11 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     dataState:
       "The reservation form with a grounded aircraft selected that also carries two or more open squawks, so the red grounded line and the amber squawk list appear together above the form.",
     crop: '[data-doc-shot="airworthiness-notice"]',
+    open: [
+      'button:has-text("New reservation")',
+      'button:has-text("Select resource")',
+      '[role="option"]:has-text("{airworthinessTail}")',
+    ],
   },
   {
     id: "notification-preferences-maintenance",
@@ -749,6 +998,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     screen: "Start from a template dialog",
     route: "/training?tab=courses",
     alt: "Start from a template dialog",
+    open: ['button:has-text("Start from a template")'],
     dataState:
       "Dialog open showing all four templates with their stage, lesson and requirement counts, and the line saying every template is created as Part 61.",
     crop: '[data-doc-shot="training-template-picker"]',
@@ -758,6 +1008,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     screen: "New course dialog",
     route: "/training?tab=courses",
     alt: "New course dialog",
+    open: ['button:has-text("New course")', "fill:#course-name=Instrument Rating"],
     dataState:
       "Dialog open with a name typed and the Trained under choice plus its helper text fully visible.",
     crop: '[data-doc-shot="training-new-course-dialog"]',
@@ -765,8 +1016,21 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "syllabus-stages-lessons",
     screen: "Course detail, Syllabus tab (draft)",
-    route: "/training/$courseId?tab=syllabus",
+    // No course id in the route on purpose: ids differ between the local database and the
+    // test org on prod, so the course is reached by name off the Courses list. The editor
+    // only renders for a DRAFT and the page preselects the published version, so the
+    // version dropdown has to be walked to Rev B before anything editable is on screen.
+    route: "/training?tab=courses",
     alt: "Course detail, Syllabus tab (draft)",
+    open: [
+      'a:has-text("Private Pilot Certificate (Part 141)")',
+      '[data-doc-shot="syllabus-published-locked"] [role="combobox"]',
+      '[role="option"]:has-text("Rev B")',
+      // One lesson expanded, so objectives, ACS tasks and the credit chips are visible.
+      // An early one: the crop stops at the foot of the viewport, and a lesson opened
+      // further down the syllabus has its expansion cut off by that edge.
+      'button:has-text("Introduction and effects of controls")',
+    ],
     dataState:
       "A draft version with two stages, one flagged Ends in a stage check, and one flight lesson expanded to show objectives, completion standards, ACS task chips and Credits toward chips.",
     crop: '[data-doc-shot="syllabus-stages-lessons"]',
@@ -774,8 +1038,16 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "syllabus-lesson-dialog-credits",
     screen: "Lesson dialog, Credits toward box",
-    route: "/training/$courseId?tab=syllabus",
+    route: "/training?tab=courses",
     alt: "Lesson dialog, Credits toward box",
+    open: [
+      'a:has-text("Private Pilot Certificate (Part 141)")',
+      '[data-doc-shot="syllabus-published-locked"] [role="combobox"]',
+      '[role="option"]:has-text("Rev B")',
+      // The pencil beside the lesson row. It carries an icon and no text, so it is reached
+      // as the sibling of the row's own expand button rather than by a label.
+      'button:has-text("Dual cross-country (day)") + button',
+    ],
     dataState:
       "Draft version with at least four requirements already added, lesson dialog open on a flight lesson so flight time, ground time and per lesson can each be ticked. A second capture with nothing ticked, showing the amber Credits nothing line.",
     crop: '[data-doc-shot="syllabus-lesson-dialog-credits"]',
@@ -783,8 +1055,14 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "syllabus-requirements-tab",
     screen: "Course detail, Requirements tab",
-    route: "/training/$courseId?tab=requirements",
+    route: "/training?tab=courses",
     alt: "Course detail, Requirements tab",
+    open: [
+      'a:has-text("Private Pilot Certificate (Part 141)")',
+      '[data-doc-shot="syllabus-published-locked"] [role="combobox"]',
+      '[role="option"]:has-text("Rev B")',
+      'nav[aria-label="Course"] button:has-text("Requirements")',
+    ],
     dataState:
       "Draft version carrying the Private Pilot requirement set, including one requirement with a simulator limit chip, one with a transfer limit chip, and one with a recency window.",
     crop: '[data-doc-shot="syllabus-requirements-tab"]',
@@ -792,8 +1070,14 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "syllabus-grading-scale",
     screen: "Grading scale card",
-    route: "/training/$courseId?tab=requirements",
+    route: "/training?tab=courses",
     alt: "Grading scale card",
+    open: [
+      'a:has-text("Private Pilot Certificate (Part 141)")',
+      '[data-doc-shot="syllabus-published-locked"] [role="combobox"]',
+      '[role="option"]:has-text("Rev B")',
+      'nav[aria-label="Course"] button:has-text("Requirements")',
+    ],
     dataState:
       "Draft version with the default S, U and I scale, the Completes the lesson checkboxes visible and S ticked.",
     crop: '[data-doc-shot="syllabus-grading-scale"]',
@@ -801,8 +1085,16 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "syllabus-publish-dialog",
     screen: "Publish confirmation dialog",
-    route: "/training/$courseId?tab=syllabus",
+    route: "/training?tab=courses",
     alt: "Publish confirmation dialog",
+    open: [
+      'a:has-text("Private Pilot Certificate (Part 141)")',
+      '[data-doc-shot="syllabus-published-locked"] [role="combobox"]',
+      '[role="option"]:has-text("Rev B")',
+      // The header trigger, not the dialog's own "Publish and lock". Publishing is
+      // irreversible, so this run must never reach the second one.
+      'button:has-text("Publish")',
+    ],
     dataState:
       "A Part 141 draft with at least a dozen lessons so the warning names a real count, and the optional FSDO approval reference field showing.",
     crop: '[data-doc-shot="syllabus-publish-dialog"]',
@@ -810,8 +1102,11 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "syllabus-published-locked",
     screen: "Course header, locked badge and version dropdown",
-    route: "/training/$courseId?tab=syllabus",
+    route: "/training?tab=courses",
     alt: "Course header, locked badge and version dropdown",
+    // The page lands on the published version by itself, which is exactly the state this
+    // one is of, so the course link is the whole path.
+    open: ['a:has-text("Private Pilot Certificate (Part 141)")'],
     dataState:
       "A course with a published Rev A (students enrolled) and a draft Rev B, so the dropdown holds two entries and the header reads Locked, students are enrolled against these lessons.",
     crop: '[data-doc-shot="syllabus-published-locked"]',
@@ -819,8 +1114,17 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "training-enroll-dialog",
     screen: "Enroll a student dialog",
-    route: "/training/$courseId?tab=students",
+    route: "/training?tab=courses",
     alt: "Enroll a student dialog",
+    open: [
+      'a:has-text("Private Pilot Certificate (Part 141)")',
+      'nav[aria-label="Course"] button:has-text("Students")',
+      'button:has-text("Enroll a student")',
+      // Choose somebody, so the picture is of a filled-in form rather than a placeholder
+      // over a disabled button. Selecting enrolls nobody; only the footer button does.
+      '[data-doc-shot="training-enroll-dialog"] [role="combobox"]',
+      '[role="option"]:has-text("Nate NeverFlew")',
+    ],
     dataState:
       "A published, non-retired version selected, and a roster with several students plus one instructor so the (staff) suffix is visible in the picker.",
     crop: '[data-doc-shot="training-enroll-dialog"]',
@@ -828,8 +1132,12 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "course-enrollment-fee-card",
     screen: "Course detail, Enrollment fee card",
-    route: "/training/$courseId?tab=students",
+    route: "/training?tab=courses",
     alt: "Course detail, Enrollment fee card",
+    open: [
+      'a:has-text("Private Pilot Certificate (Part 141)")',
+      'nav[aria-label="Course"] button:has-text("Students")',
+    ],
     dataState:
       "A fee saved, for example $250, with custom invoice wording typed and the confirmation line reading Enrolling a student will record $250 owed.",
     crop: '[data-doc-shot="course-enrollment-fee-card"]',
@@ -837,8 +1145,11 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "enrollment-overview",
     screen: "Training record, Overview tab",
-    route: "/training/enrollments/$enrollmentId?tab=overview",
+    // Reached off the roster rather than by id: enrollment ids differ between databases,
+    // and only one row is the mid-course Part 141 record these shots are of.
+    route: "/training?tab=students",
     alt: "Training record, Overview tab",
+    open: ['a:has-text("Test Student"):has-text("Part 141")'],
     dataState:
       "A Part 141 student mid course: lessons bar part filled, pace badge showing At risk, the amber Not ready to graduate card naming two or more unmet requirements, an unbilled Course fee card, and one endorsement on the Endorsements card.",
     crop: '[data-doc-shot="enrollment-overview"]',
@@ -846,8 +1157,12 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "enrollment-requirements",
     screen: "Training record, Requirements tab",
-    route: "/training/enrollments/$enrollmentId?tab=requirements",
+    route: "/training?tab=students",
     alt: "Training record, Requirements tab",
+    open: [
+      'a:has-text("Test Student"):has-text("Part 141")',
+      'nav[aria-label="Enrollment"] button:has-text("Requirements")',
+    ],
     dataState:
       "At least one requirement discounted by a simulator ceiling and one by a recency window, so both amber explanations render beside part-filled bars and credited is visibly lower than flown.",
     crop: '[data-doc-shot="enrollment-requirements"]',
@@ -855,8 +1170,12 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "enrollment-lessons",
     screen: "Training record, Lessons tab",
-    route: "/training/enrollments/$enrollmentId?tab=lessons",
+    route: "/training?tab=students",
     alt: "Training record, Lessons tab",
+    open: [
+      'a:has-text("Test Student"):has-text("Part 141")',
+      'nav[aria-label="Enrollment"] button:has-text("Lessons")',
+    ],
     dataState:
       "Across two stages: one Complete lesson, one badged Next up, one record reading Awaiting student, and one Superseded record struck through with its Correction not signed underneath.",
     crop: '[data-doc-shot="enrollment-lessons"]',
@@ -864,8 +1183,12 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "enrollment-ledger",
     screen: "Training record, Ledger tab",
-    route: "/training/enrollments/$enrollmentId?tab=ledger",
+    route: "/training?tab=students",
     alt: "Training record, Ledger tab",
+    open: [
+      'a:has-text("Test Student"):has-text("Part 141")',
+      'nav[aria-label="Enrollment"] button:has-text("Ledger")',
+    ],
     dataState:
       "Credits from at least four signed lessons, one transfer credit, one simulator credit and one negative reversal carrying an amendment reason, so every source chip and a negative amount appear.",
     crop: '[data-doc-shot="enrollment-ledger"]',
@@ -873,8 +1196,15 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "grade-lesson-dialog",
     screen: "Grade lesson dialog on the training record",
-    route: "/training/enrollments/$enrollmentId?tab=lessons",
+    route: "/training?tab=students",
     alt: "Grade lesson dialog on the training record",
+    open: [
+      'a:has-text("Test Student"):has-text("Part 141")',
+      'nav[aria-label="Enrollment"] button:has-text("Lessons")',
+      // This lesson and not the first one on the page: it is the flight lesson carrying
+      // both minimums and three credited requirements, which is what the dialog is of.
+      'div:has(> div > span:has-text("Dual cross-country (day)")) button:has-text("Grade")',
+    ],
     dataState:
       "Dialog open on a flight lesson that credits three requirements, with minimum flight and ground hours set on the lesson so the fields are prefilled and the Signing credits line lists all three.",
     crop: '[data-doc-shot="grade-lesson-dialog"]',
@@ -882,8 +1212,15 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "amend-record-dialog",
     screen: "Amend dialog",
-    route: "/training/enrollments/$enrollmentId?tab=lessons",
+    route: "/training?tab=students",
     alt: "Amend dialog",
+    open: [
+      'a:has-text("Test Student"):has-text("Part 141")',
+      'nav[aria-label="Enrollment"] button:has-text("Lessons")',
+      // A record that is both signed and countersigned, so the dialog is offered at all.
+      'div:has(> div > span:has-text("Basic instrument manoeuvres")) button:has-text("Amend")',
+      "fill:#amend-reason=Hobbs read 1.4, not 1.6. Corrected against the dispatch sheet.",
+    ],
     dataState:
       "A signed, countersigned record with the Amend dialog open and a plausible reason typed in the Why box.",
     crop: '[data-doc-shot="amend-record-dialog"]',
@@ -891,8 +1228,24 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "add-credit-dialog",
     screen: "Add credit dialog",
-    route: "/training/enrollments/$enrollmentId?tab=requirements",
+    route: "/training?tab=students",
     alt: "Add credit dialog",
+    open: [
+      'a:has-text("Test Student"):has-text("Part 141")',
+      'nav[aria-label="Enrollment"] button:has-text("Requirements")',
+      'button:has-text("Add credit")',
+      // Pick a requirement, so the dialog is not photographed on its placeholder. The
+      // options render in a portal outside the crop; what lands in the picture is the
+      // chosen label back on the trigger.
+      '[data-doc-shot="add-credit-dialog"] [role="combobox"]',
+      '[role="option"]:has-text("Night flight training")',
+      // Addressed by an attribute that is merely PRESENT, because a fill step splits on
+      // its first "=" and any [attr="value"] selector would be cut in half by its own
+      // quotes. Hours is the only number input on screen, the date the only one with a
+      // max. The date is deliberately old: prior training is the case this dialog is for.
+      "fill:input[step]=18.4",
+      "fill:input[max]=2024-06-14",
+    ],
     dataState:
       "Dialog open with a requirement chosen, Previous training (Part 61) selected, hours entered, a date from a previous year in When it was flown, and a note.",
     crop: '[data-doc-shot="add-credit-dialog"]',
@@ -900,11 +1253,12 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "closeout-training-section",
     screen: "Close-out sheet, Training record section",
-    route: "/schedule",
+    route: "/schedule?reservation={trainingReservationId}",
     alt: "Close-out sheet, Training record section",
     dataState:
-      "A completed dual booking with one enrolled student, Hobbs out and in plus briefing time entered, and the Training record block expanded so the lesson dropdown (with completed lessons prefixed by a tick), the grade and the prefilled Flight and Ground fields all show.",
+      "A completed dual booking with an enrolled student, Hobbs out and in plus briefing time entered, and the Training record block expanded so the lesson dropdown (with completed lessons prefixed by a tick), the grade and the prefilled Flight and Ground fields all show. The block starts collapsed behind a Grade this lesson button, so the step has to open it.",
     crop: '[data-doc-shot="closeout-training-section"]',
+    open: ['button:has-text("Grade this lesson")'],
   },
   {
     id: "booking-next-up-hint",
@@ -912,14 +1266,25 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/schedule",
     alt: "Booking form, Next up hint",
     dataState:
-      "A new dual booking created on behalf of a student who is enrolled and has completed four of twenty-one lessons, so the grey strip reads Next up with the count.",
+      "A new dual booking with an ENROLLED student picked in the Student field. The strip renders nothing at all for a student on no course, which is most of them, so the roster's first student has to be one who is enrolled.",
     crop: '[data-doc-shot="booking-next-up-hint"]',
+    open: [
+      'button:has-text("New reservation")',
+      'button:has-text("Assign student")',
+      '[role="option"]:has-text("{enrolledStudentName}")',
+    ],
   },
   {
     id: "graduate-dialog",
     screen: "Graduate dialog",
-    route: "/training/enrollments/$enrollmentId",
+    route: "/training?tab=students",
     alt: "Graduate dialog",
+    // A different student from the other enrollment shots: this is the one whose every
+    // requirement is met and whose record is certified, so the button is not disabled.
+    open: [
+      'a:has-text("Alex Active"):has-text("Part 141")',
+      'button:has-text("Graduate")',
+    ],
     dataState:
       "A Part 141 enrollment with every FAA-sourced requirement met and the record already certified, so the certificate number field shows and the button is enabled.",
     crop: '[data-doc-shot="graduate-dialog"]',
@@ -927,8 +1292,15 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "endorsements-card-sign",
     screen: "Sign an endorsement dialog",
-    route: "/people/$orgUserId?tab=training",
+    // The same card sits on the person page and on the training record, and only the
+    // second one can be reached without an id, so the dialog is opened from there.
+    route: "/training?tab=students",
     alt: "Sign an endorsement dialog",
+    open: [
+      'a:has-text("Test Student"):has-text("Part 141")',
+      'button:has-text("Sign one")',
+      'button:has-text("Solo flight (first 90-day period)")',
+    ],
     dataState:
       "Template picker open on the Solo group, a template chosen so the body renders with the student's name filled in, two braces still unfilled and the blanks counter visible, certificate number empty.",
     crop: '[data-doc-shot="endorsements-card-sign"]',
@@ -936,11 +1308,14 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "person-training-card",
     screen: "Person detail, Training section",
-    route: "/people/$orgUserId?tab=training",
+    // By name off the roster, not by id: the subject is a student, and
+    // `{personId}` resolves to whichever org user the API returns first.
+    route: "/people",
     alt: "Person detail, Training section",
     dataState:
       "A student with one in-training and one graduated enrollment, plus two endorsements on the Endorsements card, one of them expiring inside 30 days.",
     crop: '[data-doc-shot="person-training-card"]',
+    open: ['a:has-text("Test Student")', 'nav[aria-label="Member"] button:has-text("Training")'],
   },
   {
     id: "me-training-progress",
@@ -963,7 +1338,10 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "report-student-progress",
     screen: "Reports, Student progress",
-    route: "/reports",
+    // Reports is one route with a rail, keyed by `?report=`, the way Settings is
+    // keyed by `?tab=`. The values are the server's report ids, plus "overview"
+    // and "scheduled" for the two panes that are not reports.
+    route: "/reports?report=training-progress",
     alt: "Reports, Student progress",
     dataState:
       "Six or more enrollments across two courses with varied lesson counts, shortfalls and days since flown. Range widened past the default year to date so an enrollment from last year is included. Sorted by Requirements short.",
@@ -972,7 +1350,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "report-training-records",
     screen: "Reports, Training records",
-    route: "/reports",
+    route: "/reports?report=training-records",
     alt: "Reports, Training records",
     dataState:
       "Twenty or more graded lessons for one student over a 90 day window, including one Superseded and Correction pair, one row reading Awaiting student and one reading Not signed.",
@@ -981,7 +1359,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "report-endorsement-expirations",
     screen: "Reports, Endorsement expirations",
-    route: "/reports",
+    route: "/reports?report=endorsements",
     alt: "Reports, Endorsement expirations",
     dataState:
       "At least three endorsements with expiry dates: one already expired with negative days left, one expiring inside 30 days, one still valid.",
@@ -994,11 +1372,14 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     alt: "Reports, left rail",
     dataState:
       "Signed in as an owner in a school with enough activity that the welcome screen has retired: 5 or more reservations in the window 45 days back to 60 days ahead, and at least one invoice. All five category headings must be present.",
+    // One crop id for all three rail shots. It is the same rail in each: what
+    // differs is who is signed in, which is DOCS_EMAIL, not a selector.
+    crop: '[data-doc-shot="reports-rail"]',
   },
   {
     id: "reports-overview-board",
     screen: "Reports, Overview dashboard",
-    route: "/reports",
+    route: "/reports?report=overview",
     alt: "Reports, Overview dashboard",
     dataState:
       "The default layout on Last 30 days with real figures in all eight number cards and both line charts. Needs a month of invoices and closed-out flights so no tile reads zero or blank.",
@@ -1007,7 +1388,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "reports-overview-attention",
     screen: "Reports, Overview, Needs attention card",
-    route: "/reports",
+    route: "/reports?report=overview",
     alt: "Reports, Overview, Needs attention card",
     dataState:
       "At least five non-zero items and one Clear line. Requires an overdue invoice, a closed-out flight that was never invoiced, a booking awaiting close-out, an open squawk, and a document expiring inside 30 days.",
@@ -1016,7 +1397,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "report-shell-revenue",
     screen: "Reports, Revenue report",
-    route: "/reports",
+    route: "/reports?report=revenue",
     alt: "Reports, Revenue report",
     dataState:
       "Revenue selected, ungrouped, Last 30 days, two filter chips applied. Needs about 20 invoices across several aircraft so the table has rows on more than one page and the Totals row is meaningful.",
@@ -1025,7 +1406,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "report-toolbar-export",
     screen: "Reports, report toolbar",
-    route: "/reports",
+    route: "/reports?report=revenue",
     alt: "Reports, report toolbar",
     dataState:
       "Any report with rows and filters applied, cropped to the toolbar, the chips, and an enabled Export button.",
@@ -1034,61 +1415,85 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "report-filters-menu",
     screen: "Reports, Filters menu",
-    route: "/reports",
+    route: "/reports?report=revenue",
     alt: "Reports, Filters menu",
     dataState:
       "The Filters menu open on a report with several filterable fields, showing Group by and Columns at the top and one field submenu expanded with its Condition list.",
+    // `text=` and unquoted attribute selectors only. `:has-text("x")` needs its
+    // quotes, and a quote inside one of these strings is where the manifest
+    // reader in scripts/capture-docs-screenshots.mjs stops reading the value.
+    open: ["text=Filters"],
     crop: '[data-doc-shot="report-filters-menu"]',
   },
   {
     id: "report-columns-submenu",
     screen: "Reports, Columns submenu",
-    route: "/reports",
+    route: "/reports?report=revenue",
     alt: "Reports, Columns submenu",
     dataState:
       "A report with 19 available columns and 7 ticked, so the counter reads 7 of 19, with the search box and Reset columns visible.",
+    open: ["text=Filters", "[role=menuitem] >> text=Columns"],
     crop: '[data-doc-shot="report-columns-submenu"]',
   },
   {
     id: "report-grouped-utilization",
     screen: "Reports, Utilization grouped by Resource",
-    route: "/reports",
+    route: "/reports?report=utilization",
     alt: "Reports, Utilization grouped by Resource",
     dataState:
       "At least five aircraft with flights in the window and clearly different totals, so the Share of bars vary and the records count under each group label is greater than one.",
+    // Grouping is a menu choice rather than part of the report, so the shot has
+    // to make it: Filters, then Group by, then Resource.
+    open: [
+      "text=Filters",
+      "[role=menuitem] >> text=Group by",
+      // Scoped to the radio row: the report's own Resource column header is on
+      // the page too, and clicking that would sort the table instead.
+      "[role=menuitemradio] >> text=Resource",
+    ],
     crop: '[data-doc-shot="report-grouped-utilization"]',
   },
   {
     id: "report-saved-views",
     screen: "Reports, Saved views popover",
-    route: "/reports",
+    route: "/reports?report=revenue",
     alt: "Reports, Saved views popover",
     dataState:
       "Four saved views on one report, at least one shared and one private, so both the trash icon and its absence are visible alongside the clock and pin icons.",
+    open: ["text=Saved views"],
     crop: '[data-doc-shot="report-saved-views"]',
   },
   {
     id: "report-save-as-dialog",
     screen: "Reports, Save as dialog",
-    route: "/reports",
+    route: "/reports?report=revenue",
     alt: "Reports, Save as dialog",
     dataState:
       "The dialog open with a name typed and the Share with the school switch visible.",
+    open: ["text=Save as"],
     crop: '[data-doc-shot="report-save-as-dialog"]',
   },
   {
     id: "report-schedule-dialog",
     screen: "Reports, Schedule this report dialog",
-    route: "/reports",
+    route: "/reports?report=revenue",
     alt: "Reports, Schedule this report dialog",
     dataState:
-      "Set to Every week, Monday, 7am, with the grey cadence box showing what the window covers and at least four members with email addresses listed under Send to. Captured as an owner so the outside addresses field renders.",
+      "Set to Every week, Monday, 7am, with the grey cadence box showing what the window covers and at least four members with email addresses listed under Send to. Captured as an owner so the outside addresses field renders. Needs a saved view on Revenue, since the clock icon that opens this dialog lives on a saved view's row.",
+    // The clock icon on a saved view's row. Anchored to the start of the label
+    // on purpose: a view that already goes out on a cadence reads "Edit the
+    // schedule for ...", and opens the same dialog in its editing state, which
+    // is a different picture from the one this article wants.
+    open: [
+      "text=Saved views",
+      '[data-doc-shot="report-saved-views"] button[aria-label^="Schedule"]',
+    ],
     crop: '[data-doc-shot="report-schedule-dialog"]',
   },
   {
     id: "reports-schedules-page",
     screen: "Reports, Scheduled reports",
-    route: "/reports",
+    route: "/reports?report=scheduled",
     alt: "Reports, Scheduled reports",
     dataState:
       "Three schedule cards: one healthy with a last sent date, one carrying a Paused chip, and one showing the red last send failed line with a reason.",
@@ -1097,7 +1502,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "schedule-card-failed",
     screen: "Reports, Scheduled reports card with the row menu open",
-    route: "/reports",
+    route: "/reports?report=scheduled",
     alt: "Reports, Scheduled reports card with the row menu open",
     dataState:
       "A schedule whose last send failed, with the three dot menu open on Edit, Send now, and Stop sending.",
@@ -1106,28 +1511,33 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "dashboard-edit-mode",
     screen: "Reports, Overview in edit mode",
-    route: "/reports",
+    route: "/reports?report=overview",
     alt: "Reports, Overview in edit mode",
     dataState:
       "Customise pressed, grip handles and resize corners visible on the tiles, and the Add tile, Reset, Cancel, and Done buttons in the header.",
+    // Without this the crop is the ordinary board, which is a different picture
+    // that happens to share an element.
+    open: ["text=Customise"],
     crop: '[data-doc-shot="dashboard-edit-mode"]',
   },
   {
     id: "dashboard-tile-builder",
     screen: "Reports, Add tile dialog",
-    route: "/reports",
+    route: "/reports?report=overview",
     alt: "Reports, Add tile dialog",
     dataState:
       "A report chosen that offers no dimension, so Line and Bar are greyed out with the reason shown, alongside the metric checkboxes and the Date range and Compare to fields.",
+    open: ["text=Customise", "text=Add tile"],
     crop: '[data-doc-shot="dashboard-tile-builder"]',
   },
   {
     id: "dashboard-pin-view",
     screen: "Reports, Pin to dashboard dialog",
-    route: "/reports",
+    route: "/reports?report=revenue",
     alt: "Reports, Pin to dashboard dialog",
     dataState:
-      "Opened from the pin icon on a saved view, showing the locked report field, the carried-over title, and the note that the tile is a copy.",
+      "Opened from the pin icon on a saved view, showing the locked report field, the carried-over title, and the note that the tile is a copy. Needs a saved view on Revenue for the pin icon to sit on.",
+    open: ["text=Saved views", "[data-doc-shot=report-saved-views] button[aria-label^=Pin]"],
     crop: '[data-doc-shot="dashboard-pin-view"]',
   },
   {
@@ -1137,6 +1547,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     alt: "Reports, left rail as a dispatcher",
     dataState:
       "Signed in as a dispatcher with no admin role, so Operations, Fleet, People, and Compliance appear and Financial is absent entirely.",
+    crop: '[data-doc-shot="reports-rail"]',
   },
   {
     id: "reports-rail-technician",
@@ -1145,6 +1556,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     alt: "Reports, left rail as a technician",
     dataState:
       "Signed in as a technician with no other role, so only the Fleet heading and its three reports appear.",
+    crop: '[data-doc-shot="reports-rail"]',
   },
   {
     id: "reports-welcome",
@@ -1162,6 +1574,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     alt: "Audit Logs",
     dataState:
       "Thirty days of varied activity so the table mixes reservations, invoices, and members, with at least two destructive actions rendering red and one row attributed to AerScheduler showing a via line.",
+    crop: '[data-doc-shot="audit-logs-table"]',
   },
   {
     id: "audit-detail-panel",
@@ -1171,20 +1584,33 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     dataState:
       "Open on a meter correction so the What changed boxes show hobbs values converted to hours, along with the When, Who, About, Aircraft, Via, and Record rows.",
     crop: '[data-doc-shot="audit-detail-panel"]',
+    // The panel is opened by clicking a row, and the row it has to be is a meter
+    // correction, which is one entry among hundreds in a thirty-day window. So the
+    // page size goes to its largest first: `?event=` only resolves against the rows
+    // currently on screen (deliberately, see audit-logs.tsx), so a correction sitting
+    // on page three opens nothing at all rather than opening late.
+    open: [
+      '[aria-label="Rows per page"]',
+      '[role="option"]:has-text("250")',
+      '[data-doc-shot="audit-logs-table"] tr:has-text("Meters corrected")',
+    ],
   },
   {
     id: "person-activity-tab",
     screen: "Member record, Activity tab",
-    route: "/people/:orgUserId?tab=activity",
+    // By name off the roster, not by id: the subject is the student who has the
+    // flights, and `{personId}` resolves to whichever org user comes back first.
+    route: "/people",
     alt: "Member record, Activity tab",
     dataState:
       "A student with at least 15 closed-out flights spread over 90 days, so the tiles are non-zero and the Flying activity bar chart has visible gaps.",
     crop: '[data-doc-shot="person-activity-tab"]',
+    open: ['a:has-text("Test Student")', 'nav[aria-label="Member"] button:has-text("Activity")'],
   },
   {
     id: "aircraft-utilization-tab",
     screen: "Aircraft record, Utilization tab",
-    route: "/aircraft/:resourceId?tab=metrics",
+    route: "/aircraft/{aircraftId}?tab=metrics",
     alt: "Aircraft record, Utilization tab",
     dataState:
       "A tail with flights in most weeks of the last 90 days and at least one open squawk, captured as an admin so the Collected and Outstanding tiles render.",
@@ -1202,7 +1628,9 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "settings-org-timezone",
     screen: "Settings, Organization",
-    route: "/settings/organization",
+    // Settings is one route keyed by `?tab=`, not a path segment: `/settings/organization`
+    // is a 404. The tab values live in the console's lib/settings-sections.ts.
+    route: "/settings?tab=organization",
     alt: "Settings, Organization",
     dataState:
       "Cropped to the time zone field with a zone selected.",
@@ -1211,11 +1639,14 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "revenue-vs-payments",
     screen: "Revenue and Payments received over the same window",
-    route: "/reports",
+    // The Payments half of the pair. Its twin is `report-shell-revenue`.
+    route: "/reports?report=payments",
     alt: "Revenue and Payments received over the same window",
     dataState:
       "Two crops of the same window showing different totals and their two different date basis captions. Requires at least one invoice raised in one month and paid in the next.",
-    crop: '[data-doc-shot="report-shell-revenue"]',
+    // The Payments frame carries this id of its own. Cropping to the revenue
+    // one would look right and quietly photograph nothing on this route.
+    crop: '[data-doc-shot="revenue-vs-payments"]',
   },
 ];
 

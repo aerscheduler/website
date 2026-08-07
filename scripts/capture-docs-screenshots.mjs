@@ -42,6 +42,14 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_DIR = path.join(root, "public", "docs");
 const APP_URL = (process.env.DOCS_APP_URL ?? "https://app.aerscheduler.com").replace(/\/$/, "");
 
+/**
+ * The zone every capture runs in, and the zone the placeholder resolver has to
+ * reason about "today" in. One constant, because the two used to disagree: the
+ * browser drew the board in Denver while the resolver picked bookings by the
+ * clock of whatever machine ran the script.
+ */
+const BOARD_ZONE = "America/Denver";
+
 const args = process.argv.slice(2);
 const LIST_ONLY = args.includes("--list");
 const ALLOW_NON_DEMO = args.includes("--i-know-this-is-not-the-demo");
@@ -97,6 +105,40 @@ function readManifest() {
       const sq = new RegExp(`\\b${name}:\\s*'((?:[^'\\\\]|\\\\.)*)'`).exec(block);
       return sq ? sq[1].replace(/\\'/g, "'") : undefined;
     };
+    // `open` is an array of selectors, so it needs its own reader.
+    //
+    // Walked rather than matched, because a selector is full of the characters a
+    // regex would use as its own landmarks. `[data-doc-shot="x"] button` carries
+    // both a `]` and a pair of quotes, so scanning to the first `]` ended the
+    // array in the middle of the first selector and reading items with one
+    // alternation of quotes ended each item at the first inner one. Neither
+    // failed loudly: the step was dropped and the shot timed out on its crop,
+    // pointing at the data state rather than at the selector that never ran.
+    const list = (name) => {
+      const opener = new RegExp(`\\b${name}:\\s*\\[`).exec(block);
+      if (!opener) return undefined;
+      const items = [];
+      let quote = null;
+      let current = "";
+      for (let i = opener.index + opener[0].length; i < block.length; i++) {
+        const ch = block[i];
+        if (quote) {
+          if (ch === "\\") current += block[++i] ?? "";
+          else if (ch === quote) {
+            items.push(current);
+            current = "";
+            quote = null;
+          } else current += ch;
+        } else if (ch === "/" && block[i + 1] === "/") {
+          // A `//` note between two selectors. Skipped whole, or the apostrophe
+          // in "the report's own column" opens a string and swallows the rest.
+          while (i < block.length && block[i] !== "\n") i++;
+        } else if (ch === '"' || ch === "'" || ch === "`") quote = ch;
+        else if (ch === "]") break;
+      }
+      return items.length ? items : undefined;
+    };
+
     const id = field("id");
     if (!id) continue;
     specs.push({
@@ -104,6 +146,7 @@ function readManifest() {
       screen: field("screen") ?? id,
       route: field("route") ?? "/",
       crop: field("crop"),
+      open: list("open"),
       dataState: field("dataState") ?? "",
     });
   }
@@ -146,21 +189,57 @@ const context = await browser.newContext({
   colorScheme: "light",
   // A stable clock keeps "today" from sliding across a run, so a board captured
   // at 23:59 and the one after it do not sit on different days.
-  timezoneId: "America/Denver",
+  timezoneId: BOARD_ZONE,
 });
 const page = await context.newPage();
 
 let failures = 0;
 
+let placeholders = {};
+
+/**
+ * Whether the current spec left the mouse button DOWN.
+ *
+ * A `drag:` step has to, because the thing it is a picture of only exists while a
+ * block is being held: the callout that names the slot, or the reason the drop
+ * would be refused. Released after the shot, in a `finally`, so a failed crop
+ * cannot leave the pointer stuck down over the next spec.
+ */
+let held = false;
+
 try {
   await signIn(page);
   await assertSafeOrg(page);
+  placeholders = await resolvePlaceholders(page);
 
   for (const spec of selected) {
-    const target = `${APP_URL}${spec.route}`;
+    const route = fillPlaceholders(spec.route, placeholders);
+    if (route === null) {
+      failures += 1;
+      console.error(`  FAIL  ${spec.id}  (${spec.route})`);
+      console.error(`        route needs a record this org does not have`);
+      continue;
+    }
+    const target = `${APP_URL}${route}`;
     try {
       await page.goto(target, { waitUntil: "networkidle", timeout: 45_000 });
       await settle(page);
+
+      // Roughly a third of the shots are of a dialog, a dropdown or a sheet, and
+      // navigation alone never reaches one. Each step is a selector to click, in
+      // order, with the page allowed to settle between them. See `runStep` for the
+      // two steps that are not a click.
+      //
+      // Steps carry placeholders too, so a step can name a record the org actually
+      // has: `[role="option"]:has-text("{airworthinessTail}")` picks whichever tail
+      // is grounded here rather than one that only exists in one database.
+      held = false;
+      for (const raw of spec.open ?? []) {
+        const step = fillPlaceholders(raw, placeholders);
+        if (step === null) throw new Error(`step needs a record this org does not have: ${raw}`);
+        held = (await runStep(page, step)) || held;
+      }
+      if (spec.open?.length) await settle(page);
 
       // A whole-viewport shot is never the right illustration. It arrives on the
       // page about 700px wide, so the nav rail and the topbar eat half of it and
@@ -186,6 +265,11 @@ try {
       console.error(`  FAIL  ${spec.id}  (${spec.route})`);
       console.error(`        ${String(error).split("\n")[0]}`);
       console.error(`        needs: ${spec.dataState}`);
+    } finally {
+      if (held) {
+        await page.mouse.up().catch(() => {});
+        held = false;
+      }
     }
   }
 } finally {
@@ -209,6 +293,73 @@ async function signIn(page) {
   await page.click('button[type="submit"]');
   await page.waitForURL((url) => !url.pathname.includes("/login"), { timeout: 45_000 });
   await settle(page);
+}
+
+/**
+ * One `open` step. Returns true when it left the mouse button down.
+ *
+ * A click reaches most of these screens, but not all of them, and the two that it
+ * cannot reach are not exotic: a number typed into a field, and a block held over
+ * another one.
+ *
+ *   `fill:<selector>=<value>`   type into an input
+ *   `drag:<from> => <to>`       press on one element, move onto another, and HOLD
+ *   anything else               click it
+ *
+ * WHY `fill` EXISTS. Several of these images are of a figure the screen computes
+ * from what was just typed: the live "Hours flown" line under a ramp-in reading,
+ * or the overnight-minimum notice saying what that reading will actually bill. The
+ * field arrives prefilled with the ramp-OUT reading, so a click-only path always
+ * photographs a flight of 0.0 hours and a notice comparing 4.0 against nothing.
+ *
+ * WHY `drag` EXISTS, AND WHY IT HOLDS. The drag callout is deliberately built to
+ * live only while a block is held (see drag-affordances.tsx), because the question
+ * it answers is "why won't this move" and the answer has to be readable with the
+ * block still over the bad slot. Letting go before the crop is taken photographs
+ * an ordinary board.
+ */
+async function runStep(page, step) {
+  const fill = /^fill:(.+?)=(.*)$/s.exec(step);
+  if (fill) {
+    const field = page.locator(fill[1]).first();
+    await field.waitFor({ state: "visible", timeout: 10_000 });
+    await field.fill(fill[2]);
+    // A blur, so anything computed on change has run before the next step. Not a
+    // Tab: that moves focus into the next field and can open its popover.
+    await field.evaluate((el) => el.blur());
+    await page.waitForTimeout(500);
+    return false;
+  }
+
+  const drag = /^drag:(.+?)\s*=>\s*(.+)$/s.exec(step);
+  if (drag) {
+    const from = page.locator(drag[1]).first();
+    const to = page.locator(drag[2]).first();
+    await from.waitFor({ state: "visible", timeout: 10_000 });
+    await to.waitFor({ state: "visible", timeout: 10_000 });
+    const a = await from.boundingBox();
+    const b = await to.boundingBox();
+    if (!a || !b) throw new Error(`drag endpoints have no box: ${step}`);
+    await page.mouse.move(a.x + a.width / 2, a.y + a.height / 2);
+    await page.mouse.down();
+    // In steps, and past the drag threshold: one jump can be read as a click, and
+    // the callout does not appear until the pointer has actually moved.
+    for (let i = 1; i <= 6; i += 1) {
+      await page.mouse.move(
+        a.x + a.width / 2 + ((b.x + b.width / 2 - (a.x + a.width / 2)) * i) / 6,
+        a.y + a.height / 2 + ((b.y + b.height / 2 - (a.y + a.height / 2)) * i) / 6
+      );
+      await page.waitForTimeout(60);
+    }
+    await page.waitForTimeout(400);
+    return true;
+  }
+
+  const control = page.locator(step).first();
+  await control.waitFor({ state: "visible", timeout: 10_000 });
+  await control.click();
+  await page.waitForTimeout(500);
+  return false;
 }
 
 /**
@@ -258,6 +409,298 @@ async function hideSandboxChrome(page) {
     .catch(() => {});
 }
 
+
+
+/**
+ * Real record ids for the routes that need one.
+ *
+ * Specs write `/schedule?reservation={reservationId}`. Hardcoding an id would
+ * pin the manifest to one database, and these run against local and could run
+ * against the test org on prod, where the ids differ. So each placeholder is
+ * resolved once per run against whatever this org actually has.
+ *
+ * A placeholder that cannot be resolved leaves its spec failing with a clear
+ * reason, rather than requesting `/billing?invoice=undefined`.
+ */
+async function resolvePlaceholders(page) {
+  const get = async (path) => {
+    try {
+      const body = await page.evaluate(async (p) => {
+        // The console authenticates with a bearer token out of localStorage, not
+        // with a cookie, so a bare same-origin fetch is an ANONYMOUS request and
+        // every one of these answered 401 "Not logged in." Nothing threw: each
+        // list came back empty, every placeholder went unresolved, and the specs
+        // that use one failed claiming the org has no such record.
+        const token = localStorage.getItem("aer.token");
+        const res = await fetch(p, {
+          headers: {
+            Accept: "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        });
+        if (!res.ok) return null;
+        return res.json();
+      }, path);
+      const data = body?.data ?? body;
+      return Array.isArray(data) ? data : data ? [data] : [];
+    } catch {
+      return [];
+    }
+  };
+
+  const today = new Date();
+  const from = new Date(today.getTime() - 90 * 864e5).toISOString();
+  const to = new Date(today.getTime() + 90 * 864e5).toISOString();
+
+  const [reservations, invoices, resources, people, squawks, enrollments] = await Promise.all([
+    get(`/api/reservations?startDate=${encodeURIComponent(from)}&endDate=${encodeURIComponent(to)}`),
+    get("/api/invoices"),
+    get("/api/resources"),
+    get("/api/orgUsers"),
+    get("/api/maintenance/squawks?open=true"),
+    get("/api/training/enrollments"),
+  ]);
+
+  const planes = resources.filter((r) => r?.type?.plane);
+  const live = (r) => (r?.invoices ?? []).filter((i) => !i?.voidedAt).length;
+  const open = reservations.filter((r) => r && !r.cancelledAt);
+  const at = (r, which) => (r?.review ?? {})[which] != null;
+  /** Mirrors `usesBriefingNotMeters`: no aircraft to read a meter off. */
+  const noMeters = (r) =>
+    r?.type === "ground" || r?.resource == null || r?.resource?.type?.room != null;
+  /**
+   * Where a booking sits in the close-out pipeline. A copy of `closeOutStep` in
+   * web/src/components/schedule/close-out.ts, and it has to stay one: a picture of
+   * the ramp-in dialog can only be taken on a booking the CONSOLE thinks is at the
+   * ramp-in step, so a resolver that disagreed would hand every such spec a booking
+   * whose button is not on screen.
+   */
+  const step = (r) => {
+    if (live(r)) return "invoiced";
+    const out = noMeters(r) ? at(r, "briefing") : at(r, "hobbsTimeOut") || at(r, "tachTimeOut");
+    if (!out) return "rampOut";
+    const back = noMeters(r) ? at(r, "briefing") : at(r, "hobbsTimeIn") || at(r, "tachTimeIn");
+    if (!back) return "rampIn";
+    if (r.type === "guest") return r.completedByForGuest ? "reviewed" : "confirmGuest";
+    const p = r.personnel ?? {};
+    const pilots = new Set(
+      [...(p.instructors ?? []), ...(p.students ?? []), ...(p.renters ?? [])].map((o) => o.id)
+    );
+    if (pilots.size === 0) return "reviewed";
+    return (r.review?.reviewConfirmations ?? []).length >= pilots.size ? "reviewed" : "confirm";
+  };
+  // Nights away, judged at the AIRPORT. Comparing the two ISO strings instead calls a
+  // 6pm-to-11pm evening flight a two-day trip anywhere west of Greenwich.
+  const spansDays = (r) => dayKey(r.start) !== dayKey(new Date(new Date(r.end).getTime() - 1));
+  const billable = (r) => {
+    const p = r.personnel ?? {};
+    return (p.students ?? []).length + (p.renters ?? []).length + (p.guests ?? []).length;
+  };
+  /** Newest first, so a re-run photographs the state that was staged most recently. */
+  const pick = (predicate) =>
+    [...open].sort((a, b) => String(b.start).localeCompare(String(a.start))).find(predicate);
+
+  // How many bookings each person is on. The Personnel facet dims everything that is
+  // not theirs, and pinning the FIRST person in the roster (an owner who flies
+  // nothing) dims the whole board and reads as a broken filter rather than a filter.
+  const appearances = new Map();
+  for (const r of open) {
+    const p = r.personnel ?? {};
+    for (const ou of [...(p.instructors ?? []), ...(p.students ?? []), ...(p.renters ?? [])]) {
+      appearances.set(ou.id, (appearances.get(ou.id) ?? 0) + 1);
+    }
+  }
+  const busiestPerson = [...appearances.entries()].sort((a, b) => b[1] - a[1])[0]?.[0];
+
+  // The day the board opens on, read in the zone the browser is running in rather
+  // than the zone of the machine running the script.
+  const dayKey = (d) => new Date(d).toLocaleDateString("en-CA", { timeZone: BOARD_ZONE });
+  const todayKey = dayKey(today);
+  const tomorrowKey = dayKey(new Date(today.getTime() + 864e5));
+  const onToday = open.filter((r) => dayKey(r.start) === todayKey);
+
+  // A tail with no room left on it TWO DAYS OUT, so a time picker stepped forward to
+  // that day has nothing to offer and falls back to its "next available" link.
+  //
+  // Not today, and not tomorrow. A booking that runs midnight to midnight stretches the
+  // day board's hour ruler across a full 24 hours: on today's board that squeezes every
+  // other shot of it, and on tomorrow's it pushes the pair of blocks the drag shot picks
+  // up off the right-hand edge, out of reach of a real pointer. Measured as a booking
+  // that runs nearly a whole day rather than one starting at a particular instant, so a
+  // midnight boundary a few minutes either side of the local one still counts.
+  const blockedDayKey = dayKey(new Date(today.getTime() + 2 * 864e5));
+  const bookedSolid = open.find(
+    (r) =>
+      r.resource?.type?.plane &&
+      dayKey(r.start) === blockedDayKey &&
+      !spansDays(r) &&
+      new Date(r.end) - new Date(r.start) >= 20 * 3600e3
+  );
+
+  // Two bookings sharing one aircraft lane TOMORROW, for the drag callout. Dragging the
+  // later one back over the earlier one is what makes the board answer with the clash
+  // instead of a landing time.
+  //
+  // Tomorrow rather than today, because the board refuses to move a booking whose window
+  // has already closed ("already passed, and it never ramped out") and answers a drag
+  // attempt on one with a toast instead of the callout. On today's board that rules out
+  // every pair from the moment the earlier one ends, which is most of the working day.
+  const laneMates = (() => {
+    const byResource = new Map();
+    for (const r of open) {
+      if (dayKey(r.start) !== tomorrowKey) continue;
+      // A trip that runs into the next day is drawn clipped at the edge of the board and
+      // is refused a move anyway, so it makes a poor thing to pick up.
+      if (!r.resource?.type?.plane || spansDays(r)) continue;
+      byResource.set(r.resource.id, [...(byResource.get(r.resource.id) ?? []), r]);
+    }
+    for (const items of byResource.values()) {
+      if (items.length < 2) continue;
+      const sorted = [...items].sort((a, b) => String(a.start).localeCompare(String(b.start)));
+      return { from: sorted[sorted.length - 1], to: sorted[0] };
+    }
+    return null;
+  })();
+
+  // The grounded aircraft that also carries open squawks, so the airworthiness notice
+  // has both halves to show: the red grounding line and the amber squawk list.
+  const openByResource = new Map();
+  // The squawk list is paged on some deployments, so unwrap a page before reading it.
+  const openSquawks = Array.isArray(squawks?.[0]?.items) ? squawks[0].items : squawks;
+  for (const sq of openSquawks) {
+    const id = sq?.resource?.id;
+    if (id == null || sq.resolvedAt) continue;
+    openByResource.set(id, (openByResource.get(id) ?? 0) + 1);
+  }
+  const airworthiness =
+    [...planes]
+      .filter((p) => p.type.plane.grounded)
+      .sort((a, b) => (openByResource.get(b.id) ?? 0) - (openByResource.get(a.id) ?? 0))[0] ?? null;
+
+  // The tail to pick when the picture is of the FORM rather than of the aircraft: on the
+  // line, nothing to say about its airworthiness, and with room left on today's board.
+  // Taking whichever tail happens to be first instead gives a form headed by a squawk
+  // notice, and a start-time dropdown that is disabled because that aeroplane is out all
+  // day, which is what made two of these shots time out on a control nobody could click.
+  const bookingsToday = new Map();
+  for (const r of onToday) {
+    if (r.resource?.id == null) continue;
+    bookingsToday.set(r.resource.id, (bookingsToday.get(r.resource.id) ?? 0) + 1);
+  }
+  const freePlane =
+    [...planes]
+      .filter((p) => !p.type.plane.grounded)
+      .sort(
+        (a, b) =>
+          (openByResource.get(a.id) ?? 0) - (openByResource.get(b.id) ?? 0) ||
+          (bookingsToday.get(a.id) ?? 0) - (bookingsToday.get(b.id) ?? 0)
+      )[0] ?? null;
+
+  // Somebody the training strip will actually say something about. It renders nothing at
+  // all for a student on no course, which is most of a roster, and one line per course
+  // for a student on several. The fullest record wins: a student one course in shows a
+  // single line reading "0 of 16 done", which illustrates the strip without illustrating
+  // what it is for.
+  const enrolledCount = new Map();
+  for (const e of enrollments) {
+    if (e?.status !== "enrolled" || !e?.student?.user?.name || e.student.grounded) continue;
+    enrolledCount.set(e.student.user.name, (enrolledCount.get(e.student.user.name) ?? 0) + 1);
+  }
+  const enrolledStudent = [...enrolledCount.entries()].sort((a, b) => b[1] - a[1])[0]?.[0];
+
+  const found = {
+    reservationId: reservations.find((r) => r?.id)?.id,
+    // A booking that has ramped in, for the close-out and who-pays-what shots. Reads
+    // the review relation, which is where the stamp actually lives: the list payload
+    // has no top-level `rampedInAt`, so the old test was never once true and this
+    // silently resolved to the first booking of the window whatever state it was in.
+    rampedReservationId:
+      pick((r) => at(r, "rampedInAt"))?.id ?? reservations.find((r) => r?.id)?.id,
+    invoiceId: invoices.find((i) => i?.id)?.id,
+    aircraftId: planes.find((p) => !p?.type?.plane?.grounded)?.id ?? planes[0]?.id,
+    groundedAircraftId: planes.find((p) => p?.type?.plane?.grounded)?.id,
+    personId: people.find((p) => p?.id)?.id,
+    /* Each step of the close-out pipeline, so a spec can ask for the one booking
+       whose panel actually shows the button or the notice it is a picture of. */
+    // Notes preferred: this one is also the detail panel's own shot, and a panel with
+    // an empty Notes row is a thinner illustration of the panel than one without.
+    scheduledReservationId:
+      pick((r) => step(r) === "rampOut" && r.resource?.type?.plane && billable(r) > 0 && r.notes)
+        ?.id ??
+      pick((r) => step(r) === "rampOut" && r.resource?.type?.plane && billable(r) > 0)?.id,
+    rampedOutReservationId: pick((r) => step(r) === "rampIn" && !spansDays(r))?.id,
+    overnightRampedOutReservationId: pick((r) => step(r) === "rampIn" && spansDays(r))?.id,
+    groundReservationId: pick((r) => noMeters(r) && r.resource != null && step(r) === "rampOut")
+      ?.id,
+    awaitingReviewReservationId: pick(
+      (r) => step(r) === "confirm" && (r.review?.reviewConfirmations ?? []).length > 0
+    )?.id ?? pick((r) => step(r) === "confirm")?.id,
+    guestReservationId: pick((r) => step(r) === "confirmGuest")?.id,
+    // More than one person billed, and still open, which is when the shares can be
+    // edited at all. The server refuses to change them once the invoices exist.
+    splitReservationId: pick((r) => step(r) !== "invoiced" && billable(r) > 1)?.id,
+    // Billed, and preferably split, so the summary carries its "one of N shares" line.
+    invoicedReservationId: pick((r) => live(r) > 1)?.id ?? pick((r) => live(r) === 1)?.id,
+    // Instruction with a student on it, far enough along that the close-out has
+    // figures to prefill the training record from.
+    trainingReservationId: pick(
+      (r) =>
+        ["dual", "ground", "sim", "solo"].includes(r.type) &&
+        (r.personnel?.students ?? []).length > 0 &&
+        (step(r) === "confirm" || step(r) === "reviewed")
+    )?.id,
+    // A trip that spans nights and has not been dispatched, so its form still opens.
+    multiDayReservationId: pick((r) => spansDays(r) && step(r) === "rampOut")?.id,
+    // One occurrence of a repeating booking, so cancelling it offers the three scopes.
+    repeatingReservationId: pick((r) => r.series != null && step(r) === "rampOut")?.id,
+    /* Tails, for the steps that have to pick an aircraft out of a combo box. Resolved
+       rather than written into the manifest: which tail is grounded, and which is
+       booked solid, differs between the local database and the test org on prod. */
+    airworthinessTail: airworthiness?.type?.plane?.tailNumber,
+    flyableTail: planes.find((p) => !p.type.plane.grounded)?.type?.plane?.tailNumber,
+    freeTail: freePlane?.type?.plane?.tailNumber,
+    enrolledStudentName: enrolledStudent,
+    fullyBookedTail: bookedSolid?.resource?.type?.plane?.tailNumber,
+    /* Two blocks in one lane on today's board, named by title because that is what a
+       block's accessible name starts with. */
+    dragSourceTitle: laneMates?.from?.title,
+    dragTargetTitle: laneMates?.to?.title,
+    /* Ramp-in readings, already advanced past the recorded ramp-OUT reading. The field
+       arrives prefilled with the out reading, so without these every ramp-in shot is of
+       a flight of 0.0 hours and the overnight notice compares its minimum against
+       nothing. Hours, not tenths: the modal works in decimal hours. */
+    rampInHobbs: hobbsAfter(pick((r) => step(r) === "rampIn" && !spansDays(r)), 1.4),
+    overnightRampInHobbs: hobbsAfter(pick((r) => step(r) === "rampIn" && spansDays(r)), 1.5),
+    /** Somebody who is actually on a dozen bookings, for the Personnel facet. */
+    boardPersonId: busiestPerson,
+  };
+
+  const resolved = Object.entries(found).filter(([, v]) => v !== undefined);
+  console.log(
+    `  ids   ${resolved.map(([k, v]) => `${k}=${v}`).join(" ") || "none resolved"}\n`
+  );
+  return Object.fromEntries(resolved);
+}
+
+/** A ramp-in reading `hours` above what a booking ramped out at, as the field wants it. */
+function hobbsAfter(reservation, hours) {
+  const out = reservation?.review?.hobbsTimeOut;
+  if (out == null) return undefined;
+  return (out / 10 + hours).toFixed(1);
+}
+
+/** Substitute `{name}` in a route. Returns null if any placeholder is unknown. */
+function fillPlaceholders(route, values) {
+  let missing = false;
+  const filled = route.replace(/\{(\w+)\}/g, (_, key) => {
+    if (values[key] === undefined) {
+      missing = true;
+      return "";
+    }
+    return String(values[key]);
+  });
+  return missing ? null : filled;
+}
 
 /**
  * The box that actually has something in it, in page coordinates.
