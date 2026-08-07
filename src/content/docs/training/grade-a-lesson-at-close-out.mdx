@@ -1,0 +1,110 @@
+<Summary>
+This is the intended path. Close the booking out the way you always do, then scroll to the
+**Training record** section on the close-out sheet, click **Grade this lesson**, check the
+lesson and the grade, and click **Sign lesson**. Flight and Ground are already filled in from
+the Hobbs delta and the briefing time.
+</Summary>
+
+<Roles>Instructors assigned to the booking, Admins, Owners</Roles>
+
+## Close out the flight as usual
+
+Nothing about training changes the close-out. Enter the Hobbs readings and the briefing time
+exactly as you would on a rental. See
+[Close out a flight and bill it](/docs/billing/close-out-a-flight-and-bill-it).
+
+If the student is enrolled on a course, you will already have seen a grey **Next up** strip
+on the booking form when the flight was made, naming the lesson the syllabus suggests and
+how far through they are. Nothing is committed there: you pick and grade the lesson at
+close-out, once you know how it went.
+
+<Screenshot id="booking-next-up-hint" />
+
+## Find the Training record section
+
+Scroll down the close-out sheet. There is one block per student per enrollment, headed with
+the course name and the lesson the syllabus suggests next.
+
+<Screenshot id="closeout-training-section" />
+
+## Check the lesson, the grade and the hours
+
+<Steps>
+<Step n={1} title="Click Grade this lesson">
+</Step>
+<Step n={2} title="Check the Lesson dropdown">
+The first unfinished lesson is preselected. Lessons that have already been flown are prefixed
+with a tick. Change it if you flew something else.
+</Step>
+<Step n={3} title="Set the Grade">
+The dropdown here offers S, U and I.
+</Step>
+<Step n={4} title="Check Flight and Ground">
+**Flight** is prefilled from the Hobbs delta and **Ground** from the briefing time. Both are
+editable, so trim them if the numbers on the sheet are not the numbers you taught.
+</Step>
+<Step n={5} title="Type Notes">
+What the student did, and what to work on. This is what an inspector reads.
+</Step>
+</Steps>
+
+## Sign the lesson
+
+Click **Sign lesson**. In one action the record is saved, signed, frozen, linked to this
+booking, and its hours fan out into a ledger credit for every requirement the lesson credits.
+The section then reads "&lt;Lesson&gt; signed and credited to &lt;Course&gt;."
+
+<Callout type="important">
+Signing is final. A signed record can never be edited, only amended, which creates a
+correction beside it and takes the hours back until the correction is signed. Read the hours
+before you click. See
+[Correct a signed lesson record](/docs/training/correct-a-signed-lesson).
+</Callout>
+
+The student's countersignature is a separate step they do themselves from
+<Where app="web">My training</Where>. The record sits at **Awaiting student** until they do,
+with its hours already counted.
+
+## Two students on one booking
+
+Every student on the booking gets their own block, with their own lesson, grade, hours and
+notes. Two students in one aircraft are graded separately, and each signature credits only
+that student's record.
+
+## When the section does not appear at all
+
+The Training record section is hidden unless all of this is true:
+
+- the booking type is **dual**, **ground**, **sim** or **solo**
+- at least one **student** is on the booking
+- that student is **enrolled** on a course
+- the course has a lesson whose type matches the booking (dual and solo offer flight
+  lessons, ground offers ground lessons, sim offers sim lessons)
+- you are staff, or one of the instructors assigned to that booking
+
+A rental, a guest flight or a maintenance booking shows no trace of it rather than guessing.
+So does a dual flight for somebody who is on no course. If you expected the section and it is
+not there, work down that list: the usual answer is that the student was never enrolled, or
+the booking was made as a rental.
+
+<Callout type="warning">
+The tick beside a lesson in the close-out picker, and the count on the Next up strip, treat a
+lesson as flown as soon as **any** signed record exists for it, including one graded U. The
+student's training record only counts a lesson complete when it is signed with a passing
+grade.
+
+So the close-out can say "Flight 5 ✓, next up Flight 6" while the training record still shows
+Flight 5 incomplete. The training record is the one to believe.
+</Callout>
+
+## What close-out grading cannot do
+
+| Not here | Where instead |
+|---|---|
+| A **simulator hours** field. Device time typed into Flight is credited as aircraft time, so the course's simulator ceiling never applies to it. | Grade sim lessons on the [iPhone app](/docs/training/grade-lessons-offline-on-the-app), which has a SIM field on a simulator lesson. |
+| **Per-task grades** against your ACS codes. | The [iPhone app](/docs/training/grade-lessons-offline-on-the-app). |
+| **Save as a draft**. The close-out signs in one action. | [Grade from the student's training record](/docs/training/grade-a-lesson-from-a-training-record), which has Save draft. |
+| Grades other than S, U and I. A course with its own scale has its signature refused here. | [Set the grading scale](/docs/training/set-the-grading-scale) explains the trade. |
+
+Under Part 141, grading out of syllabus order shows a warning and does not stop the
+signature.

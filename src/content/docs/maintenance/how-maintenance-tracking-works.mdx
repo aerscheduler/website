@@ -1,0 +1,119 @@
+<Summary>
+Three separate things live under Maintenance. An **inspection** is what an aircraft owes
+on a schedule. A **squawk** is a problem somebody found. **Grounding** is the only one of
+the three that actually stops a booking.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers, Technicians</Roles>
+
+<Where app="web">Maintenance</Where> opens for owners, admins, dispatchers and
+technicians. Instructors, students and renters cannot open it at all, on either surface.
+
+## Inspections, squawks, and grounding are three different things
+
+| Thing | What it is | Does it stop a booking? |
+|---|---|---|
+| Inspection | Something the aircraft owes on a clock: an annual, a 100-hour, a transponder check, an oil change. AerScheduler counts down to it. | Only if that inspection carries the **Grounds the aircraft** flag, and only once it comes due. |
+| Squawk | A discrepancy somebody found: "Left brake soft". Filed against one tail, closed out by a technician or an admin. | No, unless whoever filed it also switched on **Grounds the aircraft**. |
+| Grounded | A flag and a reason on the aircraft itself. | Yes. Every booking type except maintenance is refused with "Resource is grounded." |
+
+That last row is the one worth remembering. An aircraft with six open squawks and an
+overdue annual is still bookable unless somebody or something grounded it.
+
+<Screenshot id="maintenance-by-aircraft" />
+
+## An inspection rule is not an inspection
+
+The **rule** lives once for the whole school. "100-hour, every 100 tach hours, warn 10
+hours out" is one rule, and you will find it under <Where app="web">Maintenance → Set
+up</Where>.
+
+Attaching that rule to a tail creates one live **inspection** per aircraft. That is what
+counts down, what shows up in the work queue, and what you sign off.
+
+<Callout type="warning">
+Deleting a rule stops tracking on every aircraft it covers, not just the one you were
+looking at. And a rule attached to no aircraft is completely inert: it looks configured,
+and it never comes due. See
+[Change which aircraft an inspection covers](/docs/maintenance/change-or-stop-tracking-an-inspection).
+</Callout>
+
+## Hours, days, or a single date
+
+Every inspection is counted one of three ways, chosen when you create it and never
+converted into another.
+
+- **On the meter.** Counts flying hours against the aircraft's tach or Hobbs. A 100-hour.
+- **On the calendar.** Recurs every so many days from the last sign-off. An annual, a transponder check.
+- **One-off.** A single date that never comes back. "Prop back from the shop."
+
+An hour-based inspection never shows a due **date**, and a calendar-based one never shows
+a meter reading. That is deliberate. A 100-hour depends entirely on how much the aircraft
+flies, so AerScheduler will not invent a date by averaging.
+
+## Tach or Hobbs, and why that is not your billing meter
+
+Each hour-based inspection is set to count one meter, either **Count tach time** or
+**Count hobbs time**. Both meters are recorded at every close-out.
+
+The meter an aircraft is **billed on** is a separate setting on the aircraft itself. Most
+schools bill on Hobbs and inspect on tach, which is why an inspection's detail line always
+names the meter it means: "Due at 1250.0 tach, now 1237.6."
+
+## Due soon means the warning lead you set
+
+Each inspection carries a warning lead: "Warn me 10 hours out", "Warns 30 days out". That
+number does two jobs. It is when the row turns to **Due soon**, and it is when the warning
+email and push go out. There is no separate cosmetic idea of "soon".
+
+<Screenshot id="maintenance-all-inspections" />
+
+## The Maintenance page, view by view
+
+The left rail holds five views in two groups.
+
+| View | What it is for |
+|---|---|
+| **By aircraft** | One card per tail, grounded first, then worst-due first. Shows the current tach and the single most urgent item. The default view. |
+| **All inspections** | The work queue for the whole school, worst first. Signed-off work is deliberately not here. |
+| **Set up** | The rules rather than their instances, grouped into On the meter, On the calendar and One-off. |
+| **Squawks → Open** | Every outstanding discrepancy, newest first. |
+| **Squawks → Resolved** | The ones already closed out. |
+
+A search box and filter chips sit above the content. On **All inspections** you also get a
+Status filter with Overdue, Due soon and Not yet due.
+
+Each aircraft carries the same information for its own tail under
+<Where app="web">Aircraft → the tail → Maintenance</Where>: an Inspections card and an
+Open squawks card, with Add, Sign off, Log and Resolve on them.
+
+<Screenshot id="aircraft-maintenance-tab" />
+
+## What the iOS app does that the console does not
+
+The app has the same four boards (Aircraft, Inspections, Squawks, Set up) plus two things
+the console cannot do:
+
+- **Report a squawk as any member.** Instructors, students and renters have no way to file
+  one from the console, because the Maintenance section of an aircraft's page is hidden
+  from them.
+- A **Signed off** filter on the Inspections board, behind the filter glyph in the header.
+  The console's All inspections view never shows completed work.
+
+
+## Where to go next
+
+<CardGrid>
+  <DocCard href="/docs/maintenance/add-the-standard-airworthiness-inspections" title="Add the standard inspections">
+    The seven AVIATES items in one pass, with the right intervals.
+  </DocCard>
+  <DocCard href="/docs/maintenance/report-a-squawk" title="Report a squawk">
+    From the console, from a tail, or from the close-out prompt in the app.
+  </DocCard>
+  <DocCard href="/docs/maintenance/when-aerscheduler-grounds-an-aircraft" title="Automatic grounding">
+    Which inspections take a tail off the line, and how it comes back.
+  </DocCard>
+  <DocCard href="/docs/maintenance/who-can-do-what-in-maintenance" title="Who can do what">
+    Technicians, dispatchers, and everyone else.
+  </DocCard>
+</CardGrid>

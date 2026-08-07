@@ -1,0 +1,120 @@
+<Summary>
+Open the booking and use the Dispatch section. **Ramp out** records the departure Hobbs
+and tach and takes the aircraft off the line. **Ramp in** records the return readings, puts
+the aircraft back, and moves the booking to Awaiting review. These two steps are what turn
+a plan into a billable flight.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers, Instructors, Students, Renters</Roles>
+
+Staff can ramp any booking. Everybody else can ramp the bookings they are on, and the
+maintenance they scheduled themselves.
+
+## Ramp out
+
+<Steps>
+  <Step n={1} title="Open the booking">
+    The section headed <strong>Dispatch</strong> carries a <strong>Not started</strong> badge.
+  </Step>
+  <Step n={2} title="Press Ramp out">
+    Both readings are already filled in from the aircraft's current Hobbs and tach.
+    <Screenshot id="ramp-out-modal" />
+  </Step>
+  <Step n={3} title="Confirm or correct the readings">
+    Both are required. Readings carry one decimal place, for example 1014.2.
+  </Step>
+  <Step n={4} title="Press Ramp out">
+    The badge becomes <strong>In flight</strong>, the aircraft is marked off the line, and
+    a Ramped out line with both readings is written to the booking's timeline.
+  </Step>
+</Steps>
+
+Ramp out is refused if the aircraft is already out on another booking, if the aircraft is
+grounded (maintenance is the exception), or if somebody on the booking is grounded.
+
+## Ramp in
+
+<Steps>
+  <Step n={1} title="Open the booking when the aircraft is back">
+    The section now asks for the ending readings.
+  </Step>
+  <Step n={2} title="Press Ramp in">
+    Hobbs and tach are pre-filled from the recorded out readings.
+    <Screenshot id="ramp-in-modal-hours-flown" />
+  </Step>
+  <Step n={3} title="Type the ending readings">
+    <strong>Hours flown</strong> is worked out and shown live as you type, so a mistyped
+    digit is obvious before you save.
+  </Step>
+  <Step n={4} title="Press Ramp in">
+    The aircraft goes back on the line and the badge becomes <strong>Awaiting review</strong>.
+  </Step>
+</Steps>
+
+Ending readings below the recorded out readings are refused. The difference between out and
+in is what the flight is billed on, so a reading that runs backwards would produce a
+negative flight.
+
+<Callout type="note">
+The aircraft's own stored Hobbs and tach are only moved forward when this is the latest
+booking for that tail. Closing out a flight from last Tuesday does not wind the aircraft
+back to Tuesday's numbers.
+</Callout>
+
+## Instruction time on a dual
+
+The ramp in modal offers **Instruction time (hrs)**. On a flight it is optional extra
+detail, billed at the instructor rate.
+
+On a booking with no aircraft it is the only figure recorded, and it is required. The help
+text under the field changes to match. See
+[Close out a ground lesson](/docs/scheduling/close-out-a-ground-lesson).
+
+## What locks once the aircraft is out
+
+From the moment a booking ramps out, its start time, its aircraft and its crew are frozen.
+They are part of the flight record now.
+
+The **Edit reservation** button disappears from the web console entirely at that point.
+The one thing you can still change is when the aircraft is due back, by dragging the
+trailing edge of the block on the board. Hovering the block says so.
+
+## The overnight minimum notice
+
+If the booking spanned nights and your school charges a minimum per night away, the ramp in
+modal says so live, before you save, in plain numbers: how many nights, what the minimum
+is, and what the flight will bill instead of what was flown.
+
+It is repeated at every close-out step until the invoice exists, because the person ramping
+the aircraft back in is often not the person who booked it. See
+[Book a trip that keeps the aircraft overnight](/docs/scheduling/overnight-and-multi-day-trips).
+
+## A booking with no meters
+
+Nothing ramps in a classroom. A Ground booking, or any booking with no aircraft, never sees
+these two steps. Its button reads **Review times**, it asks for instruction time only, and
+it goes straight from Not started to Awaiting review in one press.
+
+This keys off the reservation type first, so a ground lesson booked sitting in an aeroplane
+still behaves that way.
+
+## If you entered the wrong reading
+
+Open the booking and choose **Correct times**, on the reservation panel in the console or
+**Update Details** in the app. On a booking with no meters the console calls it **Correct
+instruction time**.
+
+You can only correct the figures the booking already has. A flight ramped in on Hobbs alone
+offers Hobbs and nothing else, and a ground lesson offers its instruction time. This is a
+correction, not a way to record a flight nobody ramped, so it opens once the aircraft is
+back and not before.
+
+
+<Callout type="warning">
+Correcting the times after somebody has already signed off **wipes every sign-off on that
+booking**, and everyone has to confirm again with their PIN. Once the last pilot has signed
+off, or any invoice exists, the correction is refused outright: void the invoice first.
+</Callout>
+
+Next: [Sign off a flight with your PIN](/docs/scheduling/sign-off-with-your-pin), which is
+what actually produces the invoice.

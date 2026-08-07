@@ -1,0 +1,100 @@
+<Summary>
+Open the course, go to **Students**, and fill in the **Enrollment fee** card: an amount, and
+the wording that lands on the invoice line. From then on every student enrolled records that
+amount as owed, and you bill it in one click from their training record.
+</Summary>
+
+<Roles>Owners, Admins, holders of the Configure training grant (to set it), holders of Enroll and graduate (to bill it)</Roles>
+
+## Set the fee
+
+<Steps>
+<Step n={1} title="Course → Students">
+The **Enrollment fee** card sits above the student list.
+</Step>
+<Step n={2} title="Type the Amount">
+In dollars. It has to be more than zero: a zero is refused with "A fee has to be more than
+zero. Leave it empty for a free course." Anything over $100,000 is refused as a typo.
+</Step>
+<Step n={3} title="Type how it reads on the invoice">
+Up to 60 characters. Leave it blank and the line reads "&lt;Course name&gt; enrollment fee".
+</Step>
+<Step n={4} title="Click Save">
+The card confirms what you have just armed: "Enrolling a student will record $X owed,
+billable in one click from their record."
+</Step>
+</Steps>
+
+<Screenshot id="course-enrollment-fee-card" />
+
+The fee belongs to the **course**, not to a syllabus version, so it stays editable after the
+syllabus is published. A price is a commercial decision, not part of the document you file
+with your FSDO.
+
+## How it reads on the invoice
+
+Whatever you typed lands verbatim on the invoice line, so write it the way a student should
+read it on a statement: "Private Pilot course enrollment", "PPL ground school and materials".
+
+The result is an ordinary custom invoice for that one line. It appears in Billing alongside
+every other invoice, is paid the same way, and syncs to QuickBooks with the rest. See
+[How billing works](/docs/billing/how-billing-works).
+
+## Bill it from the student's record
+
+<Steps>
+<Step n={1} title="Open the training record">
+<Where app="web">Training → Students</Where> and click the row, or the person's page →
+Training → the enrollment.
+</Step>
+<Step n={2} title="Stay on Overview">
+The **Course fee** card shows the amount recorded when they enrolled.
+</Step>
+<Step n={3} title="Click Bill $X">
+The card flips to **Invoiced** with a **View invoice** button.
+</Step>
+</Steps>
+
+<Screenshot id="enrollment-overview" />
+
+<Callout type="note">
+Invoicing has to be switched on for the organization before anything can actually be billed.
+The fee is recorded against the enrollment either way, so you can set it up and enroll
+students before billing is live, then bill them later. See
+[Turn on invoicing and card payments](/docs/billing/turn-on-invoicing-and-card-payments).
+</Callout>
+
+## Bill it from the app
+
+On the iPhone, the same action is a **Bill** button on the enrollment screen, behind a
+confirmation naming the amount.
+
+It is deliberately not queued when you are offline. Unlike grading, it waits for signal
+rather than storing itself on the phone, because raising an invoice from a stale copy of a
+record is not something to do twice.
+
+## It can only be billed once
+
+The link between an enrollment and its fee invoice is unique on purpose. A second attempt is
+refused with "That enrollment fee has already been invoiced."
+
+Two more things worth knowing:
+
+- **A terminated enrollment is still billable.** A student who quits in week two may still
+  owe the fee, so ending an enrollment never withdraws it.
+- **A free course shows no card at all.** If the course had no fee on the day they enrolled,
+  there is nothing to bill, so the **Course fee** card is left off the record entirely, on
+  the web and in the app.
+
+## Changing the price later
+
+The amount is snapshotted onto each enrollment the day the student enrolls. Raising or
+lowering the fee afterwards only affects people enrolled from that point on. Nobody already
+in training is re-priced, and nobody already invoiced is touched.
+
+<Callout type="warning">
+Because the snapshot happens at enrollment, the order matters. If you enroll a class of six
+and then set the fee, all six recorded nothing owed and there is no way to add it to their
+enrollments retrospectively. Set the fee before you enroll, or raise a manual invoice for
+those students. See [Create a manual invoice](/docs/billing/create-a-manual-invoice).
+</Callout>

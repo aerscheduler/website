@@ -1,0 +1,130 @@
+<Summary>
+A student's record has four tabs. Overview is progress and blockers, Lessons is the syllabus
+with each record underneath it, Requirements is the hours, and Ledger is every credit that
+built those hours. Lessons and hours are two different measures and are meant to disagree.
+</Summary>
+
+<Roles>Owners, Admins, Instructors, Students</Roles>
+
+Open one from <Where app="web">Training → Students → the student</Where>, or from the person's
+page under Training. A student opens their own from
+[My training](/docs/training/my-training-for-students).
+
+## The header
+
+Student name, the course and version (for example "Private Pilot · Rev A"), a Part 61 or
+Part 141 badge, and a status badge: In training, Graduated, Terminated or Transferred. A
+Part 141 record that has been certified also carries a Record certified badge. A record that
+is still In training may carry a pace badge as well; a finished one never does.
+
+## Overview: progress, blockers and fees
+
+<Screenshot id="enrollment-overview" />
+
+- **Lessons complete**, as a bar. How far through the syllabus they are.
+- **Not ready to graduate**, an amber card on Part 141 courses, naming the requirements still
+  unmet. This is the only place the reason for a disabled Graduate button is written down.
+- **Course fee**, if the course had one when they enrolled, with the button to bill it.
+- **Endorsements**, the same card that appears on the person's page.
+
+<Callout type="note">
+The bar and the requirement bars move independently on purpose. Lessons say how far through
+the syllabus a student is. Requirements say whether they have the flight time to test.
+A student can be on lesson 19 of 21 and still be hours short, and that is exactly the
+question this module exists to answer.
+</Callout>
+
+## Lessons: what each badge means
+
+Every stage and lesson from the version they are enrolled on, with the records made against
+each one underneath.
+
+| On a lesson | Means |
+|---|---|
+| Complete | The lesson has a signed record graded with a mark the course's scale says completes it. |
+| Next up | The first lesson that is not yet complete. It is a suggestion, not a gate. |
+
+| On a record | Means |
+|---|---|
+| Grading | A draft. Editable, and crediting nothing yet. |
+| Awaiting student | The instructor has signed it. Hours are already credited. The student has not countersigned. |
+| Signed | Both signatures are on it. |
+| Superseded | It has been amended. Struck through, kept on the record. |
+| Correction | The replacement for a superseded record. It credits nothing until it is signed. |
+
+<Screenshot id="enrollment-lessons" />
+
+Two things surprise people here, and both are correct:
+
+- A lesson graded with a failing mark is signed, is on the record, and does not move the
+  progress bar. The student flies it again.
+- A student who flew the same lesson three times before passing counts as one lesson done.
+  Lessons are counted, not records.
+
+## Requirements: credited, flown and discounted
+
+One row per requirement, showing credited hours against required hours, with a bar. A row
+sourced from your own school rather than from the regulation carries a School badge.
+
+<Screenshot id="enrollment-requirements" />
+
+When the number credited is lower than the hours the student actually flew, an amber line
+underneath says why. There are three reasons:
+
+1. Device time above the course's simulator limit for that requirement.
+2. Transferred credit above the limit for previous training.
+3. Training that has fallen outside the requirement's recency window.
+
+<Callout type="important">
+None of these lose anybody's flying. Every hour is still on the ledger. The requirement is
+refusing to count more than the rule allows, and the raw figure is shown beside it as hours
+flown.
+</Callout>
+
+A recency window is counted in whole calendar months from the 1st, which is the FAA's
+wording. On 5 August with a two month window, training from 1 June still counts.
+
+## Ledger: every credit and reversal
+
+Append-only. One row per credit, with the amount, the requirement it fed, a chip saying where
+it came from, and the date. Corrections appear as negative rows labelled as reversals,
+carrying the reason somebody typed when they amended the record.
+
+<Screenshot id="enrollment-ledger" />
+
+Sources are: a signed lesson, simulator time, transferred training under Part 61,
+transferred training under Part 141, a manual credit, and a reversal. Nothing here is ever
+edited or deleted.
+
+## The pace badge
+
+An advisory badge in the header, based on how long it has been since the student's last
+signed lesson. At risk is 30 days. Stalled is 60 days. Hover it for the reason.
+
+A student with no signed lesson yet gets no badge until they have been enrolled 60 days,
+because new is not the same as behind.
+
+It never gates anything. It exists to prompt a phone call. For the same information across
+the whole school, use the Student progress report.
+
+## Where graduated students go
+
+<Where app="web">Training → Students</Where> only ever lists people whose enrollment is In
+training. Graduated, terminated and transferred students are not on that page and there is no
+status filter to bring them back.
+
+You will find them in three other places: the course's own Students tab, the person's page
+under Training, and the Student progress report.
+
+## Who is allowed to open a record
+
+| Who | What they get |
+|---|---|
+| The student on the record | Their own record in full, the same numbers the school sees. |
+| Instructors and admins | Any training record in the school, in full, with grading controls. |
+| A holder of the Auditor grant | Every record, read only. |
+| Everyone else, including dispatchers | Refused. |
+
+Grading buttons only appear for people who can actually grade. The lifecycle buttons
+(Certify record, Graduate, End enrollment) only appear for admins and holders of the Enroll
+and graduate grant.

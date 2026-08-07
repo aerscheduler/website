@@ -1,0 +1,97 @@
+<Summary>
+Click **Sign off** on the inspection row, set **Completed on** to the day the work actually
+finished, correct the meter reading, add your notes, then click **Sign off**. A repeating
+inspection starts counting again immediately, from exactly those two numbers.
+</Summary>
+
+<Roles>Owners, Admins, Technicians</Roles>
+
+## Sign it off
+
+<Steps>
+  <Step n={1} title="Find the inspection">
+    <Where app="web">Maintenance → All inspections</Where> is the work queue for the whole
+    school, worst first. Or open the tail and use its Inspections card at
+    <Where app="web">Aircraft → the tail → Maintenance</Where>.
+
+    <Screenshot id="maintenance-all-inspections" />
+  </Step>
+  <Step n={2} title="Click Sign off on the row">
+    Dispatchers do not see this button. Only admins, owners and technicians can sign work
+    off.
+  </Step>
+  <Step n={3} title="Set Completed on">
+    The day the work was actually finished. It cannot be in the future.
+  </Step>
+  <Step n={4} title="Correct the meter reading">
+    On an hour-based inspection you are asked for the tach or Hobbs reading when the work
+    was done. It defaults to today's meter, which is usually not the right number.
+  </Step>
+  <Step n={5} title="Add notes and click Sign off">
+    Work order number, who did it, what was found. Up to 500 characters.
+
+    <Screenshot id="sign-off-inspection-modal" />
+  </Step>
+</Steps>
+
+## Enter the meter reading from the day the work was done, not today
+
+This is the field that matters most, and it is the one that looks like a display value.
+
+The **next** interval counts from the number you type. Sign off a 100-hour with today's
+tach when the work was actually done six hours ago and the next 100-hour comes due six
+hours late. Permanently, on every cycle after that, with nothing on screen to say so.
+
+<Callout type="warning">
+Same rule in the other direction: if the shop finished the annual on the 3rd and you sign
+it off on the 12th, put the 3rd in **Completed on**. The next annual is measured from what
+you type, not from when you typed it.
+</Callout>
+
+## What happens next
+
+- The item leaves **All inspections**. That view is a work queue and only holds outstanding work.
+- If the rule repeats, a fresh inspection is created straight away, counting from your completed date and completed meter reading.
+- A one-off does not come back. Once it is signed off on every tail it covers, the rule disappears from the Set up list entirely.
+- An "Inspection signed off" line is written to the audit log with your name on it.
+
+## When the aircraft comes back on the line automatically
+
+If the aircraft was grounded automatically by an inspection coming due, its grounding reason
+is the single word "Maintenance". Sign off the last outstanding item holding it and
+AerScheduler returns the aircraft to service by itself. The dialog says as much before you
+confirm.
+
+Every overdue inspection on that tail has to be signed off first, not only the ones that
+ground. An overdue VOR check or oil change is enough to keep the aircraft grounded.
+
+## When it does not
+
+<Callout type="warning">
+If somebody grounded the aircraft **by hand** and typed their own reason ("Prop strike",
+"Annual in progress"), signing inspections off will never lift it. Only the automatic
+reason "Maintenance" is ever cleared automatically, because AerScheduler will not overrule
+a human decision. An admin has to click **Return to service** on the aircraft. See
+[Ground an aircraft, and return it to service](/docs/maintenance/ground-an-aircraft).
+</Callout>
+
+## Notes, and the 500 character limit
+
+The console stops you at 500 characters. The app's sign-off sheet lets you keep typing past
+that, and then the save fails with "Couldn't sign that off." If you get that message and
+the aircraft and dates look fine, shorten the notes.
+
+## Where signed-off work goes
+
+It stays on the aircraft's record and in the audit log. It just leaves the queue.
+
+The console's **All inspections** view can never show completed work, and the Status filter
+there (Overdue, Due soon, Not yet due) has no "Signed off" option on purpose. The app's
+Inspections board does have one, behind the filter glyph, so reach for the phone when
+somebody asks you to prove a 100-hour was signed off.
+
+<Callout type="tip">
+The **Maintenance due** report under <Where app="web">Reports</Where> carries resolved items
+along with outstanding ones, with who signed them off and their notes. That is the export
+to hand somebody who wants the paperwork.
+</Callout>

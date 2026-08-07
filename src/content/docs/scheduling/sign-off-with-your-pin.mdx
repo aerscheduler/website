@@ -1,0 +1,96 @@
+<Summary>
+Once a flight has ramped in, every pilot on it presses **Confirm review** and types their
+own four character PIN. When the last person signs off, the invoice is raised
+automatically. A flight nobody signs off is a flight nobody is billed for.
+</Summary>
+
+<Roles>Instructors, Students, Renters</Roles>
+
+## Set your PIN first
+
+<Where app="web">You &rarr; Profile &rarr; Security</Where>, under **Confirmation PIN**.
+Type a PIN and press **Set PIN**. It has to be exactly four characters.
+
+<Screenshot id="profile-security-pin" />
+
+On the iOS app it is <Where app="mobile">Settings &rarr; Security &rarr; Personal PIN</Where>.
+
+<Callout type="note">
+Your PIN belongs to your login, not to one school. If you fly at two schools the same PIN
+works at both, and changing it changes it in both places.
+</Callout>
+
+Without a PIN you cannot close out a flight you were on, and the booking sits at Awaiting
+review and never turns into an invoice.
+
+## Confirm the review
+
+<Steps>
+  <Step n={1} title="Open the booking">
+    The close-out section reads that the flight is flown and needs pilot sign-off, with a
+    count such as <strong>1 of 2 confirmed</strong>.
+    <Screenshot id="reservation-detail-awaiting-signoff" />
+  </Step>
+  <Step n={2} title="Check the recorded times">
+    The Hobbs and tach readings, and the instruction time, are what you are signing for.
+  </Step>
+  <Step n={3} title="Press Confirm review and type your PIN">
+    <Screenshot id="confirm-review-pin-modal" />
+  </Step>
+  <Step n={4} title="Press Confirm review">
+    Your sign-off is recorded against your name.
+  </Step>
+</Steps>
+
+<Callout type="important">
+Typing your PIN **is** the confirmation. There is no second "are you sure" dialog, and a
+sign-off cannot be undone. Your PIN is your signature on the flight record.
+</Callout>
+
+## Everyone on the flight has to confirm
+
+The close-out waits on every person on the booking. A two person dual waits on both the
+instructor and the student. Neither one can sign for the other, and neither can an admin:
+the PIN is personal, and only people on the booking are offered the button at all.
+
+Anybody looking at the booking who is not on it sees a line saying it is waiting for the
+assigned pilots to confirm, and no button.
+
+A maintenance booking carries nobody, so it needs no sign-off and completes on its own.
+
+## What happens when the last person signs
+
+The close-out completes and the invoice is generated automatically. On a booking split
+between several people, that is one invoice each, not one invoice with shares inside it.
+
+The badge walks on to **Billed**, and then to **Paid** once it is settled.
+
+## You can only sign off once
+
+Afterwards the button is replaced with a line telling you that you have signed off and are
+waiting on the other pilot's PIN. If a flight is stuck there, the other person on it has
+not confirmed yet. Ask them.
+
+<Callout type="warning">
+If one person was somehow booked into two seats on the same flight, the count waits for two
+confirmations and that person can only give one, so it sits at 1 of 2 forever. New bookings
+are refused when one person fills two seats, but a booking made before that rule can still
+be stuck this way. Ask your school to sort that booking out.
+</Callout>
+
+## If the recorded times were wrong
+
+Say so before you sign. Once the readings are corrected, **every sign-off on that booking
+is wiped** and everybody has to confirm again.
+
+Corrections are made with **Correct times** on the booking in the console, or **Update
+Details** in the app. Once the last person has signed off, or an invoice exists, they are
+refused entirely and the invoice has to be voided first. See
+[Ramp out and ramp in a flight](/docs/scheduling/ramp-out-and-ramp-in).
+
+## Guests never sign off
+
+A guest has no account and no PIN. A guest flight is finished by an admin or by the
+instructor on it, with **Close out and bill guest**, and the guest is emailed a link to pay
+by card. See
+[Close out and bill a discovery or guest flight](/docs/scheduling/close-out-a-guest-flight).

@@ -1,0 +1,102 @@
+<Summary>
+<Where app="web">Aircraft → Add aircraft</Where>. Tail number, make and model, year,
+category and class, current Hobbs and tach, fuel capacity, the hourly rate and its basis,
+and a home base. Save, and the tail is on the schedule and billable.
+</Summary>
+
+<Roles>Owners, Admins</Roles>
+
+## Before you start
+
+At least one location has to exist. Without one the **Home base** picker is disabled and
+the form will not save.
+
+If you meet "Add a home base location first, every aircraft needs one before it can be
+scheduled", press **Add a location** beside it. That opens
+<Where app="web">Facilities → Locations</Where> with the create form already up. Save the
+location, come back, and the picker works. You only do this once per airport.
+
+## Add the tail
+
+<Steps>
+  <Step n={1} title="Open Aircraft and press Add aircraft">
+    Admins and owners only. Everybody else can view the fleet but not change it.
+  </Step>
+  <Step n={2} title="Enter the tail number">
+    This is what appears on the dispatch board, on invoices and in every report.
+  </Step>
+  <Step n={3} title="Optionally pick a Type template">
+    Cessna 172, Cessna 152, Piper PA-28, Diamond DA40, Cirrus SR20, or Other. It prefills
+    make, model, category and class, fuel capacity and a suggested rate. Everything it
+    fills in stays editable.
+  </Step>
+  <Step n={4} title="Fill in make, model, year, and category and class">
+    Single or multi-engine, land or sea.
+  </Step>
+  <Step n={5} title="Enter the current Hobbs and the current tach">
+    Type the readings exactly as they show on the meters, for example 1234.5. These are the
+    starting point for billing and for every hour-based maintenance inspection, so get them
+    off the actual aircraft rather than off a spreadsheet.
+  </Step>
+  <Step n={6} title="Enter fuel capacity and its unit">
+    Gallons or liters.
+  </Step>
+  <Step n={7} title="Set the hourly rate and the rate basis">
+    **Wet** means the rate includes fuel. **Dry** means it does not.
+  </Step>
+  <Step n={8} title="Decide Bill by Hobbs time">
+    On bills from Hobbs time. Off bills from tach time.
+
+    <Screenshot id="aircraft-rate-fields" />
+  </Step>
+  <Step n={9} title="Choose the Home base and press Add aircraft">
+    The home base is the airport the aircraft lives at, and it is what the schedule's time
+    zone resolves against.
+  </Step>
+</Steps>
+
+## Rate basis and Bill by Hobbs are two different questions
+
+They sit next to each other and both sound like "how is this billed", which is why they get
+confused.
+
+| Control | The question it answers |
+|---|---|
+| Rate basis (wet or dry) | Does the hourly rate include fuel? |
+| Bill by Hobbs time | Which meter do the billed hours come from, Hobbs or tach? |
+
+A wet rate billed on tach time is a perfectly normal combination, and so is a dry rate
+billed on Hobbs. Pick each one on its own merits.
+
+More on what happens to those numbers at close-out in
+[How billing works](/docs/billing/how-billing-works).
+
+## What adding a tail changes
+
+- It appears as a lane on the dispatch board and in every booking form.
+- It becomes billable at the rate you set.
+- It counts toward your subscription, which is $20 per month per aircraft. Simulators and
+  ground-school rooms are free.
+
+## Editing an aircraft later
+
+Open the tail and press **Edit**. It is the same form, except **Type template** is fixed to
+**Other**, so a template cannot silently overwrite the real details of an aircraft you have
+already been flying.
+
+## After the tail is in
+
+<CardGrid>
+  <DocCard href="/docs/maintenance/add-the-standard-airworthiness-inspections" title="Track its inspections">
+    Annual, ELT, transponder, pitot-static, VOR, altimeter, 100-hour.
+  </DocCard>
+  <DocCard href="/docs/getting-started/approve-a-member-on-an-aircraft" title="Check renters out on it">
+    Record who is approved to fly this tail.
+  </DocCard>
+  <DocCard href="/docs/billing/set-aircraft-and-instruction-rates" title="Rates in detail">
+    Aircraft rates, instruction rates and what a lesson costs.
+  </DocCard>
+  <DocCard href="/docs/maintenance/ground-an-aircraft" title="Ground it">
+    Take a tail off the line, by hand or automatically.
+  </DocCard>
+</CardGrid>

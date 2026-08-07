@@ -1,0 +1,25 @@
+<Summary>
+AerScheduler runs the day-to-day of a flight school, flying club, or FBO: who is flying
+what, when, on which aircraft, what it costs, and whether the aircraft is legal to go.
+</Summary>
+
+## The shape of the product
+
+There is one schedule, one roster of people, one fleet, and everything else hangs off
+those three. A booking on the schedule pulls an aircraft out of the fleet and a person
+out of the roster. When the flight comes back, the same booking produces the invoice,
+moves the aircraft meters forward, and ticks off the lesson.
+
+<Callout type="tip">
+If you only remember one thing: the reservation is the unit of work. Almost every number
+in AerScheduler is derived from reservations, so a booking that was never closed out is
+the usual reason a report looks wrong.
+</Callout>
+
+## Where you work
+
+<Where app="web">app.aerscheduler.com</Where> is the full console. Everything in these
+docs happens there unless a page says otherwise.
+
+The iOS app is the same account, narrowed to what a pilot needs away from a desk: see
+your schedule, book, close out a flight, and grade or review a lesson.

@@ -16,7 +16,7 @@ import { FEATURE_GROUPS, FEATURES, featureHref } from "@/lib/features";
 import { INTEGRATION_LINKS } from "@/lib/integrations";
 import { RESOURCE_GROUPS } from "@/lib/resources";
 import { DEVELOPER_LINKS } from "@/lib/developers";
-import { APP_URL, DEMO_URL, SIGNUP_URL } from "@/lib/site";
+import { APP_URL, DEMO_URL } from "@/lib/site";
 import { useAppAuthStatus } from "@/lib/use-app-auth-status";
 import { cn } from "@/lib/cn";
 
@@ -30,17 +30,23 @@ const MEGA_TRIGGERS: { id: MegaId; label: string }[] = [
 
 const RIGHT_NAV = [
   { href: "/pricing", label: "Pricing" },
-  //Straight into the demo, the same target as the hero's "See the live demo"
-  //button. It used to point at /demo, this site's landing page for the demo —
-  //but somebody who clicks "Live demo" in the nav has already decided, and
-  //answering that with a page that asks them to click again is a toll booth.
-  //
-  //The landing page still exists and still earns its place: it ranks for
-  //"flight school software demo / try / no signup", where the reader has NOT
-  //decided and does want the pitch first. It just isn't what this click means.
-  { href: DEMO_URL, label: "Live demo" },
-  { href: "/app", label: "App" },
+  // Docs sits in the top nav as well as inside the Resources menu. A customer
+  // hunting for help does not open a menu called "Resources"; they look for
+  // the word "Docs" and give up if it is not there, which is exactly the moment
+  // they email support instead.
+  { href: "/docs", label: "Docs" },
 ];
+
+/**
+ * Desktop nav shows from this breakpoint up. Below it, the hamburger.
+ *
+ * Was `md` (768px). Features + Integrations + Resources + Pricing + Live demo +
+ * Docs already fill a mid-width bar, and Login / Get started / App used to shove
+ * them into each other. With those gone the links still need room for the mega
+ * triggers' labels. `lg` (1024px) is where they stop colliding.
+ */
+const NAV_DESKTOP = "lg:flex";
+const NAV_MOBILE_ONLY = "lg:hidden";
 
 /**
  * A right-nav entry, as a router link or a plain anchor depending on where it goes.
@@ -76,7 +82,7 @@ function RightNavLink({
   );
 }
 
-/** Features mega-menu omits Integrations — that has its own trigger. */
+/** Features mega-menu omits Integrations; that has its own trigger. */
 const NAV_FEATURE_GROUPS = FEATURE_GROUPS.map((group) => ({
   ...group,
   items: group.items.filter((slug) => slug !== "integrations"),
@@ -88,7 +94,7 @@ const PANEL_WIDTH: Record<MegaId, number> = {
   features: 880,
   integrations: 380,
   // Four groups here for the same reason (Guides, Reporting, Developers,
-  // Compare) — the panel grows sideways, which there is room for, rather than
+  // Compare): the panel grows sideways, which there is room for, rather than
   // downwards, which there isn't.
   resources: 880,
 };
@@ -191,7 +197,7 @@ export function SiteHeader() {
         <Logo />
 
         <nav
-          className="hidden min-w-0 flex-1 items-center md:flex"
+          className={cn("hidden min-w-0 flex-1 items-center", NAV_DESKTOP)}
           aria-label="Primary"
         >
           <div
@@ -353,7 +359,7 @@ export function SiteHeader() {
                     </div>
                     <div className="flex items-center justify-between gap-3 border-t border-border bg-[#fafbfc] px-5 py-3">
                       <p className="text-xs text-muted-foreground">
-                        On every plan — no premium tier
+                        On every plan, no premium tier
                       </p>
                       <Link
                         href="/integrations"
@@ -374,7 +380,7 @@ export function SiteHeader() {
                     }}
                   >
                     {/* One column per group. The panel is a fixed width, so
-                        these are not viewport-responsive — four groups, four
+                        these are not viewport-responsive: four groups, four
                         columns. */}
                     <div className="grid grid-cols-4 gap-0 p-3">
                       {RESOURCE_GROUPS.map((group) => (
@@ -435,28 +441,26 @@ export function SiteHeader() {
           </div>
         </nav>
 
-        <div className="hidden items-center gap-2 md:flex">
+        <div className={cn("hidden items-center gap-2", NAV_DESKTOP)}>
           {signedIn ? (
             <Button href={APP_URL} variant="primary">
               Go to dashboard
               <ChevronRight className="size-4 opacity-80" />
             </Button>
           ) : (
-            <>
-              <Button href="/login" variant="ghost">
-                Login
-              </Button>
-              <Button href={SIGNUP_URL} variant="primary">
-                Get started
-                <ChevronRight className="size-4 opacity-80" />
-              </Button>
-            </>
+            <Button href={DEMO_URL} variant="primary">
+              Live demo
+              <ChevronRight className="size-4 opacity-80" />
+            </Button>
           )}
         </div>
 
         <button
           type="button"
-          className="ml-auto inline-flex size-10 items-center justify-center rounded-full border border-border md:hidden"
+          className={cn(
+            "ml-auto inline-flex size-10 items-center justify-center rounded-full border border-border",
+            NAV_MOBILE_ONLY
+          )}
           onClick={() => setOpen((v) => !v)}
           aria-label={open ? "Close menu" : "Open menu"}
         >
@@ -466,8 +470,8 @@ export function SiteHeader() {
 
       <div
         className={cn(
-          "border-t border-border bg-white md:hidden",
-          // Fill the viewport under the h-16 bar and scroll inside — otherwise
+          "border-t border-border bg-white lg:hidden",
+          // Fill the viewport under the h-16 bar and scroll inside. Otherwise
           // a long Features list grows the sticky header past the screen and
           // touch-scroll moves the page underneath the open menu.
           open
@@ -598,15 +602,10 @@ export function SiteHeader() {
                 <ChevronRight className="size-4 opacity-80" />
               </Button>
             ) : (
-              <>
-                <Button href="/login" variant="secondary" className="w-full">
-                  Login
-                </Button>
-                <Button href={SIGNUP_URL} variant="primary" className="w-full">
-                  Get started
-                  <ChevronRight className="size-4 opacity-80" />
-                </Button>
-              </>
+              <Button href={DEMO_URL} variant="primary" className="w-full">
+                Live demo
+                <ChevronRight className="size-4 opacity-80" />
+              </Button>
             )}
           </div>
         </div>

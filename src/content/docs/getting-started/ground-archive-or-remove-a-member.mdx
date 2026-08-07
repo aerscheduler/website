@@ -1,0 +1,128 @@
+<Summary>
+All three live on <Where app="web">People → the row's ⋯ menu</Where>. **Ground** stops
+somebody flying and emails them the reason. **Archive** takes them off the roster silently.
+**Remove** ends their access to your school. Only removing is permanent, and none of the
+three deletes any history.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers (ground and unground only)</Roles>
+
+## Which one do I want?
+
+| | Ground | Archive | Remove |
+|---|---|---|---|
+| Is the member told? | Yes, emailed and pushed the reason | No | They lose access |
+| What it blocks | Aircraft bookings only | Every booking type | All access |
+| Still on the roster? | Yes, with a red Grounded badge | No, filed under Archived | No |
+| Still gets your email? | Yes | No, nothing at all | No |
+| Undo | Unground | Return to roster | No |
+| Use it for | An expired medical, an unpaid balance, a safety review | A student who stopped coming | Somebody who should not have access |
+
+<Callout type="tip">
+If you are tidying up dormant students, **archive** them. Grounding was the only tool for
+that job before archiving existed, and it emails everybody you touch.
+</Callout>
+
+## Ground a member
+
+<Steps>
+  <Step n={1} title="People, find the person, ⋯ menu, Ground">
+    Grounding is not offered for somebody who is already archived.
+  </Step>
+  <Step n={2} title="Pick a reason">
+    Missing or expired documents, Missing TSA documentation, Rental agreement not on file,
+    Medical certificate expired, Outstanding balance, Currency lapsed, Pending safety
+    review, or **Something else...** for free text.
+  </Step>
+  <Step n={3} title="Press Ground member">
+    Their row and their record show a red Grounded badge and a banner.
+  </Step>
+</Steps>
+
+<Callout type="important">
+The reason is not a private note. It is emailed and pushed to the member word for word, as
+the entire body of the notice, and free text is capped at 60 characters. Write it for them:
+"Medical expired 1 Aug, send us the new one" rather than "chase re medical, again".
+</Callout>
+
+<Callout type="warning">
+Grounding blocks **aircraft** bookings. A grounded member can still be put on a simulator
+session, a classroom ground lesson, or any booking with no resource at all. If you need to
+stop somebody completely, archive them.
+</Callout>
+
+Ungrounding asks for confirmation and clears the old reason.
+
+### Grounding from the front desk
+
+A dispatcher can ground and unground too, from the same ⋯ menu in the console, from the
+member's record page, or from the app. Archiving and removing stay owner and admin, so a
+dispatcher's menu offers Ground and Reinstate and nothing else.
+
+### Automatic grounding for unpaid invoices
+
+<Where app="web">Settings → Billing → Billing</Where> has **Ground members with unpaid
+invoices**, which grounds somebody once they reach a number of unpaid invoices you set. It
+starts off. The refusal a member then sees says they are grounded for unpaid invoices and
+that paying them lifts it.
+
+## Archive a member
+
+<Steps>
+  <Step n={1} title="People, find the person, ⋯ menu, Archive">
+    You cannot archive your own membership.
+  </Step>
+  <Step n={2} title="Read the confirmation and press Archive member">
+    They come off the roster, cannot be booked at all, and stop receiving any email or
+    notification from you. Their flights, invoices and history are kept.
+  </Step>
+  <Step n={3} title="To find them later, set the Roster filter to Archived">
+    **Return to roster** on their ⋯ menu brings them back.
+  </Step>
+</Steps>
+
+They are **not** told, and that silence is the point. It is the difference between
+archiving and grounding.
+
+<Callout type="warning">
+The Roster filter's neutral position is **Current**, not "Any". Leaving it alone never
+shows archived people, so an archived member will look as though they have vanished from
+your roster entirely.
+</Callout>
+
+A member who is both grounded and archived shows as **Archived**. Archiving wins in the
+interface, and it is the stronger stop of the two.
+
+## Remove a member
+
+<Steps>
+  <Step n={1} title="People, ⋯ menu, Remove">
+    Then confirm.
+  </Step>
+  <Step n={2} title="They lose access to your school">
+    Their flight and billing history is preserved, so your reports and invoices do not
+    change.
+  </Step>
+</Steps>
+
+Three things to know:
+
+- An owner cannot be removed at all. Demote them first from **Edit roles**.
+- You cannot remove the last admin.
+- If you do it from the person's own record page, you are sent back to People, because the
+  page you were on no longer exists.
+
+A member can also leave voluntarily, from
+<Where app="mobile">Settings → Leave organization</Where> in the iOS app, under the same
+last-admin and last-owner rules.
+
+## Related
+
+<CardGrid>
+  <DocCard href="/docs/getting-started/roles-and-permissions" title="Roles and permissions">
+    Sometimes the right answer is fewer roles, not a ground.
+  </DocCard>
+  <DocCard href="/docs/getting-started/member-documents" title="Documents and expiries">
+    Most groundings start with a document nobody chased.
+  </DocCard>
+</CardGrid>

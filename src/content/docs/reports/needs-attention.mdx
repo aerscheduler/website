@@ -1,0 +1,110 @@
+<Summary>
+The "Needs attention" card sits under the Overview tiles and counts what is genuinely outstanding: overdue
+invoices, flights flown but never invoiced, flights awaiting close-out, grounded aircraft, open squawks, and
+anything expiring. Click a count and the report opens already filtered.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers, Technicians</Roles>
+
+## Where the list is
+
+<Where app="web">Reports → Overview</Where>, below the grid of tiles. It is a single card titled "Needs attention".
+
+If everything is clear it reads "Nothing needs attention right now."
+
+<Screenshot id="reports-overview-attention" />
+
+## What each item counts
+
+There are nine possible items. Each is a filter over a real report, and each carries its own time window.
+
+| Item | What it counts |
+|---|---|
+| Overdue invoices | Invoices past their due date and still unpaid |
+| Flown not invoiced | Flights that were closed out but never turned into an invoice |
+| Awaiting close-out | Bookings that flew and are still waiting to be closed out |
+| Grounded resources | Aircraft currently grounded |
+| Open squawks | Squawks still open |
+| Maintenance overdue | Maintenance reminders past due |
+| Documents expiring | Documents whose expiry date is coming up |
+| Currency lapsing | Pilot currencies about to lapse |
+| Endorsements expiring | Endorsements whose expiry date is coming up |
+
+An item at zero is not hidden. Zeros are collapsed into a single "Clear:" line at the bottom of the card, naming
+them, so you can tell "nothing overdue" apart from "we do not track that".
+
+## These counts ignore the date range above them
+
+The card sits under a dashboard with a date range picker, which makes it look as though it obeys that picker. It
+does not.
+
+Each item uses whatever window makes it useful:
+
+- **Overdue invoices** and **Flown not invoiced** cover all time. An invoice that went overdue eighteen months ago
+  is still overdue.
+- **Awaiting close-out** covers the last 60 days only. Over all time it would count every un-closed flight since
+  the school opened, which nobody would ever work through.
+
+<Callout type="note">
+Changing the dashboard's date range does not change these counts. If you want a number that follows the picker,
+that is what the tiles above are for.
+</Callout>
+
+## Clicking through opens the matching report
+
+Click a count and AerScheduler opens the report behind it, pre-filtered, over the exact window the count was taken
+on.
+
+<Callout type="warning">
+That means the date picker on the report you land on may show dates you never chose. It is deliberate. Without it,
+a card reading "3 endorsements expiring" would open a table reading "Nothing matched", because the count looks
+forward and the report opens on the last 30 days.
+</Callout>
+
+## Items showing zero
+
+A zero in the "Clear:" line is a real finding. It says the school has none of that thing outstanding right now, not
+that the check failed.
+
+The one to be careful about is "Flown not invoiced" reading zero when you expected a backlog. Voiding an invoice
+puts its flight back into that count, and closing out a flight is what puts it into scope in the first place. See
+[Why a flight was not invoiced](/docs/billing/why-a-flight-was-not-invoiced).
+
+## Items that are missing for your role
+
+An item is dropped entirely if you cannot run the report underneath it.
+
+| Role | What the card can show |
+|---|---|
+| Owner, admin | All nine |
+| Dispatcher | Everything except Overdue invoices |
+| Technician | Grounded resources, Open squawks, Maintenance overdue |
+
+There is nothing greyed out to click, so a shorter card is not a fault. See
+[Who can see which reports](/docs/reports/who-can-see-which-reports).
+
+## The one to work first
+
+If you only have ten minutes, work them in this order. The first two are money already earned that has not been
+collected, and they are the items that most often sit untouched for months.
+
+<Steps>
+<Step n={1} title="Flown not invoiced">
+Flights that happened and were never billed. This is revenue the school has already delivered.
+See [Why a flight was not invoiced](/docs/billing/why-a-flight-was-not-invoiced).
+</Step>
+<Step n={2} title="Overdue invoices">
+Money billed and not collected. See [Chase unpaid invoices](/docs/billing/chase-unpaid-invoices).
+</Step>
+<Step n={3} title="Awaiting close-out">
+These become the two items above if you leave them. See
+[Ramp out and ramp in](/docs/scheduling/ramp-out-and-ramp-in).
+</Step>
+<Step n={4} title="Grounded resources and Open squawks">
+Aircraft that cannot earn. See
+[When AerScheduler grounds an aircraft](/docs/maintenance/when-aerscheduler-grounds-an-aircraft).
+</Step>
+<Step n={5} title="The expiring items">
+Documents, currency and endorsements. These have lead time, which is exactly why they get forgotten.
+</Step>
+</Steps>

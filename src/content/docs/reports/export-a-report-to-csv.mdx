@@ -1,0 +1,97 @@
+<Summary>
+Set the report up the way you want it, then click Export at the right of the toolbar. The CSV holds every matching
+row, not just the page on screen, and the numbers come out plain so a spreadsheet can add them up.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers, Technicians</Roles>
+
+## Export what is on screen
+
+<Steps>
+<Step n={1} title="Shape the report first">
+Set the date range, add your filters, choose the grouping, pick the columns, and sort it. The export is a copy of
+what you have built, so anything you change afterwards is not in the file.
+</Step>
+<Step n={2} title="Click Export">
+It sits at the right of the toolbar, beside Saved views and Save as. The file downloads immediately.
+</Step>
+</Steps>
+
+<Screenshot id="report-toolbar-export" />
+
+## What ends up in the file
+
+Every matching row. Not the 100 rows on the page you were looking at, and not a truncated sample.
+
+The file carries the columns you chose, in the report's own order, with your grouping applied. Underneath the rows
+there is a totals row, labelled "Total" in the first column. That row is always taken over every matching row, so
+on a grouped export it is the whole report's total, not any one group's.
+
+## How numbers are written
+
+Nothing is exported as a formatted string, so every numeric column can be summed in a spreadsheet without any
+cleaning up first.
+
+| Kind of column | How it exports | Heading |
+|---|---|---|
+| Money | A plain number in dollars | Carries "(USD)" |
+| Hours | A decimal | Carries "(hours)" |
+| Percentages | A number from 0 to 100 | Carries "(%)" |
+
+The file also carries a UTF-8 byte order mark, which is what makes Excel open accented names correctly rather than
+turning them into punctuation.
+
+## The file name and the school's clock
+
+Files are named after the report and the window, like `revenue_2026-01-01_2026-01-31.csv`.
+
+Those dates are your school's dates, measured on the school's time zone, so the file name and the window on screen
+always agree. If nobody has set the school's time zone yet, see
+[Date ranges, date basis, and your school's time zone](/docs/reports/date-ranges-and-time-zones).
+
+## Why Export is greyed out
+
+Export is disabled when the report has zero matching rows. There is nothing to write.
+
+Widen the date range or drop a filter, and it comes back. If the table reads "Nothing matched", that is the same
+condition stated in words.
+
+## CSV is the only format
+
+There is no PDF and no XLSX export. If somebody needs a PDF, export the CSV and print it from a spreadsheet.
+
+There is also no export on the Overview dashboard and none on Audit Logs. To get a dashboard figure into a
+spreadsheet, click the tile to open the report behind it and export from there.
+
+## Opening the file in Excel
+
+Double-clicking the file works. Because the numbers are plain and the encoding is marked, you can select a money
+column and read the sum in the status bar straight away.
+
+<Callout type="tip">
+If you export the same thing twice and the totals differ, check whether the report has a column measured to today
+rather than to the end of the window, such as "Days since last flight" or "Days open". Those move overnight by
+design. See [Report numbers that look wrong](/docs/reports/numbers-dont-match).
+</Callout>
+
+## The Cancellations page has its own separate export
+
+<Where app="web">Operations → Cancellations</Where> is a different screen from the Cancellations and no-shows
+report on the Reports page. It has its own summary section, its own search box, its own Category and Notice
+filters, and its own Export button.
+
+The two overlap, so pick deliberately: use the Cancellations page when you want to search and read individual
+cancellations, and the report when you want to group, save the view, or have it emailed on a schedule.
+
+<Screenshot id="cancellations-insights" />
+
+## Next
+
+<CardGrid>
+  <DocCard href="/docs/reports/email-a-report-on-a-schedule" title="Email a report on a schedule">
+    The same CSV, sent automatically every day, week or month.
+  </DocCard>
+  <DocCard href="/docs/reports/save-a-report-view" title="Save a report as a view">
+    So you do not have to rebuild it before every export.
+  </DocCard>
+</CardGrid>

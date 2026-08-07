@@ -1,0 +1,137 @@
+<Summary>
+Reporting lives on one page in the web console: <Where app="web">Reports</Where>. That page holds 18 built-in
+reports, your own Overview dashboard, and the reports your school emails out on a schedule. Four ideas explain
+everything else: report, category, saved view, and date basis.
+</Summary>
+
+## Everything reporting lives on one page
+
+Open <Where app="web">Reports</Where>. A left rail lists everything that exists, and the pane beside it renders
+whichever item you pick.
+
+The rail is always in the same order. Overview and Scheduled reports sit at the top on their own, then five
+category headings: Financial, Operations, Fleet, People, Compliance.
+
+On a narrow screen the rail collapses into a "Choose a report" select at the top of the page. Nothing is missing,
+it just moves.
+
+<Screenshot id="reports-rail-owner" />
+
+## The 18 reports are fixed, saved views are yours
+
+There is no "new report" button, and you do not need one. Each of the 18 reports declares what its rows are, which
+columns exist, which filters it offers, and what it can be grouped by. You shape one of them, then save that shape
+as a view.
+
+So the answer to "we need a report of X" is almost always: pick the nearest report, filter it, group it, choose the
+columns, save it. "Month-end revenue", "Lapsed students" and "Grounding squawks" are saved views, not separate
+reports. See [Save a report as a view](/docs/reports/save-a-report-view).
+
+Everything else in this area runs those same 18 reports underneath: the dashboard tiles, the Needs attention
+counts, the scheduled emails, and the CSV exports. That is why a tile and the report you click into always show the
+same number.
+
+## Category decides who sees what
+
+Every report sits in one category, and the category is the whole permission model. Financial is owners and admins
+only. Dispatchers get Operations, Fleet, People and Compliance. Technicians get Fleet.
+
+Reports you cannot run are absent, not greyed out. A dispatcher opening Reports sees no Financial heading at all,
+so there is nothing to click and no upgrade prompt to misread. Full detail is in
+[Who can see which reports](/docs/reports/who-can-see-which-reports).
+
+## Date basis is why two reports disagree
+
+Under the date range picker on every report there is a small caption reading "by" and then a date. That caption
+tells you which date your range applies to.
+
+It is the most load-bearing line on the page. Revenue is windowed on the date an invoice was raised. Payments
+received is windowed on the date it was paid. An invoice raised in June and paid in August is June's revenue and
+August's cash, so the two reports will not agree over the same window, and both are right.
+
+<Callout type="warning">
+Before you reconcile one AerScheduler number against another, read both captions. Most "the numbers do not match"
+questions end there. See [Date ranges, date basis, and your school's time zone](/docs/reports/date-ranges-and-time-zones).
+</Callout>
+
+## Overview is your dashboard, not the school's
+
+Overview is a board of tiles that belongs to you alone. Everyone at the school gets their own, and changing yours
+changes nobody else's.
+
+The default layout is eight number cards (Billed, Collected, Outstanding, Flights, Hours flown, Hours booked,
+Efficiency, Cancellations) and two line charts ("Booked, flown and billed hours" and "Billed and collected"), over
+Last 30 days versus the previous period. Every figure opens the report behind it.
+
+Below the tiles sits the Needs attention card, which counts what is genuinely outstanding right now.
+
+<Screenshot id="reports-overview-board" />
+
+<CardGrid>
+  <DocCard href="/docs/reports/build-your-overview-dashboard" title="Build your Overview dashboard">
+    Move, resize, add and remove tiles.
+  </DocCard>
+  <DocCard href="/docs/reports/needs-attention" title="Work the Needs attention list">
+    What each count means and which one to work first.
+  </DocCard>
+</CardGrid>
+
+## Where else numbers show up in the console
+
+Reports is not the only place with figures on it, and the other places do not all come from the report engine.
+
+| Where | What it is |
+|---|---|
+| <Where app="web">Reports</Where> | The 18 reports, Overview, and Scheduled reports. |
+| A member's Activity tab | One person's hours, flights and spend over a window you pick. |
+| An aircraft's Utilization tab | One tail's hours, flights and open squawks. |
+| <Where app="web">Dashboard</Where> | The console home page: fleet and people counts, the next seven days, and for admins an Outstanding card. |
+| <Where app="web">Operations → Cancellations</Where> | A separate cancellations screen with its own filters and its own export. |
+
+<Callout type="note">
+The stat cards on <Where app="web">Dashboard</Where> are not built by the report engine and will not tie out
+against Reports. "Outstanding" there is every unpaid invoice with no date window at all; "Outstanding" on the
+Overview is the report engine's figure over the window you picked. They answer different questions.
+</Callout>
+
+For one person or one tail, skip the reports entirely: see
+[one student's hours or one aircraft's utilization](/docs/reports/member-and-aircraft-activity).
+
+## Reporting on the iPhone
+
+There is no Reports section in the mobile app. Reporting is a web console feature, so use
+<Where app="web">app.aerscheduler.com</Where> on a laptop or an iPad browser.
+
+## A brand new school sees samples first
+
+Until the school has 5 reservations or its first invoice, Reports shows a welcome screen instead: three preview
+cards titled "Revenue", "Aircraft utilization" and "Maintenance trends", each carrying either a green "Ready" chip
+or a grey lock chip naming what unlocks it ("Send your first invoice", "Schedule 5 reservations", "Add a
+maintenance reminder").
+
+<Callout type="warning">
+Those preview charts are drawn with sample rows, not your school's numbers. They use the same chart components as
+the real board, so they look live. A caption on the screen says the data is a sample and a "Preview with sample
+data" toggle turns it off. The screen retires itself the moment your own numbers are worth reading.
+</Callout>
+
+"Go to reports anyway" skips straight through to the real page.
+
+<Screenshot id="reports-welcome" />
+
+## Where to go next
+
+<CardGrid>
+  <DocCard href="/docs/reports/run-a-report" title="Run a report and filter the results">
+    The toolbar, the date range, and the filter conditions.
+  </DocCard>
+  <DocCard href="/docs/reports/report-catalog" title="Every report, and what it counts">
+    All 18, the category each sits in, and the window it opens on.
+  </DocCard>
+  <DocCard href="/docs/reports/email-a-report-on-a-schedule" title="Email a report on a schedule">
+    Daily, weekly or monthly, to your team or your accountant.
+  </DocCard>
+  <DocCard href="/docs/reports/audit-log" title="Find out who changed something">
+    Who did what, from which surface, and which fields moved.
+  </DocCard>
+</CardGrid>

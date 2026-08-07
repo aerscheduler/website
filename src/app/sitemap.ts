@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { FEATURE_LIST } from "@/lib/features";
 import { apiDocRoutes } from "@/lib/developers";
+import { docRoutes } from "@/lib/docs";
 import { SITE_URL } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -106,5 +107,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: path === "/docs/api" ? 0.85 : 0.7,
   }));
 
-  return [...staticEntries, ...featureRoutes, ...apiDocEntries];
+  // Help documentation: the hub, one page per section, one per article. Like the
+  // API reference these are generated from the registry rather than listed by
+  // hand, so a new article is submitted the moment it is routed. Listing docs
+  // by hand is precisely how the split-billing guide stayed out of the sitemap
+  // for a week while rendering perfectly.
+  const helpDocEntries: MetadataRoute.Sitemap = docRoutes().map((path) => ({
+    url: `${SITE_URL}${path}`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    // The hub and the section landings carry the broad support queries; the
+    // articles under them are long-tail and support those.
+    priority: path === "/docs" ? 0.85 : path.split("/").length === 3 ? 0.75 : 0.65,
+  }));
+
+  return [...staticEntries, ...featureRoutes, ...apiDocEntries, ...helpDocEntries];
 }

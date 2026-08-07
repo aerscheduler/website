@@ -1,0 +1,137 @@
+<Summary>
+<Where app="web">Billing → New invoice</Where>. Pick the member, add line items, click
+Create invoice. It is raised in Stripe and the member is emailed a link to pay it. A manual
+invoice is never charged to a saved card, even when the member has autopay switched on.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers (if enabled), Instructors (if enabled)</Roles>
+
+Use this for anything that is not a flight: a headset rental, a checkride fee, ground
+school books, a fuel charge on a dry rate, or a correction you are making by hand.
+
+Your school needs Stripe connected before any invoice can be raised. See
+[Turn on invoicing and card payments](/docs/billing/turn-on-invoicing-and-card-payments).
+
+## Create one in the web console
+
+<Steps>
+<Step n={1} title="Open Billing and click New invoice">
+<Where app="web">Billing</Where> is in the left rail, and is visible to owners and admins
+only.
+</Step>
+
+<Step n={2} title="Pick the Customer">
+Search the member list. The web dialog can only invoice a member of your organization.
+</Step>
+
+<Step n={3} title="Add line items">
+Each line has a Description, a Qty and a unit price. Add as many lines as you need with the
+running total shown underneath.
+
+<Screenshot id="create-invoice-dialog" />
+</Step>
+
+<Step n={4} title="Add a memo and a due date if you want them">
+Both are optional. A due date matters more than it looks: it is what the automatic reminder
+sweep chases against. See [Chase an unpaid invoice](/docs/billing/chase-unpaid-invoices).
+</Step>
+
+<Step n={5} title="Click Create invoice">
+The invoice appears on Billing and on the member's own Invoices page, and they are emailed
+and pushed a link to pay it.
+</Step>
+</Steps>
+
+## Create one in the iOS app
+
+Open Billing, then Generate Invoice.
+
+
+<Steps>
+<Step n={1} title="Choose the recipient">
+Either search for a member, or enter a guest recipient with a name and an email address.
+</Step>
+
+<Step n={2} title="Add invoice items">
+Tap Add + for each line: a name, a quantity and a price.
+</Step>
+
+<Step n={3} title="Add a memo and a due date">
+Optional, same as the web console.
+</Step>
+
+<Step n={4} title="Tap Send Invoice" />
+</Steps>
+
+## Invoicing a guest
+
+Only the iOS app can do this. The Generate Invoice screen has a guest recipient field where
+you type a name and an email address; the web console's New invoice dialog offers the member
+list and nothing else.
+
+## Limits on line items and memos
+
+| Field | Limit |
+|---|---|
+| Line item name | 60 characters |
+| Quantity | Between 1 and 99 |
+| Memo | 100 characters |
+| Invoice total | More than 50 cents |
+
+The 50 cent floor is Stripe's, not ours. Stripe will not accept an invoice below it.
+
+## Manual invoices are never autopaid
+
+<Callout type="important">
+A manual invoice is always sent to the member to pay, even if they have a default card
+saved and autopay switched on. This is deliberate: autopay exists so routine flight
+invoices settle themselves, and a hand-typed invoice with an extra zero in it should not
+charge somebody's card before anyone has looked at it.
+</Callout>
+
+## What a manual invoice does not do
+
+- **It is not linked to a reservation.** A flight that was never invoiced still shows in
+  the Unbilled reservations list on Billing after you type up a manual invoice for it.
+- **It carries no rate breakdown.** There are no resource hours or instruction figures on
+  it, so it does not appear as revenue against a particular aircraft.
+- **It cannot be edited once created.** The only things you can do to an invoice afterwards
+  are mark it paid and void it. See
+  [Mark an invoice paid, void it, or refund it](/docs/billing/mark-an-invoice-paid-void-or-refund-it).
+
+<Callout type="warning">
+The Bill button on a row in the Unbilled reservations list opens this same New invoice
+dialog, prefilled with the member and the reservation title as the memo. It is a manual
+invoice, not the flight's invoice, so the booking stays in the unbilled list afterwards. To
+bill the flight itself, finish its close-out:
+[Why a flight was not invoiced](/docs/billing/why-a-flight-was-not-invoiced).
+</Callout>
+
+## Letting dispatchers or instructors create invoices
+
+By default only admins can create a manual invoice. Two settings widen that, in the
+**Manual invoices** card on <Where app="web">Settings → Billing</Where>:
+
+- Dispatchers can manually generate invoices
+- Instructors can manually generate invoices
+
+They are also on the app's Billing Settings screen. Either way, only the organization owner
+can save them.
+
+
+<Callout type="note">
+The toggle says who, not where. A dispatcher or instructor granted the permission creates
+invoices through the app's Generate Invoice screen; the web console's New invoice button
+stays owner and admin only.
+</Callout>
+
+## Related
+
+<CardGrid>
+<DocCard href="/docs/billing/chase-unpaid-invoices" title="Chase an unpaid invoice">
+Reminders, due dates, and grounding for non-payment.
+</DocCard>
+<DocCard href="/docs/billing/who-can-do-what-in-billing" title="Who can do what in billing">
+Every billing action by role.
+</DocCard>
+</CardGrid>

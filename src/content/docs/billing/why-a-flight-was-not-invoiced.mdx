@@ -1,0 +1,137 @@
+<Summary>
+Nine times out of ten somebody has not confirmed the review with their PIN, so the invoice
+was never raised. Check that first, then work down this list in order.
+</Summary>
+
+<Roles>Owners, Admins, Instructors</Roles>
+
+## 1. Check the sign-offs first
+
+Open the booking on <Where app="web">Schedule</Where> and read the step badge in the
+Close-out section.
+
+| Badge | What it means |
+|---|---|
+| Not started, In flight | The flight has not been ramped in yet |
+| Awaiting review, Awaiting close-out | Somebody still owes a confirmation |
+| Reviewed, Billed, Paid | The close-out is finished |
+
+No invoice exists until **every** assigned pilot has confirmed with their PIN. A flight
+that flew in March and is still sitting at "Awaiting review" has produced nothing. Chase
+whoever's confirmation is missing. If that person can no longer sign off at all, raise a
+[manual invoice](/docs/billing/create-a-manual-invoice) for the amount instead.
+
+Guest and discovery flights never have sign-offs at all. They are closed out and billed in
+one step: see [Bill a discovery or guest flight](/docs/billing/bill-a-discovery-or-guest-flight).
+
+## 2. Billing is switched off
+
+<Where app="web">Settings → Billing</Where> → **Billing enabled**.
+
+<Callout type="warning">
+With Billing enabled off, close-outs complete perfectly normally and no invoice is raised,
+with nothing on screen to say so. If a whole month of flights produced no invoices, this
+is usually why.
+</Callout>
+
+Only the organization owner can turn it on and save.
+
+## 3. Stripe setup is not finished
+
+Same page, the **Payouts** card. If the badge reads **Not connected**, nothing bills, even
+with Billing enabled on. Both are required.
+
+An abandoned Stripe onboarding leaves the badge at Not connected. Click **Connect
+payouts** again to finish it. See
+[Turn on invoicing and card payments](/docs/billing/turn-on-invoicing-and-card-payments).
+
+## 4. The aircraft has no rate
+
+<Where app="web">Aircraft</Where> → open the tail → edit → **Rate (per hour)**.
+
+A tail with no rate prices its time at zero. If there was no instruction either, the whole
+booking comes to nothing and there is nothing to invoice. See
+[Set your aircraft and instruction rates](/docs/billing/set-aircraft-and-instruction-rates).
+
+The same applies to instruction: with no rating rate and a default instructor rate of
+$0.00, instruction bills zero.
+
+## 5. Maintenance bookings are never invoiced
+
+By design. A maintenance booking exists to keep the aircraft off the schedule, not to
+charge anybody. Nothing is wrong.
+
+## 6. The share came to less than 50 cents
+
+Stripe will not accept an invoice below 50 cents.
+
+<Callout type="warning">
+If a person's share prices under 50 cents, that share is skipped and no invoice is raised
+for them. The booking is still treated as billed. On a cheap booking split several ways,
+one or more people can simply never get billed.
+</Callout>
+
+## Only some people on the booking were billed
+
+On a split booking each payer gets their own invoice, and they are raised one at a time.
+Two things leave gaps:
+
+- A share under 50 cents, as above.
+- Voiding one person's invoice. Voiding does **not** re-apportion their share to the
+  others, so the booking is left partially billed.
+
+<Callout type="warning">
+**Create invoice** does not fix this, on either surface. It is hidden as soon as anybody on
+the booking holds a live invoice, so a partially billed booking never offers it. Raise a
+[manual invoice](/docs/billing/create-a-manual-invoice) for the person who was missed
+instead.
+</Callout>
+
+## How to bill it now
+
+<Steps>
+<Step n={1} title="Open the reservation">
+On the dispatch board in the console, or the reservation screen in the app. It has to be
+completed, with every sign-off done.
+</Step>
+<Step n={2} title="Click Create invoice">
+In the console it is the button at the bottom of the close-out panel, under "Review
+complete, and this flight has no invoice against it." In the app it is in the bubble menu.
+</Step>
+<Step n={3} title="Confirm">
+You get "Invoice sent", or one invoice per payer on a split booking.
+</Step>
+</Steps>
+
+<Callout type="note">
+**Create invoice** is admin and owner only, on both surfaces, because the endpoint is. A
+dispatcher can close a flight out and cannot bill it. It also only appears when billing and
+Stripe are on, the reservation is complete, and no live invoice exists against it yet.
+</Callout>
+
+
+### Finding the flights that were missed
+
+In the web console, <Where app="web">Billing</Where> → set the **Status** filter to
+**Unbilled reservations**. That lists past bookings with no invoice against them.
+
+<Screenshot id="billing-unbilled-reservations" />
+
+<Callout type="warning">
+The **Bill** button on those rows does not invoice the flight. It opens the manual New
+invoice dialog with the member filled in and the booking's title as the memo, and nothing
+else: no hours, no rate, no link back to the booking. After using it the reservation still
+shows as unbilled, and the invoice will not appear in that aircraft's revenue. To bill the
+flight itself, finish the close-out or use **Create invoice** on the booking.
+</Callout>
+
+If you genuinely want to charge a flat amount by hand, that dialog is the right tool. See
+[Create a manual invoice](/docs/billing/create-a-manual-invoice).
+
+## Still nothing
+
+- Confirm the person you expected to be billed is actually a payer. An instructor with a
+  student aboard is being paid, not billed, so they never receive an invoice. See
+  [Fill in Who pays what on a shared booking](/docs/billing/who-pays-what-at-close-out).
+- Check [Billing troubleshooting and FAQ](/docs/billing/billing-troubleshooting) for the
+  rest of the surprises.

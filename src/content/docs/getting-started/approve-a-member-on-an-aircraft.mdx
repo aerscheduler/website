@@ -1,0 +1,68 @@
+<Summary>
+<Where app="web">Aircraft → the tail's ⋯ menu → Approve renters</Where>, then flip the
+switch beside each person. Each switch saves the moment you touch it. The approval is your
+record that somebody is checked out on that tail.
+</Summary>
+
+<Roles>Owners, Admins</Roles>
+
+## Check somebody out
+
+<Steps>
+  <Step n={1} title="Open Aircraft">
+    Or open the tail's own record. **Approve renters** is on both.
+  </Step>
+  <Step n={2} title="Open the ⋯ menu on the tail and choose Approve renters">
+    A sheet lists the people who can be approved on this aircraft.
+  </Step>
+  <Step n={3} title="Flip the switch beside each person">
+    There is no Save button. Each switch writes immediately and confirms with a toast.
+  </Step>
+</Steps>
+
+<Callout type="warning">
+The sheet lists **renters only**. Somebody who holds the student role and not the renter
+role does not appear here at all. If the person you are looking for is missing, check their
+roles first from <Where app="web">People → ⋯ → Edit roles</Where>.
+</Callout>
+
+## Where the approval shows up
+
+On the member's record, under **Compliance → Approved aircraft**. That is the list to open
+when somebody asks what a given renter is checked out on.
+
+## What the approval actually restricts
+
+That depends on one organization setting, **Members can only book approved resources**, on
+<Where app="web">Settings → School → Booking preferences</Where>.
+
+| Setting | What students and renters can book |
+|---|---|
+| Off (the default) | Any aircraft. The approvals are a record of who is checked out, and nothing is blocked |
+| On | Only the aircraft they are approved on |
+
+With the setting on:
+
+- **Students and renters** are held to the aircraft they are approved on.
+- **Instructors are not.** A CFI is never checked against the approved list, so turning
+  this on cannot ground your dual bookings.
+- Owners, admins and dispatchers can still assign anybody to any resource. The restriction
+  applies to a student or renter booking for themselves.
+- Guest flights and classrooms are unaffected. Simulators are not: a simulator is
+  checked against the approved list just like an aircraft.
+
+<Callout type="note">
+Turning the rule on at a school that has never used it will stop your renters booking. Work
+through the fleet and approve people first, then switch it on.
+</Callout>
+
+## The other way to turn it on
+
+The booking rules step on your dashboard asks "Check people out on an
+aircraft first", which sets the same switch. Either route is fine.
+
+## If somebody cannot book a tail
+
+Approvals are one of several reasons a booking is refused. The others include grounding,
+the aircraft itself being grounded, a required card on file, and student-instructor
+pairing. See [Why was my booking refused?](/docs/scheduling/why-was-my-booking-refused).

@@ -1,0 +1,151 @@
+<Summary>
+Open the course and go to **Syllabus**. Add a stage, then lessons inside it, then the graded
+tasks inside a lesson. The control that matters most is **Credits toward** in the lesson
+dialog: a lesson with nothing ticked can be flown, graded and signed, and will credit no
+hours anywhere.
+</Summary>
+
+<Roles>Owners, Admins, holders of the Configure training grant</Roles>
+
+## Before you start
+
+Two things save you a rebuild.
+
+- **The version has to be a draft.** A published version is shown as a plain read-only page
+  with no pencils and no Add buttons at all. That is on purpose, not a loading failure. See
+  [Publish a syllabus version](/docs/training/publish-a-syllabus-version).
+- **Add your requirements first.** Until the version has requirements, the Credits toward
+  box in the lesson dialog is empty and shows an amber warning, so lessons added early
+  credit nothing until you go back and fix them.
+  [Add hour and landing requirements](/docs/training/add-hour-requirements)
+
+Once a course has more than one version, a version dropdown appears in the course header.
+Check it before you edit anything: it silently governs the Syllabus, Requirements and
+Students sections below it.
+
+<Screenshot id="syllabus-stages-lessons" />
+
+## Add a stage
+
+A stage is an ordered block of lessons: "Stage 1, Presolo", "Stage 2, Cross-country and
+night".
+
+<Steps>
+<Step n={1} title="Course → Syllabus → Add stage">
+</Step>
+<Step n={2} title="Give it a Name and an Objective">
+The objective is what the student reads on the record and on the phone.
+</Step>
+<Step n={3} title="Click Add stage">
+It saves immediately. There is no separate Save for the page.
+</Step>
+</Steps>
+
+## Add a lesson
+
+<Steps>
+<Step n={1} title="Click Add lesson inside the stage">
+</Step>
+<Step n={2} title="Fill in the lesson">
+Name, **Type** (Flight, Ground or Simulator), **Flight hrs**, **Ground hrs**, Objectives and
+Completion standards.
+
+The hours are a prefill, not a floor. They fill the hour boxes in the grading dialog so the
+common case is open, confirm, sign. Nothing refuses a lower number on the day.
+</Step>
+<Step n={3} title="Tick Credits toward">
+Beside each requirement this lesson should feed, click **flight time**, **ground time** or
+**per lesson**. Read the next section before you skip this.
+</Step>
+<Step n={4} title="Click Add lesson">
+</Step>
+</Steps>
+
+The **Type** you choose here decides which bookings can grade the lesson at close-out: dual
+and solo bookings offer flight lessons, ground bookings offer ground lessons, sim bookings
+offer sim lessons. See
+[Grade a lesson when you close out the flight](/docs/training/grade-a-lesson-at-close-out).
+
+## Tick what the lesson credits
+
+**Credits toward** is the fan-out. When a lesson record is signed, its hours are added to
+every requirement ticked here, from the clock you chose:
+
+| Choice | What is posted |
+|---|---|
+| flight time | The flight hours on the record |
+| ground time | The ground hours on the record |
+| per lesson | One event, for a requirement measured in a count rather than hours |
+
+One flight can credit several requirements at once, which is the whole point: a night
+cross-country feeds total time, dual received, night training and cross-country time from a
+single signature.
+
+<Screenshot id="syllabus-lesson-dialog-credits" />
+
+<Callout type="warning">
+A lesson with nothing ticked under Credits toward is fully flyable, gradeable and signable,
+and contributes zero hours to every requirement, silently. The expanded lesson row shows an
+amber **Credits nothing** line, and nothing else warns you.
+
+If a school's hour bars are not moving, this is almost always why. Expand every lesson in
+the syllabus and look for that line.
+</Callout>
+
+## Add tasks and ACS codes
+
+A task is one graded item inside a lesson: one maneuver or one knowledge area, optionally
+carrying its ACS code, for example `PA.VII.B`.
+
+<Steps>
+<Step n={1} title="Expand the lesson row">
+</Step>
+<Step n={2} title="Click Add tasks (or Edit tasks)">
+</Step>
+<Step n={3} title="Click Add task for each item">
+Give it a name and, if you have it, the ACS code.
+</Step>
+<Step n={4} title="Click Save tasks">
+</Step>
+</Steps>
+
+<Callout type="note">
+Per-task grades are entered on the iPhone app, where each task gets its own grade chip with
+the ACS code beside it. The web grading dialog and the close-out grader record the lesson
+grade only. A school that grades entirely in the console will fill in tasks carefully and
+never grade them. See
+[Grade lessons offline on the iPhone app](/docs/training/grade-lessons-offline-on-the-app).
+</Callout>
+
+## Edit, delete and reorder
+
+- **Edit** anything with the pencil on its row, while the version is still a draft.
+- **Delete** with the trash icon. Deleting a stage deletes the lessons inside it, and the
+  confirmation names how many.
+- **Reorder** is the one thing you cannot do. There is no drag to reorder, and a lesson
+  keeps the position it had when it was added. Add lessons in the order you teach them, and
+  if the order is wrong, delete and re-add rather than hunting for a handle.
+
+## Two lesson settings worth knowing
+
+- **Notes required** makes the iPhone app refuse to sign the lesson while the Notes box is
+  empty ("This lesson needs notes before it can be signed."). Set it on the lessons where a
+  narrative matters.
+- **Flight hrs** and **Ground hrs** prefill the grading dialog, as above.
+
+## Next
+
+<CardGrid>
+<DocCard href="/docs/training/add-hour-requirements" title="Add hour requirements">
+The amounts a student has to accumulate, and the caps that discount them.
+</DocCard>
+<DocCard href="/docs/training/set-the-grading-scale" title="Set the grading scale">
+Which marks the course uses, and which of them complete a lesson.
+</DocCard>
+<DocCard href="/docs/training/publish-a-syllabus-version" title="Publish the version">
+What publishing locks, and how to revise it afterwards.
+</DocCard>
+<DocCard href="/docs/training/enroll-a-student" title="Enroll a student">
+Check the version first, then enroll from the course page.
+</DocCard>
+</CardGrid>

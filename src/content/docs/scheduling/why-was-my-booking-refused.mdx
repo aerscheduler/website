@@ -1,0 +1,179 @@
+<Summary>
+AerScheduler never trims a booking quietly. When it will not create one it says which person,
+which aircraft or which rule stopped it. This page lists every refusal and the shortest way
+past each.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers, Instructors, Students, Renters, Technicians</Roles>
+
+## No times are offered for the day I want
+
+The Start dropdown lists only 15 minute marks where the resource **and every person on the
+booking** are simultaneously free. When nothing overlaps, the list is empty and says "No open
+times on this date for everyone selected."
+
+<Screenshot id="time-picker-next-available" />
+
+Underneath it there is a **Next available** link with a date and a time. Clicking it moves the
+form to that slot, which is usually faster than hunting.
+
+Otherwise, shorten the list of people. Adding a second instructor or a fourth student
+intersects one more diary into the calculation, so removing somebody almost always opens
+slots. Trying another aircraft or another day does the same.
+
+<Callout type="note">
+Adding a person **after** you have chosen a time can invalidate it. The end time refits to the
+new overlap, or both times clear. Nothing is wrong: the picker has recalculated against one
+more diary.
+</Callout>
+
+## That person does not meet currency requirements
+
+"Jamie Smith does not meet currency requirements."
+
+Somebody on the booking is not current for that aircraft. Open
+[their currencies](/docs/scheduling/check-your-currency-status) and look at all four counts,
+not just Expired. A currency that has never been signed off counts as not current even though
+nothing has run out, and that is the usual answer.
+
+Some currency rules allow the flight with a current instructor aboard. If yours does, adding
+an instructor to the booking clears the refusal. Nothing on screen explains that this is what
+happened, so it can look as if the block was never real.
+
+## Somebody on the booking is grounded, archived or unavailable
+
+"Jamie Smith is grounded." or "Jamie Smith is grounded for unpaid invoices. Paying them lifts
+it."
+
+The refusal always names the person. Two flavors:
+
+- **Grounded for unpaid invoices**, which AerScheduler applies by itself. It says so, because
+  paying the invoices lifts it with no admin involved.
+- **Grounded by an admin**, where the reason is deliberately not quoted back. It may be
+  personal, and the person reading the message is often not the person who is grounded.
+
+Grounding only blocks bookings with an **aircraft** on them. A grounded member can still be
+booked into a ground lesson or a simulator session. Archived and unavailable people are named
+the same way.
+
+## The aircraft is grounded
+
+A grounded aircraft can be booked for **Maintenance** and for nothing else. That exception is
+deliberate: the maintenance booking is what gets it back in service, so blocking it would
+leave the aeroplane permanently stuck.
+
+<Screenshot id="airworthiness-notice" />
+
+The airworthiness notice above the time picker is a separate thing. It reports the grounding
+reason and any open squawks so you know what you are booking. Open squawks on an aircraft that
+is **not** grounded are information, not a block.
+
+See [Why can't I book this aircraft?](/docs/maintenance/why-cant-i-book-this-aircraft).
+
+## A solo has one pilot, a shared flight has none
+
+The personnel limits are per type, and they are refusals rather than warnings.
+
+| Message | What it means |
+|---|---|
+| "A solo has one pilot. Book a dual if an instructor is flying with a student." | A solo carries exactly one person. This is regulatory, not a product limit: 14 CFR 61.87 defines solo as the student being the sole occupant, so a two-person solo would be a false record. |
+| "A shared flight is two or more pilots sharing one aircraft. With one pilot, book a solo or a rental instead." | Shared means two or more pilots splitting one aircraft. |
+| "A shared flight has no instructor. With an instructor aboard it's a dual." | The moment there is an instructor, it is a dual. |
+| "Pick an instructor for this dual reservation." | A dual needs both sides filled in. |
+| "Guest flights need an aircraft." | Guest is the one type that always needs a tail. |
+| "Enter a valid email. The guest's invoice is sent there." | The guest's invoice has nowhere to go without it. |
+| "A maintenance booking can't have anyone assigned to it." | Maintenance takes the aircraft off the line and carries nobody. |
+
+If you are not sure which type you want, read
+[Which reservation type should I use?](/docs/scheduling/reservation-types) once. Picking the
+wrong type is the most common reason a booking is refused.
+
+## That tier can book up to N days ahead
+
+"The Associate tier can book up to 7 days ahead. That booking is 12 days out."
+
+The member is on a membership plan with a booking window. Three things people get caught by:
+
+- It applies to **every** reservation type, so it limits ground school and simulator time as
+  well as aircraft.
+- It applies when **staff book on that member's behalf** too, because the rule is about whose
+  membership it is.
+- It applies only while the membership is **active**. A pending or lapsed membership has no
+  window at all.
+
+An admin can change or clear the window on the plan. See
+[Booking rules and settings](/docs/scheduling/booking-rules-and-settings).
+
+## This booking would keep the aircraft overnight
+
+"This booking would keep the aircraft overnight, and multi-day bookings are turned off for
+this organization. An owner or admin can enable them in Settings, under booking rules."
+
+You have crossed local midnight at the airport. Note where the line is: a flight that ends
+exactly at midnight is fine, and midnight is the last slot the end-time picker offers every
+day. 12:15am is a night away.
+
+An admin turns multi-day bookings on under
+<Where app="web">Settings → Booking preferences</Where>, and cannot do it until the
+school has a time zone set. See
+[Book a trip that keeps the aircraft overnight](/docs/scheduling/overnight-and-multi-day-trips).
+
+## Add a payment method before booking
+
+"Add a payment method before booking. Open Payment methods in your profile, then try again."
+
+Your school requires a card on file before a student or renter books themselves. Add one under
+<Where app="web">You → Profile → Payments</Where> and book again.
+
+It only applies to somebody booking themselves into the student or renter seat. The front desk
+booking on your behalf is never blocked by it.
+
+## You are not checked out on that tail
+
+"You're not checked out on any aircraft." when you have no approvals at all, or a message
+naming the tail when you click a lane for one you are not approved on. The Aircraft field
+clears rather than letting you get further into a booking that would be refused.
+
+A check-out is an explicit approval linking you to one aeroplane. Ask your school to approve
+you on the aircraft you can fly. It is granted from the aircraft record or from your own
+record and takes a moment.
+
+## That repeating booking cannot be made
+
+"That repeating booking can't be made" followed by how many dates conflict, up to five of them
+named, and "Nothing was booked."
+
+A repeat is all or nothing. If one Tuesday in twelve has a clash, none of the twelve are
+created. Fix or avoid the named dates, or shorten the series, and book again. See
+[Set up a lesson that repeats every week](/docs/scheduling/set-up-a-repeating-booking).
+
+## Bookings more than a year ahead
+
+Nothing can be booked more than 365 days out, by anyone. There is no error message: the date
+picker simply will not go there.
+
+## Other refusals worth knowing
+
+- **"Nothing to book yet"** on the Book page. Your account has no role that can book. Ask an
+  admin to add student, renter, instructor or technician to you. Owner, admin and dispatcher
+  do not count, because they book other people rather than themselves.
+- **Notes that will not save.** Notes are capped at 200 characters and titles at 50. The web
+  Notes box does not show a counter, so a long briefing note fails on save with an unhelpful
+  message. Shorten it.
+- **One person in two seats.** A booking cannot put the same person on both sides, for example
+  as instructor and as student. A close-out waits on every distinct person, and somebody in
+  two seats could never complete it.
+
+## Related
+
+<CardGrid>
+<DocCard href="/docs/scheduling/why-cant-i-edit-move-or-cancel" title="Why can't I edit, move or cancel?">
+The other half: refusals on a booking that already exists.
+</DocCard>
+<DocCard href="/docs/scheduling/check-your-currency-status" title="Check your currencies">
+The page behind the most confusing refusal on this list.
+</DocCard>
+<DocCard href="/docs/scheduling/booking-rules-and-settings" title="Booking rules and settings">
+For admins: which of these rules you turned on.
+</DocCard>
+</CardGrid>

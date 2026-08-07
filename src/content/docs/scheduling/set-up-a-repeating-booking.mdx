@@ -1,0 +1,107 @@
+<Summary>
+Fill the booking in first, including the start and end times, then open **Repeat** and
+pick a preset. A repeat creates a real, separate booking for every date, so each one is
+ramped, reviewed and invoiced on its own. If any one date clashes, none of them are
+booked.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers, Instructors, Students, Renters</Roles>
+
+## Fill in the first booking first
+
+The Repeat control builds its options from the date and time you have already chosen, so
+it has nothing to offer until they are set. Pick the type, the resource, the people, the
+date, the start and the end, and only then open Repeat.
+
+## Pick a repeat preset
+
+Open the **Repeat** dropdown, above Notes. The presets are written from your chosen date,
+so booking Monday 9 March gives you a list like this:
+
+- Does not repeat
+- Daily
+- Weekly on Monday
+- Every 2 weeks on Monday
+- Monthly on the second Monday
+- Monthly on day 9
+- Annually on March 9
+- Every weekday (Monday to Friday)
+- Custom&hellip;
+
+One extra entry, **Monthly on the last Monday**, appears only when your date really is the
+last of that weekday in the month.
+
+<Screenshot id="repeat-dropdown-presets" />
+
+## Build a custom repeat
+
+Pick **Custom** at the bottom of the list to open the custom repeat dialog. It lets you
+set:
+
+- The interval, for example every 3 weeks. The interval is capped at 12.
+- Several days a week at once, for a Tuesday and Thursday lesson.
+- Which sense of monthly you mean: the same date each month, or the same weekday of the month.
+- Where the series ends: after a number of bookings, or on a date.
+
+<Screenshot id="me-book-repeat" />
+
+<Callout type="note">
+A weekly rule has to keep at least one weekday selected. The picker will not let you clear
+the last one.
+</Callout>
+
+## Read the summary line before you book
+
+Under the control, AerScheduler writes back what it is about to do in plain language, with
+the number of bookings it will create. Something like `Repeats every week on Monday` and a
+count of 12.
+
+Read it. It is the only place the count appears before the bookings exist.
+
+Press **Book reservation** and the toast reads `Repeating booking created`.
+
+## How many bookings you get
+
+There is no "repeats forever". Every occurrence holds a real aircraft for a real hour, so
+a repeat that never ended would block the fleet indefinitely. Two limits apply:
+
+| Limit | Value |
+|---|---|
+| Bookings created at once | 200 |
+| How far out a daily or weekly repeat runs | About 400 days |
+| How far out a monthly repeat runs | About 3 years |
+| How far out a yearly repeat runs | About 10 years |
+
+<Callout type="warning">
+A monthly repeat on a day past the 28th **skips** the months that do not have that day. A
+booking on the 31st does not move to the end of February, it simply does not happen that
+month.
+</Callout>
+
+## If one of the dates conflicts
+
+The whole series is all or nothing. If one of twelve Tuesdays clashes with something
+already on the board, nothing at all is booked and the error names up to five of the
+clashing dates, ending with `Nothing was booked.`
+
+Clear the conflict, shorten the series, or move the time, then book again.
+
+## Changing or cancelling a repeat later
+
+Two things to know before you commit to a cadence.
+
+**Editing one booking edits only that booking.** Open it, press Edit reservation, change
+what you need. The rest of the series is untouched.
+
+**The repeat rule itself cannot be changed.** The Repeat control is offered when you create
+a booking and not when you edit one. To move a lesson from Mondays to Wednesdays, cancel
+the series and book it again.
+
+Cancelling asks what you mean: this booking only, this and all later bookings, or all
+bookings in the series. Bookings that have already started are never cancelled, whichever
+you pick. See [Cancel a booking and record why](/docs/scheduling/cancel-a-reservation).
+
+<Callout type="note">
+A repeat sends one notification for the whole series rather than one per booking. Anyone
+with Google Calendar connected does get an event for every occurrence.
+</Callout>

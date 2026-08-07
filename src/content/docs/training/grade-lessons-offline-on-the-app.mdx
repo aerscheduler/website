@@ -1,0 +1,125 @@
+<Summary>
+Open the student's enrollment once while you still have signal, then grade and sign as
+normal at the aircraft. A grade recorded with no signal is stored on the phone, counted in
+a banner at the top of Training, and sent up the next time you open Training or that
+enrollment with signal.
+</Summary>
+
+<Roles>Instructors, Admins</Roles>
+
+## Before you lose signal
+
+The app draws the grading screen from a cached copy of that student's syllabus, and it only
+caches what it has successfully read. So open the enrollment at least once while you have
+signal.
+
+<Callout type="warning">
+Open the app cold, out of range, on a student you have never opened on that phone, and the
+lesson will not load. There is nothing to fix at the aircraft: the syllabus is not on the
+device. Open each student you plan to fly before you walk out.
+</Callout>
+
+<Where app="mobile">Training</Where> lists the people you can grade. As an instructor or an
+admin the rows are headed by the student name with the course underneath. Tap a student to
+open their enrollment, which is enough to cache it.
+
+
+## Grade a lesson on the phone
+
+<Steps>
+  <Step n={1} title="Open the lesson">
+    From the enrollment, tap the lesson on the Lessons tab, or tap the Next lesson card at
+    the top.
+  </Step>
+  <Step n={2} title="Tap a grade">
+    The grade buttons are drawn from the course's own grading scale, so they are whatever
+    marks that course version uses.
+  </Step>
+  <Step n={3} title="Fill in the hours and notes">
+    FLIGHT and GROUND are always there. SIM appears only when the lesson's type is
+    Simulator. Add per-task grades on the task chips, each with its ACS code beside it, and
+    type your notes.
+  </Step>
+  <Step n={4} title="Save draft, or Sign and complete">
+    Save draft leaves the record open and editable. Sign and complete freezes it and credits
+    the student's hours.
+  </Step>
+</Steps>
+
+
+<Callout type="important">
+Signing is final. A signed record can never be edited, on the phone or anywhere else. If it
+turns out to be wrong, see [Correct a signed lesson record](/docs/training/correct-a-signed-lesson).
+</Callout>
+
+If the syllabus author ticked Notes required on that lesson, the app will not let you sign
+it with an empty Notes box.
+
+## Simulator hours and per-task grades
+
+The phone is the only place these two can be entered. Neither the grading dialog on the
+web training record nor the Training record section of a flight close-out has a SIM field
+or a task grid.
+
+That matters more than it sounds. A course with a simulator limit on a requirement can only
+apply that limit to hours that were recorded as simulator time, so a school that grades
+entirely in the console never populates it. If you teach in a device, grade those lessons
+on the phone.
+
+## What the pending banner means
+
+When a grade cannot be sent, the app saves it on the device and tells you so, and a banner
+appears above the list on Training and on the enrollment counting what is waiting.
+
+Only one grade is ever held per lesson. Grading the same lesson twice while offline
+replaces the first attempt rather than queuing both, which is deliberate: replaying two
+grades for one flight would credit the hours twice.
+
+## Sync a queued grade
+
+Open Training or the enrollment and tap **Try now** on the banner. Opening either screen
+also pushes the queue on its own, so in practice a queue clears when you get back to signal
+and open the app.
+
+<Callout type="warning">
+Nothing sends in the background. Getting your signal back with the phone in your pocket
+sends nothing: a queued grade sits there until somebody opens Training or that enrollment.
+Before you finish for the day, open Training and check the banner has gone.
+</Callout>
+
+## When a queued grade is refused
+
+If the server refuses a queued grade, the entry is kept rather than dropped, the server's
+own message is shown on it, and the banner turns red reading how many grades could not be
+saved. Read the message: it is usually that the record was already signed by somebody else,
+or that you no longer have permission to grade that student.
+
+A refusal that happens while you are online, such as trying to grade an already-signed
+record, is never queued at all. You see the message straight away.
+
+<Callout type="warning">
+There is one case worth checking on the web afterwards. If the record saves but the
+signature is refused, the entry stays in the queue and the next sync saves the draft again,
+which can leave two rows reading Grading on the same lesson. Open the student's record in
+the console, sign the one you want, and grade over the other.
+</Callout>
+
+## What the app cannot do
+
+Amending a signed record is deliberately not offered on the phone. The screen tells you to
+do it in the web console.
+
+Billing a course enrollment fee is on the enrollment screen behind a confirmation naming the
+amount, and it is not queued when you are offline. It waits for signal.
+
+A record that has already been signed shows as a green Signed and final panel, not as a
+disabled form, so there is nothing to tap by mistake.
+
+<CardGrid>
+  <DocCard href="/docs/training/grade-a-lesson-at-close-out" title="Grade at close-out">
+    The intended path when you are back at the desk.
+  </DocCard>
+  <DocCard href="/docs/training/read-a-training-record" title="Read a training record">
+    What the badges and the two progress measures mean.
+  </DocCard>
+</CardGrid>

@@ -1,0 +1,161 @@
+<Summary>
+A booking locks in stages as the day goes on: once it has ramped out, once it has ramped in,
+once it is invoiced, once its window has passed. A few actions are also narrower than the
+buttons suggest. Find the symptom below.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers, Instructors, Students, Renters, Technicians</Roles>
+
+## The Edit button has disappeared
+
+**Edit reservation** is only offered while all three of these hold:
+
+- the booking is not cancelled
+- it has not ramped out
+- its end time is still in the future
+
+Miss any one and the button is gone rather than greyed out, from the detail panel and from the
+block's menu on the board.
+
+| Situation | What to do instead |
+|---|---|
+| It has ramped out | Only the return time can still change. Drag the trailing edge of the block. See below. |
+| Its window has passed and it never flew | Cancel it, with a reason. The record is what makes the cancellation report honest. |
+| It is cancelled | Book a new one. A cancelled booking is kept as a record and never reopened. |
+
+## The block will not drag
+
+Dragging is blocked by the same rules plus one more, and the board tells you why **before** you
+try: hover the block and the reason is in the tooltip.
+
+| Tooltip | Why |
+|---|---|
+| "This flight is invoiced" | Its times are part of the bill. |
+| "The aircraft is back" | Its times are part of its close-out now. |
+| "This booking's window has already passed, and it never ramped out." | It is history. |
+| "Only dispatch or someone rostered on this flight can move it." | You are not on it and you are not staff. |
+
+Two other things stop a drop rather than a drag:
+
+- Dropping on the **Unassigned** or **Other** row at the foot of the day board is refused.
+  Dragging cannot take a booking off its aircraft.
+- Dropping on the wrong kind of resource is refused and says so, for example a ground booking
+  needing a room rather than an aircraft.
+
+<Screenshot id="drag-callout-conflict" />
+
+<Callout type="note">
+If a block snaps back after a drop that looked clean, check your filters. A Resource or
+Location filter takes whole lanes off the board, and a clash with a booking in a lane you
+filtered away is invisible while you drag. The server still catches it and names what it hit.
+</Callout>
+
+Everything snaps to 15 minute marks, and a booking cannot be dragged shorter than 15 minutes.
+Dragging one occurrence of a repeating booking moves only that occurrence, and the toast says
+so.
+
+## The aircraft is out and only the return time can change
+
+Once a flight has ramped out, its start time, its aircraft and its crew are frozen. The one
+thing still open is when it is due back.
+
+On the web the Edit button is gone at this point, so the way to push the return time is on the
+board: the block grows a single handle on its trailing edge, and dragging that changes the end
+time. The tooltip says as much, but only on hover, which is why people miss it.
+
+The iOS app will still let you edit the end time from the reservation screen.
+
+## Cancel says you are unauthorized
+
+"You are unauthorized to make this request."
+
+Cancelling turns on **who created the booking**, not who is flying it. The permitted set is the
+creator, plus owners, admins, dispatchers and technicians.
+
+<Callout type="warning">
+An instructor assigned to a booking somebody else created is shown a Cancel reservation button
+and gets this message when they press it. It is not something you did wrong. Ask the front
+desk or a technician to cancel it.
+</Callout>
+
+Same rule, seen from the other side: a student can cancel a lesson they booked themselves but
+not the identical lesson the front desk booked for them.
+
+## There is no Cancel button at all
+
+On the web console, students and renters are never shown one, even on a booking they created
+themselves, because the board cannot see who created a booking and errs on the side of hiding
+the button.
+
+Two ways round it: cancel from the AerScheduler iOS app, which can see it and does offer the
+button, or ask the front desk.
+
+## You can only take yourself off this booking
+
+"You can only take yourself off this booking. Ask an instructor or the front desk to remove
+someone else."
+
+Editing a booking replaces the whole crew, so the server checks what actually changed. A
+student or renter may add or remove **themselves** and nobody else. Staff, and the instructor
+on the booking, can change anyone's seat.
+
+This bites hardest on a group lesson, where a student trying to tidy the roster looks like
+they are removing a classmate. It also surprises people because editing your own booking opens
+the full dispatch form, with every picker on it, which looks like permission to reseat the
+flight.
+
+## The shares are frozen because it is invoiced
+
+"This booking has already been invoiced, so the shares can't be changed. Void the invoices
+first if they're wrong."
+
+The Who pays what panel locks the moment the **first** invoice for the booking exists, and on a
+split booking there is one invoice per payer. Fill the panel in after the aircraft is back and
+before the last pilot signs off, because that sign-off is what raises the invoices. See
+[Split a flight between two or more people](/docs/scheduling/split-a-booking-between-payers).
+
+## The repeat cannot be changed
+
+The Repeat control is offered when you create a booking and never when you edit one. Editing
+an occurrence of a series is an ordinary edit of that one booking, and there is no way to
+change the rule itself afterwards.
+
+To change a cadence, cancel the series and book it again. Cancelling offers three scopes: this
+booking only, this and all later bookings, or the whole series. Bookings that have already
+started are never cancelled by any of them.
+
+## A Hobbs reading needs correcting
+
+Use **Correct times** on the reservation panel in the console, or **Update Details** on the
+reservation screen in the app. Only the figures the booking already carries can be
+corrected, and only once the aircraft is back.
+
+<Callout type="important">
+Two things to know before you correct one.
+
+Correcting a reading after somebody has signed off **wipes every sign-off on the booking**, and
+everybody has to confirm with their PIN again.
+
+Correcting one after every pilot has signed off, or after any invoice exists, is refused
+outright with "This reservation has already been invoiced". Void the invoice first.
+</Callout>
+
+## Things only the iOS app can do
+
+Two of them, both small. The app can **edit the end time of a flight that has ramped out**,
+where the console will not edit a ramped-out booking at all. And it shows cancelled bookings
+in its reservations list, which the web board never draws.
+
+## Related
+
+<CardGrid>
+<DocCard href="/docs/scheduling/why-was-my-booking-refused" title="Why was my booking refused?">
+The other half: refusals when you are creating a booking.
+</DocCard>
+<DocCard href="/docs/scheduling/reschedule-a-booking" title="Move a booking to a new time or aircraft">
+The three ways a booking moves, when it can move at all.
+</DocCard>
+<DocCard href="/docs/scheduling/who-can-do-what-on-the-schedule" title="Who can book, edit and cancel">
+The permission rules behind every message on this page.
+</DocCard>
+</CardGrid>

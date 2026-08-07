@@ -1,0 +1,115 @@
+<Summary>
+<Where app="web">Maintenance → Add inspections</Where>, and leave the mode on **Standard
+set**. All seven AVIATES items start ticked. Untick what does not apply to your operation,
+fill in when each was last done, pick the tails, and click **Add**.
+</Summary>
+
+<Roles>Owners, Admins, Technicians</Roles>
+
+## Add the standard set
+
+<Steps>
+  <Step n={1} title="Open Maintenance and click Add inspections">
+    The button sits in the top right. You need at least one aircraft in the fleet first;
+    the dialog says so if there are none.
+  </Step>
+  <Step n={2} title="Leave the mode on Standard set">
+    This is the AVIATES airworthiness set. All seven items are ticked to start. Two shop
+    extras, **Oil change** and **ELT battery replacement**, sit under "Also common" and
+    start unticked.
+
+    <Screenshot id="add-inspections-standard-set" />
+  </Step>
+  <Step n={3} title="Untick anything that does not apply">
+    Each row shows the regulation it comes from and a caveat line. See the table below.
+  </Step>
+  <Step n={4} title="Fill in When was it last done?">
+    Enter the **Date** the work was last performed and the **Meter reading** at that time.
+    Leave both blank only if the work was just done.
+  </Step>
+  <Step n={5} title="Pick the tails under Applies to">
+    Tap the tail numbers this should cover. Picking none leaves **Add** disabled: an
+    inspection with no tails never comes due.
+  </Step>
+  <Step n={6} title="Click Add">
+    One rule per preset appears under <Where app="web">Maintenance → Set up</Where>, and a
+    live inspection appears against each tail you chose, counting down straight away.
+  </Step>
+</Steps>
+
+## Which ones to untick
+
+| Item | Untick it when |
+|---|---|
+| Annual inspection | Never. Every aircraft owes one. |
+| 100-hour inspection | The aircraft does not carry persons for hire and is not used for instruction for hire. |
+| VOR check | The aircraft is not flown IFR. |
+| Static system and altimeter | The aircraft is not flown IFR. |
+| Transponder check | Rarely. Keep it unless the aircraft has no transponder. |
+| ELT | Never. |
+| Airworthiness Directive review | Never. |
+
+<Callout type="note">
+The presets are starting points, not compliance rulings. Calendar items are tracked in
+days, so "24 calendar months" is carried as 730 days. Every preset is fully editable after
+you apply it, and you can add your own on top. See
+[Add your own inspection](/docs/maintenance/add-your-own-inspection).
+</Callout>
+
+## Fill in when the work was last done
+
+This is the field people skip, and it is the one that decides when your first reminder
+arrives. Left blank, the countdown starts today at the aircraft's current meter, which is
+right for a brand-new aircraft and wrong for every aircraft a school already operates.
+
+<Screenshot id="add-inspections-last-done" />
+
+<Callout type="warning">
+Enter one meter reading with more than one tail selected and that same reading is applied
+to all of them, whose meters differ. The form shows an amber warning when this happens.
+Add the aircraft one tail at a time instead. Full detail in
+[Set when an inspection was last done](/docs/maintenance/set-when-an-inspection-was-last-done).
+</Callout>
+
+## Pick the tails under Applies to
+
+**Applies to** is a multi-select. If you opened the dialog from an aircraft's own
+Maintenance card, the tail is already fixed for you and there is nothing to pick.
+
+Adding a tail later works either way round: open that aircraft and use
+<Where app="web">Aircraft → the tail → Maintenance → Add</Where>, or edit the rule's list
+directly with the aircraft button on its row under
+<Where app="web">Maintenance → Set up</Where>. See
+[Change which aircraft an inspection covers](/docs/maintenance/change-or-stop-tracking-an-inspection).
+
+## Only the annual and the 100-hour ground the aircraft
+
+Of the standard set, only **Annual inspection** and **100-hour inspection** carry the
+**Grounds the aircraft** flag. When one of those comes due, AerScheduler takes the tail off
+the line by itself.
+
+The rest (VOR, AD review, transponder, ELT, static system and altimeter, oil change, ELT
+battery) come due, show as overdue, and notify the people who need to know, but the
+aircraft stays bookable. You can change that on any of them afterwards under
+<Where app="web">Maintenance → Set up</Where>. See
+[When AerScheduler grounds an aircraft by itself](/docs/maintenance/when-aerscheduler-grounds-an-aircraft).
+
+<Screenshot id="aircraft-maintenance-tab" />
+
+## If one of them fails to add
+
+The presets are applied one at a time rather than in a batch, so a partial failure names
+exactly what did not land: "Added 6. Couldn't add: Transponder check." Add the named item
+by hand with **Add inspections → Recurring** and you are done.
+
+## Doing it on an iPhone
+
+The app can apply the same standard set from an aircraft's page, for that tail only.
+
+<Callout type="warning">
+The app's preset sheet has no **When was it last done?** field. Anything set up on the
+phone starts counting from today at the current meter. On an aircraft that is already
+partway through its interval, add the inspections from the console instead, or fix the
+starting point afterwards from
+<Where app="mobile">Maintenance → Set up → the rule → edit which aircraft</Where>.
+</Callout>

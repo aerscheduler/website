@@ -1,0 +1,170 @@
+<Summary>
+Open <Where app="web">Reports</Where>, pick a report from the left rail, set the date range, then click Filters to
+narrow it. Read the small caption under the picker first: it tells you which date the range applies to.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers, Technicians</Roles>
+
+## Open a report
+
+<Steps>
+<Step n={1} title="Go to Reports">
+<Where app="web">Reports</Where> in the left navigation. On a narrow screen the rail becomes a "Choose a report"
+select at the top of the page.
+</Step>
+<Step n={2} title="Pick a report from the rail">
+Reports are grouped under Financial, Operations, Fleet, People and Compliance. You only see the categories your
+roles grant, so the rail is shorter for a dispatcher and shorter again for a technician.
+</Step>
+<Step n={3} title="Read the report's one-line description">
+It sits under the report name at the top of the pane and says what a row is.
+</Step>
+</Steps>
+
+Nothing you do here is saved. The report is recomputed on every change, and leaving the page discards the shaping.
+If you want to keep it, [save it as a view](/docs/reports/save-a-report-view).
+
+<Screenshot id="report-shell-revenue" />
+
+## Set the date range
+
+The date range picker sits at the left of the toolbar. Presets are Last 7 days, Last 30 days, Last 90 days and
+Last 12 months, or you can set your own dates.
+
+Each report opens on its own default window. Most look back 30 days. The three compliance reports (Document
+expirations, Pilot currency, Endorsement expirations) open on the **next** 90 days instead, Student progress opens
+on year to date, and Training records opens on the last 90 days.
+
+## Read the date basis caption before you trust the numbers
+
+Under the picker there is a small caption reading "by" and then a date, such as "by the date the invoice was
+raised" or "by the date of the flight". That is the date your range applies to.
+
+<Callout type="warning">
+Two reports over exactly the same dates can legitimately disagree because they window on different dates. Revenue
+counts an invoice on the day it was raised; Payments received counts it on the day it was paid. Read both captions
+before concluding something is broken. See
+[Report numbers that look wrong](/docs/reports/numbers-dont-match).
+</Callout>
+
+## Add a filter
+
+<Steps>
+<Step n={1} title="Click Filters">
+The button sits beside the date picker. The menu behind it holds Group by and Columns as well as the filters, so
+this is also where grouping lives.
+</Step>
+<Step n={2} title="Pick a field from the Filters section">
+Each report offers its own list of fields.
+</Step>
+<Step n={3} title="Choose or type a value">
+Some fields give you a searchable list of values to tick. Others give you a box to type into.
+</Step>
+<Step n={4} title="Pick a condition if the field offers more than one">
+The Condition list is pinned to the bottom of the field's submenu.
+</Step>
+<Step n={5} title="Close the menu">
+The filter appears as a dismissible chip under the toolbar, and the badge on the Filters button goes up by one.
+</Step>
+</Steps>
+
+<Screenshot id="report-filters-menu" />
+
+<Callout type="note">
+The badge on the Filters button counts active filters only. Grouping and hidden columns do not show up on it, which
+is why the button can read "Filters" with no number while the table looks nothing like the default.
+</Callout>
+
+## Conditions: is, is not, over, under, is between
+
+Depending on the field, the Condition list offers: is, is not, is more than, is at least, is less than, is at most,
+contains, starts with, is any of, is none of, is empty, is not empty, and is between.
+
+Two rules govern how filters combine:
+
+- **One filter per field.** "Over 1 hour and under 5" is the "is between" condition, not two filters.
+- **Filters are always ANDed.** To express an OR, use a multi-select condition ("is any of") on the field the
+  question turns on.
+
+<Callout type="warning">
+Changing the condition clears the value you had already picked. That is deliberate: a single value, a multi-select
+and an is-empty check are not interchangeable, and carrying a value across would silently match nothing. Pick the
+condition first, then the value.
+</Callout>
+
+A filter you have added but not yet given a value to does nothing at all, so the table does not empty out while you
+are mid-edit.
+
+## Money is typed in dollars and hours in hours
+
+Type money in dollars and hours as hours, so 2.5 means two and a half hours. A "$" or "hours" hint sits beside the
+box, and the conversion is automatic.
+
+<Callout type="note">
+Aircraft and people filters match on the label, meaning the tail number or the person's name. Two members with
+identical display names cannot be told apart by a filter, and a member with no name set does not appear in the
+dropdown at all.
+</Callout>
+
+## Remove a filter or clear them all
+
+Click the "x" on a filter chip to drop that one. To drop all of them at once, use "Clear all" beside the chips, or
+"Clear all filters" inside the Filters menu.
+
+## What the row count and the Totals row are telling you
+
+Under the table you get the row count ("n rows", or "n groups" when the report is grouped), then "page x of y",
+then the report's footnote. The table pages at 100 rows.
+
+Sorting, filtering and grouping all apply across every matching row, not just the page you are looking at. Click
+any column heading to sort by it.
+
+The sticky row at the bottom of the table is the Totals row, and it aggregates every matching row across all pages
+too. That is what you want when you are reconciling a window against a bank statement.
+
+<Callout type="note">
+A blank cell in the Totals row is not a fault. It means there is no honest way to add that column up. You cannot
+sum a tail number.
+</Callout>
+
+On an ungrouped report, clicking a row opens the invoice or booking behind it in a detail panel.
+
+## A dash is not a zero
+
+A dash in a cell means no value was recorded. Zero means it really was zero, and the difference matters.
+
+An aircraft booked for 13 hours whose flights were never closed out shows a blank Flown and a blank Efficiency, not
+"0.0 h" and "0%". Printing zero would claim the aircraft sat idle, which is a different and wrong finding. If a
+whole column is dashes, its total comes out blank as well.
+
+The usual cause is a flight that was never closed out. See
+[Ramp out and ramp in](/docs/scheduling/ramp-out-and-ramp-in).
+
+## When nothing matches
+
+The empty state reads "Nothing matched. Try a wider date range", and adds "or fewer filters" when you have filters
+set. Both suggestions are worth taking in that order: widen the window first, because the window is what most often
+excludes the rows you were expecting.
+
+## Things that catch people out
+
+<Callout type="warning">
+- Grouping is inside the **Filters** menu, not next to it. So is the column picker.
+- Cancelled bookings are excluded from Utilization and Flight log entirely. They have their own report,
+  Cancellations &amp; no-shows.
+- Voided invoices are excluded from every financial report, so a school that voids and reissues sees one figure,
+  not two.
+- Columns like "Days since last flight", "Days open" and "Days left" are measured to today, not to the end of the
+  window you picked. They are chase numbers, so they deliberately disagree with the window heading above them.
+</Callout>
+
+## Next
+
+<CardGrid>
+  <DocCard href="/docs/reports/group-a-report" title="Group a report">
+    Collapse the rows into one line per aircraft, instructor or customer.
+  </DocCard>
+  <DocCard href="/docs/reports/export-a-report-to-csv" title="Export a report to CSV">
+    Every matching row, with numbers a spreadsheet can add up.
+  </DocCard>
+</CardGrid>

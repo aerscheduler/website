@@ -1,0 +1,90 @@
+<Summary>
+Create an account at app.aerscheduler.com, verify your email, then type your school's code
+at <Where app="web">app.aerscheduler.com/join</Where>. Either you are in immediately, or you
+see "Request sent" and an admin at the school lets you in.
+</Summary>
+
+## What you need
+
+One of two things, both of which come from the school:
+
+- A **join code**, a short code that identifies the school. In the iOS app the school will
+  call it the Organization Invitation Code.
+- An **invitation email**, sent to your address by an admin. The link in it carries the
+  roles you will get.
+
+If you have the invitation, you do not need the code.
+
+## Join with a code
+
+<Steps>
+  <Step n={1} title="Create your account">
+    Go to app.aerscheduler.com and choose **Create your account**: name, email and a
+    password, or **Sign up with Google** / **Sign up with Apple**.
+  </Step>
+  <Step n={2} title="Verify your email">
+    Click the link we email you. Every page will send you back to **Verify your email**
+    until you do. That page moves on by itself the moment you click the link, so leave it
+    open.
+  </Step>
+  <Step n={3} title="Choose I'm joining an organization">
+    That is the first card on the "What brings you to AerScheduler?" screen. If you are
+    already signed in and past that screen, go straight to
+    <Where app="web">app.aerscheduler.com/join</Where>, or in the app to
+    <Where app="mobile">Settings → Join an organization</Where>.
+
+    <Screenshot id="join-school-code" />
+  </Step>
+  <Step n={4} title="Type the code and press Join school">
+    Either you land on the booking page as a member, or you see **Request sent**.
+  </Step>
+</Steps>
+
+## If you see "Request sent"
+
+Your school approves people before they join. Your request is sitting in a panel above
+their People roster, and an admin has to accept it and give you a role. Nothing else
+happens until they do, so there is nothing to retry: ask the front desk to look at
+**People**.
+
+## If you were invited by email
+
+Click the link in the invitation. You are put into the school immediately with the roles
+the invitation carried, whether or not the school approves people before they join. If the
+invitation also named a membership plan, that is applied as pending, and the school starts
+it when they are ready.
+
+## Common messages
+
+| What you see | What it means |
+|---|---|
+| "You already belong to this organization" | You are in. Sign in and use the school switcher at the top of the left rail |
+| "Request sent" | The school approves new members by hand. Wait for an admin |
+| The code is not accepted | Check it with the school. Demo sandbox codes cannot be joined |
+
+## Once you are in
+
+Joining drops you on the booking page. Your home page, **Home** in the left rail, is where
+you will spend most of your time: upcoming reservations, unpaid invoices, currencies that
+need attention, and the school's announcements.
+
+If the **Book** link and the **+** button are missing, you were accepted without a role.
+That is easily fixed: ask an admin to give you student, renter, instructor or technician
+from <Where app="web">People → ⋯ → Edit roles</Where>.
+
+<Callout type="note">
+Flying at two schools is normal and supported. Join the second one the same way, with its
+own code, and switch between them from the top of the left rail. See
+[Fly at more than one school](/docs/getting-started/switch-between-schools).
+</Callout>
+
+## What to read next
+
+<CardGrid>
+  <DocCard href="/docs/scheduling/book-a-solo-flight" title="Book your own flight">
+    Pick the type, the aircraft, then a start time from the list of free slots.
+  </DocCard>
+  <DocCard href="/docs/getting-started/your-profile-and-time-zone" title="Your profile and PIN">
+    Contact details, your sign-off PIN, and which time zone the schedule shows.
+  </DocCard>
+</CardGrid>

@@ -1,0 +1,101 @@
+<Summary>
+An inspection carrying the **Grounds the aircraft** flag grounds its tail the moment it
+comes due, with the reason "Maintenance". Signing off the last such inspection puts the
+aircraft back on the line by itself. Nothing else in AerScheduler grounds an aircraft on
+its own.
+</Summary>
+
+<Roles>Owners, Admins, Technicians</Roles>
+
+## One switch, one behavior
+
+Every recurring and one-off inspection carries a **Grounds the aircraft** switch. With it
+on, the day that inspection comes due:
+
+- The aircraft is grounded with the reason **Maintenance**.
+- Every booking type except maintenance is refused on it with "Resource is grounded."
+- The tail sorts to the top of <Where app="web">Maintenance → By aircraft</Where> with a Grounded badge.
+- The inspection row itself carries a red **Grounds** flag in the work queue.
+
+With it off, the inspection still comes due, still shows as overdue, and still notifies your
+admins and technicians. The aircraft simply stays bookable.
+
+## Turn it on for an inspection
+
+The switch is on the Recurring and One-off forms in
+<Where app="web">Maintenance → Add inspections</Where>. Afterwards it shows as a red
+**Grounds** badge on the rule's row under
+<Where app="web">Maintenance → Set up</Where>.
+
+<Screenshot id="add-inspections-recurring" />
+
+## Which of the standard inspections ground
+
+Of the seven AVIATES presets, exactly two: the **Annual inspection** and the **100-hour
+inspection**.
+
+VOR check, Airworthiness Directive review, transponder check, ELT, static system and
+altimeter, oil change and ELT battery replacement all come due without grounding anything.
+
+<Screenshot id="maintenance-set-up" />
+
+## What an automatic grounding looks like
+
+The same as any other grounding, with one tell: the reason reads exactly "Maintenance"
+rather than something a person typed.
+
+<Screenshot id="aircraft-grounded-banner" />
+
+<Callout type="warning">
+Grounding does not cancel the bookings already on that aircraft. They stay on the dispatch
+board looking perfectly normal, and nobody on them is notified. They refuse at ramp out,
+which is a bad moment to find out. When a tail grounds itself, check the board for the rest
+of the day and move those flights.
+</Callout>
+
+## An hour-based grounding waits for a close-out
+
+Calendar inspections come due on their own, around the clock. Hour-based ones do not: the
+countdown only moves when a flight is closed out on that aircraft, and the grounding happens
+at the same moment.
+
+So a 100-hour that is already past due on screen will not have grounded the aircraft yet if
+nobody has closed out a flight on it since. Correcting the tach by hand under
+<Where app="web">Aircraft → the tail → Edit</Where> does not trigger it either. More on
+this in
+[Troubleshooting inspections and squawks](/docs/maintenance/troubleshooting-inspections-and-squawks).
+
+## Coming back off the ground
+
+Sign the inspection off and the aircraft returns to service by itself, as long as nothing
+else is still holding it. Every overdue inspection on the tail counts, not only the ones
+that ground, so an overdue oil change will keep it on the ground until that is signed off
+too.
+
+Deleting the rule, or detaching that tail from it, clears the grounding the same way.
+
+<Callout type="important">
+This only works when the grounding reason is exactly "Maintenance", which only the automatic
+grounding writes. If somebody grounded the aircraft by hand and typed a reason, no amount of
+signing off will lift it. An admin has to click **Return to service**.
+</Callout>
+
+## Reminders created during setup all ground
+
+The maintenance step offered while you are setting the school up creates every reminder as
+a grounding one, including the oil change.
+
+If you set your fleet up that way, open
+<Where app="web">Maintenance → Set up</Where> afterwards and look at which rows carry the
+red **Grounds** badge. An oil change taking a trainer off the line mid-morning is the
+support email this causes.
+
+## The switch defaults differently on web and on the phone
+
+| Where you create it | **Grounds the aircraft** starts |
+|---|---|
+| Console, Add inspections, Recurring or One-off | Off |
+| iOS app, Add inspection | On |
+| The maintenance step during setup | On |
+
+Check it before you save, wherever you are.

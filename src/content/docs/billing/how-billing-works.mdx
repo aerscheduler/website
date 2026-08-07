@@ -1,0 +1,133 @@
+<Summary>
+A flight is priced when its close-out finishes. AerScheduler takes the hours off the
+aircraft's meter, adds the instruction time, splits the total between the people on the
+booking, and raises one Stripe invoice per payer.
+</Summary>
+
+## From booking to paid invoice
+
+Every flight invoice follows the same path.
+
+<Steps>
+<Step n={1} title="The flight is booked">
+Nothing is priced yet. The booking just decides which aircraft and which people are
+involved, and both of those feed the invoice later.
+</Step>
+<Step n={2} title="Ramp out, then ramp in">
+The pilot records Hobbs and tach at the start and at the end, plus instruction time if a
+CFI was teaching. See [Close out a flight so it invoices](/docs/billing/close-out-a-flight-and-bill-it).
+</Step>
+<Step n={3} title="Every pilot confirms with their PIN">
+The invoice does not exist until the last assigned pilot has signed off. This is the most
+common answer to "where is my invoice?".
+</Step>
+<Step n={4} title="The invoices are raised">
+One per payer, in Stripe and in AerScheduler. Each payer gets an email and a push
+notification with a pay link.
+</Step>
+<Step n={5} title="The member pays">
+By card in the app, or automatically if they have saved a card and turned on autopay. An
+admin can also mark it paid after cash or a check.
+</Step>
+</Steps>
+
+## What AerScheduler prices, and what it does not
+
+It prices four things:
+
+| Charge | Where the number comes from |
+|---|---|
+| Aircraft or simulator time | Hobbs in minus Hobbs out, or tach in minus tach out, times the aircraft's hourly rate |
+| Instruction | The instruction time entered at ramp-in, times the rating's rate or the school's default instructor rate |
+| Overnight minimum | A floor under the aircraft time when the booking is away overnight |
+| Service fee | An optional percentage of the invoice that your school adds, with a label you choose |
+
+It does not price anything else. There is no fuel line item, even on a dry rate, so a
+school on dry rates bills fuel separately on a [manual invoice](/docs/billing/create-a-manual-invoice).
+Rooms have no rate and are never charged for time, and maintenance bookings are never
+invoiced at all.
+
+## One invoice per payer
+
+A booking with one payer produces one invoice. A booking with several produces one each,
+priced at that person's own rate, with a memo naming the others on the flight and line
+text quoting that person's own hours. How the cost divides is set once per booking type
+in [Cost splitting](/docs/billing/set-up-cost-splitting).
+
+<Callout type="warning">
+The service fee is charged per invoice, not per flight. A booking split three ways
+collects the fee three times, once on each person's invoice.
+</Callout>
+
+## Where invoices show up
+
+| Screen | Who sees it |
+|---|---|
+| <Where app="web">Billing</Where> | Owners and admins. Every invoice in the organization, plus revenue, outstanding and unbilled totals. |
+| <Where app="web">Invoices</Where> under the personal section | Every member, for their own invoices only. |
+| The close-out section on the booking | Staff, and anyone rostered on that flight. |
+| <Where app="web">Dashboard</Where> | Staff see recent invoices, admins also see the outstanding total. |
+| <Where app="web">Reports → Financial</Where> | Admins only. Revenue, payments received, items sold, memberships and dues. |
+
+<Screenshot id="billing-invoice-list" />
+
+On a split booking, the summary on the booking itself shows one person's share, labelled
+"(one of N shares for this booking)". It is not the flight's whole bill.
+
+<Screenshot id="close-out-invoice-summary" />
+
+## What you have to set up first
+
+Four things, and nothing bills until all four are done.
+
+| Setting | Where | Who |
+|---|---|---|
+| Stripe payouts connected | <Where app="web">Settings → Billing</Where>, Payouts card | Organization owner only |
+| Billing enabled | <Where app="web">Settings → Billing</Where> | Organization owner only |
+| A rate on each aircraft | <Where app="web">Aircraft</Where> → edit the aircraft | Owner or admin |
+| An instruction rate | <Where app="web">Settings → Billing</Where> or <Where app="web">Settings → Instruction rates</Where> | Owner for the default, admin for a rating |
+
+<Callout type="warning">
+Invoicing needs both Billing enabled and a Stripe account that Stripe reports as enabled.
+With Stripe connected but Billing enabled switched off, close-outs complete normally and
+no invoice ever appears, with nothing on screen to say why.
+</Callout>
+
+Start with [Turn on invoicing and card payments](/docs/billing/turn-on-invoicing-and-card-payments),
+then [Set your aircraft and instruction rates](/docs/billing/set-aircraft-and-instruction-rates).
+
+## What billing cannot do
+
+Worth knowing before you plan around it.
+
+- **No refunds.** There is no refund action anywhere in AerScheduler. Refunds are done in
+  your own Stripe dashboard, and they are not reflected back here: the invoice stays Paid
+  and stays in your revenue figures.
+- **A paid invoice cannot be voided.** Voiding is for an invoice that should never have
+  been raised, not for undoing a payment.
+- **An invoice cannot be edited once raised.** You can mark it paid or void it, nothing
+  else.
+- **No credit notes or account credits.**
+- **No per-instructor rates.** Every CFI teaching a given rating bills the same hourly
+  figure.
+- **You cannot invoice a guest from the web console.** The New invoice dialog only picks a
+  member; a guest invoice is raised from the app's Generate Invoice screen. If a close-out's
+  invoice never appeared, **Create invoice** on the booking is the fix, on either surface.
+  See [Why a flight was not invoiced](/docs/billing/why-a-flight-was-not-invoiced).
+
+## Where to go next
+
+<CardGrid>
+<DocCard href="/docs/billing/turn-on-invoicing-and-card-payments" title="Turn on invoicing and card payments">
+Connect Stripe, switch billing on, and set the fees every invoice is built from.
+</DocCard>
+<DocCard href="/docs/billing/set-aircraft-and-instruction-rates" title="Set your aircraft and instruction rates">
+Hourly rate, wet or dry, and whether the invoice measures Hobbs or tach.
+</DocCard>
+<DocCard href="/docs/billing/close-out-a-flight-and-bill-it" title="Close out a flight so it invoices">
+Ramp out, ramp in, confirm with a PIN, and the invoice is raised.
+</DocCard>
+<DocCard href="/docs/billing/who-can-do-what-in-billing" title="Who can see and do what in billing">
+Every billing action by role, including the owner-only ones.
+</DocCard>
+</CardGrid>

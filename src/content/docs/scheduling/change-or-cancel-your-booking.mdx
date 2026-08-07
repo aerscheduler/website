@@ -1,0 +1,119 @@
+<Summary>
+Open the booking from <Where app="web">You &rarr; Schedule</Where> and press
+**Edit reservation**. Cancelling on the web is limited to staff, technicians and the
+instructor on the flight, so if you are a student or a renter who booked yourself in,
+cancel from the AerScheduler iOS app or ask the front desk.
+</Summary>
+
+<Roles>Students, Renters, Instructors, Technicians</Roles>
+
+## Edit a booking
+
+<Steps>
+  <Step n={1} title="Open the booking">
+    From <Where app="web">You &rarr; Schedule</Where>, from <Where app="web">You &rarr; Home</Where>,
+    or by clicking it on the school calendar.
+    <Screenshot id="me-schedule-list" />
+  </Step>
+  <Step n={2} title="Press Edit reservation">
+    In the footer of the detail panel.
+  </Step>
+  <Step n={3} title="Change the aircraft, the times or who you are flying with">
+    The times offered are still only the ones where the aircraft and everyone on the
+    booking are free.
+  </Step>
+  <Step n={4} title="Press Save changes">
+    Everyone on the booking is notified that it changed.
+  </Step>
+</Steps>
+
+<Screenshot id="reservation-detail-panel" />
+
+## When editing stops being possible
+
+The **Edit reservation** button disappears once any of these is true:
+
+- The aircraft has ramped out.
+- The booking's end time is in the past.
+- The booking has been cancelled.
+
+Running late and want to push the return time back? On the web you cannot edit at that
+point, because the time picker cannot offer sensible slots around a start that has already
+happened. Drag the trailing edge of the block on the calendar instead, or use the iOS app,
+which still lets you change the end time.
+
+## Why the edit form looks bigger than the one you booked with
+
+Editing always opens the full dispatch form, with a Title field and every person picker,
+even for a student. The form you booked with was the narrowed self-serve version.
+
+That is also the only way to add a second person to a booking you made yourself: book it,
+then edit it.
+
+## You can only take yourself off a booking
+
+Saving an edit replaces the crew with whoever is in the pickers. Students and renters may
+add or remove **themselves**, and no other student or renter. Trying to remove a classmate
+is refused:
+
+> You can only take yourself off this booking. Ask an instructor or the front desk to remove someone else.
+
+The instructor is not covered by that rule. You can still change which instructor you are
+flying with on your own booking, which is what Step 3 above is for.
+
+Instructors on a booking can change anyone's seat on it, and so can staff.
+
+## Cancel a booking
+
+<Steps>
+  <Step n={1} title="Open the booking and press Cancel reservation">
+    It is in the panel footer, and in the block's <strong>&hellip;</strong> menu on the calendar.
+  </Step>
+  <Step n={2} title="Pick a reason type">
+    A fixed list: Weather, Aircraft maintenance, Aircraft unavailable, Instructor
+    unavailable, No-show, Student or renter unavailable, Rescheduled to another time,
+    Booked in error.
+  </Step>
+  <Step n={3} title="Say what happened">
+    The note is required, up to 200 characters. Your school's cancellation report counts
+    the reason types and reads the notes.
+    <Screenshot id="cancel-reservation-dialog" />
+  </Step>
+  <Step n={4} title="Press Cancel reservation">
+    The booking comes off the board and everyone on it is notified.
+  </Step>
+</Steps>
+
+A booking that has already ramped out cannot be cancelled. It has flown, so it needs
+closing out instead.
+
+## If there is no Cancel button
+
+Cancelling is allowed for staff, for technicians, and for whoever created the booking.
+
+The web console cannot see who created a booking, so it only shows the button to staff,
+technicians and the instructor on the flight. If you booked yourself in and there is no
+button:
+
+- Cancel it from the AerScheduler iOS app, which does know you created it.
+- Or ask the front desk.
+
+<Callout type="warning">
+If you are the instructor on a booking that somebody else created, the web and the app
+both offer you a Cancel button, and the request comes back as
+`You are unauthorized to make this request.` Ask an admin, a dispatcher or the person who
+booked it to cancel it instead.
+</Callout>
+
+## Cancelling one of a repeating series
+
+Cancelling any booking in a series adds a choice: **This booking only**,
+**This and all later bookings**, or **All bookings in the series**.
+
+Bookings that have already started are never cancelled, whichever option you pick.
+
+## Drag to reschedule on the calendar
+
+You can move a booking you are on by dragging it on the school calendar, the same as
+dispatch does. Hovering a block first tells you whether it can be moved. See
+[Move a booking to a new time or a different aircraft](/docs/scheduling/reschedule-a-booking).

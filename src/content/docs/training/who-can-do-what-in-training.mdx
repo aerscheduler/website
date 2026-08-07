@@ -1,0 +1,113 @@
+<Summary>
+Owners and admins can do everything. Instructors can read and grade every training record and
+sign endorsements, but cannot touch the course library or enroll anybody until they are given
+a grant. Students see only their own record. Dispatchers see almost nothing, despite Training
+appearing in their navigation.
+</Summary>
+
+<Roles>Owners, Admins</Roles>
+
+## What each role can do
+
+| | Owner / Admin | Instructor | Dispatcher | Student | Renter | Technician |
+|---|---|---|---|---|---|---|
+| Open the Training page | Yes | Yes | Yes, but it is empty | No | No | No |
+| See and edit the course library | Yes | Only with Configure training | No | No | No | No |
+| Enroll, graduate, terminate, certify | Yes | Only with Enroll and graduate | No | No | No | No |
+| Read any student's training record | Yes | Yes | No | Own only | Own only | No |
+| Grade, sign and amend lesson records | Yes | Yes | No | No | No | No |
+| Countersign a lesson | No | Own only | No | Yes | Yes | No |
+| Sign and renew endorsements | Yes | Yes | No | No | No | No |
+| Post transfer or simulator credit | Yes | Only with Enroll and graduate | No | No | No | No |
+| Run the three training reports | Yes | No | Yes | No | No | No |
+| Hand out training grants | Yes | No | No | No | No | No |
+
+Two rows in that table catch people out.
+
+**Instructors cannot open Reports at all.** The Student progress, Training records and
+Endorsement expirations reports are owner, admin and dispatcher only. An instructor works from
+the student's record and from the endorsement digest instead.
+
+**Nobody can countersign on a student's behalf**, including the owner. The student's signature
+is the student's.
+
+## The four training grants
+
+<Where app="web">Training → Permissions</Where>
+
+<Screenshot id="training-permissions-tab" />
+
+| Grant | What it adds |
+|---|---|
+| Configure training | Build and publish syllabi, edit stages, lessons, tasks and requirements, set the grading scale, retire and un-retire versions. |
+| Enroll and graduate | Enroll students, post transfer credit, certify a Part 141 record, graduate, terminate or transfer, and bill the enrollment fee. |
+| Check instructor | Records that this instructor is your designated check instructor, either for one named course or for every course. |
+| Auditor (read-only) | Read every training record in the school and change nothing. |
+
+Only **Check instructor** can be scoped to a single course. The other three always apply
+school-wide.
+
+## Hand out or take back a grant
+
+<Steps>
+  <Step n={1} title="Open Training → Permissions">
+    The section only renders for owners and admins. A grant holder cannot hand their own grant
+    to somebody else.
+  </Step>
+  <Step n={2} title="Click Add on the grant you want to give">
+    Each grant carries a description of exactly what it adds.
+  </Step>
+  <Step n={3} title="Pick a person">
+    Only owners, admins, instructors and dispatchers are offered. Students and renters cannot
+    hold a training grant.
+  </Step>
+  <Step n={4} title="Choose which course, for Check instructor only">
+    Or Every course.
+  </Step>
+  <Step n={5} title="Click Grant">
+    It takes effect immediately. To take one back, click the trash icon on the person's row.
+  </Step>
+</Steps>
+
+## Grants only ever add
+
+Nothing on this screen can take a capability away from anybody.
+
+Owners and admins already configure training and enroll students, so granting or revoking on
+their rows changes nothing about what they can do. A school that never opens this page behaves
+exactly as it always did: the grants exist so that a chief instructor or a training
+administrator who is not an org admin can do the job without being made one.
+
+## Read-only access for an FAA inspector
+
+The **Auditor** grant reads every training record in the school and changes nothing, but it
+can only be given to somebody who already holds a staff role. The person picker offers
+owners, admins, instructors and dispatchers only, so an inspector added to your roster as an
+ordinary member never appears in it and cannot be granted Auditor at all.
+
+<Callout type="warning">
+Making the inspector a dispatcher or an instructor so that the grant can be given also hands
+them that role's own powers, which is a good deal more than read-only.
+</Callout>
+
+In practice the cleaner route is to export the record yourself. See
+[Pull training records for an FAA inspection](/docs/training/training-records-for-an-faa-inspection).
+
+## Where the button and the permission disagree
+
+Two places in the console offer a dispatcher something the server will refuse. Both are worth
+knowing before somebody emails you about a broken screen.
+
+**Sign one, on the Endorsements card.** The button is shown to dispatchers, but only an
+instructor or an administrator can sign an endorsement. A dispatcher who tries gets told so.
+
+**A training record opened by link or by search.** Dispatchers can reach the address, but the
+server only serves a record to the student on it, to somebody who can grade, or to an Auditor.
+A dispatcher gets a refusal on everybody but themselves.
+
+<Callout type="note">
+There is a related oddity on a person's page. If you are staff but not an instructor, the
+Training card on somebody else's page can show your own enrollments and your own endorsements
+rather than theirs. It is your data being shown in the wrong frame, not two members' records
+mixed together. Read other people's records from Reports instead.
+</Callout>

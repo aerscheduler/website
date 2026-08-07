@@ -2,6 +2,7 @@
 // developers.ts imports only the ResourceLink *type* back from here, which is
 // erased at compile time, so this pair is not a runtime cycle.
 import { DEVELOPER_LINKS } from "@/lib/developers";
+import { DOC_LINKS } from "@/lib/docs";
 
 /** Resource / guide links for nav, footer, and resources index. */
 export type ResourceLink = {
@@ -16,6 +17,15 @@ export type ResourceGroup = {
 };
 
 export const RESOURCE_GROUPS: ResourceGroup[] = [
+  {
+    // Product documentation sits at the head of the menu because it answers a
+    // different question from everything below it. The guides underneath are
+    // written for someone deciding whether to buy; these are for someone who
+    // already did and is stuck. That reader is the one who otherwise emails
+    // support, so they should not have to scroll past the sales material.
+    title: "Documentation",
+    items: DOC_LINKS,
+  },
   {
     title: "Guides",
     items: [

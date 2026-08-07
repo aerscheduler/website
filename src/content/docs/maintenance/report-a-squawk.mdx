@@ -1,0 +1,99 @@
+<Summary>
+On the console: <Where app="web">Maintenance → Log a squawk</Where>. On the iOS app: any
+aircraft's page, or the prompt that opens by itself after you enter Hobbs and tach at
+close-out. A squawk needs a title, a description, and a tail.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers, Technicians, Instructors, Students, Renters</Roles>
+
+## Report one from the console
+
+<Steps>
+  <Step n={1} title="Click Log a squawk">
+    From <Where app="web">Maintenance</Where>, top right. Or use **Log** on the Open squawks
+    card at <Where app="web">Aircraft → the tail → Maintenance</Where>, which fills the
+    aircraft in for you.
+  </Step>
+  <Step n={2} title="Write a title">
+    What a technician needs to see in a list: "Left brake soft", "Nav light intermittent".
+    Keep it under 50 characters.
+  </Step>
+  <Step n={3} title="Write a description">
+    What you noticed and when. This is required, even though the form does not mark it.
+  </Step>
+  <Step n={4} title="Pick the aircraft">
+    Skipped if you opened the dialog from a tail.
+
+    <Screenshot id="log-squawk-modal" />
+  </Step>
+  <Step n={5} title="Click Log squawk">
+    It appears under <Where app="web">Maintenance → Squawks → Open</Where>, on the
+    aircraft's page, and as an open-squawk note on the booking form for that tail.
+  </Step>
+</Steps>
+
+<Screenshot id="maintenance-squawks-open" />
+
+## Report one from the iOS app
+
+Anybody can file a squawk from the app, including instructors, students and renters. Open
+the aircraft, then **Report Squawk** from the gear menu.
+
+<Callout type="note">
+In the console, only owners, admins, dispatchers and technicians can reach a Log button at
+all. The Maintenance page and the aircraft page's Maintenance section are both hidden from
+instructors, students and renters. If you are one of those, use the app.
+</Callout>
+
+## The app asks after every flight
+
+Close a flight out on the phone and, right after you enter the Hobbs and tach readings, the
+**Report Squawk** sheet opens on its own with the aircraft already filled in. Fill it in and
+save, or tap **Skip**. Either way the close-out carries on to the completion sheet.
+
+Ground lessons and simulator bookings skip the prompt, because there is no airframe to
+squawk.
+
+There is no equivalent prompt in the console's close-out. The web never offers to log a
+squawk after a flight.
+
+## The description is required even though the form does not say so
+
+The **Log squawk** button greys out on a missing title, not on a missing description. Submit
+without one and the save fails with a red "Description is required."
+
+## Keep the title under 50 characters
+
+The console form has no character counter and no length warning. A title over 50 characters,
+or a description over 500, fails with a message that names nothing: "Unable to create
+squawk." If you get that and everything looks filled in, shorten the title first, then the
+description. The app caps both fields correctly as you type.
+
+## Grounding the aircraft from the squawk form
+
+The console's Log a squawk dialog carries a **Grounds the aircraft** switch. Left off, which
+is the default, filing a squawk changes nothing about whether the aircraft can be booked. It
+is a note for the shop, not a no-go.
+
+Switch it on and the tail is grounded as the squawk is filed, and the squawk itself carries
+a Grounding badge.
+
+<Callout type="warning">
+Resolving a grounding squawk later does not put the aircraft back on the line. An admin has
+to click **Return to service** on the aircraft when the work is done. See
+[Ground an aircraft, and return it to service](/docs/maintenance/ground-an-aircraft).
+</Callout>
+
+If you did not use the switch and the aircraft needs to come off the line, ground it
+separately from its own page. Only an admin or owner can do that.
+
+## Who gets told
+
+Every admin and technician in the school, except the person who filed it, gets an email and
+a push notification titled "Squawk reported on" the tail.
+
+Dispatchers are not notified, even though they can read the squawk boards. Nobody can turn
+squawk alerts off. See
+[Who gets maintenance reminders and squawk alerts](/docs/maintenance/who-gets-maintenance-reminders-and-squawk-alerts).
+
+A "Squawk filed" line is also written to the audit log.

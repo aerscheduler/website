@@ -1,0 +1,143 @@
+<Summary>
+Set the school's time zone once in <Where app="web">Settings → Organization</Where>, then read the caption under
+each report's date picker. Those two things settle almost every argument about a report's dates.
+</Summary>
+
+## Set the school's time zone
+
+<Roles>Owners, Admins</Roles>
+
+<Steps>
+<Step n={1} title="Open Settings, Organization">
+<Where app="web">Settings → Organization</Where>.
+</Step>
+<Step n={2} title="Set the time zone on the time zone card">
+Pick the zone the field is in, not the zone you happen to be sitting in.
+</Step>
+</Steps>
+
+<Screenshot id="settings-org-timezone" />
+
+From then on, everything below is measured on the school's clock:
+
+- Every report window, so "Last 30 days" means thirty of the school's days.
+- Every dashboard tile's window.
+- The day boundaries of a comparison period.
+- The dates in a CSV export's file name.
+- The hour a scheduled report goes out, so "7am" means 7am at the field.
+
+## What happens when it is not set
+
+The setting starts out unset, and reports still work. They just fall back.
+
+| Situation | What the window is measured on |
+|---|---|
+| Organization time zone set | The school's zone |
+| Not set, somebody reading a report in a browser | That reader's own browser zone |
+| Not set, a scheduled report sending | UTC, because a send has no browser attached |
+
+<Callout type="warning">
+With no organization zone, two people in different zones can legitimately see slightly different totals for the
+same "Last 30 days" on the same report. Nothing is broken and neither of them is wrong. Set the zone and the
+disagreement goes away.
+</Callout>
+
+## The named ranges, and what each one means
+
+Reports and the dashboard offer different presets, which surprises people who go looking for one on the other.
+
+| Where | Presets |
+|---|---|
+| A report's date picker | Last 7 days, Last 30 days, Last 90 days, Last 12 months |
+| The Overview dashboard | Last 7 days, Last 30 days, Last 90 days, Month to date, Year to date, Next 30 days, Next 90 days |
+
+On a report you can also set your own start and end dates.
+
+<Callout type="note">
+A saved view stores whatever window was on screen as fixed dates, presets included. "Last 30 days" is resolved when
+you save, so re-applying the view a month later restores that same month, not the last 30 days from today. See
+[Save a report as a view](/docs/reports/save-a-report-view).
+</Callout>
+
+## Date basis: which date the range applies to
+
+Under the date picker on every report there is a small caption reading "by" and then a date, such as "by the date
+the invoice was raised" or "by the date of the flight".
+
+That caption is the answer to most reporting questions people email about. Your range does not apply to reports in
+general, it applies to that specific date.
+
+| Report | The date the range applies to |
+|---|---|
+| Revenue | The date the invoice was raised |
+| Payments received | The date the invoice was paid |
+| Document expirations, Pilot currency, Endorsement expirations | The expiry date |
+| Maintenance due | The date the reminder was raised, not when it comes due |
+
+<Screenshot id="revenue-vs-payments" />
+
+<Callout type="warning">
+An invoice raised in June and paid in August is June's revenue and August's cash. Revenue and Payments received
+will therefore never agree over the same window at a school where anybody pays late, and both reports are correct.
+</Callout>
+
+The caption on the report is always authoritative. Read it before you reconcile two numbers against each other. See
+[Report numbers that look wrong](/docs/reports/numbers-dont-match).
+
+## Why expiry reports open on the next 90 days
+
+Document expirations, Pilot currency and Endorsement expirations all window on the expiry date, so they open on the
+**next** 90 days rather than the last 30.
+
+Every other report looks backwards, which is exactly why this catches people. Opening a compliance report on the
+last 30 days would list what has already lapsed, which is the opposite of what you asked. To see what has already
+lapsed, set the range backwards yourself.
+
+<Callout type="note">
+A document, currency or endorsement with no expiry date on it never appears on these reports at all. It has no date
+to match a window, so it is missing rather than listed blank.
+</Callout>
+
+## Comparison periods: previous period and last year
+
+The Overview dashboard offers "vs previous period", "vs last year" and "No comparison". They are not
+interchangeable.
+
+| Comparison | What it measures against |
+|---|---|
+| vs previous period | The same number of days immediately before this window |
+| vs last year | The same calendar dates a year ago |
+
+Use "vs last year" when the season matters, which for a flight school is most of the year. "Previous period" is a
+strict day count, so comparing a 28 day February against the 28 days before it rarely answers the question you had
+in mind.
+
+<Callout type="note">
+A number card shows no percentage change when the previous period was zero. Going from 0 to 40 is not a meaningful
+percentage, so the card prints nothing rather than something misleading. When a comparison ran but produced no
+baseline, the card reads "No comparison".
+</Callout>
+
+## Scheduled reports ignore the saved view's dates
+
+A schedule points at a saved view, but it does not use that view's window. The cadence decides.
+
+| How often | What each email covers |
+|---|---|
+| Every day | Yesterday |
+| Every week | The seven days ending yesterday |
+| Every month | The whole previous calendar month |
+
+That is deliberate: consecutive emails are meant to tile exactly, with no gaps and no days counted twice. Save a
+view over 1 to 31 July, schedule it weekly, and you get last week every week. See
+[Email a report on a schedule](/docs/reports/email-a-report-on-a-schedule).
+
+Those windows are measured on the school's clock, and a scheduled send falls straight through to UTC when no
+organization zone is set, because there is no browser to fall back to. That is the strongest reason to set the
+zone.
+
+## Where else time zones matter
+
+Reporting is not the only place a clock decides something. Booking times, ramp times and what "today" means on the
+schedule are covered separately, in
+[Airport time and time zones](/docs/scheduling/airport-time-and-time-zones).

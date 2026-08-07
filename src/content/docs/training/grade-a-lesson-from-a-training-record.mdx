@@ -1,0 +1,105 @@
+<Summary>
+Open the student's training record, go to **Lessons**, find the lesson and click **Grade**
+(or **Continue** if a draft is already open). Fill in the grade, hours and notes, then
+**Save draft** to leave it open or **Save and sign** to finish. Signing freezes the record
+and posts its hours to every requirement the lesson credits.
+</Summary>
+
+<Roles>Instructors, Admins, Owners</Roles>
+
+Use this when the flight was closed out without grading, when you are catching up on
+paperwork, or when you want to leave a record half-finished and come back to it. The quicker
+path for a flight you have just flown is
+[grading at the close-out](/docs/training/grade-a-lesson-at-close-out).
+
+## Open the record and find the lesson
+
+<Steps>
+<Step n={1} title="Open the student's training record">
+<Where app="web">Training → Students</Where> and click the row, or the person's page →
+**Training** → the enrollment.
+</Step>
+<Step n={2} title="Go to the Lessons section">
+Stages and lessons in syllabus order. The lesson the syllabus suggests next is highlighted
+and badged **Next up**.
+</Step>
+<Step n={3} title="Click Grade">
+It reads **Continue** instead if somebody has already started a draft for that lesson.
+</Step>
+</Steps>
+
+<Screenshot id="enrollment-lessons" />
+
+## Save a draft, or save and sign
+
+Fill in **Grade**, **Flight hours**, **Ground / instruction hours** and **Notes**. If the
+lesson carries minimum flight and ground hours from the syllabus, the boxes arrive prefilled
+with them, so the common case is open, confirm, sign.
+
+| Button | What it does |
+|---|---|
+| **Save draft** | Leaves an editable record. The row reads **Grading**. Nothing is credited yet, and anyone who can grade can pick it up. |
+| **Save and sign** | Freezes the record and posts its credits. The row reads **Awaiting student** until the student countersigns. |
+
+<Screenshot id="grade-lesson-dialog" />
+
+## What signing credits
+
+The dialog tells you before you commit, for example: "Signing credits Total flight time, Dual
+instruction received, Night flight training."
+
+That list comes from **Credits toward** on the lesson in the syllabus. If the line is missing
+or shorter than you expect, the lesson credits nothing or credits less than you meant, and
+the fix is in the syllabus rather than here. See
+[Build a syllabus](/docs/training/build-a-syllabus).
+
+<Callout type="important">
+A signed record can never be edited. If the grade or the hours turn out to be wrong, you
+amend it: the original stays on the record struck through and a correction is created beside
+it. See [Correct a signed lesson record](/docs/training/correct-a-signed-lesson).
+</Callout>
+
+## Awaiting the student's signature
+
+Your signature is the one that freezes the record and credits the hours. The student's
+countersignature only acknowledges it, and the record can sit at **Awaiting student**
+indefinitely with its hours already counted.
+
+Nothing in the product chases the student. To find records nobody has countersigned, filter
+the Training records report on Signatures = Awaiting student. See
+[Pull training records for an FAA inspection](/docs/training/training-records-for-an-faa-inspection).
+
+Students sign from <Where app="web">My training</Where> or from the app. See
+[See your training progress and sign your lessons](/docs/training/my-training-for-students).
+
+## Grading out of order on a Part 141 course
+
+On a Part 141 course, saving a draft for a lesson whose earlier lessons are not complete
+returns a warning naming the count: "N earlier lessons in this course have not been
+completed. Record a reason if you are taking this one out of order."
+
+It is a warning and never a block. Put the reason in the notes and carry on. **Save and sign**
+does not raise it at all.
+
+On a Part 61 course there is no warning, in either direction. See
+[Part 61 vs Part 141](/docs/training/part-61-vs-part-141).
+
+## What this dialog cannot do
+
+- **No simulator hours field**, and **no per-task grades**. Both exist only on the iPhone
+  app. See [Grade lessons offline on the iPhone app](/docs/training/grade-lessons-offline-on-the-app).
+- **No records on a closed enrollment.** Once an enrollment is graduated, terminated or
+  transferred, nothing further can be added: "This student's enrollment is graduated; records
+  cannot be added to it." There is no un-graduate, so record everything before you graduate
+  somebody. See
+  [Graduate a student, or end an enrollment](/docs/training/graduate-or-end-an-enrollment).
+- **No link back to a booking.** A record saved from this dialog stands on its own, and the
+  instructor named on it becomes whoever saved it. A record graded at the close-out carries a
+  link to the flight, and re-saving it here clears that link. If you care about the link,
+  grade at the close-out.
+
+<Callout type="tip">
+Drafts are easy to lose track of, because an unsigned record credits nothing and shows only
+as **Grading** on the Lessons tab. Filter the Training records report on Signatures = Not
+signed once a month to find the ones an instructor started and never finished.
+</Callout>

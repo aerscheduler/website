@@ -1,0 +1,101 @@
+<Summary>
+Enroll the student first, then open their training record, go to Requirements, and click
+**Add credit**. Choose the requirement, say where the time came from, enter the hours, and
+set **When it was flown** to the date in the logbook rather than today.
+</Summary>
+
+<Roles>Owners, Admins</Roles>
+
+Instructors can do this too if they hold the Enroll and graduate grant. See
+[Who can see and do what in Training](/docs/training/who-can-do-what-in-training).
+
+## Post a credit
+
+<Where app="web">Training → Students → the student → Requirements</Where>
+
+<Steps>
+  <Step n={1} title="Enroll the student first">
+    Credit is posted against a requirement, and requirements come from the course version the
+    student is enrolled on. There is nowhere to park hours before an enrollment exists.
+  </Step>
+  <Step n={2} title="Click Add credit">
+    On the Requirements tab of their training record.
+  </Step>
+  <Step n={3} title="Choose the requirement">
+    One credit feeds one requirement. Time that counts toward three requirements needs three
+    credits.
+  </Step>
+  <Step n={4} title="Enter the amount">
+    Hours for an hours requirement, or How many for one measured in events, such as night
+    landings.
+  </Step>
+  <Step n={5} title="Set When it was flown, and add a note">
+    The date from the logbook. A note such as the previous school's name and that you have
+    seen the logbook is what makes this defensible later.
+  </Step>
+  <Step n={6} title="Click Post credit">
+    The Requirements bars move immediately.
+  </Step>
+</Steps>
+
+<Screenshot id="add-credit-dialog" />
+
+## Choose where it came from
+
+Four sources, and the choice decides which ceiling applies to the hours.
+
+| Where it came from | Use it for |
+|---|---|
+| Previous training (Part 61) | Training done elsewhere under Part 61, from the student's logbook. |
+| Previous training (Part 141) | Training done at another Part 141 or Part 142 school. |
+| Simulator or training device | Device time, which the course may cap separately. |
+| Correction by hand | A number you are putting right yourself. A note is required. |
+
+## The date is the point
+
+**When it was flown** looks optional beside the requirement and the hours. It is not.
+
+If you leave it blank it defaults to today. On any requirement that only counts training
+from the last few calendar months, that quietly makes a 2019 logbook look like it was flown
+this morning, and the student is told they are ready when they are not.
+
+<Callout type="warning">
+Enter the real date every time, even on requirements that have no recency window. You cannot
+tell from the Add credit dialog which requirements have one.
+</Callout>
+
+A date in the future is refused: training cannot be credited before it has happened. Zero is
+refused, and so is a negative number.
+
+## Why some of it may not count
+
+Post 30 hours and the requirement may still show fewer. That is the course's own ceilings
+doing their job, not the credit failing.
+
+A requirement can cap how much of it may be met by previous training, and how much by device
+time. The caps exist because §141.77 limits transferred credit, and Appendix B limits
+simulator time. They are applied when the record is read, so every hour you posted stays on
+the ledger; the requirement simply refuses to count more than its share.
+
+The Requirements row says which one bit. See
+[Read a training record](/docs/training/read-a-training-record).
+
+## Credits you cannot take back
+
+There is no button anywhere in the console to reverse a credit you posted by hand. Check the
+requirement, the amount and the date before you click Post credit.
+
+The one undo the console does have is [amending a signed lesson
+record](/docs/training/correct-a-signed-lesson), which reverses the credits that lesson
+posted. That does nothing for a hand-posted transfer or simulator credit.
+
+## Read the result on the Ledger
+
+<Where app="web">Training → Students → the student → Ledger</Where>
+
+Every credit and every reversal, with its amount, the requirement it fed, a chip saying where
+it came from, and its date. Nothing is stored as a running total: a student's standing is
+the sum of these rows, which is why "why does this read 41.2 hours?" is still answerable next
+year.
+
+<Screenshot id="enrollment-ledger" />

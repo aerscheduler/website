@@ -1,0 +1,134 @@
+<Summary>
+<Where app="web">Maintenance → Add inspections</Where>. Choose **Recurring** for anything
+that repeats on hours or on a set number of days, or **One-off** for a single date. Name
+it, set the interval and the warning lead, pick the tails, and click **Add**.
+</Summary>
+
+<Roles>Owners, Admins, Technicians</Roles>
+
+## Recurring or one-off
+
+The dialog opens on **Standard set**, the AVIATES presets. The other two modes are for
+everything else your shop tracks.
+
+| Mode | Use it for | Comes back after sign-off? |
+|---|---|---|
+| Recurring | Oil changes, 50-hour checks, gear inspections, anything on a clock | Yes, immediately |
+| One-off | "Prop back from the shop", a single ferry permit expiry | No |
+
+## Add a recurring inspection
+
+<Steps>
+  <Step n={1} title="Maintenance, then Add inspections, then Recurring">
+    The mode buttons sit at the top of the dialog.
+  </Step>
+  <Step n={2} title="Type a name">
+    Up to 60 characters. Name it the way your shop says it out loud: "Oil change",
+    "50-hour", "Gear rig check".
+  </Step>
+  <Step n={3} title="Choose On the calendar or On the meter">
+    **On the calendar** is preselected. Switch to **On the meter** for anything counted in
+    flying hours.
+  </Step>
+  <Step n={4} title="Fill in Every and Warn me">
+    "Every 100" hours with "Warn me 10 hours out", or "Every 180" days with "Warn me 14
+    days out". The defaults are 100 and 10.
+  </Step>
+  <Step n={5} title="On the meter, pick the meter">
+    **Count tach time** or **Count hobbs time**. Tach is the default, and it is what every
+    hour-based standard preset uses.
+  </Step>
+  <Step n={6} title="Decide whether it grounds the aircraft">
+    Switch on **Grounds the aircraft** only if the tail should come off the line the moment
+    this comes due.
+
+    <Screenshot id="add-inspections-recurring" />
+  </Step>
+  <Step n={7} title="Fill in When was it last done?">
+    The date and meter reading from the last time the work was actually performed. Leave
+    both blank only if it was just done.
+  </Step>
+  <Step n={8} title="Pick the tails and click Add">
+    **Applies to** is a multi-select. **Add** stays disabled until at least one tail is
+    picked.
+  </Step>
+</Steps>
+
+## On the calendar or on the meter
+
+An inspection counted on the calendar recurs every so many days from the last sign-off, and
+it shows a due date. An inspection counted on the meter counts flying hours and shows a
+meter figure instead: "Due at 1250.0 tach, now 1237.6."
+
+They never convert into each other, so pick the one your shop actually works to. An oil
+change measured in hours should be on the meter even though people talk about it in months.
+
+<Callout type="note">
+The progress bar under an inspection is how full the interval is, not how much time has
+passed. On an hour-based item it moves when the aircraft flies, and sits perfectly still
+during a month it does not.
+</Callout>
+
+## Set the warning lead
+
+**Warn me** is not decoration. It is exactly when the row turns to **Due soon** and exactly
+when the warning email and push are sent to your admins and technicians.
+
+The form never lets the lead reach zero, so you cannot create an inspection through it that
+comes due with no warning at all. A calendar lead cannot go below 1 day, and a meter lead
+cannot go below 0.1 hours.
+
+## Should it ground the aircraft?
+
+**Grounds the aircraft** is the highest-consequence control on the form. With it on, the
+moment this inspection comes due AerScheduler grounds that tail with the reason
+"Maintenance", and nobody can book it for anything except maintenance until it is signed
+off.
+
+<Callout type="warning">
+The switch starts **off** on the console and **on** in the app's Add inspection sheet.
+Check it before you save, especially on the phone: an oil change that grounds an aircraft
+will take a trainer off the line in the middle of a Saturday.
+</Callout>
+
+Full behavior in
+[When AerScheduler grounds an aircraft by itself](/docs/maintenance/when-aerscheduler-grounds-an-aircraft).
+
+## Add a one-off dated reminder
+
+<Steps>
+  <Step n={1} title="Maintenance, then Add inspections, then One-off">
+    A single date that does not come back.
+  </Step>
+  <Step n={2} title="Name it">
+    "Prop back from the shop", "Ferry permit expires".
+  </Step>
+  <Step n={3} title="Pick Due on and Warn me">
+    **Due on** must be today or later. **Warn me (days out)** starts at 10 and is clamped
+    to between 1 and 30 days.
+  </Step>
+  <Step n={4} title="Pick the tails and click Add">
+    The rule is filed under <Where app="web">Maintenance → Set up</Where> in the **One-off**
+    group, with a One-off badge.
+  </Step>
+</Steps>
+
+<Screenshot id="maintenance-set-up" />
+
+## What a one-off does not do
+
+- It never repeats. Signing it off does not create a replacement.
+- It has no **When was it last done?** box, because there is nothing to count from.
+- Once it is signed off on every tail it covers, the rule disappears from the Set up list entirely. That is expected, not a deletion.
+
+## Adding one on the phone
+
+The app's **Add inspection** button on the Maintenance page creates the rule first and then
+takes you on to pick the aircraft.
+
+<Callout type="warning">
+Stop at that second step and you are left with a rule attached to nothing. It looks
+identical to a working rule in the Set up list except for one line: "Not on any aircraft,
+so it never comes due." Nothing will ever fire from it. Attach the tails from
+<Where app="mobile">Maintenance → Set up → the rule → edit which aircraft</Where>.
+</Callout>

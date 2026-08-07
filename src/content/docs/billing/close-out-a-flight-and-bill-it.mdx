@@ -1,0 +1,137 @@
+<Summary>
+Open the booking on <Where app="web">Schedule</Where>, click **Ramp out** before the
+flight and **Ramp in** after it, then every assigned pilot clicks **Confirm review** and
+enters their PIN. The invoice is raised the moment the last person signs off, and not
+before.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers, Instructors, Students, Renters</Roles>
+
+Staff can close out any booking. A pilot can close out a booking they are assigned to.
+
+<Screenshot id="close-out-not-started" />
+
+The Close-out section carries a step badge saying where the booking has got to: **Not
+started**, **In flight**, **Awaiting review**, **Awaiting close-out**, **Reviewed**,
+**Billed**, **Paid** or **Void**. The badge always tells you whose turn it is.
+
+## Ramp out
+
+<Steps>
+<Step n={1} title="Open the booking on the schedule">
+Click it to open the detail sheet, then find the Close-out section.
+</Step>
+<Step n={2} title="Click Ramp out">
+</Step>
+<Step n={3} title="Enter Hobbs out and Tach out">
+Both are prefilled from the aircraft's current readings, so usually you are confirming
+rather than typing. Correct them if the meters disagree.
+</Step>
+</Steps>
+
+## Ramp in
+
+<Steps>
+<Step n={1} title="Click Ramp in when the aircraft is back">
+</Step>
+<Step n={2} title="Enter Hobbs in and Tach in">
+</Step>
+<Step n={3} title="Enter Instruction time (hrs) if a CFI was teaching">
+This is what instruction is billed on, including any briefing. Leave it empty on a rental
+or a solo.
+</Step>
+</Steps>
+
+Saving Ramp in also moves the aircraft's Hobbs and tach readings forward to the figures you
+just entered, so the fleet is up to date straight away. That happens here, not at the
+sign-offs.
+
+<Screenshot id="close-out-ramp-in-dialog" />
+
+<Callout type="warning">
+Ending readings cannot be lower than the readings recorded at ramp-out. If the meter was
+typed in wrong on the way out, fix that before you try to ramp in.
+</Callout>
+
+If the booking was away overnight and your school has set an overnight minimum, this
+dialog tells you before you save, in plain figures: away two nights, minimum 2.0 hours a
+night, so it will bill 4.0 hours rather than the 1.5 flown. See
+[Charge a minimum for overnight trips](/docs/billing/charge-a-minimum-for-overnight-trips).
+
+If two or more people are paying for this booking, a **Who pays what** panel sits in the
+same section. Fill it in and save before the sign-offs. See
+[Fill in Who pays what on a shared booking](/docs/billing/who-pays-what-at-close-out).
+
+## Confirm the review with your PIN
+
+Every assigned pilot clicks **Confirm review** and enters their own confirmation PIN. The
+section shows how many have confirmed out of how many are needed.
+
+<Callout type="important">
+The invoice does not exist until the last required confirmation lands. A flight sitting at
+"Awaiting review" has produced no invoice and no revenue, however long ago it flew. This
+is the single most common reason a school cannot find an invoice.
+</Callout>
+
+Guests never enter a PIN. A guest or discovery booking is closed out and billed in one
+step instead: see [Bill a discovery or guest flight](/docs/billing/bill-a-discovery-or-guest-flight).
+
+## The invoice appears
+
+When the last person confirms, all of this happens at once:
+
+- One invoice per payer is created in Stripe and in AerScheduler.
+- Each payer gets an "Invoice #N" email and a push notification with a pay link.
+- The invoice appears on <Where app="web">Billing</Where> and on the payer's own Invoices
+  page.
+- If the payer has autopay on, it is charged to their default card straight away and lands
+  as Paid.
+
+The Close-out section then shows the line items and the total.
+
+<Screenshot id="close-out-invoice-summary" />
+
+<Callout type="warning">
+On a split booking that total is **one person's share**, labelled "(one of N shares for
+this booking)". It is not the flight's whole bill. There is no single screen that shows
+the whole bill, so open each payer's invoice on Billing to see them all.
+</Callout>
+
+## Ground lessons and bookings with no aircraft
+
+A ground lesson, a room booking, or a booking with nothing reserved at all has no meters
+to read. Instead of Ramp out and Ramp in you get a single **Review times** step that asks
+only for instruction time, and then goes straight to the sign-offs. Everything after that
+is the same.
+
+## Overriding a rate clears every sign-off
+
+**Override payment** on a booking lets you replace the aircraft rate or the instruction rate
+for that flight only. It is on the reservation panel in the console and on the reservation
+screen in the app, and it reads **Change rates** once the booking already has one. Rates are
+typed in dollars. Leave a field blank to keep the school's rate.
+
+Admins, owners and dispatchers can always use it. Instructors can when the school has
+switched on "Instructors can override reservation prices" under
+<Where app="web">Settings → Booking preferences</Where>.
+
+<Callout type="warning">
+Adding an override deletes every review confirmation already collected, so a booking at "1
+of 2 confirmed" drops back to "0 of 2" and everybody has to sign off again. The sheet says
+how many sign-offs it is about to discard before you press it. Once the last person has
+confirmed you cannot override at all: "You can't override payment for a reservation that has
+already been completed". Do overrides before people start confirming.
+</Callout>
+
+## Doing this in the iOS app
+
+The reservation detail page and its Complete Reservation sheet run the same sequence: ramp
+out, ramp in, confirm with a PIN. Correcting readings (**Edit Time Details** there,
+**Correct times** in the console) and, for admins, **Create invoice** on a completed
+reservation that never produced one, are on both surfaces.
+
+## If no invoice appeared
+
+Start with the sign-offs, then work down
+[Why a flight was not invoiced](/docs/billing/why-a-flight-was-not-invoiced). Maintenance
+bookings, and shares worth less than 50 cents, are never invoiced at all.

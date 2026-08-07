@@ -4,28 +4,37 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "node scripts/sync-openapi.mjs && node scripts/check-docs-auth.mjs && next build",
+    "build": "node scripts/sync-openapi.mjs && node scripts/check-docs-auth.mjs && node scripts/check-docs.mjs && next build",
     "start": "next start",
     "lint": "next lint",
-    "check:docs-auth": "node scripts/check-docs-auth.mjs"
+    "check:docs-auth": "node scripts/check-docs-auth.mjs",
+    "check:docs": "node scripts/check-docs.mjs",
+    "docs:screenshots": "node scripts/capture-docs-screenshots.mjs"
   },
   "dependencies": {
+    "@mdx-js/loader": "^3.1.1",
+    "@mdx-js/react": "^3.1.1",
+    "@next/mdx": "^16.3.0",
     "clsx": "^2.1.1",
     "lucide-react": "^1.27.0",
     "next": "^16.2.12",
     "posthog-js": "^1.414.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "rehype-slug": "^6.0.0",
+    "remark-gfm": "^4.0.1",
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/mdx": "^2.0.14",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.5",
+    "playwright": "^1.62.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   },

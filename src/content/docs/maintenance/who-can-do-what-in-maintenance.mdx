@@ -1,0 +1,91 @@
+<Summary>
+Admins, owners and technicians do the work. Dispatchers can read every board but cannot sign
+anything off. Instructors, students and renters cannot open Maintenance in the console at
+all, and file squawks from the iOS app instead.
+</Summary>
+
+## The short version
+
+| | Owner, Admin | Technician | Dispatcher | Instructor, Student, Renter |
+|---|---|---|---|---|
+| Open the Maintenance page | Yes | Yes | Yes, read only | No |
+| Add, edit or delete an inspection rule | Yes | Yes | No | No |
+| Sign off an inspection | Yes | Yes | No | No |
+| File a squawk | Yes | Yes | Yes | App only |
+| Resolve a squawk | Yes | Yes | No | No |
+| Verify a squawk | Yes | Yes | No | No |
+| Ground an aircraft or return it to service | Yes | No | No | No |
+| Edit an aircraft's meters or rates | Yes | No | No | No |
+| Book maintenance | Yes | Yes | Yes | No |
+| Maintenance due and Squawks &amp; downtime reports | Yes | Yes | Yes | No |
+| Audit log | Yes | No | No | No |
+
+Roles add up rather than ranking. A technician who is also an instructor gets both sets.
+
+## Technicians
+
+The technician role is built around the shop. A technician can open every maintenance board,
+add and sign off inspections, resolve and verify squawks, and book an aircraft in for
+maintenance, which is the only booking type they can create.
+
+What a technician cannot do:
+
+- **Ground an aircraft, or return one to service.** That is admin and owner only.
+- Edit an aircraft's meters, rates or details.
+- See revenue anywhere on an aircraft's page.
+- Open the audit log.
+- See simulator or classroom lanes on the dispatch board.
+
+## Dispatchers
+
+A dispatcher sees the whole Maintenance page: all five views, the same cards, the same
+counts. What is missing is every button that changes something. No **Sign off**, no
+**Resolve**, no **Add inspections**, no delete.
+
+<Screenshot id="maintenance-all-inspections" />
+
+<Callout type="note">
+This is deliberate, not a broken page. Knowing which aircraft is unserviceable is a
+dispatcher's job. Declaring it fixed is a technician's. A dispatcher who has been told to
+"close that squawk out" needs to hand it to an admin or a technician.
+</Callout>
+
+Dispatchers can still file a squawk, book maintenance, and run the fleet reports. They are
+not sent maintenance or squawk notifications.
+
+## Instructors, students, and renters
+
+None of these roles can open the Maintenance page. In the console the link is not there, and
+following one anyway redirects to your own page. The Maintenance section on an aircraft's
+page is hidden from them too, which means there is no **Log** button they can reach.
+
+They do see what matters at the moment of booking: the grounding reason and the open-squawk
+count on the airworthiness notice. See
+[Why can't I book this aircraft?](/docs/maintenance/why-cant-i-book-this-aircraft).
+
+To file a squawk, they use the iOS app: the aircraft's page, or the prompt that opens by
+itself at close-out. See [Report a squawk](/docs/maintenance/report-a-squawk).
+
+## Admins and owners
+
+Everything above, plus the two things nobody else can do: grounding an aircraft by hand and
+returning it to service, and editing an aircraft's meters. Owners get everything an admin
+gets.
+
+## Why the technician role hint mentions grounding
+
+When you invite somebody, the technician role is described as covering maintenance, squawks
+and grounding. Take that as the automatic kind. A technician's route to a grounded aircraft
+is an inspection that carries **Grounds the aircraft**: when it comes due, the tail comes off
+the line by itself.
+
+Grounding a tail on the spot, by hand, runs through the aircraft's own settings and stays
+admin only.
+
+## Verify and resolve are two different stamps
+
+Both belong to admins, owners and technicians, and both are on either surface. Verifying
+records that somebody checked the fault; resolving records what was done about it. Neither
+requires the other, so a squawk can be resolved having never been verified. The **Verify**
+button disappears once a squawk carries either stamp, so verify first if your shop uses it
+as a second signature.

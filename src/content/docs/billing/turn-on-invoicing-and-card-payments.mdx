@@ -1,0 +1,138 @@
+<Summary>
+Go to <Where app="web">Settings → Billing</Where>. Connect payouts with Stripe in the
+Payouts card, then turn on **Billing enabled**, set a default instructor rate, and click
+**Save changes**. Only the organization owner can do any of it.
+</Summary>
+
+<Roles>Owners</Roles>
+
+## Before you start
+
+- You must be the **organization owner**, not merely an admin. An admin can open the page
+  and type in it, but the save will be refused.
+- Stripe will ask for your business details and the bank account you want payouts to land
+  in. It is your own Stripe account, so payouts and the payout schedule stay yours.
+- Set your aircraft rates too, or their bookings price at zero. See
+  [Set your aircraft and instruction rates](/docs/billing/set-aircraft-and-instruction-rates).
+
+<Screenshot id="billing-payouts-not-connected" />
+
+## Connect payouts with Stripe
+
+<Steps>
+<Step n={1} title="Open Settings and choose Billing">
+The Billing tab holds two cards: **Billing settings** and **Payouts**.
+</Step>
+<Step n={2} title="Click Connect payouts">
+In the Payouts card. The badge next to it reads **Not connected** until this is done.
+</Step>
+<Step n={3} title="Complete Stripe's hosted onboarding">
+This happens on Stripe's own pages. Finish every step, including the bank details.
+</Step>
+<Step n={4} title="Wait for the confirmation page">
+You come back to a "Confirming your payout setup" page, which then drops you on Settings
+with a message saying payouts are connected.
+<Callout type="note">
+That page waits and checks a few times on purpose. Stripe's confirmation usually lands a
+beat after your browser gets back, so an instant answer would be wrong.
+</Callout>
+</Step>
+</Steps>
+
+The Payouts badge should now read **Connected**, and the button becomes **Manage payouts**.
+
+<Screenshot id="billing-payouts-connected" />
+
+## Turn billing on and set your default instructor rate
+
+<Steps>
+<Step n={1} title="Switch on Billing enabled">
+In the Billing settings card. This is the master switch.
+</Step>
+<Step n={2} title="Set the Default instructor rate">
+The hourly figure charged for instruction when the booking has no rating at all. A booking
+that carries a rating is priced from that rating's own rate instead. It starts at $0.00.
+</Step>
+<Step n={3} title="Click Save changes">
+Nothing on this card takes effect until you do.
+</Step>
+</Steps>
+
+<Screenshot id="billing-settings-card" />
+
+<Callout type="warning">
+Invoicing needs **both** things: Billing enabled on, and a Stripe account Stripe reports
+as enabled. With Stripe connected and Billing enabled left off, flights close out
+normally and no invoice is ever raised, with nothing on screen to explain it.
+</Callout>
+
+## Add a service fee
+
+The **Service fee (%)** field adds a percentage of the invoice as an extra line, using
+whatever wording you put in **Service fee label** (the default is "Service Fee").
+
+It is your own surcharge. It is not AerScheduler's fee and not Stripe's. It goes on every
+invoice you raise, including membership dues.
+
+<Callout type="warning">
+The fee is applied per invoice, not per flight. A booking split between three people
+carries the service fee three times, once on each person's invoice.
+</Callout>
+
+## What Stripe charges you
+
+Payments run through your own Stripe account, so Stripe's processing fees apply: at the
+time of writing that is 2.9% plus 30 cents for a card and 0.8% for ACH Direct Debit, in
+US dollars. Anything deducted comes out of your payout rather than being added to what
+your member is charged.
+
+Payouts reach a US bank in about two business days once you are up and running. The very
+first payout takes longer, usually 7 to 10 days, because Stripe verifies the account.
+
+Your Stripe dashboard is the authority on what was deducted and what landed. AerScheduler
+does not show the fee breakdown.
+
+## If Stripe onboarding does not finish
+
+If you close Stripe's pages half way, the confirmation page tells you the payout setup is
+not finished, and the badge stays **Not connected**. Nothing bills in that state.
+
+To pick it back up, open <Where app="web">Settings → Billing</Where> and click
+**Connect payouts** again. You resume where you left off.
+
+## Doing this from the iOS app
+
+An owner who opens <Where app="mobile">Billing Settings</Where> before any of this is
+sent to the **Invoicing with Card and ACH Payments** screen instead. It explains what
+invoicing will do, then **Setup** creates the Stripe account and opens the same hosted
+onboarding. If an account already exists but was never finished, the app carries on from
+where it stopped.
+
+
+Two more settings sit below, in the **Manual invoices** card: **Dispatchers can manually
+generate invoices** and **Instructors can manually generate invoices**. They are on both
+surfaces, both owner-only, and they say who may bill outside a reservation rather than
+where. See
+[Letting dispatchers or instructors create invoices](/docs/billing/create-a-manual-invoice).
+
+## Check it worked
+
+1. The Payouts badge reads **Connected**.
+2. **Billing enabled** is on and saved.
+3. Every aircraft has a rate.
+4. Close out a real flight. When the last pilot confirms with their PIN, the booking shows
+   its line items and total, and the payer gets an invoice email.
+
+If a flight closes out and no invoice appears, work through
+[Why a flight was not invoiced](/docs/billing/why-a-flight-was-not-invoiced).
+
+## Related
+
+<CardGrid>
+<DocCard href="/docs/billing/set-aircraft-and-instruction-rates" title="Set your aircraft and instruction rates">
+The rate, the wet or dry basis, and whether the invoice measures Hobbs or tach.
+</DocCard>
+<DocCard href="/docs/billing/charge-a-minimum-for-overnight-trips" title="Charge a minimum for overnight trips">
+The other figure on this same settings card, and how nights are counted.
+</DocCard>
+</CardGrid>

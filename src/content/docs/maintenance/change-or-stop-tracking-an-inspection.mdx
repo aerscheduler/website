@@ -1,0 +1,112 @@
+<Summary>
+To put an inspection on one more tail, open that aircraft and use
+<Where app="web">Maintenance → Add</Where>. To rework the whole list at once, use the
+aircraft button on the rule under <Where app="web">Maintenance → Set up</Where>. To stop
+tracking something altogether, delete the rule, which stops tracking it on every aircraft it
+covers.
+</Summary>
+
+<Roles>Owners, Admins, Technicians</Roles>
+
+## Add one aircraft to an inspection
+
+From the console, work from the aircraft rather than from the rule.
+
+<Steps>
+  <Step n={1} title="Open the aircraft">
+    <Where app="web">Aircraft → the tail → Maintenance</Where>.
+  </Step>
+  <Step n={2} title="Click Add on the Inspections card">
+    The Add inspections dialog opens with this tail already fixed, so there is no
+    **Applies to** list to get wrong.
+  </Step>
+  <Step n={3} title="Set it up and fill in When was it last done?">
+    This tail has its own history and its own meter. Enter the date and reading from the
+    last time the work was performed on **this** aircraft. See
+    [Set when an inspection was last done](/docs/maintenance/set-when-an-inspection-was-last-done).
+  </Step>
+</Steps>
+
+## Change the whole list at once
+
+<Steps>
+  <Step n={1} title="Open Maintenance, then Set up">
+    Find the rule. Rules are grouped into On the meter, On the calendar and One-off.
+  </Step>
+  <Step n={2} title="Click the aircraft button on the row">
+    It is labelled **Which aircraft this covers**. Tail numbers are chips: click one to
+    attach it, click an attached one to detach it.
+  </Step>
+  <Step n={3} title="Set a starting point for any tail you just added">
+    A **When was it last done?** box appears per newly added tail, for a meter reading or a
+    date depending on how the rule counts. Leave it blank and that tail starts today. See
+    [Set when an inspection was last done](/docs/maintenance/set-when-an-inspection-was-last-done).
+  </Step>
+  <Step n={4} title="Click Save coverage">
+    Removals are named on screen before you save, and confirmed again after.
+  </Step>
+</Steps>
+
+The same sheet is on the app, at
+<Where app="mobile">Maintenance → Set up → the rule</Where>.
+
+
+## Editing the list replaces it, it does not add to it
+
+<Callout type="warning">
+The list you save becomes the complete list of aircraft on that rule. Any tail you leave
+unticked is detached, and its open inspection is deleted. This looks like an ordinary
+multi-select you are adding to, and it is not. Check every tail that should stay before you
+save.
+</Callout>
+
+## Removing a tail deletes its open inspection
+
+Detaching an aircraft removes the outstanding countdown for that tail and nothing else.
+Everything already signed off stays on the aircraft's record and in the audit log.
+
+If that open inspection was the last thing holding an automatic grounding on that aircraft,
+the aircraft is returned to service at the same time.
+
+## Stop tracking an inspection entirely
+
+<Steps>
+  <Step n={1} title="Open Maintenance, then Set up">
+    Rules are grouped into On the meter, On the calendar and One-off.
+
+    <Screenshot id="maintenance-set-up" />
+  </Step>
+  <Step n={2} title="Expand the aircraft chips first">
+    Click the "N aircraft" chip on the row and read the list. This is the one number that
+    tells you how big the delete is.
+  </Step>
+  <Step n={3} title="Click the trash icon and read the confirmation">
+    It reads "This stops tracking it on N aircraft. Work already signed off stays on the
+    record."
+  </Step>
+  <Step n={4} title="Click Delete">
+    The rule and every outstanding inspection under it are removed, across the whole fleet.
+  </Step>
+</Steps>
+
+<Callout type="warning">
+This is the biggest-consequence button on the page. One rule commonly covers every tail you
+own, so a single delete can stop maintenance tracking on the entire fleet. The count in the
+confirmation is easy to skim past.
+</Callout>
+
+## What deleting keeps
+
+- Every signed-off inspection stays on the aircraft's record.
+- One "Inspection removed" line is written to the audit log per affected aircraft, so you can see exactly what stopped being tracked and when.
+- Any aircraft that this rule had grounded automatically, with nothing else outstanding, is returned to service.
+
+## A rule on no aircraft never comes due
+
+A rule with no tails attached looks completely normal in the Set up list except for one
+line: "Not on any aircraft, so it never comes due." Nothing will ever fire from it and
+nobody will ever be emailed about it.
+
+The usual way to end up with one is on the phone, where **Add inspection** creates the rule
+first and then sends you on to pick the aircraft. Abandon that second step and the rule
+survives with no tails. Attach them with the aircraft button on the row, as above.

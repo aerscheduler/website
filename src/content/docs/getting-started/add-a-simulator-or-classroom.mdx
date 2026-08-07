@@ -1,0 +1,66 @@
+<Summary>
+<Where app="web">Facilities</Where>, then **Simulators** or **Rooms** in the left rail, then
+**Add simulator** or **Add room**. Both become bookable on the same board as your aircraft,
+and neither one costs anything on your bill.
+</Summary>
+
+<Roles>Owners, Admins</Roles>
+
+## What counts as a resource
+
+A resource is anything a booking can hold: an aircraft, a simulator, or a ground-school
+room. Aircraft live under **Aircraft**. Simulators and rooms live under **Facilities**,
+which is an admin-only page.
+
+<Callout type="tip">
+Only aircraft count toward your subscription. Simulators and ground-school rooms are free,
+so there is no reason to leave them off the schedule.
+</Callout>
+
+## Add one
+
+<Steps>
+  <Step n={1} title="Open Facilities">
+    The page has a left rail with three sections, **Locations**, **Simulators** and
+    **Rooms**. You can view simulators and rooms as a grid or as a list.
+  </Step>
+  <Step n={2} title="Pick the section, then press Add simulator or Add room">
+    Simulators carry a name, a location, Hobbs and tach readings, an hourly rate, and a
+    Grounded or Available state. Rooms carry a room number and a location.
+  </Step>
+  <Step n={3} title="Fill the form and save">
+    It appears on the dispatch board straight away.
+  </Step>
+</Steps>
+
+Both need a location, the same as an aircraft. If none exists yet, the form shows an **Add a
+location** button that takes you to <Where app="web">Facilities → Locations</Where> with the
+create form open.
+
+## What you can book them for
+
+- A **Sim** reservation takes a simulator.
+- A **Ground** reservation takes a room, or no resource at all.
+
+Which roles may book each type is in
+[Which reservation type should I use?](/docs/scheduling/reservation-types).
+
+<Callout type="note">
+Renters and technicians never see simulator or classroom lanes on the dispatch board. That
+is by role, not by anything you have configured. If a renter says the sim is not there,
+that is why.
+</Callout>
+
+## Finding one again
+
+Simulators and rooms have no record page of their own, unlike an aircraft. Searching for
+one takes you back to **Facilities** with the search already filled in and the right
+section selected.
+
+Filters on the page: **Location** for both, plus **Status** for simulators.
+
+## A grounded member can still use them
+
+Grounding stops a member booking aircraft. It does not stop them being put on a simulator
+session, a classroom ground lesson, or any booking with no resource. See
+[Ground, archive or remove a member](/docs/getting-started/ground-archive-or-remove-a-member).

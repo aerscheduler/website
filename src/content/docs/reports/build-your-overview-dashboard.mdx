@@ -1,0 +1,196 @@
+<Summary>
+Overview is your own dashboard, not the school's. Click "Customise" to move, resize, add or remove tiles, then
+"Done" to save. Nothing is stored until you press Done.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers, Technicians</Roles>
+
+## Overview belongs to you alone
+
+Open <Where app="web">Reports → Overview</Where>. Everyone who can reach Reports gets their own board, and changing
+yours changes nobody else's. There is no shared school dashboard.
+
+You start on the default layout: eight number cards (Billed, Collected, Outstanding, Flights, Hours flown, Hours
+booked, Efficiency, Cancellations) and two line charts ("Booked, flown and billed hours" and "Billed and
+collected"). Nothing is written down until the first time you save your own.
+
+Every figure on the board opens the report behind it, so a number you distrust is one click from the rows that
+produced it.
+
+<Screenshot id="reports-overview-board" />
+
+## Set the date range and the comparison
+
+Two selects sit in the toolbar above the tiles.
+
+**Date range**: Last 7 days, Last 30 days, Last 90 days, Month to date, Year to date, Next 30 days, Next 90 days.
+It defaults to Last 30 days and drives every tile that has not overridden it.
+
+**Comparison**: "vs previous period", "vs last year", or "No comparison". It decides what the change percentage on
+each number card is measured against.
+
+| Comparison | What it compares to |
+|---|---|
+| vs previous period | The same number of days immediately before this window |
+| vs last year | The same calendar dates a year ago |
+
+<Callout type="tip">
+Use "vs last year" when the season matters, which for a flight school is most of the time. "Previous period" is the
+same number of days, so comparing a 28 day February against the 28 days before it is rarely the question you meant
+to ask.
+</Callout>
+
+Changing either select counts as an unsaved edit, so remember to press Done.
+
+## Move and resize tiles
+
+<Steps>
+<Step n={1} title="Click Customise">
+The sub-line under the heading changes to say that you can drag to move and pull the corner to resize, and that
+nothing is saved until you are done.
+</Step>
+<Step n={2} title="Drag a tile by its grip handle">
+The board is a 12 column grid, so tiles snap.
+</Step>
+<Step n={3} title="Pull a tile's corner to resize it">
+Each shape has a minimum size. A line chart cannot be dragged down to a single cell, because at that size it says
+nothing.
+</Step>
+<Step n={4} title="Click Done">
+Or "Cancel" to throw the changes away.
+</Step>
+</Steps>
+
+<Screenshot id="dashboard-edit-mode" />
+
+<Callout type="warning">
+Nothing is saved until you press Done. If you leave the Overview with unsaved edits, by the rail, the sidebar, the
+browser's back button or by closing the tab, you are prompted first.
+</Callout>
+
+## Add a tile
+
+<Steps>
+<Step n={1} title="Click Customise, then Add tile">
+"Add tile" only appears in the toolbar once the board is in edit mode, so click "Customise" first.
+</Step>
+<Step n={2} title="Pick a report">
+The picker only lists reports your roles let you run.
+</Step>
+<Step n={3} title="Pick a shape and tick the metrics">
+Number, line, bar or table. See the table below for what each shape needs.
+</Step>
+<Step n={4} title="Pick a dimension where the shape needs one">
+This is what the chart plots along its axis.
+</Step>
+<Step n={5} title="Optionally add filters, a title, its own date range and its own comparison" />
+<Step n={6} title="Click Add tile, then Done">
+The tile lands at the bottom of the board. It is not saved until you press Done.
+</Step>
+</Steps>
+
+<Screenshot id="dashboard-tile-builder" />
+
+## Pick a shape: number, line, bar, or table
+
+| Shape | Metrics | Dimension |
+|---|---|---|
+| Number card | Exactly one | None |
+| Bar chart | Exactly one | Required |
+| Line chart | Up to three | Required |
+| Table | Up to six | Optional |
+
+Only columns the report marks as metrics are offered, so you cannot put a label column such as a tail number on a
+number card.
+
+<Callout type="note">
+If Line and Bar are greyed out, the report you picked has nothing to break its numbers down by, so a chart would
+have no axis to draw. That report can still be a number card or a table.
+</Callout>
+
+## Give a tile its own date range
+
+A tile's range and comparison both default to "inherit", meaning they follow the selects at the top of the page.
+
+Override the range in the Add tile or Edit tile dialog and the tile carries "· pinned" under its title, so a board
+of mixed windows is readable. This is how "Revenue this week" and "Revenue this month" can sit side by side and
+both be right. A comparison override carries no marker.
+
+## Pin a saved view from a report
+
+If you have already shaped a report and saved it, you do not have to rebuild it here.
+
+<Steps>
+<Step n={1} title="Open the report and click Saved views">
+</Step>
+<Step n={2} title="Click the pin icon on the view's row">
+The "Pin to dashboard" dialog opens with a suggested shape and metrics already chosen.
+</Step>
+<Step n={3} title="Click Pin tile">
+The success toast offers "View" to jump straight to the Overview.
+</Step>
+</Steps>
+
+<Screenshot id="dashboard-pin-view" />
+
+The shape is guessed from the view: grouped by day gives a line chart, grouped by anything else gives a bar chart,
+and ungrouped gives a single number.
+
+<Callout type="warning">
+Pinning makes a **copy**. Editing the saved view afterwards does not change the tile, and the dialog says so. If you
+want the tile to change, edit the tile.
+</Callout>
+
+Two more things about pinning. A report with no column that can be totalled shows no pin icon at all, because there
+is nothing for a tile to display. And a saved view's dates are dropped when pinned: the tile follows the
+dashboard's window instead, unless you pick a range for the tile in the pin dialog.
+
+Anyone can pin any view they can see. The tile is their own copy on their own board.
+
+## Edit or remove a tile
+
+In edit mode, each tile carries a menu. "Edit" reopens the same dialog you built it in; "Remove" deletes it.
+Neither is saved until you press Done.
+
+## Reset to the default layout
+
+"Reset" in the header puts the board back to the eight default cards and two default charts.
+
+<Callout type="warning">
+Reset is destructive: it replaces your tiles and your layout, not just the positions. It confirms first.
+</Callout>
+
+## Leaving without saving
+
+Cancel discards everything since you clicked Customise. Navigating away with unsaved edits prompts you. Neither one
+can lose a tile you had previously saved with Done.
+
+## Limits, phones, and tiles that disappear
+
+A panel holds up to 40 tiles, and there can be up to 10 panels, though today there is only ever one.
+
+<Callout type="warning">
+A tile can vanish on its own, with only a toast to explain. If it points at a report you no longer have access to,
+or at a metric or dimension that report no longer offers, that one tile is dropped and the rest of the board still
+renders. The toast names it, along the lines of "'X' needs access you don't have".
+</Callout>
+
+Two consequences worth knowing:
+
+- A technician's default board is nearly empty. All eight default cards and both default charts are built on
+  Revenue, Utilization and Cancellations, and a technician's roles grant only the Fleet category. Add your own
+  tiles from Fleet, Squawks and downtime, and Maintenance due.
+- A number card shows no percentage change when the previous period was zero. Going from 0 to 40 is not a
+  meaningful percentage, so the card says nothing rather than printing one. Where a comparison ran but produced no
+  baseline, the card reads "No comparison".
+
+## Next
+
+<CardGrid>
+  <DocCard href="/docs/reports/needs-attention" title="Work the Needs attention list">
+    The card under the tiles, and why its counts ignore your date range.
+  </DocCard>
+  <DocCard href="/docs/reports/save-a-report-view" title="Save a report as a view">
+    The thing you pin.
+  </DocCard>
+</CardGrid>

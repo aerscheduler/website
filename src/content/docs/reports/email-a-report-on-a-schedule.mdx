@@ -1,0 +1,122 @@
+<Summary>
+Save the report as a view, click "Saved views", then the clock icon beside the view. AerScheduler emails that view
+as a CSV attachment every day, week or month, at an hour measured on your school's clock.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers, Technicians</Roles>
+
+## Save a view first
+
+A schedule always points at a saved view, never at a report on its own. If you have not saved one yet, shape the
+report and click "Save as". See [Save a report as a view](/docs/reports/save-a-report-view).
+
+## Open the schedule dialog
+
+<Steps>
+<Step n={1} title="Click Saved views in the report toolbar">
+The popover lists every view you can see on this report.
+</Step>
+<Step n={2} title="Click the clock icon on the view's row">
+The "Schedule this report" dialog opens.
+</Step>
+</Steps>
+
+<Screenshot id="report-schedule-dialog" />
+
+## Set how often and at what hour
+
+Choose "How often": Every day, Every week or Every month. Then set "At", which is the hour it goes out.
+
+- **Every week** also asks for the weekday.
+- **Every month** also asks for the day of the month, from 1 to 28.
+
+Click "Schedule it" to finish.
+
+## What period each email covers
+
+The cadence decides the window, and the saved view's own dates are ignored.
+
+| How often | What the email covers |
+|---|---|
+| Every day | Yesterday |
+| Every week | The seven days ending yesterday |
+| Every month | The whole previous calendar month |
+
+<Callout type="warning">
+This trips people up constantly. You save a view over 1 to 31 July and schedule it weekly, and the email covers
+last week, not July. It is deliberate: consecutive emails are meant to tile exactly, with no gaps and no
+double-counted days, so a recurring report reads as "here is last week". A grey box in the dialog states what the
+cadence you picked will cover.
+</Callout>
+
+The email's subject is the view's name followed by the period, and the body states the period and the row count
+before you even open the attachment.
+
+## Choose who it goes to
+
+Tick the people at your school who should receive it, under "Send to". Everyone on the list must be a member of
+this school, and a schedule needs at least one recipient.
+
+<Callout type="warning">
+Recipients are re-checked on every send. Anyone whose roles change so they can no longer run the underlying report
+stops receiving it, silently. So does anyone who has turned off email from this school in their own notification
+preferences. The dialog and the Scheduled reports page both tell you when this has happened.
+</Callout>
+
+## Send it to an accountant outside the school
+
+Owners and admins get an extra field: "Also send outside the school". Type email addresses there for people who are
+not members, such as your accountant or a club treasurer.
+
+<Callout type="note">
+An outside address keeps receiving the report only while the person who set the schedule up still has access to it
+themselves. If that person leaves or loses the role, the outside deliveries stop.
+</Callout>
+
+## Times are your school's, not yours
+
+"7am" means 7am at the field, on your school's clock, no matter where the reader is or where you were sitting when
+you set it up.
+
+That clock comes from <Where app="web">Settings → Organization</Where>. A scheduled send has no browser attached,
+so if no organization time zone is set it falls through to UTC. Set the zone once and this stops being a question.
+See [Date ranges, date basis, and your school's time zone](/docs/reports/date-ranges-and-time-zones).
+
+## Day of the month stops at 28
+
+Monthly schedules only offer days 1 to 28, and the dialog says why: a schedule set to the 30th would skip February
+every year. Picking 28 or lower means the report never misses a month.
+
+## Pause, edit, or stop a schedule
+
+Everything lives on <Where app="web">Reports → Scheduled reports</Where>.
+
+| Control | What it does |
+|---|---|
+| The switch on the card | Pauses delivery without losing the setup. The card shows a "Paused" chip and greys out. |
+| Edit | Reopens the dialog to change cadence, hour or recipients. |
+| Send now | Sends exactly what the next real delivery would contain, right now. |
+| Stop sending | Deletes the schedule. |
+
+<Callout type="note">
+"Send now" does not consume the next scheduled send. Pressing it at 06:55 does not cancel the 07:00 email. Use it
+freely to check what a schedule actually produces.
+</Callout>
+
+Only the person who created a schedule, or an admin, can edit, pause, test-send or delete it. On a schedule you can
+see but not manage, the card says "Set up by" and the person's name, and notes that only they or an admin can
+change it.
+
+## See everything the school is emailing out
+
+<Where app="web">Reports → Scheduled reports</Where> lists one card per schedule: the saved view's name, a chip with
+the report name, the cadence line ("Every Monday at 7am · covers the previous 7 days"), the recipients, and when it
+last went.
+
+<Screenshot id="reports-schedules-page" />
+
+The list only shows schedules whose underlying report you can run. A dispatcher cannot see that a revenue report
+goes out weekly, let alone read it.
+
+If an email has stopped arriving, the card's last line usually says why. See
+[A scheduled report did not arrive](/docs/reports/scheduled-report-not-arriving).

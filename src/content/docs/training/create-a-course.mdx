@@ -1,0 +1,107 @@
+<Summary>
+<Where app="web">Training → Courses</Where>. **Start from a template** forks one of the four
+built-in syllabi. **New course** gives you an empty one. Either way you get a single
+editable draft version called Rev A, and the Part 61 or Part 141 choice is made once and
+cannot be changed.
+</Summary>
+
+<Roles>Owners, Admins, holders of the Configure training grant</Roles>
+
+## Decide Part 61 or Part 141 first
+
+**Trained under** is the only field on a course that can never be edited afterwards, by
+anyone, on any screen. Settle it before you type a name.
+
+Templates are always created as **Part 61**. If you are running an approved Part 141
+course, use **New course**, pick Part 141, and build the syllabus yourself. See
+[Part 61 vs Part 141](/docs/training/part-61-vs-part-141).
+
+<Screenshot id="training-courses-list" />
+
+## Start from a template
+
+<Steps>
+<Step n={1} title="Open Training">
+<Where app="web">Training</Where> in the left rail, and stay on the **Courses** section.
+</Step>
+<Step n={2} title="Click Start from a template">
+The picker lists the four shipped syllabi, each with its stage, lesson and requirement
+counts on the button.
+<Screenshot id="training-template-picker" />
+</Step>
+<Step n={3} title="Pick one">
+The course is created and the console opens its Syllabus tab straight away.
+</Step>
+</Steps>
+
+## What is in each template
+
+| Template | Notes |
+|---|---|
+| Private Pilot, Airplane Single-Engine Land | The requirement list has been checked line by line against §61.109(a). |
+| Instrument Rating, Airplane (Part 61) | Check the requirement list against the CFR before you rely on it. |
+| Commercial Pilot, Single-Engine (Part 61) | Check the requirement list against the CFR before you rely on it. |
+| Flight Instructor, Airplane Single-Engine (Part 61) | Check the requirement list against the CFR before you rely on it. |
+
+Each one arrives with every stage, lesson, ACS-coded task and hour requirement already in
+place, the **Credits toward** map wired up so hours actually accumulate, and the grading
+scale set to S, U and I.
+
+<Callout type="warning">
+Only the Private Pilot template's requirements have been verified against the regulation.
+The other three look equally authoritative in the picker and are a starting point, not a
+compliance document. Read them against the CFR before a student's graduation depends on
+them.
+</Callout>
+
+## Create an empty course
+
+<Steps>
+<Step n={1} title="Training → Courses → New course">
+</Step>
+<Step n={2} title="Type a Name">
+What the students call it: "Instrument Rating", "Tailwheel endorsement".
+</Step>
+<Step n={3} title="Choose Trained under">
+Part 61 or Part 141. Read the line underneath before you pick, because this is your only
+chance.
+<Screenshot id="training-new-course-dialog" />
+</Step>
+<Step n={4} title="Click Create course">
+The console opens the new course's Syllabus tab.
+</Step>
+</Steps>
+
+## What you get: a draft called Rev A
+
+Either route leaves you with one course holding one **draft** version labelled Rev A.
+Nothing is published, so nothing is locked and everything is editable.
+
+The header badge marks the version **Draft** and safe to edit while that is true. There is
+no version dropdown in the header yet: it appears only once a course has more than one
+version, so everything in the Syllabus, Requirements and Students sections is Rev A.
+
+Next:
+
+- [Add hour and landing requirements](/docs/training/add-hour-requirements) first, so the
+  Credits toward box has something in it.
+- [Build a syllabus](/docs/training/build-a-syllabus): stages, lessons and tasks.
+- [Set the grading scale](/docs/training/set-the-grading-scale) if S, U and I do not suit
+  you.
+- [Publish the version](/docs/training/publish-a-syllabus-version) when it is finished.
+
+## What the templates will not do for you
+
+- **They are Part 61.** They cannot be converted.
+- **The lesson sequence is not from any regulation.** It is a sensible order, not an
+  approved one. Expect to change it.
+- **They are not an approved Training Course Outline.** Approval is per school and per
+  FSDO.
+- **They do not know your fleet, your rates or your local airspace.** Objectives and
+  completion standards are generic, and worth a read before your first student flies them.
+
+<Callout type="tip">
+Forking a template and editing it down is usually faster than starting empty, even for a
+Part 141 school that has to rebuild in a Part 141 course. Fork one, read the lesson list,
+then copy what you want into your own course.
+</Callout>

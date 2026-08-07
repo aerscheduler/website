@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { BookOpen, ChevronRight } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { SITE_NAME } from "@/lib/site";
 
@@ -116,7 +116,31 @@ export default function ResourcesPage() {
           platform.
         </p>
 
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Product documentation is answering a different question from every
+            card below, so it gets its own band rather than a fourteenth tile.
+            Somebody who already bought and is stuck should not have to read
+            past the comparison pages to find help. */}
+        <Link
+          href="/docs"
+          className="group mt-10 flex flex-col gap-2 rounded-2xl border border-border bg-brand-surface p-6 text-white transition-shadow hover:shadow-lg sm:flex-row sm:items-center sm:justify-between"
+        >
+          <span>
+            <span className="flex items-center gap-2 text-lg font-semibold">
+              <BookOpen className="size-5 opacity-80" aria-hidden />
+              Product documentation
+            </span>
+            <span className="mt-1.5 block max-w-2xl text-sm leading-relaxed text-white/70">
+              Already using AerScheduler? Step-by-step guides for scheduling and dispatch,
+              billing, maintenance, the Part 141 and Part 61 curriculum, and reporting.
+            </span>
+          </span>
+          <span className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold">
+            Open the docs
+            <ChevronRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+          </span>
+        </Link>
+
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {GUIDES.map((guide) => (
             <Link
               key={guide.href}

@@ -1,0 +1,106 @@
+<Summary>
+Create your account, verify your email, and follow the setup you are shown. It asks for
+your operation, your first aircraft, and your billing connection. Everything can be
+changed later, so do not stall on a decision.
+</Summary>
+
+<Roles>Owners, Admins</Roles>
+
+## Before you start
+
+Nothing. No credit card and no sales call. A 14-day free trial starts the moment you sign
+up.
+
+Whoever creates the operation becomes its **owner** and **admin** automatically.
+
+## Create the account
+
+<Steps>
+  <Step n={1} title="Go to app.aerscheduler.com and create your account">
+    Name, work email and a password, or sign up with Google or Apple.
+  </Step>
+  <Step n={2} title="Open the verification email and click the link">
+    Until you do, every page sends you back to the verification screen. It checks every
+    few seconds and moves on by itself once you click the link, so you do not need to
+    press anything. There is a resend button if it never arrives.
+  </Step>
+  <Step n={3} title="Say what you are here for">
+    Joining a school someone else runs is a different path: you just need their code. See
+    [Join a school with a code](/docs/getting-started/join-a-school). Otherwise you are
+    setting up your own operation, and AerScheduler walks you through it.
+  </Step>
+</Steps>
+
+## What setup asks for
+
+Three things, in this order.
+
+**Your operation.** Whether you are a flight school, a flying club or a rental operation,
+what it is called, and the airport you fly from. That airport becomes your first location,
+and every aircraft, simulator and room belongs to one.
+
+**Your first aircraft.** Tail number, year, current Hobbs and tach, and an hourly rate.
+You can skip it and add aircraft later from
+[Add an aircraft](/docs/getting-started/add-an-aircraft).
+
+**Billing.** Connecting Stripe is what turns a closed-out flight into an invoice your
+members can pay. You can do it later without blocking anything else. See
+[Turn on invoicing and card payments](/docs/billing/turn-on-invoicing-and-card-payments).
+
+Once you are through, your dashboard shows what is still missing and links straight to
+each job. It works that out from your real data rather than from a list of steps you
+ticked, so adding an aircraft from anywhere in the product counts.
+
+<Callout type="warning">
+Set your school's time zone early, under <Where app="web">Settings → Organization</Where>.
+Until it is set, two people can see different times for the same booking, and multi-day
+bookings cannot be enabled at all. See
+[Why the schedule shows airport time](/docs/scheduling/airport-time-and-time-zones).
+</Callout>
+
+## A sensible first week
+
+Setup gets you bookable. This is the order that gets you *useful*.
+
+<Steps>
+  <Step n={1} title="Get your fleet in">
+    Aircraft first, then simulators and classrooms. Rates and meters matter here, because
+    billing and maintenance both read them.
+  </Step>
+  <Step n={2} title="Set your instruction rates">
+    A lesson cannot be priced until its instruction type has a rate.
+  </Step>
+  <Step n={3} title="Invite your instructors, then your students">
+    Roles decide what each person sees and can book. See
+    [Roles, and what each one can do](/docs/getting-started/roles-and-permissions).
+  </Step>
+  <Step n={4} title="Decide your booking rules">
+    Who may book what, and whether members need a card on file. See
+    [Booking rules and settings](/docs/scheduling/booking-rules-and-settings).
+  </Step>
+  <Step n={5} title="Put maintenance due dates in">
+    So the schedule knows when a tail should stop flying. See
+    [How maintenance tracking works](/docs/maintenance/how-maintenance-tracking-works).
+  </Step>
+  <Step n={6} title="Book a real flight and close it out">
+    One end-to-end flight tells you more about whether your rates and roles are right than
+    any amount of settings review.
+  </Step>
+</Steps>
+
+## What to do next
+
+<CardGrid>
+  <DocCard href="/docs/getting-started/add-an-aircraft" title="Add an aircraft">
+    Tails, meters, rates and a home base.
+  </DocCard>
+  <DocCard href="/docs/getting-started/invite-people" title="Invite people">
+    Email invitations with roles attached, or share your join code.
+  </DocCard>
+  <DocCard href="/docs/getting-started/settings-reference" title="Every setting">
+    What lives on each tab of Settings, and what it changes.
+  </DocCard>
+  <DocCard href="/docs/scheduling/how-scheduling-works" title="How scheduling works">
+    The board, and the life of a booking.
+  </DocCard>
+</CardGrid>

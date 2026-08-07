@@ -1,0 +1,105 @@
+<Summary>
+<Where app="web">Reports → Compliance → Training records</Where> is the log to hand an
+inspector: every graded lesson, both signatures, and the hours. Set the range, filter to the
+student, add the columns you want, and export.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers</Roles>
+
+Instructors cannot open Reports, so this is a front-desk or chief-instructor job.
+
+## Open the Training records report
+
+<Steps>
+  <Step n={1} title="Open Reports">
+    From the left navigation.
+  </Step>
+  <Step n={2} title="Choose Compliance → Training records">
+    In the report rail.
+  </Step>
+  <Step n={3} title="Set the date range">
+    It opens on the past 90 days. Widen it to the period being inspected.
+  </Step>
+</Steps>
+
+Each row is one graded lesson. As the report opens that is the date, the student, the course,
+the lesson, the grade, the flight and ground hours, the instructor, and the signature state.
+
+<Screenshot id="report-training-records" />
+
+<Callout type="note">
+The range filters on the **signature date**, falling back to the day the draft was opened when
+a record was never signed. So a lesson an instructor started in March and never finished still
+appears in March, which is where an inspector would look for it.
+</Callout>
+
+## Set the range and the student
+
+Filter on **Student** to produce one person's log, and on **Course** as well if they are
+enrolled on more than one.
+
+Useful optional columns, added from the report toolbar: **Stage**, **Type**, **Simulator**,
+**Notes**, **Superseded**, **Correction**, and **Credits**, which counts the ledger entries
+each signed lesson posted.
+
+If you pull the same thing every year, [save the view](/docs/reports/save-a-report-view) so the
+range, the filters and the columns come back next time.
+
+## What each Signatures value means
+
+| Value | Means |
+|---|---|
+| Not signed | A draft. The instructor opened it and never signed. It credits nothing. |
+| Awaiting student | The instructor signed it, so the hours are credited, but the student has not countersigned. |
+| Complete | Both signatures are on the record. |
+
+Filter Signatures to **Not signed** before an inspection to find drafts an instructor left
+open, and to **Awaiting student** to find records nobody countersigned. Neither is chased
+automatically, so this report is how you find them.
+
+## Superseded and Correction rows
+
+A record that has been amended stays in the report, flagged **Superseded**, with its
+replacement flagged **Correction**. Both are shown on purpose.
+
+That is the whole reason AerScheduler amends rather than edits: the original is still there,
+the correction is beside it, and the reason for the change is on the reversal in the student's
+ledger. See [Correct a signed lesson record](/docs/training/correct-a-signed-lesson).
+
+<Callout type="tip">
+Do not try to tidy these out of the export. A log with the wrong figure quietly replaced is
+worth less to an inspector than one that shows the correction being made.
+</Callout>
+
+## Export it
+
+Use the export action on the report toolbar. The export carries the columns you have on
+screen, the range you set, and the filters you applied, so get the view right first. See
+[Export a report to CSV](/docs/reports/export-a-report-to-csv).
+
+## The Student progress report
+
+<Where app="web">Reports → People → Student progress</Where>
+
+The other half of the picture. One row per **enrollment**, with lessons done against lessons
+in the syllabus, percent complete, total hours, how many requirements are still short, the
+next lesson, and days since the student last flew.
+
+<Screenshot id="report-student-progress" />
+
+<Callout type="warning">
+This report is windowed on the **enrollment date**, not on activity, and it opens on year to
+date. Anybody who enrolled last year is missing until you widen the range. That single
+default is the usual reason a school thinks students have disappeared.
+</Callout>
+
+Somebody training for two certificates at once appears twice, once per enrollment. That is
+correct: they are two records with two sets of requirements.
+
+## Find students who have stopped flying
+
+On the same report, sort by **Requirements short**, or filter **Days since flown** to 30 or
+more. Read the **Next lesson** column to see what to book them for, then call them.
+
+The same signal appears one student at a time as the pace badge on their training record: At
+risk after 30 days without a signed lesson, Stalled after 60.

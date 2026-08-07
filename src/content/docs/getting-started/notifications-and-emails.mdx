@@ -1,0 +1,97 @@
+<Summary>
+Email switches live on <Where app="web">Notification settings</Where>, reached from the
+account menu at the foot of the left rail. Push switches live only in the iOS app, under
+<Where app="mobile">Settings → Notifications → Push</Where>. Both are per school and both
+save as you touch them.
+</Summary>
+
+## Two places, two different jobs
+
+| | Where | What it holds |
+|---|---|---|
+| **Notifications** (the bell) | Topbar in the console, the Inbox bubble in the app | Everything that has happened to you, with an unread count. Paged and searchable |
+| **Notification settings** | Account menu → Notification settings | Which of those things also reach you by email or push |
+
+In the iOS app, tapping a notification takes you to the thing it is about.
+
+## Choose which emails you get
+
+<Steps>
+  <Step n={1} title="Open the account menu at the foot of the left rail and choose Notification settings">
+    Or go straight to app.aerscheduler.com/me/notifications.
+  </Step>
+  <Step n={2} title="Leave Email notifications on">
+    That master switch is the top of the page. Everything below it is a category.
+  </Step>
+  <Step n={3} title="Turn off the categories you do not want">
+    Each one saves immediately. There is no Save button.
+
+    <Screenshot id="me-notifications" />
+  </Step>
+</Steps>
+
+## The categories
+
+| Group | Covers | Who sees the group |
+|---|---|---|
+| Organization | A member joining your school | Admins |
+| Reservations | A booking created, updated, cancelled or completed | Everyone |
+| Billing | An invoice received, paid or declined, and payment reminders | Everyone |
+| Documents | A document about to expire | Everyone |
+| Currency | A currency about to expire | Everyone |
+| Endorsements | An endorsement about to expire | Instructors and admins |
+| Maintenance | Inspection reminders | Admins and technicians |
+| Status | Being grounded | Everyone |
+
+Groups you would never receive anything from are hidden rather than shown greyed out, which
+is why two people at the same school see different pages.
+
+<Callout type="note">
+Every category starts **on**. A switch you have never touched behaves as on, so a quiet
+category means nothing is happening, not that it is off.
+</Callout>
+
+<Screenshot id="notification-preferences-maintenance" />
+
+## Push notifications
+
+Push goes to the iOS app, and the push switches exist only there:
+<Where app="mobile">Settings → Notifications → Push</Where>. The web page's switches are
+email only, which the line at the bottom of that page says.
+
+The two channels are independent. Turning reservation email off does not turn reservation
+push off.
+
+## What the master switch does not stop
+
+<Callout type="warning">
+Turning **Email notifications** off does not stop all email. Account email still sends:
+invitations, email verification and password resets. Those are how you get back into your
+account, so they are not optional.
+</Callout>
+
+School-wide announcements are also always delivered. Everyone in the school with the app
+installed receives the push, and announcements are never emailed. The role tags on an
+announcement describe who a notice is aimed at; the board itself is readable by everybody.
+
+## Preferences are per school
+
+If you fly at two schools you have two sets of switches. Switch schools first, then set
+them. See [Fly at more than one school](/docs/getting-started/switch-between-schools).
+
+## Unsubscribing from an email you did not expect
+
+Every notification email carries an unsubscribe link in the footer. One click, no sign-in,
+and that category stops. It is the quickest route for somebody who cannot remember their
+password, and the only route for somebody who is not at a computer.
+
+## Related
+
+<CardGrid>
+  <DocCard href="/docs/maintenance/who-gets-maintenance-reminders-and-squawk-alerts" title="Maintenance alerts">
+    Who is told when an inspection comes due or a squawk is logged.
+  </DocCard>
+  <DocCard href="/docs/getting-started/the-mobile-app" title="What the iOS app does">
+    Including the half of notification settings that lives only there.
+  </DocCard>
+</CardGrid>

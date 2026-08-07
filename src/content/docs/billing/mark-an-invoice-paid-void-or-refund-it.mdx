@@ -1,0 +1,125 @@
+<Summary>
+Open the invoice from <Where app="web">Billing</Where>. Mark paid records money that
+arrived some other way. Void cancels an invoice that should never have been raised, and
+only works while it is still unpaid. There is no refund in AerScheduler: a refund is done
+in your own Stripe dashboard.
+</Summary>
+
+<Roles>Owners, Admins</Roles>
+
+## Mark an invoice paid after cash, check or bank transfer
+
+<Steps>
+<Step n={1} title="Find the invoice on Billing">
+Use the date range and the Status filter to narrow the list, or open the invoice from the
+Recent invoices panel on the Dashboard.
+</Step>
+
+<Step n={2} title="Click Mark paid">
+It is in the row menu on the invoice table, and on the invoice detail panel itself.
+
+<Screenshot id="invoice-detail-panel" />
+</Step>
+</Steps>
+
+What that does:
+
+- The invoice flips to Paid here, and in Stripe it is recorded as paid out of band.
+- Who marked it paid is recorded on the invoice's audit trail.
+- The member gets a Payment received email and push notification.
+- If QuickBooks sync is on, a Sales Receipt is created. See
+  [Send paid invoices to QuickBooks Online](/docs/billing/send-paid-invoices-to-quickbooks).
+- If the member was grounded for unpaid invoices and this takes them under the threshold,
+  they are released automatically.
+
+Two things can stop you:
+
+- **"You cannot pay an invoice that has already been voided."** A voided invoice is
+  finished. Raise a new one instead.
+- **Stripe could not be reached.** You get a warning rather than an error, saying the
+  invoice was marked paid here but Stripe could not be updated. The invoice is correct in
+  AerScheduler; go and mark it paid in Stripe too, or the two will not agree.
+
+## Void an invoice
+
+Voiding is for an invoice that should never have existed: a duplicate, a booking billed to
+the wrong person, a flight that never happened.
+
+<Steps>
+<Step n={1} title="Open the invoice and click Void">
+Also available from the row menu on the Billing table.
+</Step>
+
+<Step n={2} title="Confirm">
+The dialog says this marks the invoice as void and that it cannot be undone. It means it.
+</Step>
+</Steps>
+
+The invoice is voided here and in Stripe, who voided it is recorded, and from then on it
+stops counting toward the Outstanding total, toward the grounding threshold, and toward
+every financial report.
+
+<Callout type="warning">
+You cannot void an invoice that has already been paid: "You cannot void an invoice that has
+already been paid." Voiding is not an undo for a payment. Once money has moved, the only
+correction is a refund in Stripe.
+</Callout>
+
+## Refunds happen in your Stripe dashboard
+
+There is no refund action in AerScheduler. Not in the web console, not in the iOS app, not
+in the API.
+
+To refund somebody, sign in to your school's own Stripe dashboard, find the payment, and
+refund it there.
+
+## What a refund does not change in AerScheduler
+
+<Callout type="important">
+A refund made in Stripe is not read back into AerScheduler. The invoice stays Paid, it
+keeps counting as revenue in the Revenue and Payments received reports, and if QuickBooks
+sync is on, the Sales Receipt stays in QuickBooks. Nothing here will tell you the money
+went back.
+</Callout>
+
+Keep your own note of refunds and correct them on your own books. If you refund often
+enough that this hurts, the practical habit is to record the refund in QuickBooks by hand
+on the same day you issue it in Stripe.
+
+## Voiding one share of a split booking
+
+On a booking split between several people, each payer holds their own invoice.
+
+Voiding one of them does not hand that share to the others. Their invoices are unchanged,
+and the booking becomes partially billed rather than unbilled.
+
+<Callout type="warning">
+**Create invoice** on the booking will not fill that gap, on either surface. It is hidden
+while anybody on the booking still holds a live invoice, which is exactly the state you are
+in. Raise a [manual invoice](/docs/billing/create-a-manual-invoice) for that one payer
+instead. It only comes back if you void every invoice on the booking.
+</Callout>
+
+## Who is allowed to do this
+
+| Role | Mark paid | Void | Send reminder |
+|---|---|---|---|
+| Owner | Yes | Yes | Yes |
+| Admin | Yes | Yes | Yes |
+| Dispatcher | No | No | No |
+| Instructor | No | No | No |
+| Student, renter | No | No | No |
+
+Dispatchers cannot open the Billing page at all. Full detail in
+[Who can see and do what in billing](/docs/billing/who-can-do-what-in-billing).
+
+## Related
+
+<CardGrid>
+<DocCard href="/docs/billing/chase-unpaid-invoices" title="Chase an unpaid invoice">
+Reminders and grounding, for the invoices you do want paid.
+</DocCard>
+<DocCard href="/docs/billing/billing-troubleshooting" title="Billing troubleshooting">
+Wrong amounts, missing invoices, and the behaviour that catches people out.
+</DocCard>
+</CardGrid>

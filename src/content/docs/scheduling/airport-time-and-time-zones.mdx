@@ -1,0 +1,107 @@
+<Summary>
+Every time on the schedule is drawn in the airport's own zone, so a 9:00 AM lesson reads
+9:00 AM whether you check it from the front desk or from another state. Admins set the
+school's zone under <Where app="web">Settings → Organization</Where>. You can switch your
+own view to your own zone under <Where app="web">You → Profile</Where>.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers, Instructors, Students, Renters, Technicians</Roles>
+
+## What airport time means
+
+AerScheduler picks the zone for a booking in this order:
+
+1. the time zone on the **location** the booking is at
+2. failing that, the **organization's** time zone
+3. failing both, whatever zone the device you are reading it on is in
+
+The aircraft and the instructor are going by the clock on the wall at the field, so that is
+the clock the board uses. A 9:00 AM lesson stays 9:00 AM in the day board, the week board, the
+booking form and the detail panel, no matter where the person looking at it happens to be.
+
+## Set your school's time zone
+
+<Where app="web">Settings → Organization</Where>, then pick a zone. Owners and admins
+only.
+
+<Screenshot id="settings-org-timezone" />
+
+Do this on day one. It is the single setting that makes everybody's schedule agree, and it is
+a hard prerequisite for
+[multi-day bookings](/docs/scheduling/overnight-and-multi-day-trips), which stay greyed out
+until it is set.
+
+## Set a time zone for a second airport
+
+If the school operates from more than one field, give each location its own zone under
+<Where app="web">Facilities → Locations</Where>. Edit the location and pick its **Time
+zone**. A location's zone beats the organization's for bookings at that field, so a school
+with a base in Denver and a satellite in Phoenix labels each booking against the right clock
+instead of splitting the difference.
+
+A location with no zone of its own carries a **No time zone** badge in that list, which is
+the quickest way to find the ones still falling back to the organization's.
+
+## Choose what you see
+
+Every member controls their own view from the **My time zone** card on
+<Where app="web">You → Profile</Where>.
+
+<Screenshot id="profile-time-zone-card" />
+
+Two settings on the card:
+
+| Setting | Options | What it does |
+|---|---|---|
+| Show the schedule in | Airport time (recommended), My time zone | Which clock the whole schedule is drawn in |
+| Time zone | Automatic, or a zone you pick | What "your time" means. Automatic follows your device and moves with you |
+
+The default is airport time, and it is the recommendation for a reason. Switching to your own
+zone is for the person who genuinely works remotely and thinks in their own clock. If you fly
+at the field, leave it alone.
+
+## When a time gets a zone label
+
+A time is labelled with its zone abbreviation, and the detail panel appends your own time, only
+when the two disagree **at that instant**. When they agree there is no label, because a label
+on every time would be noise.
+
+That instant matters. Phoenix and Denver read the same for half the year and differ for the
+other half, so the same pair of people see labels appear and disappear at the DST changeover
+without anybody changing a setting.
+
+## If no time zone is set anywhere
+
+With no zone on the location and none on the organization, times fall back to each person's
+own device. The schedule then genuinely looks different to different people, and it changes
+under one person when they travel. That is the state that produces "the times moved" support
+calls. Set the organization's zone and it stops.
+
+<Callout type="warning">
+In the Month view, a booking's chip can show a different start time from the one on the day
+and week boards. If a month chip and the day board disagree, trust the day board, or open the
+booking to read its time in the detail panel.
+</Callout>
+
+## Why this matters to the bill
+
+Two places where the zone is not cosmetic:
+
+- **Nights away.** A multi-day trip bills a minimum number of hours per night, and the nights
+  are counted at the airport. This is why multi-day bookings cannot even be turned on until a
+  zone exists: with the count falling back to a device, two people booking the same trip would
+  be billed differently.
+- **Local midnight.** A booking that ends exactly at midnight is a same-day booking. One that
+  ends at 12:15am is a night away. Which side of the line you are on is decided by the
+  airport's clock, not yours.
+
+## Related
+
+<CardGrid>
+<DocCard href="/docs/scheduling/overnight-and-multi-day-trips" title="Book a trip that keeps the aircraft overnight">
+Why a time zone is a prerequisite, and how nights are counted.
+</DocCard>
+<DocCard href="/docs/scheduling/booking-rules-and-settings" title="Booking rules and settings">
+The rest of the settings that change how booking behaves.
+</DocCard>
+</CardGrid>

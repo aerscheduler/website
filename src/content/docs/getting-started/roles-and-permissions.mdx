@@ -1,0 +1,209 @@
+<Summary>
+Seven roles: **owner, admin, dispatcher, instructor, student, renter, technician**. They
+are additive and there is no ladder, so a person can hold any combination or none. Set
+them from <Where app="web">People → ⋯ → Edit roles</Where>.
+</Summary>
+
+## Roles hang off the school, not the person
+
+Your account (name, email, password, photo) is global. Your roles belong to your
+membership of one organization. That is why editing somebody's roles at one school changes
+nothing at another, and why a person can be an instructor at one club and a renter at the
+next.
+
+## The seven roles in one line each
+
+| Role | What it is for |
+|---|---|
+| Owner | Full control. Always carries admin with it |
+| Admin | Runs the school: people, aircraft, money, settings |
+| Dispatcher | Runs the board. No money, no settings |
+| Instructor | Teaches, signs off flights and lessons |
+| Student | Books training flights for themselves |
+| Renter | Rents aircraft solo |
+| Technician | Logs maintenance and squawks |
+
+Two words appear throughout the product and are worth learning:
+
+- **Staff** means owner, admin and dispatcher together: the people who run the operation
+  day to day. Staff land on the Dashboard, see the whole board, and can book on other
+  people's behalf.
+- Staff is **not** the set that can see money. Money is admin and owner only.
+
+<Callout type="tip">
+Roles add up. A student who is also a renter can book everything a student can, plus
+rentals. If somebody is missing a button, the usual fix is one more role, not a different
+one.
+</Callout>
+
+## Which pages each role can open
+
+| Page | Owner | Admin | Dispatcher | Instructor | Student | Renter | Technician |
+|---|---|---|---|---|---|---|---|
+| Dashboard | Yes | Yes | Yes | No | No | No | No |
+| Calendar (dispatch board) | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
+| People | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
+| Aircraft | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
+| Billing | Yes | Yes | No | No | No | No | No |
+| Reports | Yes | Yes | Yes | No | No | No | Yes |
+| Maintenance | Yes | Yes | Yes | No | No | No | Yes |
+| Go / No-Go | Yes | Yes | Yes | No | No | No | No |
+| Training | Yes | Yes | Yes | Yes | No | No | No |
+| Facilities | Yes | Yes | No | No | No | No | No |
+| Cancellations | Yes | Yes | Yes | No | No | No | No |
+| Audit Logs | Yes | Yes | No | No | No | No | No |
+| Settings | Yes | Yes | No | No | No | No | No |
+| Announcements | Yes | Yes | Yes | Yes | Yes | Yes | Yes |
+
+Everybody, whatever their roles, gets their own pages: home, their schedule, their
+invoices, their documents, their currencies, their profile.
+
+## Which reservations each role can book
+
+| Reservation type | Owner, Admin | Dispatcher | Instructor | Student | Renter | Technician |
+|---|---|---|---|---|---|---|
+| Dual | Yes | Yes | Yes | Yes | No | No |
+| Solo | Yes | Yes | Yes | Yes | No | No |
+| Shared | Yes | Yes | Yes | Yes | Yes | No |
+| Ground | Yes | Yes | Yes | Yes | No | No |
+| Sim | Yes | Yes | Yes | Yes | No | No |
+| Rental | Yes | Yes | No | No | Yes | No |
+| Guest | Yes | Yes | Yes | No | No | No |
+| Maintenance | Yes | Yes | No | No | No | Yes |
+
+Staff book for other people. A dispatcher's grant lets them book anybody, but it does not
+put the dispatcher in a seat: to fly, they need a flying role of their own.
+
+Full detail in [Which reservation type should I use?](/docs/scheduling/reservation-types).
+
+## Owner
+
+Everything an admin can do, plus:
+
+- Edit another owner's roles.
+- Change billing settings and connect Stripe.
+- Manage API keys and the QuickBooks connection.
+- Delete the organization (iOS app only).
+
+An owner cannot be removed by anybody. The last owner cannot give up the role or leave the
+school.
+
+## Admin
+
+Reaches every page in the console. Invites, removes, edits roles, grounds, ungrounds and
+archives members. Accepts and declines join requests and instruction pairing requests. Adds,
+edits, grounds and deletes aircraft, simulators and rooms, and approves renters on a tail.
+Sees and manages all money. Changes every organization setting. Reads anyone's documents,
+currencies, training records and endorsements. Books every reservation type on anyone's
+behalf.
+
+An admin cannot change an owner's roles, remove an owner, or remove or demote the last
+admin (including themselves). An admin who is not the owner cannot connect Stripe or change
+billing settings, and cannot delete the organization.
+
+## Dispatcher
+
+A dispatcher runs the ramp. They create, edit, cancel, ramp out, ramp in and close out every
+reservation type for anybody, ground and reinstate a member, read fleet and operations
+reports including utilization, read another member's currencies and documents, read the
+maintenance boards and open squawks, and see guests.
+
+They cannot see any money at all. No Billing page, no invoices, no outstanding balances, no
+revenue, no per-person spend.
+
+<Callout type="note">
+A dispatcher opening the Dashboard sees three stat cards, not four, and no Recent invoices
+panel. That is deliberate, not a loading failure.
+</Callout>
+
+They also cannot open Settings, Facilities or Audit Logs, sign a squawk off as resolved or
+verified, or read a student's training record or endorsements. Grounding is theirs, but
+archiving and removing a member are not: those stay owner and admin.
+
+## Instructor
+
+Reaches the Calendar, People, Aircraft and Training, plus their own pages. Books dual,
+solo, shared, ground, sim and guest reservations. Sees their students' flights, training
+records and endorsements. Closes out and signs off their own flights. Sets their own
+availability, which is a tab that exists only for instructors.
+
+An instructor cannot open the Dashboard, Billing, Reports, Facilities, Settings,
+Maintenance, Go / No-Go, Cancellations or Audit Logs. They cannot book a rental or a
+maintenance block, cannot read another member's documents, and cannot invite, ground,
+archive or remove anybody. Designing a syllabus needs a separate training permission: see
+[Who can do what in training](/docs/training/who-can-do-what-in-training).
+
+With **Instructors can override reservation prices** switched on, they get **Override
+payment** on a booking, on either surface. It is not limited to their own reservations.
+
+## Student
+
+Views the school schedule, the roster and the fleet. Books dual, solo, shared, ground and
+sim reservations for themselves. Sees their own training record, endorsements, currencies,
+documents and invoices, and pays their own invoices.
+
+A student cannot book a rental, see anyone else's money, currencies, documents or training
+records, see open squawks, or open any staff page.
+
+## Renter
+
+Views the schedule, the roster and the fleet. Books rentals, and shared bookings (two
+renters splitting a cross-country). Sees and pays their own invoices, and sees their own
+currencies and documents.
+
+A renter cannot book dual, solo, ground, sim, guest or maintenance reservations, and never
+sees simulator or classroom lanes on the board. With **Members can only book approved
+resources** on, they can book only the aircraft they have been checked out on. See
+[Check a renter out on an aircraft](/docs/getting-started/approve-a-member-on-an-aircraft).
+
+## Technician
+
+Reaches Maintenance and the fleet reports. Books maintenance blocks, which take an aircraft
+off the line. Logs squawks and signs them off as resolved or verified. Sees maintenance
+reminders and inspections across the fleet, and can ground an aircraft.
+
+A technician sees no money anywhere, cannot book any flying reservation, never sees
+simulator or classroom lanes, and cannot open the Dashboard, Billing, Settings, Facilities,
+Training, Go / No-Go or Audit Logs.
+
+## Somebody with no role
+
+A member who joined and was never given a role can sign in, see the schedule, the roster
+and the fleet, and see their own profile, documents, currencies and invoices. They cannot
+book anything: the **+** button and the Book link simply do not appear. They show up under
+the **No role yet** filter on People.
+
+## Change somebody's roles
+
+<Steps>
+  <Step n={1} title="Open People, or the person's record">
+    From the roster, use the row's **⋯** menu. From their page, press **Edit roles** in the
+    header.
+  </Step>
+  <Step n={2} title="Tick the roles they should hold">
+    Ticking **Owner** force-ticks **Admin** and locks it, because an owner is always an
+    admin.
+  </Step>
+  <Step n={3} title="Press Save roles">
+    Access changes immediately, everywhere: console, phone app and API.
+  </Step>
+</Steps>
+
+Three refusals you may meet:
+
+- "There must be at least one owner in your organization."
+- You cannot remove the last admin, including your own admin grant.
+- "You do not have permission to update the owner's roles." Only another owner can edit an
+  owner.
+
+## Two places roles behave unexpectedly
+
+Reports are open to dispatchers and technicians, but each sees only the categories their
+role grants. A dispatcher gets operations, fleet, people and compliance reports and no
+financial section at all. A technician gets fleet reports only. See
+[Who can see which reports](/docs/reports/who-can-see-which-reports).
+
+Search is scoped by role too, and training is scoped differently from everything else. A
+dispatcher can search another member's documents and currencies but not their training
+records. An instructor is the exact opposite. See
+[Find anything with search](/docs/getting-started/find-anything).

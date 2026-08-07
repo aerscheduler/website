@@ -1,0 +1,91 @@
+<Summary>
+**Trained under** is chosen once, in the New course dialog, and can never be changed. Part
+141 requires a published syllabus before anyone can enroll, warns when a lesson is graded
+out of order, requires the record to be certified, and refuses graduation while any FAA
+requirement is unmet. Part 61 enforces none of that.
+</Summary>
+
+Both regimes use exactly the same screens, the same syllabus editor and the same records.
+Only the gates differ.
+
+<Screenshot id="training-new-course-dialog" />
+
+## What Part 141 turns on
+
+| Gate | What happens |
+|---|---|
+| Publish before enrolling | You cannot enroll anybody against a draft. The attempt is refused with "A Part 141 course must be published before anyone can be enrolled on it." |
+| Out-of-order warning | Saving a draft record for a lesson whose earlier lessons are not complete returns a warning naming the count, and asks you to record a reason. It is a warning, never a block. |
+| Certification | A **Certify record** button appears in the training record header. Until it is used, graduating is refused with "A Part 141 record has to be certified by the chief instructor before the student graduates." |
+| Graduation gate | The **Graduate** button stays disabled while any requirement sourced Part 61 or Part 141 is unmet. The Overview tab names what is outstanding in an amber card. |
+| Certificate numbers | The graduation dialog asks for the §141.95 graduation certificate number, and stores it against the record. |
+
+Two things are worth reading twice. The out-of-order warning never stops a signature, and
+a requirement whose **Comes from** is set to "Our own" never blocks a graduation however
+short the student is. Only Part 61 and Part 141 requirements can hold the Graduate button
+down. See [Add hour and landing requirements](/docs/training/add-hour-requirements).
+
+The publish dialog on a Part 141 course also offers an **FSDO approval reference**. Fill in
+the reference you filed with your POI and it is stored against the version for your audit
+trail. It is optional, and nothing in the product depends on it.
+
+## What Part 61 does not enforce
+
+Under Part 61 nothing is gated at all:
+
+- You can enroll students against an unpublished draft.
+- Lessons can be graded in any order, with no warning.
+- There is no certification step and no **Certify record** button.
+- **Graduate** is never disabled, however far short of the hour requirements the student
+  is.
+
+<Callout type="warning">
+A Part 61 course still shows every requirement bar on the student's record, and those bars
+are accurate. They simply never stop anything. Schools build careful hour requirements on a
+Part 61 course and expect the Graduate button to catch a shortfall. It will not. Read the
+amber requirement rows on the Overview tab before you graduate anyone.
+</Callout>
+
+## Why the setting cannot be changed later
+
+No screen, no role and no support request can flip a course from Part 61 to Part 141 or
+back. Flipping it would retro-arm gates against records made under the other regime: a
+student who was legitimately graduated under Part 61 with 38 hours would suddenly be
+sitting on a record that says they should never have graduated.
+
+So the choice is made once, in the New course dialog, and it lives with the course.
+
+## Moving a school from Part 61 to Part 141
+
+Create a **new** course, set **Trained under** to Part 141, build its syllabus, publish it,
+and enroll new students on it. Students already training carry on to the end on the Part 61
+course.
+
+<Callout type="important">
+Every one of the four built-in syllabus templates creates a **Part 61** course, whatever
+certificate it is for. A school pursuing Part 141 that forks the Private Pilot template
+ends up with a Part 61 course it cannot convert. Start from **New course** instead, choose
+Part 141, and build the syllabus yourself.
+
+That is deliberate: an approved Training Course Outline is approved for one school by one
+FSDO, so no template can ship as one.
+</Callout>
+
+See [Create a course](/docs/training/create-a-course).
+
+## What to do next
+
+<CardGrid>
+<DocCard href="/docs/training/create-a-course" title="Create a course">
+The New course dialog, the four templates, and what you get afterwards.
+</DocCard>
+<DocCard href="/docs/training/publish-a-syllabus-version" title="Publish a syllabus version">
+What publishing locks, and how to change a published syllabus later.
+</DocCard>
+<DocCard href="/docs/training/graduate-or-end-an-enrollment" title="Graduate a student">
+Certifying a Part 141 record, and why Graduate can be disabled.
+</DocCard>
+<DocCard href="/docs/training/training-records-for-an-faa-inspection" title="Records for an inspection">
+The §141.101 log to hand an inspector, and how to export it.
+</DocCard>
+</CardGrid>

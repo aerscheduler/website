@@ -1,0 +1,109 @@
+<Summary>
+A guest has no account, so there is no PIN and nobody signs off. Ramp out and ramp in as
+usual, then click Close out &amp; bill guest in the booking's Close-out section. Stripe
+creates a customer for the guest and emails them the invoice with a pay link.
+</Summary>
+
+<Roles>Admins, Instructors</Roles>
+
+## Before the flight
+
+The booking has to be a Guest reservation, and the guest record on it needs a name and an
+email address. That is what the invoice is addressed to. Nothing checks it for you, so make
+sure both are filled in before you close out.
+
+A guest booking holds one guest, and the guest is the payer. Both the aircraft time and
+the instruction land on their invoice: instruction is charged whenever there is an
+instructor plus somebody to instruct, and a guest counts.
+
+## Close out and bill the guest
+
+<Steps>
+<Step n={1} title="Ramp out">
+Open the booking on <Where app="web">Schedule</Where> and click Ramp out in the Close-out
+section. Enter Hobbs out and Tach out.
+</Step>
+
+<Step n={2} title="Ramp in">
+When the aircraft is back, click Ramp in and enter Hobbs in and Tach in, plus Instruction
+time (hrs) if you are charging for the lesson.
+</Step>
+
+<Step n={3} title="Click Close out & bill guest">
+On a member booking this is where the pilots would confirm with a PIN. On a guest booking
+the Close-out section offers Close out &amp; bill guest instead.
+</Step>
+
+<Step n={4} title="Check the guest's details">
+The dialog shows the guest's name, email and phone. Correct anything that is wrong before
+you send, because this is where the invoice is going.
+
+<Screenshot id="close-out-bill-guest" />
+</Step>
+
+<Step n={5} title="Confirm">
+Click Close out &amp; bill. The review is finalized and the invoice goes out.
+</Step>
+</Steps>
+
+<Callout type="note">
+Guests never enter a PIN. There is no pilot sign-off step on a guest booking at all, which
+is why this is a one-click close-out rather than the usual round of confirmations. The
+instructor on the booking can do it, not just an admin.
+</Callout>
+
+## What the guest receives
+
+Stripe creates a customer record for the guest and emails them the invoice with a payment
+link. Guest invoices are given 7 days to pay by default.
+
+The guest does not get an AerScheduler account. They cannot sign in, and they see nothing
+about your school beyond their own invoice.
+
+## Guest invoices in the Billing list
+
+The invoice appears on <Where app="web">Billing</Where> alongside everything else, and the
+instructor who flew it can open it from the reservation.
+
+<Callout type="warning">
+On a guest invoice the Customer column shows a dash, and the invoice detail panel reads
+"No customer". The guest's name and email live on the booking, not on the invoice row.
+Identify a guest invoice by the linked flight in the detail panel.
+</Callout>
+
+## Reminders do not apply to guests
+
+Send payment reminder is refused on a guest invoice: "Guest invoices are emailed by
+Stripe". Chasing a guest happens in your own Stripe dashboard, where the invoice was sent
+from.
+
+## If the guest record is incomplete
+
+<Callout type="warning">
+The close-out does not check the guest's details. With the name or the email missing,
+**Close out &amp; bill** still succeeds, the booking locks as reviewed, and no invoice is
+raised. Nothing on screen tells you.
+</Callout>
+
+You cannot run the close-out a second time. It answers "This reservation has already been
+reviewed", and the guest's details can no longer be corrected on the booking. Bill the
+guest by hand instead, on the Generate Invoice screen in the iOS app, where you can type
+their name and email in directly.
+
+## Billing a guest for something that is not a flight
+
+The web console's New invoice dialog can only pick a member. To invoice a guest for a
+headset, a photo package or anything else, use the Generate Invoice screen in the iOS app,
+which has a guest recipient field. See
+[Create a manual invoice](/docs/billing/create-a-manual-invoice).
+
+## Related
+
+<CardGrid>
+<DocCard href="/docs/scheduling/close-out-a-guest-flight" title="Close out a guest flight">
+The scheduling side of the same booking.
+</DocCard>
+<DocCard href="/docs/billing/mark-an-invoice-paid-void-or-refund-it" title="Mark paid, void or refund">
+What to do when the guest pays you in cash on the ramp.
+</DocCard>
+</CardGrid>

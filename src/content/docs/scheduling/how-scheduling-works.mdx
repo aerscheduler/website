@@ -1,0 +1,133 @@
+<Summary>
+Your whole schedule is one page. The **Calendar** link in the left nav opens a board
+titled **The Ramp**, which shows every booking your school has for the day, week or
+month you are looking at. Each booking then walks the same path: booked, ramped out,
+ramped in, signed off, invoiced.
+</Summary>
+
+## The board, and what it shows
+
+<Where app="web">Calendar</Where> opens <Where app="web">The Ramp</Where> at
+`/schedule`. It is the whole organization's schedule, not just yours. Every member can
+see it, on purpose, so nobody books over a flight they could not see.
+
+What changes by role is which lanes are drawn and what you can act on:
+
+- Owners, admins, dispatchers, instructors and students see aircraft, simulator and room lanes.
+- Renters and technicians see aircraft lanes only.
+
+A red now-line is drawn across today so you can see at a glance what is out. The
+counter on the right reads something like `47 reservations`, and switches to
+`12 of 47 matching` once you start filtering.
+
+<Screenshot id="schedule-day-board" />
+
+<Callout type="note">
+The board refreshes itself about every 20 seconds, so bookings appear and change
+without you doing anything. It skips the refresh while somebody is mid-drag, because
+pulling the block out from under the cursor would be worse.
+</Callout>
+
+Cancelled bookings are not drawn on the board at all. To find one, use the
+[Cancellations report](/docs/scheduling/cancel-a-reservation) or open the booking's own
+link. The iOS app's Reservations list does include them, under its Canceled filter.
+
+## The life of a booking
+
+Every booking carries a status badge in its detail panel. The badge is the fastest way
+to see where a flight is stuck.
+
+| Badge | What has happened | What happens next |
+|---|---|---|
+| Not started | It is booked. The aircraft is still on the line. | [Ramp out](/docs/scheduling/ramp-out-and-ramp-in) when it leaves. |
+| In flight | Ramped out. The departure Hobbs and tach are recorded. | Ramp in when the aircraft is back. |
+| Awaiting review | The return readings are in. | Every pilot on it [signs off with their PIN](/docs/scheduling/sign-off-with-your-pin). |
+| Reviewed | Everyone has signed off. | The invoice is raised automatically. |
+| Billed | The invoice exists. | The payer pays it. |
+| Paid | Settled. | Nothing. |
+
+A booking with no aircraft, such as a ground lesson in a classroom, skips the ramp
+steps entirely. See [Close out a ground lesson](/docs/scheduling/close-out-a-ground-lesson).
+
+<Screenshot id="reservation-detail-panel" />
+
+The detail panel also carries a timeline of what happened to the booking: Booked,
+Ramped out, Ramped in, Signed off, Invoiced, Paid, Cancelled, Last edited.
+
+## Day, week, month and list
+
+Four ways to look at the same bookings.
+
+| View | What it draws |
+|---|---|
+| Day | Rows are resources (aircraft, simulators, rooms), columns are hours. |
+| Week | Seven columns, one per day, with a time grid down the side. |
+| Month | A grid of whole weeks, up to three bookings per day, then a `+N more` link. |
+| List | The same bookings as a plain vertical list instead of a grid. |
+
+Use the Month / Week / Day tabs to switch, the arrows either side to step forward and
+back, and **Today** to come home. There is a date picker in the header if you need to
+jump somewhere specific.
+
+The Board / List toggle is a desktop control. On a narrow screen you always get the
+list, because a resource grid on a phone is unreadable.
+
+<Screenshot id="schedule-month-grid" />
+
+## Rows are resources, and one row is the catch-all
+
+On the day board every row is a thing you can book: a tail number, a simulator, a room.
+The row you click is what the new booking is for. Clicking a room lane opens the form
+already set to Ground and a simulator lane already set to Sim. Clicking an aircraft lane
+leaves the type alone, because six of the eight types book an aircraft.
+
+The last row is the catch-all. It is labelled **Unassigned** when it holds bookings with
+no resource at all, and **Other** when it also holds bookings whose lane is not drawn on
+your board, such as a room booking seen by a renter.
+
+<Screenshot id="schedule-unassigned-row" />
+
+<Callout type="tip">
+Nothing is ever dropped off the board. If a booking is not in a lane, it is in this row.
+Dual is the one type that can be booked with no aircraft, which is how you schedule a
+briefing, and those bookings live here.
+</Callout>
+
+## Where to find your own bookings
+
+The board is the whole school. For just your own flights:
+
+- <Where app="web">You &rarr; Schedule</Where> lists the bookings you are on, grouped by Today, Tomorrow and then by weekday. A technician sees the maintenance they scheduled.
+- <Where app="web">You &rarr; Home</Where> shows your next reservation and the ones coming up.
+
+Opening a booking from either place gives you the same detail panel as the board, so you
+can ramp out, ramp in and sign off from there.
+
+<Screenshot id="my-schedule-list" />
+
+## What the iOS app does
+
+The app is the same account, narrowed to what a pilot needs away from a desk: the
+calendar, your reservations, creating a booking, and the view-reservation screen with its
+progress stepper (Ramp out, Ramp in, Review times, Completed).
+
+Correcting a reading after the fact and overriding a booking's rates are on both surfaces.
+The app calls them **Update Details** and **Override Payment**; the console calls them
+**Correct times** and **Override payment**, on the reservation panel.
+
+## Where to go next
+
+<CardGrid>
+  <DocCard href="/docs/scheduling/reservation-types" title="Which reservation type should I use?">
+    The eight types, what each one books, and who may be on it.
+  </DocCard>
+  <DocCard href="/docs/scheduling/book-a-reservation" title="Book a reservation from the dispatch board">
+    How the front desk books for somebody else.
+  </DocCard>
+  <DocCard href="/docs/scheduling/book-a-solo-flight" title="Book your own flight or lesson">
+    For students, renters, instructors and technicians.
+  </DocCard>
+  <DocCard href="/docs/scheduling/filter-and-search-the-schedule" title="Find a booking on the schedule">
+    Why most filters dim instead of hiding.
+  </DocCard>
+</CardGrid>

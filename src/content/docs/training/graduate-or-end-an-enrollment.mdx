@@ -1,0 +1,115 @@
+<Summary>
+On a Part 141 course, click **Certify record** in the training record header first, then
+**Graduate** and type the graduation certificate number. On a Part 61 course, Graduate is the
+only step. To stop an enrollment that will not finish, use **End enrollment** and choose
+Terminated or Transferred out.
+</Summary>
+
+<Roles>Owners, Admins</Roles>
+
+Instructors can do all of this if they hold the Enroll and graduate grant.
+
+## Certify a Part 141 record
+
+§141.85 makes certifying the student's record the chief instructor's job. In AerScheduler
+that is one button in the training record header: **Certify record**. It stamps the record
+with the date and who clicked it, and a Record certified badge appears in the header.
+
+The button only exists on Part 141 courses, and only while the enrollment is still In
+training.
+
+<Callout type="warning">
+AerScheduler does not check that the person clicking is your chief instructor. It checks that
+they are an admin or hold the Enroll and graduate grant. Make sure the right person signs
+in and does it.
+</Callout>
+
+Until the record is certified, graduating a Part 141 student is refused.
+
+## Graduate a student
+
+<Steps>
+  <Step n={1} title="Open the student's training record">
+    <Where app="web">Training → Students → the student</Where>
+  </Step>
+  <Step n={2} title="Click Graduate">
+    In the page header.
+  </Step>
+  <Step n={3} title="Type the graduation certificate number">
+    Part 141 only. This is the §141.95 number, stored on the record for your audit trail.
+  </Step>
+  <Step n={4} title="Click Graduate">
+    The status badge changes to Graduated and the graduation date is recorded.
+  </Step>
+</Steps>
+
+<Screenshot id="graduate-dialog" />
+
+<Callout type="note">
+No certificate document is produced. The number you type is stored, not printed. Whatever you
+hand the student is still yours to produce.
+</Callout>
+
+## Why the Graduate button is disabled
+
+On a **Part 61** course it never is. Nothing blocks graduation no matter how short the hours
+are, because the instructor decides readiness and the FAA counts the hours at the checkride.
+The requirement bars are advice, not a gate.
+
+On a **Part 141** course it is disabled while either of these is true:
+
+- the record has not been certified, or
+- any requirement sourced from Part 61 or Part 141 is still unmet.
+
+The reason is written in the amber "Not ready to graduate" card on the **Overview** tab,
+which names the outstanding requirements. If you are sitting on the Requirements or Lessons
+tab you will see a dead button and no explanation, so go back to Overview.
+
+<Screenshot id="enrollment-overview" />
+
+Requirements you created with **Comes from** set to "Our own" never block graduation, however
+short the student is. Only a Part 61 or Part 141 requirement can stop it. See
+[Add hour and landing requirements to a course](/docs/training/add-hour-requirements).
+
+## End an enrollment: terminated or transferred
+
+For a student who stops, or who moves to another school.
+
+<Steps>
+  <Step n={1} title="Click End enrollment">
+    In the training record header.
+  </Step>
+  <Step n={2} title="Choose Terminated or Transferred out">
+    Pick the one that is true. This distinction is exactly what a student disputes two years
+    later, which is why the reason is stored on both.
+  </Step>
+  <Step n={3} title="Type a reason, then click Record it">
+    The status, the date and the reason are recorded, and the change is written to the audit
+    trail.
+  </Step>
+</Steps>
+
+## What happens to the record afterwards
+
+Nothing is removed. Every lesson record, every signature and every ledger credit stays
+exactly as it was, whether the student graduated, quit or transferred. §141.101 requires the
+school to keep the record either way.
+
+Two consequences worth knowing:
+
+- **No further lesson records can be added.** Once an enrollment is graduated, terminated or
+  transferred, the console refuses new records against it, and there is no un-graduate. If
+  there is an unrecorded ground lesson, record it before you graduate them.
+- **An unbilled enrollment fee is still billable.** A student who left in week two may still
+  owe it, so the Bill button stays on the record. See
+  [Charge a course enrollment fee](/docs/training/course-enrollment-fee).
+
+## Re-enrolling a student later
+
+A student may only have one active enrollment per syllabus version, but after a termination
+they can be enrolled again on the same version. The old enrollment stays where it is, with
+its own records, and the new one starts empty.
+
+If they are coming back after a long gap, consider posting their earlier hours as
+[prior training credit](/docs/training/credit-prior-training) against the new enrollment,
+dated when they were actually flown.

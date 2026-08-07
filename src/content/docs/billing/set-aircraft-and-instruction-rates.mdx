@@ -1,0 +1,140 @@
+<Summary>
+An aircraft's hourly rate, its wet or dry basis, and whether it bills on Hobbs or tach all
+live on the aircraft itself under <Where app="web">Aircraft</Where> → edit. Instruction is
+priced from the rating's rate, or from the school's default instructor rate when the
+booking has no rating.
+</Summary>
+
+<Roles>Owners, Admins</Roles>
+
+## Set an aircraft's hourly rate
+
+<Steps>
+<Step n={1} title="Open Aircraft and choose the tail">
+Then choose to edit it.
+</Step>
+<Step n={2} title="Set Rate (per hour)">
+What one hour on this aircraft costs the person flying it.
+</Step>
+<Step n={3} title="Set Rate basis">
+**Wet (fuel included)** or **Dry**.
+</Step>
+<Step n={4} title="Set the Bill by Hobbs time toggle">
+On bills the Hobbs meter, off bills tach time.
+</Step>
+<Step n={5} title="Save">
+The aircraft list now shows it as, for example, "$165.00 wet /Hobbs". Every future booking
+of that tail prices from this.
+</Step>
+</Steps>
+
+<Screenshot id="aircraft-rate-fields" />
+
+<Callout type="note">
+Picking a type template (Cessna 172, PA-28 and so on) prefills a suggested wet rate. It is
+a ballpark to save typing, not your school's price. Check it before you save.
+</Callout>
+
+## Wet or dry, and what that means for fuel
+
+A wet rate includes fuel, a dry rate does not. An aircraft holds one or the other:
+choosing a basis clears the other one.
+
+<Callout type="warning">
+AerScheduler never adds fuel to an invoice. There is no fuel line item anywhere in the
+product, on a dry rate or any other. A school billing dry rates has to bill fuel
+separately, on a [manual invoice](/docs/billing/create-a-manual-invoice).
+</Callout>
+
+## Bill by Hobbs or by tach
+
+| Toggle | What the invoice measures |
+|---|---|
+| Bill by Hobbs time **on** (the default) | Hobbs in minus Hobbs out |
+| Bill by Hobbs time **off** | Tach in minus tach out |
+
+The pilot enters **both** readings at ramp-out and at ramp-in either way. Only the meter
+you pick here is priced. Switching this toggle changes the number of hours on every future
+invoice for that aircraft, so it is worth getting right before you go live.
+
+## Simulators and rooms
+
+A simulator has a single rate and its own bill-by-Hobbs switch, both on the facility form
+rather than the aircraft form.
+
+A room has no rate at all and is never charged for time. If you charge for a classroom,
+bill it on a manual invoice.
+
+## Set the school's default instruction rate
+
+<Where app="web">Settings → Billing</Where> → **Default instructor rate** → **Save
+changes**. It starts at $0.00, and only the organization owner can save that card.
+
+This is the fallback, and it is used only when the booking has no rating attached at all.
+
+<Callout type="warning">
+A rating always carries a rate, so a rating saved at $0.00 bills instruction at $0.00. The
+school default is not consulted to fill the gap. If a rating's bookings are billing nothing
+for instruction, check that rating's own rate first.
+</Callout>
+
+## Set a rate per rating
+
+<Where app="web">Settings → Instruction rates</Where> lists your ratings and what
+instruction on each costs per hour.
+
+<Steps>
+<Step n={1} title="Click Add rating">
+</Step>
+<Step n={2} title="Enter the name and the rate">
+For example "Private Pilot", then its **Default instructor rate**.
+</Step>
+<Step n={3} title="Click Add rating to save it">
+Bookings carrying that rating now price instruction at this figure instead of the
+organization default.
+</Step>
+</Steps>
+
+<Screenshot id="instruction-rates-tab" />
+
+<Callout type="warning">
+There is no per-instructor rate anywhere in AerScheduler. Every CFI teaching a given
+rating bills the same hourly figure. The only rate that varies is the one attached to the
+rating on the booking.
+</Callout>
+
+## When instruction is charged at all
+
+Instruction is only charged when the booking has an instructor **and** somebody to
+instruct: a student, or a guest on a discovery flight. An instructor flying alone is
+renting the aircraft, not teaching, so no instruction is billed and the instructor becomes
+the payer for the aircraft time.
+
+The hours charged are the **Instruction time (hrs)** entered at ramp-in, not the length of
+the booking. If the CFI briefed for half an hour either side, that goes in the same box.
+
+## Rates for a membership tier
+
+A membership plan can carry its own per-aircraft rates, so full members pay one figure and
+associates another on the same tail. Set them in
+<Where app="web">Settings → Memberships</Where> by reopening a saved plan and filling in
+**Aircraft rates**.
+
+They are deliberately sparse: leave one blank and that tail bills at its published rate.
+
+<Callout type="important">
+A tier rate is only used when **every** billable pilot on the booking resolves to the same
+tier. Anything mixed or ambiguous falls back to the aircraft's published rate. See
+[Set up membership plans and dues](/docs/billing/set-up-membership-dues).
+</Callout>
+
+## Related
+
+<CardGrid>
+<DocCard href="/docs/billing/close-out-a-flight-and-bill-it" title="Close out a flight so it invoices">
+Where those hours get recorded, and when the invoice is raised.
+</DocCard>
+<DocCard href="/docs/billing/why-a-flight-was-not-invoiced" title="Why a flight was not invoiced">
+Including what happens when an aircraft has no rate at all.
+</DocCard>
+</CardGrid>

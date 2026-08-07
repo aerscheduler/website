@@ -1,0 +1,94 @@
+<Summary>
+An admin sets up the categories on
+<Where app="web">Settings → School → Document types</Where>. Members file their own from
+<Where app="web">You → Documents</Where>. Admins file one on somebody's behalf from that
+person's record, under **Compliance**.
+</Summary>
+
+## Set up your document types first
+
+Nothing can be uploaded until at least one type exists. A type is the category a document
+is filed under: Medical Certificate, Photo ID, Renter Agreement, and whatever else your
+school insists on.
+
+<Roles>Owners, Admins</Roles>
+
+Each type carries four settings:
+
+| Setting | What it does |
+|---|---|
+| Admin upload only | Members do not see this type in their own upload picker. An admin files it for them |
+| Has an expiry date | Makes the expiry field appear when the document is uploaded |
+| Warn this many days ahead | How much notice you want before it expires. The form starts at 30 days |
+| Active | Turn a type off to retire it without deleting anything |
+
+<Callout type="note">
+**Admin upload only** is about uploading, not reading. It does not hide a filed document
+from the member. Use it for the paperwork you want to control the copy of, such as a signed
+rental agreement.
+</Callout>
+
+## Upload your own document
+
+<Steps>
+  <Step n={1} title="Open Documents under You in the left rail">
+    Or go to your own record and look under **Compliance**.
+  </Step>
+  <Step n={2} title="Press Upload and choose the type">
+    The picker shows only the types your school has marked active and has not restricted to
+    admins.
+  </Step>
+  <Step n={3} title="Add the expiry date if you are asked for one">
+    Only types set to expire ask.
+
+    <Screenshot id="me-documents-upload" />
+  </Step>
+</Steps>
+
+## Upload on somebody's behalf
+
+Open the person from <Where app="web">People</Where>, go to the **Compliance** section of
+their record, and upload there. Admins can file any type, including the ones marked admin
+upload only.
+
+## Who can see whose documents
+
+| Role | Whose documents they can read |
+|---|---|
+| Owner, Admin | Anybody's |
+| Dispatcher | Anybody's |
+| Instructor | Their own |
+| Student, Renter, Technician | Their own |
+
+An instructor being unable to see a student's medical surprises people, since instructors
+can see that student's training record and endorsements. The two are scoped differently on
+purpose.
+
+## Expiry warnings
+
+A type with an expiry date and a warning period generates a **Document expirations**
+notification the set number of days ahead, by email and by push. Members can turn that
+category off for themselves under
+[notification settings](/docs/getting-started/notifications-and-emails).
+
+If a document lapses anyway, **Missing or expired documents** and **Medical certificate
+expired** are both standard grounding reasons. See
+[Ground, archive or remove a member](/docs/getting-started/ground-archive-or-remove-a-member).
+
+## Two things that catch people out when editing a type
+
+<Callout type="warning">
+Turning **Has an expiry date** off on a type clears the expiry date on every document
+already filed under it. Those dates do not come back if you turn the setting on again.
+</Callout>
+
+<Callout type="warning">
+Deleting a document type does **not** delete the documents filed under it. The confirm
+dialog says so, and it is easy to read past. If you want a category to stop being used, set
+it to inactive rather than deleting it.
+</Callout>
+
+## Documents are per school
+
+Documents belong to your membership of one organization, the same as your roles. If you fly
+at two schools you file your medical at each of them.

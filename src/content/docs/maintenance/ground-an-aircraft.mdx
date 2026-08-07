@@ -1,0 +1,101 @@
+<Summary>
+Open the aircraft and click the red **Ground** button, or use the overflow menu on the
+Aircraft list. Type a reason. The aircraft cannot be booked for anything except maintenance
+until an admin clicks **Return to service**.
+</Summary>
+
+<Roles>Owners, Admins</Roles>
+
+## Ground it
+
+<Steps>
+  <Step n={1} title="Open the aircraft, or find it in the list">
+    <Where app="web">Aircraft → the tail</Where> for the detail page, or stay on
+    <Where app="web">Aircraft</Where> and use the overflow menu on the row or card.
+  </Step>
+  <Step n={2} title="Click Ground">
+    On the detail page it is the red **Ground** button in the header. In the list it is
+    **Ground aircraft** in the overflow menu. Both are visible to admins and owners only.
+  </Step>
+  <Step n={3} title="Type a reason">
+    The placeholder suggests the shape of it: annual inspection, oil leak, prop strike. Up
+    to 60 characters.
+
+    <Screenshot id="ground-aircraft-modal" />
+  </Step>
+  <Step n={4} title="Click Ground aircraft">
+    The tail immediately shows a Grounded badge everywhere it appears, and a red banner on
+    its own page.
+
+    <Screenshot id="aircraft-grounded-banner" />
+  </Step>
+</Steps>
+
+## Write a reason people can act on
+
+The reason is not a private note. It is shown to dispatchers, instructors and students
+wherever the tail appears, including in the airworthiness notice on the booking form and in
+the refusal message when somebody tries to drag a flight onto it.
+
+"Oil leak, in the shop Thursday" saves your front desk five phone calls. Grounding with no
+reason at all shows as "Grounded: No reason recorded."
+
+<Callout type="important">
+The reason also decides whether AerScheduler may ever lift the grounding by itself. Only the
+exact automatic reason "Maintenance" is cleared automatically. Because you typed this one by
+hand, signing inspections off will not lift it, deliberately. You return the aircraft to
+service yourself when the work is done.
+</Callout>
+
+## What grounding stops
+
+| Action on a grounded aircraft | Result |
+|---|---|
+| Creating any booking except maintenance | Refused with "Resource is grounded." |
+| Creating a maintenance booking | Allowed. This is the one exemption. |
+| Dragging a booking onto it on the dispatch board | Refused, naming the tail and the reason. |
+| Ramping out an existing booking | Refused. |
+
+## Bookings already on the aircraft stay where they are
+
+<Callout type="warning">
+Grounding does not cancel anything. The flights already on that tail stay on the dispatch
+board, looking normal, and none of the people on them are notified. They fail at ramp out,
+when the student is already standing at the desk. After you ground an aircraft, work the
+board yourself and move or cancel what is on it.
+</Callout>
+
+## Return it to service
+
+<Steps>
+  <Step n={1} title="Click Return to service">
+    On the aircraft's page, or from the overflow menu on the Aircraft list. Admins and
+    owners only.
+  </Step>
+  <Step n={2} title="Confirm">
+    The dialog asks to return the tail to service and warns that it will be schedulable
+    again.
+  </Step>
+</Steps>
+
+The grounded flag and the reason are both cleared, and a "Returned to service" line goes
+into the audit log with your name on it.
+
+## Why signing off an inspection did not lift your grounding
+
+Because you typed the reason. AerScheduler clears a grounding on its own in exactly one
+case: the reason is the single word "Maintenance", which only its own automatic grounding
+ever writes, and the last inspection holding it has been signed off.
+
+Anything a person typed is treated as a human decision and left alone. See
+[When AerScheduler grounds an aircraft by itself](/docs/maintenance/when-aerscheduler-grounds-an-aircraft).
+
+## Technicians cannot ground an aircraft
+
+Grounding and returning to service are admin and owner actions. A technician can add and
+sign off inspections, resolve squawks and book maintenance, but the **Ground** button is not
+shown to them at all.
+
+A technician who needs a tail off the line right now has two routes: ask an admin, or book
+it in for maintenance, which blocks the aircraft for that window. See
+[Who can do what in maintenance](/docs/maintenance/who-can-do-what-in-maintenance).

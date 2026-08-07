@@ -1,0 +1,126 @@
+<Summary>
+<Where app="web">Settings → Integrations → QuickBooks Online</Where>, organization owner
+only. Connect the Intuit company, pick one income item, then turn on Sync paid invoices.
+From then on every invoice becomes a QuickBooks Sales Receipt the moment it is paid. Unpaid
+and voided invoices never go across.
+</Summary>
+
+<Roles>Owners</Roles>
+
+## Before you connect
+
+Two things have to be true.
+
+**You must be the organization owner.** Every part of this page is owner only. An admin who
+is not the owner opens it and sees an Owner required panel. On the iOS app, Accounting
+Integrations tells you to manage QuickBooks on the web.
+
+**You need an active Product/Service item in QuickBooks.** Every line of every Sales Receipt
+posts to one income item that you pick here, and you cannot pick it if it does not exist
+yet. Create it in QuickBooks first if you have not: most schools use a single Flight
+Revenue or Sales item.
+
+## Connect QuickBooks
+
+<Steps>
+<Step n={1} title="Open Settings → Integrations → QuickBooks Online">
+The page has a three-step strip across the top: Connect, Map income, Sync on. It tells you
+where you are.
+
+<Screenshot id="quickbooks-setup" />
+</Step>
+
+<Step n={2} title="Click Connect QuickBooks">
+Intuit's own sign-in opens. Authorize the company you want AerScheduler to post into. Pick
+carefully if you keep more than one company file.
+</Step>
+
+<Step n={3} title="Check the company name">
+Once connected, the page shows the connected company's name. A sandbox company is labelled
+so.
+</Step>
+</Steps>
+
+## Choose the income item
+
+Pick one from Income item (from QuickBooks). The list is loaded live from your Products &amp;
+Services, so what you see here is what is in QuickBooks right now.
+
+Every line of every receipt posts to this one item. There is no per-line mapping.
+
+## Turn sync on
+
+Switch on Sync paid invoices. The toggle cannot be turned on until an income item has been
+chosen, which is the point of the three-step strip.
+
+From that moment, an invoice is pushed as soon as it becomes paid, whether that was a card
+payment, autopay, or you clicking Mark paid.
+
+## Backfill past paid invoices
+
+Click Sync past paid invoices to send invoices that were already paid before you connected.
+
+A run is capped at 25 invoices. Run it again for the next batch until the activity feed
+stops finding work.
+
+## What lands in QuickBooks
+
+One Sales Receipt per paid invoice, against a customer matched by email address, once and
+only once.
+
+Each receipt carries a private note holding the AerScheduler and Stripe references, the
+member, the instructor, the flight date and the tail number, so a receipt can always be
+traced back to the flight that produced it.
+
+In AerScheduler you see the result in two places: a green tick on the invoice row in the
+Billing table, and a QuickBooks section in the invoice detail panel showing the Sales
+Receipt id, how long ago it synced, and Open in QBO.
+
+<Screenshot id="invoice-detail-panel" />
+
+<Callout type="warning">
+Only paid invoices sync. Nothing about an unpaid or a voided invoice ever reaches
+QuickBooks. And because AerScheduler never learns about a refund made in Stripe, refunding
+somebody does not remove or reverse the Sales Receipt. See
+[Mark an invoice paid, void it, or refund it](/docs/billing/mark-an-invoice-paid-void-or-refund-it).
+</Callout>
+
+## When a sync fails
+
+Syncing fails softly and never blocks the money. If QuickBooks is unreachable when a member
+pays, the payment still succeeds and the invoice is still Paid here. Only the bookkeeping
+step is outstanding.
+
+A failed invoice shows a red Failed chip with the error on the Billing list, and the invoice
+detail panel offers Retry.
+
+The Activity feed at the bottom of the QuickBooks page records every attempt, success,
+skipped or error, with the invoice number and what triggered it. The most recent error is
+also shown at the top of the page.
+
+The common one is **"Invoice has no customer email for QuickBooks."** A Sales Receipt is
+matched to a QuickBooks customer by email, so an invoice with no email on it cannot be
+posted. Add the email to the member's record. Guest invoices without an email hit the same
+wall.
+
+If Intuit's authorization has lapsed, the page offers Reauthorize or Reconnect QuickBooks.
+Use it and then retry the failed invoices from their detail panels.
+
+## Disconnecting
+
+Disconnect QuickBooks revokes the tokens at Intuit and deletes the stored credentials here.
+Sales Receipts that already went across stay in QuickBooks; disconnecting does not reach
+back into your books.
+
+Reconnecting later starts from the setup strip again, including picking the income item.
+
+## Related
+
+<CardGrid>
+<DocCard href="/docs/billing/mark-an-invoice-paid-void-or-refund-it" title="Mark paid, void or refund">
+Marking an invoice paid is what triggers a sync.
+</DocCard>
+<DocCard href="/docs/billing/billing-troubleshooting" title="Billing troubleshooting">
+Including why the Tax collected report is empty.
+</DocCard>
+</CardGrid>

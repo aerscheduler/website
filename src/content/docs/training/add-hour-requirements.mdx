@@ -1,0 +1,132 @@
+<Summary>
+Open the course and go to **Requirements**, then click **Add**. A requirement is what a
+student must accumulate before graduating (40 hours total, 3 hours night, 10 night
+landings), tracked separately from lessons. Set the amount, set **Comes from**, and set any
+simulator, transfer or recency limit.
+</Summary>
+
+<Roles>Owners, Admins, holders of the Configure training grant</Roles>
+
+Requirements belong to a syllabus **version**, and the version has to be a draft. Add them
+before you build the lessons: the **Credits toward** box in the lesson dialog is empty until
+requirements exist.
+
+<Screenshot id="syllabus-requirements-tab" />
+
+## Add a requirement
+
+<Steps>
+<Step n={1} title="Course → Requirements → Add">
+</Step>
+<Step n={2} title="Enter a Code and a Label">
+The **Code** is a short stable key, for example `night`. It has to be unique inside the
+version. The **Label** is what the student reads on their record, so write it the way you
+would say it out loud: "Night flight training".
+</Step>
+<Step n={3} title="Choose Comes from">
+Part 61, Part 141, or **Our own**. This decides whether the requirement can ever block a
+graduation. See below.
+</Step>
+<Step n={4} title="Choose Measured in, and the amount">
+**Hours** or **Events**. Never both.
+</Step>
+<Step n={5} title="Set the limits, if any">
+For an hours requirement you can set **Simulator limit %**, **Transfer limit %**, and
+**Only count training from the last … months**.
+</Step>
+<Step n={6} title="Click Add requirement">
+</Step>
+</Steps>
+
+The requirement appears immediately on every enrolled student's Requirements tab, and
+becomes tickable under Credits toward on any lesson in the same version.
+
+## Hours or events, never both
+
+Choose **Hours** for anything measured on a clock: total time, dual received, night flight
+training. Choose **Events** for anything you count: 10 night landings, one long solo
+cross-country.
+
+An events requirement is fed by lessons that tick **per lesson** under Credits toward, so
+one signed lesson posts one event.
+
+## Comes from: Part 61, Part 141 or Our own
+
+| Comes from | On the student's record | Blocks a Part 141 graduation? |
+|---|---|---|
+| Part 61 | Shows a Part 61 badge | Yes |
+| Part 141 | Shows a Part 141 badge | Yes |
+| Our own | Shows a **School** badge | No, never |
+
+<Callout type="important">
+"Our own" is not a category label, it is a switch. A requirement sourced Our own is shown to
+the student, tracked exactly like the others, and can never stop them graduating however
+short they are. Use it for a bar your school sets above the regulation. Use Part 61 or Part
+141 for anything that has to hold the Graduate button down.
+
+On a Part 61 course nothing blocks graduation regardless. See
+[Part 61 vs Part 141](/docs/training/part-61-vs-part-141).
+</Callout>
+
+## Simulator and transfer limits
+
+Both are percentages of that one requirement.
+
+- **Simulator limit %** caps how much of the requirement may be met with device time.
+  Appendix B allows 20% or 15% depending on the course.
+- **Transfer limit %** caps how much may come from previous training. §141.77 allows 50%
+  from an approved Part 141 or 142 course, and 25% otherwise.
+
+Leave a box empty for no ceiling.
+
+<Callout type="warning">
+Ceilings are applied when the record is **read**, not when the credit is written. Every hour
+the student flew stays on the ledger forever. The requirement simply refuses to count more
+than the cap, so a row can legitimately read "10.0 of 40.0 hrs" with "Flown: 20.0 hrs"
+beside it, and the record explains which cap did it in amber underneath.
+
+That is not lost flying, and it is the single most common "the software has eaten my
+student's hours" email. See
+[Read a training record](/docs/training/read-a-training-record).
+</Callout>
+
+## Only count training from the last N months
+
+Some requirements only count recent training, for example the test-preparation hours that
+have to be flown close to the checkride. Set **Only count training from the last … months**
+and older training stops counting toward that one requirement. It stays on the record and on
+the ledger, and the student's Requirements row says so.
+
+<Callout type="warning">
+The window is in whole **calendar months, counted from the 1st**, which is the FAA's wording
+and not the same as N × 30 days. On 5 August with a 2 month window, anything flown from
+1 June onward counts, not from 6 June.
+
+It is judged on when the flying **happened**, not when it was typed in. That matters when
+you post prior training: leaving the flown date blank dates the hours to today and makes a
+2019 logbook look current forever. See
+[Credit prior training](/docs/training/credit-prior-training).
+</Callout>
+
+## Connect requirements to lessons
+
+A requirement on its own accumulates nothing. Hours reach it in two ways:
+
+1. **A signed lesson that credits it.** Open each lesson in the Syllabus tab and tick this
+   requirement under **Credits toward**, choosing flight time, ground time or per lesson.
+   [Build a syllabus](/docs/training/build-a-syllabus)
+2. **A credit posted by hand**, for prior training or device time.
+   [Credit prior training and simulator time](/docs/training/credit-prior-training)
+
+<Callout type="tip">
+After you add a requirement to an existing draft, go back through the lessons and tick it
+where it belongs. A requirement added late is a requirement no lesson feeds, and its bar
+will sit at zero all year.
+</Callout>
+
+## Editing and deleting
+
+Edit or delete a requirement with the controls on its row, while the version is a draft.
+Once the version is published, the whole requirement set is frozen with it, and the only way
+to change it is a new version. See
+[Publish a syllabus version](/docs/training/publish-a-syllabus-version).

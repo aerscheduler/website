@@ -1,0 +1,140 @@
+<Summary>
+Training is five pieces: a **course**, a **syllabus version**, an **enrollment**, a
+**lesson record**, and a **requirement**. You build a course, publish a version of its
+syllabus, enroll a student against that version, then grade and sign each lesson from the
+flight you already booked. The instructor's signature is what freezes the record and
+credits the hours.
+</Summary>
+
+## The five pieces
+
+| Piece | What it is | Where it lives |
+|---|---|---|
+| Course | A thing your school teaches: Private Pilot, Instrument Rating, Tailwheel endorsement. It holds the name, the description, whether it is trained under Part 61 or Part 141, and the enrollment fee. It does not hold the lessons. | <Where app="web">Training → Courses</Where> |
+| Syllabus version | One revision of that course's syllabus, named by you ("Rev A", "2026.1"). It owns every stage, lesson, task, requirement and the grading scale. It is a draft, published, or retired. | Course → Syllabus |
+| Enrollment | One student on one syllabus version. It carries the enrollment date, the status, and a snapshot of the course fee as it stood the day they enrolled. | Course → Students |
+| Lesson record | A lesson that actually happened: the grade, the flight and ground hours, notes, the instructor's signature and the student's countersignature. | The student's training record → Lessons |
+| Requirement | Something the student must accumulate before graduating: 40 hours total, 3 hours night, 10 night landings. Measured in hours or in events, never both. | Course → Requirements |
+
+A lesson is the template. A lesson record is the event. A student can fly the same lesson
+three times, and that is three records against one lesson.
+
+<Screenshot id="training-courses-list" />
+
+## Students are enrolled against a version, not a course
+
+This is the single most important idea in the module. Because the enrollment points at a
+version rather than at the course, revising your syllabus in March cannot change what a
+student who started in January is being trained against.
+
+The trade is that publishing a version freezes it forever. There is no unpublish. To
+change a published syllabus you create a new version, edit that, publish it, and retire
+the old one. See [Publish a syllabus version](/docs/training/publish-a-syllabus-version).
+
+## Lessons and hours are counted separately
+
+They are two different measures and they do not predict each other.
+
+- **Lessons complete** says how far through the syllabus the student is. A lesson counts
+  as complete when a record for it is signed **and** graded with a mark the course's scale
+  says completes the lesson.
+- **Requirements** say whether the student has the flight time to test. Hours arrive on a
+  requirement because a signed lesson credited them, or because somebody posted prior
+  training by hand.
+
+So a student can be on lesson 19 of 21 and still be hours short, and that is exactly the
+question this module exists to answer.
+
+What connects the two is **Credits toward** on each lesson: the list of requirements that
+lesson feeds, and from which clock (flight time, ground time, or a count per lesson). A
+lesson with nothing ticked is perfectly flyable and credits nothing at all.
+
+<Callout type="warning">
+If your hour bars never move, check Credits toward on the lessons your students are
+flying. It is the most common cause by a distance. See
+[Build a syllabus](/docs/training/build-a-syllabus).
+</Callout>
+
+## A normal week
+
+<Steps>
+<Step n={1} title="Book the flight as usual">
+Nothing about training changes how you book. If the student is enrolled, the booking form
+shows a grey "Next up" strip naming the lesson the syllabus suggests. Nothing is committed
+there.
+</Step>
+<Step n={2} title="Fly it, then close the booking out">
+Enter the Hobbs readings and the briefing time the way you always do.
+</Step>
+<Step n={3} title="Grade and sign in the Training record section">
+The close-out sheet grows a **Training record** section for each enrolled student on the
+booking. The lesson is preselected, and Flight and Ground are already filled in from the
+Hobbs delta and the briefing time. See
+[Grade a lesson when you close out the flight](/docs/training/grade-a-lesson-at-close-out).
+</Step>
+<Step n={4} title="The hours fan out on their own">
+Signing freezes the record and posts a ledger credit to every requirement that lesson
+credits. The student's record updates immediately.
+</Step>
+<Step n={5} title="The student countersigns">
+The student acknowledges the record from **My training**. Their signature does not change
+the grade or the hours: those were already credited when you signed.
+</Step>
+</Steps>
+
+<Screenshot id="enrollment-overview" />
+
+## What to set up first
+
+Do it in this order, because each step needs the one before it.
+
+<Steps>
+<Step n={1} title="Create the course">
+Start from one of the four built-in syllabi, or from an empty course. Choose Part 61 or
+Part 141 now: it cannot be changed afterwards.
+[Create a course](/docs/training/create-a-course)
+</Step>
+<Step n={2} title="Add the requirements">
+Do these before the lessons. The Credits toward box on a lesson is empty until requirements
+exist. [Add hour and landing requirements](/docs/training/add-hour-requirements)
+</Step>
+<Step n={3} title="Build the syllabus">
+Stages, then lessons inside them, then the graded tasks inside a lesson, ticking Credits
+toward as you go. [Build a syllabus](/docs/training/build-a-syllabus)
+</Step>
+<Step n={4} title="Publish the version">
+Read the warning first. Publishing is the one irreversible act in the module.
+[Publish a syllabus version](/docs/training/publish-a-syllabus-version)
+</Step>
+<Step n={5} title="Enroll your students">
+Check which version is selected before you do.
+[Enroll a student](/docs/training/enroll-a-student)
+</Step>
+</Steps>
+
+## Where each screen lives
+
+| I want to | Go to |
+|---|---|
+| Build or publish a syllabus | <Where app="web">Training → Courses</Where>, then Open syllabus |
+| See who is currently in training | <Where app="web">Training → Students</Where> |
+| Read or grade one student's record | Training → Students → the row, or the person's page → Training |
+| Grade the flight you just flew | The close-out sheet on <Where app="web">Schedule</Where> |
+| Grade at the aircraft with no signal | <Where app="mobile">Training</Where> |
+| See your own progress as a student | <Where app="web">My training</Where> |
+| Hand an inspector the log | <Where app="web">Reports → Compliance → Training records</Where> |
+
+<CardGrid>
+<DocCard href="/docs/training/part-61-vs-part-141" title="Part 61 vs Part 141">
+Which gates the setting turns on, and why it can only be chosen once.
+</DocCard>
+<DocCard href="/docs/training/read-a-training-record" title="Read a training record">
+What each tab means, and why credited hours can be lower than hours flown.
+</DocCard>
+<DocCard href="/docs/training/who-can-do-what-in-training" title="Who can do what">
+Roles, the four training grants, and where a button and a permission disagree.
+</DocCard>
+<DocCard href="/docs/training/training-troubleshooting" title="Training: why it did that">
+Hours that will not count, buttons that are disabled, sections that never appear.
+</DocCard>
+</CardGrid>

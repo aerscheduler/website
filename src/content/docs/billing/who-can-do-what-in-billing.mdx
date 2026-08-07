@@ -1,0 +1,150 @@
+<Summary>
+Billing is an owner and admin area. Two things need the organization owner specifically:
+saving <Where app="web">Settings → Billing</Where>, and connecting Stripe or QuickBooks.
+Everyone else sees only their own invoices, or the invoice for a flight they were on.
+</Summary>
+
+## The short version
+
+- **Owner**: everything, including the two owner-only areas below.
+- **Admin**: everything else in billing. Every invoice, every report, all the rules.
+- **Dispatcher**: can close a flight out and fill in who pays what. Cannot open Billing.
+- **Instructor**: the same, plus billing a guest flight they instructed.
+- **Student and renter**: their own invoices and their own cards.
+- **Technician**: no money at all.
+
+<Callout type="warning">
+An admin who is not the organization owner can open <Where app="web">Settings → Billing</Where>,
+edit every field, press **Save changes**, and be told they are not authorized to make the
+request. Nothing on the screen says the page is owner-only. If you are an admin and the
+save is refused, the owner has to make the change.
+</Callout>
+
+## Every billing action by role
+
+| Action | Owner | Admin | Dispatcher | Instructor | Student, renter | Technician |
+|---|---|---|---|---|---|---|
+| Save <Where app="web">Settings → Billing</Where> | Yes | No | No | No | No | No |
+| Connect or manage Stripe payouts | Yes | No | No | No | No | No |
+| Connect or configure QuickBooks Online | Yes | No | No | No | No | No |
+| Open Billing and see every invoice | Yes | Yes | No | No | No | No |
+| See financial reports | Yes | Yes | No | No | No | No |
+| Create a manual invoice | Yes | Yes | Only if switched on | Only if switched on | No | No |
+| Mark an invoice paid | Yes | Yes | No | No | No | No |
+| Void an invoice | Yes | Yes | No | No | No | No |
+| Send a payment reminder | Yes | Yes | No | No | No | No |
+| Set cost-splitting rules | Yes | Yes | No | No | No | No |
+| Membership plans, and a member's dues | Yes | Yes | No | No | No | No |
+| See a tail's revenue on the aircraft record | Yes | Yes | No | No | No | No |
+| Ramp out and ramp in | Yes | Yes | Yes | On their bookings | On their bookings | No |
+| Fill in Who pays what | Yes | Yes | Yes | On their bookings | On their bookings | No |
+| Override payment on a booking | Yes | Yes | Yes | Only if switched on | No | No |
+| Create the invoice for a closed-out booking | Yes | Yes | No | No | No | No |
+| Confirm a review with a PIN | Own sign-off | Own sign-off | Own sign-off | Own sign-off | Own sign-off | No |
+| See and pay their own invoices | Yes | Yes | Yes | Yes | Yes | Yes |
+| Save a card and use autopay | Yes | Yes | Yes | Yes | Yes | Yes |
+
+## Owner
+
+The owner is an admin plus four things nobody else can do:
+
+- Save the Billing settings card: Billing enabled, default instructor rate, service fee
+  and its label, overnight minimum, and the grounding threshold.
+- Connect, manage and reconnect the Stripe payout account.
+- Connect, configure, backfill and disconnect QuickBooks Online, and retry a single
+  invoice's sync.
+- Set the two "can manually generate invoices" toggles, in the **Manual invoices** card on
+  <Where app="web">Settings → Billing</Where>.
+
+The owner still cannot refund a payment, issue a credit, or edit an invoice after it has
+been raised. Nobody can.
+
+## Admin
+
+An admin runs day to day billing: the whole Billing page, manual invoices, mark paid,
+void, payment reminders, every financial report, cost-splitting rules, membership plans
+and every member's dues and money. An admin also gets **Override payment** and **Create
+invoice** on a reservation, both on the booking's panel in the console and on the app.
+
+What an admin cannot do is save the Billing settings card, connect Stripe or QuickBooks,
+refund anything, or change an invoice's amount once it exists.
+
+## Dispatcher
+
+A dispatcher runs the ramp, not the books. They can ramp any booking out and in, fill in
+the Who pays what panel, and see the invoice raised for a reservation they are closing
+out. On the booking's panel they also get **Override payment** and **Correct times**, both
+on either surface. They do not get **Create invoice**: a dispatcher can close a flight out
+and cannot bill it.
+
+<Callout type="note">
+A dispatcher who opens <Where app="web">Billing</Where> is sent back to their own home
+page. The organization-wide invoice list is admin-only.
+</Callout>
+
+They cannot mark an invoice paid, void one, see any financial report, or see anyone's
+membership. They can create a manual invoice only if the school has switched on
+"Dispatchers can manually generate invoices". The owner sets that toggle in the console, on
+<Where app="web">Settings → Billing</Where>. Raising the invoice itself is still an app
+job: the console's **New invoice** button stays owner and admin only.
+
+## Instructor
+
+An instructor can ramp out and in and fill in Who pays what on bookings they are on, and
+can [close out and bill a guest or discovery flight](/docs/billing/bill-a-discovery-or-guest-flight)
+they instructed, including viewing that guest's invoice.
+
+With "Instructors can override reservation prices" switched on, they can also override the
+instruction and resource rate on a booking, from **Override payment** on the reservation
+panel in the console or from the app. Note that adding an override clears every sign-off
+already collected.
+
+<Callout type="note">
+An instructor's copy of that setting is read from their session. Switch it on and they see
+**Override payment** the next time they sign in, not the moment you save.
+</Callout>
+
+<Callout type="warning">
+That toggle is not limited to an instructor's own bookings. Switched on, any instructor can
+override the rates on any booking in the organization, not only the ones they are flying.
+</Callout>
+
+They cannot open Billing, see other members' invoices or balances, see any financial
+report, or mark anything paid.
+
+## Student and renter
+
+Identical for billing purposes. Both can:
+
+- See their own invoices, and their outstanding balance on their home page.
+- Pay their own invoices by card, save cards, set a default, and turn on autopay. See
+  [Pay your invoice and set up autopay](/docs/billing/pay-an-invoice-and-save-a-card).
+- Confirm a review with their PIN, which is what triggers the invoice.
+- Fill in Who pays what on a booking they are assigned to.
+- Read their own membership on their profile.
+
+They cannot see what anybody else pays, cannot see the cost-splitting rules (those are
+admin-only to read), and cannot change or cancel their own membership.
+
+## Technician
+
+A technician sees fleet reports and books maintenance, which is deliberately never
+invoiced. They see no money anywhere, including on the aircraft record.
+
+## Settings that change what a role can do
+
+| Setting | Where it lives | What it changes |
+|---|---|---|
+| Dispatchers can manually generate invoices | <Where app="web">Settings → Billing → Manual invoices</Where> | Lets a dispatcher raise a manual invoice, from the app |
+| Instructors can manually generate invoices | <Where app="web">Settings → Billing → Manual invoices</Where> | Lets an instructor raise a manual invoice, from the app |
+| Instructors can override reservation prices | <Where app="web">Settings → Booking preferences</Where> | Lets an instructor use Override payment on a booking, on either surface |
+
+All three are owner-only to change. The first two say who may raise a manual invoice, not
+where: the console's **New invoice** button stays owner and admin only, so a dispatcher or
+instructor you grant it to raises theirs from the app.
+
+## Actions that still only exist in the iOS app
+
+Invoicing a guest by hand. The app's Generate Invoice screen takes a name and an email
+address for somebody who is not a member; the console's New invoice dialog offers the
+member list and nothing else.

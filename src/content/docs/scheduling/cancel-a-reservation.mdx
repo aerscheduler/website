@@ -1,0 +1,121 @@
+<Summary>
+Open the booking, press **Cancel reservation**, pick a reason type and write a short note.
+Both are required, because the Cancellations report counts the reason types and reads the
+notes. A no-show is recorded by cancelling with the **No-show** reason after the start
+time has passed.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers, Technicians</Roles>
+
+Whoever created a booking can also cancel it, whatever their role.
+
+## Cancel one booking
+
+<Steps>
+  <Step n={1} title="Open the booking, or use the block's menu">
+    On <Where app="web">Calendar</Where>, click the block, or open the
+    <strong>&hellip;</strong> menu on it and pick Cancel reservation.
+  </Step>
+  <Step n={2} title="Press Cancel reservation">
+    The dialog opens.
+  </Step>
+  <Step n={3} title="Pick a reason type and write the note">
+    Both are required.
+    <Screenshot id="cancel-reservation-dialog" />
+  </Step>
+  <Step n={4} title="Press Cancel reservation">
+    The booking comes off the board, everyone on it is notified, and their Google Calendar
+    events are removed.
+  </Step>
+</Steps>
+
+A booking that has already ramped out cannot be cancelled. It flew, so it has to be closed
+out instead.
+
+## Pick a reason and write the note
+
+The reason types are a fixed list:
+
+- Weather
+- Aircraft maintenance
+- Aircraft unavailable
+- Instructor unavailable
+- No-show
+- Student or renter unavailable
+- Rescheduled to another time
+- Booked in error
+
+Pick the closest one. The list is fixed so that the report can count it, and consistent
+answers are the only thing that makes the count worth reading. Anything the list does not
+cover goes in the note.
+
+The note is capped at 200 characters and cannot be left blank. An empty note is refused
+with a prompt to say briefly what happened.
+
+<Callout type="note">
+There is no **Other** on the list any more. It was removed on purpose, because it had
+become the most common answer and told nobody anything. Cancellations recorded under it
+before it went still report as Other, and cancellations from before reason types existed
+report as `Not recorded`, kept visibly separate from real answers.
+</Callout>
+
+## Cancel a repeating booking
+
+Open any occurrence and cancel it as normal. Under the note, the dialog adds a scope:
+
+| Choice | What it cancels |
+|---|---|
+| This booking only | That one occurrence. |
+| This and all later bookings | That one and everything after it. |
+| All bookings in the series | The whole series. |
+
+<Callout type="warning">
+Bookings that have already started are never cancelled by a series cancel, whichever scope
+you pick. **All bookings in the series** does not reach backwards into flights that have
+already happened, so it will not erase your history.
+</Callout>
+
+## Record a no-show
+
+There is no No-show button on a booking, and people do look for one. A no-show is a
+cancellation with the **No-show** reason type, logged after the start time has passed.
+
+Doing it that way is what makes it countable. A cancellation logged after the start time
+is the latest possible notice, so it lands at the bottom of the notice-given chart and
+shows up as exactly what it was.
+
+## Where cancelled bookings go
+
+Nothing is destroyed. The record is kept, which is the only reason the report is honest.
+
+But cancelled bookings are **not drawn on the web dispatch board** at any zoom level. To
+find one:
+
+- Open <Where app="web">Operations &rarr; Cancellations</Where>.
+- Or open the booking's own link, which still works.
+- Or use the iOS app's Reservations list, which includes cancelled bookings and has a Canceled filter.
+
+## See what cancellations are costing you
+
+<Where app="web">Operations &rarr; Cancellations</Where> is the whole picture over a date
+range: a summary by category and by how much notice was given, then a searchable,
+exportable table.
+
+<Screenshot id="cancellations-report" />
+
+Open a row for the detail: the note, who cancelled it, and how much notice there was.
+A cancellation inside 24 hours of the start counts as late.
+
+The report is staff only. Owners, admins and dispatchers can see it.
+
+## If Cancel reservation fails
+
+The dialog stays open with your typed reason intact, so nothing is lost. Read the message:
+
+| Message | What it means |
+|---|---|
+| `You are unauthorized to make this request.` | You are not staff, not a technician, and did not create this booking. An instructor assigned to somebody else's booking hits this. Ask an admin or a dispatcher. |
+| A message about the booking having ramped out | It has flown. Close it out rather than cancelling it. |
+
+More in
+[Why can't I edit, move or cancel this booking?](/docs/scheduling/why-cant-i-edit-move-or-cancel)

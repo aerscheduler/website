@@ -1,0 +1,170 @@
+<Summary>
+The billing questions that reach us most often, and the reason behind each one. If a flight
+produced no invoice at all, start with
+[Why a flight was not invoiced](/docs/billing/why-a-flight-was-not-invoiced) instead.
+</Summary>
+
+<Screenshot id="billing-invoice-list" />
+
+## Save changes on Settings, Billing is refused
+
+You get "You are not authorized to make this request" and nothing is saved.
+
+The Billing settings card is saved by the **organization owner** only. Every other Settings
+tab is open to admins, and this one renders fully editable for an admin too, which is why it
+catches people out. Being an admin is not enough for:
+
+- Billing enabled
+- Default instructor rate
+- Service fee and its label
+- Overnight minimum
+- Ground members with unpaid invoices
+
+The same applies to connecting Stripe and to the whole QuickBooks Online page. Ask the
+owner to make the change, or have them sign in.
+
+## An invoice is for the wrong amount
+
+Work down this list. The answer is usually in the first three.
+
+| Check | Where |
+|---|---|
+| Which meter the aircraft bills. Bill by Hobbs time on charges Hobbs in minus Hobbs out; off charges tach instead. | Aircraft, edit the aircraft |
+| The aircraft's hourly rate, and whether it is wet or dry | Aircraft, edit the aircraft |
+| The instruction rate. A booking with a rating uses that rating's rate; anything else falls back to the organization's default instructor rate. | <Where app="web">Settings → Instruction rates</Where> and <Where app="web">Settings → Billing</Where> |
+| Your service fee, which is a percentage you add | <Where app="web">Settings → Billing</Where> |
+| An overnight minimum, which is a floor and can raise a bill well above the hours flown | <Where app="web">Settings → Billing</Where> |
+| A rate override typed onto that one booking | The reservation, **Override payment** |
+| A membership tier rate for that tail | <Where app="web">Settings → Memberships</Where>, inside the plan |
+
+<Callout type="warning">
+The service fee is charged **per invoice**, not per flight. A booking split three ways
+produces three invoices, and each of them carries the fee. The same percentage on a bigger
+base collects more than you may have intended.
+</Callout>
+
+<Callout type="warning">
+If your cost-splitting rule for that booking type is Each pays in full, the charge is
+**multiplied**, not divided. Four students in a two-hour ground session produce four
+two-hour charges. It is the right rule when you are selling seats and the wrong one
+everywhere else. See
+[Split a booking's cost between several people](/docs/billing/set-up-cost-splitting).
+</Callout>
+
+## The total on a split booking looks too small
+
+The invoice summary at the end of a close-out on a split booking shows **one payer's
+share**, labelled "(one of N shares for this booking)". It is not the flight's total bill.
+
+Everyone else on the booking received their own invoice for their own share. To see them
+all, open <Where app="web">Billing</Where> and look for the other invoices raised at the
+same time. There is no single screen that adds a split booking back up.
+
+## Somebody on a split booking was never invoiced
+
+A share worth less than 50 cents is skipped, and no invoice is raised for that person. That
+is Stripe's floor: it will not accept an invoice below 50 cents. The booking still counts
+as billed.
+
+It only shows up on a cheap booking divided many ways, such as a short ground session split
+between a large class. If somebody needs to be charged for it, raise a
+[manual invoice](/docs/billing/create-a-manual-invoice).
+
+## Everybody's sign-off disappeared
+
+Adding a payment override to a booking clears every review confirmation already collected,
+so a close-out sitting at "1 of 2 confirmed" drops back to none and each pilot has to enter
+their PIN again. Once everybody has confirmed, the override is refused rather than applied.
+
+This is on purpose: the pilots confirmed a set of numbers, and the numbers changed. Do the
+override before you ask people to sign off, not after.
+
+## A guest invoice shows no customer name
+
+On the Billing table the Customer column is a dash for a guest invoice, and the detail panel
+header reads "No customer". The guest's name and email are recorded on the booking, not on
+the invoice row.
+
+Identify a guest invoice by the linked flight shown in the detail panel. See
+[Bill a discovery or guest flight](/docs/billing/bill-a-discovery-or-guest-flight).
+
+## The Bill button did not bill the flight
+
+The Bill button on a row in the Unbilled reservations list starts a **manual invoice** for
+that member, prefilled with the reservation's title as the memo. It is not the flight's
+invoice: it has no line items, no hours and no link back to the booking, so the reservation
+stays in the unbilled list afterwards and the amount never appears as revenue against that
+aircraft.
+
+To bill the flight itself, finish its close-out. If the close-out is already complete and
+the invoice failed, the recovery action is **Create invoice** on the reservation, on either
+surface. Full walkthrough in
+[Why a flight was not invoiced](/docs/billing/why-a-flight-was-not-invoiced).
+
+## The Tax collected report is empty
+
+AerScheduler does not calculate sales tax on invoices, so there is nothing for that report
+to show.
+
+If you have to charge tax, add it as its own line item on a
+[manual invoice](/docs/billing/create-a-manual-invoice), or handle it in your accounting
+software.
+
+## Membership dues are mixed into flight revenue
+
+Dues and join fees are raised as ordinary invoices, deliberately, so that they pay through
+the same link, appear on the same Billing list, and can be marked paid the same way. The
+consequence is that they also land in the Revenue, Payments received and Items sold reports
+alongside flight income, with no separate treatment.
+
+Use the **Memberships and dues** report in the Financial section for the membership
+questions: who is on what tier, the annualized run rate, what is outstanding, and which
+periods failed.
+
+## A member sees two different outstanding balances
+
+The Outstanding balance card on a member's Home page counts invoices the school has voided.
+The Outstanding card on their Invoices page does not.
+
+The Invoices page is the figure they actually owe. Tell members to trust that one.
+
+## Nothing bills in the demo
+
+In the public demo, closing out a flight produces a realistic-looking paid invoice without
+any money moving, so revenue reports and balances have something in them to look at.
+Anything that would touch real money is refused, each with its own message:
+
+| What you try | What the demo says |
+|---|---|
+| Creating an invoice, marking one paid, voiding one | "Creating and settling invoices is turned off in the demo." |
+| Sending a payment reminder | "Payment reminders are turned off in the demo." |
+| Billing membership dues | "Billing membership dues is turned off in the demo." |
+
+None of this applies to your own organization.
+
+## Things AerScheduler cannot do
+
+Worth knowing before you plan a process around one of them.
+
+| | |
+|---|---|
+| Refund a payment | Refunds are done in your own Stripe dashboard, and are not read back here. The invoice stays Paid. |
+| Issue a credit note or hold an account credit | There is no credit or prepaid balance. |
+| Edit an invoice after it is raised | The only actions are mark paid and void. |
+| Calculate sales tax | Add it as a line item if you need it. |
+| Bill fuel on a dry rate | There is no fuel line. Invoice fuel separately. |
+| Set a rate for one instructor | Rates are per rating, plus the organization default. Every instructor on a rating bills the same figure. |
+| Exempt one aircraft from the overnight minimum | There is nowhere to set a per-aircraft figure, so the organization's applies to every tail. |
+| Let a member join, change tier or cancel a membership | Every membership change is an admin action. |
+| Invoice a guest from the web console | The New invoice dialog can only pick a member. Guest invoices are raised from the app's Generate Invoice screen. |
+
+## Related
+
+<CardGrid>
+<DocCard href="/docs/billing/how-billing-works" title="How billing works">
+The path from booking to paid invoice, start to finish.
+</DocCard>
+<DocCard href="/docs/billing/who-can-do-what-in-billing" title="Who can do what in billing">
+Including the two places an admin is not enough.
+</DocCard>
+</CardGrid>

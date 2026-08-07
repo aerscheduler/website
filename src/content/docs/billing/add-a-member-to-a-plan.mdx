@@ -1,0 +1,148 @@
+<Summary>
+<Where app="web">People → the person → Billing</Where>. Click Add to a plan in the
+Membership card, then Bill on the join fee row and Bill now on each dues period as it comes
+due. A dues invoice is an ordinary invoice, so it shows up on Billing and pays through the
+same link as a flight.
+</Summary>
+
+<Roles>Owners, Admins</Roles>
+
+You need at least one plan to exist first. See
+[Set up membership plans and dues](/docs/billing/set-up-membership-dues).
+
+## Add somebody to a plan
+
+<Steps>
+<Step n={1} title="Open the person's Billing tab">
+People, then the person, then Billing. The Membership card sits above their Invoices card.
+
+<Screenshot id="person-membership-card" />
+</Step>
+
+<Step n={2} title="Click Add to a plan" />
+
+<Step n={3} title="Choose the plan and decide Start it now">
+Leave Start it now off and you get a Not started membership: it is on their record, and it
+accrues nothing until you start it.
+</Step>
+
+<Step n={4} title="Waive the join fee if you are comping it">
+There is a Waive the join fee option in the same dialog.
+</Step>
+
+<Step n={5} title="Click Add to plan" />
+</Steps>
+
+The plan's prices are snapshotted onto the membership at that moment. Raising the plan's
+price later never re-prices them.
+
+A person can hold one live membership at a time. To move somebody between tiers, use Change
+plan rather than adding a second one.
+
+## Bill the join fee
+
+If a join fee is owed and was not waived, the Join fee row shows a Bill button carrying the
+amount. Click it and the join fee is raised as an invoice.
+
+## Bill a dues period
+
+When a period comes due, the Next period row shows Bill now. Click it and that period is
+invoiced.
+
+Each period lands in the dues history ledger underneath:
+
+| What the row shows | Meaning |
+|---|---|
+| An **Owed** chip | Due, not yet invoiced |
+| No chip, just the period and the amount | Billed. This is the normal finished state |
+| A **Waived** chip | Comped, and recorded as comped |
+| A **Failed** chip | The attempt did not go through, with the reason |
+
+<Callout type="note">
+A billed period is the one with nothing next to it. There is no "Billed" chip, so an
+unmarked row is the period that went through, not one that was missed. To open the invoice
+itself, go to <Where app="web">Billing</Where> and find it by the member's name.
+</Callout>
+
+<Callout type="note">
+A period is billed because the membership's own cursor says it is due, not because of what
+today's date is. That is also why a period can only ever be billed once: the nightly sweep,
+a retry and you pressing Bill now all land on the same key, and only one of them wins. Bill
+now on a period that has already been billed is refused, which is correct rather than
+broken.
+</Callout>
+
+To have periods raised for you overnight, switch on Bill dues automatically. Remember it is
+opt in twice: on the plan, and on this membership.
+
+## Waive a period
+
+Waive comps that period. It stays in the ledger marked Waived, so the history still shows
+what happened and why the member was not charged.
+
+## Pause, resume, change plan or end
+
+| Action | What it does |
+|---|---|
+| Pause | Suspends the membership. Nothing accrues. |
+| Resume | Puts it back to active. |
+| Change plan | Moves them to another plan at today's price, from the next period. |
+| End | Cancels the membership. |
+
+<Callout type="warning">
+A paused membership does not carry the tier's booking window. A paused member falls back to
+no booking limit rather than to the strictest one, so pausing somebody for non-payment does
+not restrict what they can book.
+</Callout>
+
+Ending a membership and later putting the same person back on a plan creates a new
+membership. It does not revive the old one, and the old dues history stays where it is.
+
+## When a period fails
+
+A failed period is kept, not deleted. It shows in the ledger as Failed with the reason, and
+carries a Retry button.
+
+The membership's cursor still moves on past a failed period, so the automatic sweep does not
+sit there retrying the same one forever. Fix the cause, then press Retry by hand.
+
+## What the member can see
+
+On their own profile a member sees a read-only membership card: plan name, status, the dues
+line, next dues, member since, recent dues periods, a note if a join fee is owed but not yet
+invoiced, and a note if the agreement is not recorded as on file.
+
+<Callout type="note">
+The Membership card on the People record is admin only, even when the member is looking at
+their own record. That is why a member sees their membership on their profile and not
+there.
+</Callout>
+
+## Membership agreement on file
+
+The Membership agreement on file toggle is a record for your files. AerScheduler does not
+collect signatures, and nothing about the member is blocked while it is unticked.
+
+## Nobody can join or cancel themselves
+
+Every membership change is an admin action. There is no way for a member to join a plan,
+move tier, or cancel from their side. If somebody wants to leave, they email you and you
+press End.
+
+## Finding a dues or join fee invoice
+
+Dues and join fee invoices are ordinary invoices. Open <Where app="web">Billing</Where>,
+set the date range around the period, and find it by the member's name. They pay through
+the same link as any other invoice, and they count in the Revenue and Payments received
+reports.
+
+## Related
+
+<CardGrid>
+<DocCard href="/docs/billing/set-up-membership-dues" title="Set up membership plans and dues">
+Building the plan this member is joining.
+</DocCard>
+<DocCard href="/docs/billing/chase-unpaid-invoices" title="Chase an unpaid invoice">
+Dues invoices are chased like any other.
+</DocCard>
+</CardGrid>

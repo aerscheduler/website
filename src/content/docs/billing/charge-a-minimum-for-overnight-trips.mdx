@@ -1,0 +1,87 @@
+<Summary>
+Set **Overnight minimum (hrs/night)** on <Where app="web">Settings → Billing</Where>. It
+is the least billable time per night the aircraft is kept away, applied to the booking as
+a whole. Two nights at 2.0 hours a night bills 4.0 hours even if only 1.5 were flown.
+</Summary>
+
+<Roles>Owners, Admins</Roles>
+
+## Set the minimum
+
+<Steps>
+<Step n={1} title="Open Settings and choose Billing">
+</Step>
+<Step n={2} title="Enter a figure in Overnight minimum (hrs/night)">
+In decimal hours, so 2.0 or 1.5. Leaving it blank means no minimum, which is the default.
+</Step>
+<Step n={3} title="Click Save changes">
+Only the organization owner can save this card. An admin can read it but the save will be
+refused.
+</Step>
+</Steps>
+
+<Screenshot id="billing-settings-card" />
+
+It takes effect on the next close-out. Invoices already raised never change.
+
+## How nights are counted
+
+A night is a local midnight the booking crosses, counted in the **airport's** time zone
+rather than whatever zone the person closing out happens to be in.
+
+| Booking | Nights |
+|---|---|
+| Out Saturday morning, back Saturday evening | 0 |
+| Out Friday, back Saturday | 1 |
+| Out Friday, back Sunday | 2 |
+
+A booking that comes back the same day is never affected, however long it ran.
+
+## It is a floor, never a reduction
+
+The minimum only ever raises a bill. AerScheduler compares the time actually flown against
+nights multiplied by the minimum, and bills whichever is larger.
+
+- Two nights, minimum 2.0, 1.5 hours flown: the aircraft time bills as **4.0 hours**.
+- Two nights, minimum 2.0, 6.0 hours flown: the aircraft time bills as **6.0 hours**, the
+  minimum does nothing.
+
+## One minimum per booking, not per person
+
+The minimum is applied to the booking before the cost is split, so it is one minimum
+between everybody on the trip.
+
+<Callout type="important">
+Two pilots sharing a weekend away owe one minimum between them, not one each. Whatever
+your [cost-splitting rule](/docs/billing/set-up-cost-splitting) is for that booking type
+then divides the raised total the same way it divides everything else.
+</Callout>
+
+## What the pilot sees at ramp-in
+
+Nobody should be surprised by this on an invoice. When a booking crosses a night and a
+minimum is set, a notice appears on the booking at every close-out step before invoicing,
+and the ramp-in dialog spells it out in figures before you save: away two nights, the
+school's minimum is 2.0 hours a night, so this will bill 4.0 hours rather than the 1.5
+flown.
+
+<Screenshot id="close-out-overnight-notice" />
+
+If the flown time is already above the minimum, no notice appears, because nothing changes.
+
+## You cannot exempt a single aircraft
+
+There is nowhere in the web console or the iOS app to give one tail its own overnight
+minimum, or to exclude it. The figure you set here applies to every aircraft in the fleet,
+so pick one that is fair across the fleet, or leave it blank and handle long trips by hand.
+
+## Related
+
+<CardGrid>
+<DocCard href="/docs/scheduling/overnight-and-multi-day-trips" title="Overnight and multi-day trips">
+Booking a trip that spans nights in the first place.
+</DocCard>
+<DocCard href="/docs/billing/close-out-a-flight-and-bill-it" title="Close out a flight so it invoices">
+Where the notice appears, and what happens after the last sign-off.
+</DocCard>
+</CardGrid>

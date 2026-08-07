@@ -1,0 +1,86 @@
+<Summary>
+<Where app="web">Maintenance → Squawks → Open</Where>. Click **Resolve** on the card, set
+**Completed** to the day the work finished, write what was done, then click **Resolve
+squawk**. **Verify** is a separate second stamp, on the same boards, and a squawk can be
+resolved without ever being verified.
+</Summary>
+
+<Roles>Owners, Admins, Technicians</Roles>
+
+## Resolve it
+
+<Steps>
+  <Step n={1} title="Open the Open board">
+    <Where app="web">Maintenance → Squawks → Open</Where>, newest first. Use the Aircraft
+    filter or the search box to narrow it to one tail.
+  </Step>
+  <Step n={2} title="Click Resolve">
+    Either on the card itself, or open the card and use **Resolve squawk** in the footer of
+    the detail panel.
+  </Step>
+  <Step n={3} title="Set Completed">
+    Defaults to today. Change it to the day the work was actually finished. It is required.
+  </Step>
+  <Step n={4} title="Write what was done">
+    Part number, work order, what was found. Keep it under 500 characters.
+
+    <Screenshot id="resolve-squawk-modal" />
+  </Step>
+  <Step n={5} title="Click Resolve squawk">
+    It moves to the Resolved tab with a Resolved badge and a timestamp.
+  </Step>
+</Steps>
+
+## What resolving changes
+
+- The squawk leaves the Open board and appears under **Resolved**, sorted by the date it was resolved.
+- It stops appearing in the open-squawk warning on the booking form for that tail.
+- A "Squawk resolved" line goes into the audit log, with your notes.
+- It is counted as closed in the **Squawks &amp; downtime** report, where "days open" runs from the reported date to the resolved date.
+
+<Screenshot id="squawk-detail-panel" />
+
+## Verify is a second sign-off
+
+Two stamps, two different acts. **Resolving** records what was done. **Verifying** records
+that somebody reproduced or checked the fault. They are independent: a squawk can be
+resolved having never been verified, and nothing warns you about it.
+
+Verify has no fields to fill in. It is offered wherever a squawk is, to the same people who
+can resolve one:
+
+- <Where app="web">Maintenance → Squawks → Open</Where>, in the footer of the squawk panel.
+- <Where app="web">Aircraft → the tail → Maintenance</Where>, on the Open squawks card.
+- The squawk's own page, at the top beside **Resolve**.
+- In the app, on the squawk from the Squawks board.
+
+<Callout type="warning">
+Verify before you resolve. The **Verify** button disappears once a squawk carries either
+stamp, on both surfaces, so a squawk that was resolved first can never be verified. If your
+shop uses verify as its second signature, make that the habit: verify, then resolve.
+</Callout>
+
+## Keep the notes under 500 characters
+
+The notes box counts up to 600 and the save fails above 500, on both surfaces, with
+"Couldn't resolve that squawk." If a long write-up will not save, that is why. Shorten it,
+or put the detail in the work order and reference the number.
+
+## Dispatchers cannot resolve a squawk
+
+A dispatcher can open the Maintenance page and read every board, including this one, but
+there is no **Resolve** button anywhere for them, and no **Verify** either. Reading the
+fleet's discrepancies and declaring one fixed are treated as different jobs.
+
+If a dispatcher has been asked to "close out that squawk", they need an admin or a
+technician. See [Who can do what in maintenance](/docs/maintenance/who-can-do-what-in-maintenance).
+
+## Resolving does not return a grounded aircraft to service
+
+<Callout type="important">
+If the aircraft is grounded, resolving the squawk leaves it grounded. That is true whether
+the grounding came from the squawk, from an inspection with a hand-typed reason, or from an
+admin grounding it directly. An admin has to open the aircraft and click **Return to
+service**. The only grounding AerScheduler lifts by itself is one it created, from an
+inspection, and it lifts that when the inspection is signed off.
+</Callout>

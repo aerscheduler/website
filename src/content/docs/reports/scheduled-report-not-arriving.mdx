@@ -1,0 +1,120 @@
+<Summary>
+Open <Where app="web">Reports → Scheduled reports</Where> and read the last line on the card. It tells you when the
+last email went, that nothing has gone yet, or exactly why the last send failed.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers</Roles>
+
+## Check the card first
+
+Every schedule shows one of three lines under its recipient list:
+
+| What the card says | What it means |
+|---|---|
+| "Last sent" with a date and time | The last delivery went out. If nobody got it, the problem is on the mail side. |
+| "Not sent yet." | The first occurrence has not come round yet. |
+| A red "Last send failed" line | The reason is spelled out on the same line. Work from that. |
+
+A paused schedule also carries a "Paused" chip and a muted card, which is easy to miss on a page of healthy ones.
+
+<Screenshot id="schedule-card-failed" />
+
+## Prove it end to end with Send now
+
+Open the card's menu and click "Send now". It sends exactly what the next real delivery would contain, to exactly
+the same recipients.
+
+<Callout type="tip">
+"Send now" does not consume the scheduled send. Pressing it at 06:55 does not cancel the 07:00 email, so use it as
+a test whenever you want.
+</Callout>
+
+If the test arrives and the scheduled one does not, the setup is fine and the cadence or the hour is the thing to
+look at. If the test does not arrive either, the reason is one of the ones below.
+
+## No longer have access to this report
+
+The failure line reads something like "2 no longer have access to this report".
+
+Recipients are re-checked on every single send. If somebody's roles changed, they stop receiving the report from
+that moment, quietly, because the alternative is emailing revenue to somebody who is no longer allowed to see it.
+
+Fix it by restoring the role, or by editing the schedule and removing them from the list so the card goes green
+again. Which reports each role can run is in
+[Who can see which reports](/docs/reports/who-can-see-which-reports).
+
+## Turned off email from this school
+
+The failure line reads "1 turned off email from this school".
+
+That member switched off email in their own notification preferences. Nothing about the schedule will change that:
+they have to turn email back on themselves.
+
+## The schedule is paused
+
+Look for the "Paused" chip and the muted card. Flip the switch on the card back to active.
+
+Pausing is not deleting, so nothing about the setup was lost while it was off. It simply did not send.
+
+## The recipient is not in the list at all
+
+Open Edit and read the "Send to" list.
+
+Two things put somebody outside it. They may never have been ticked. Or they are not a member of this school, in
+which case they belong under "Also send outside the school", which is an owner and admin field.
+
+If an outside address is the problem, the failure line names it: "1 outside address is blocked because whoever set
+this up no longer has access". An outside recipient only keeps receiving the report while the person who created
+the schedule still has access to it.
+
+If every recipient has dropped off, the card reads "This schedule has no recipients left."
+
+## The email arrived but covers the wrong dates
+
+It is almost certainly right, and the expectation is what is off.
+
+A schedule ignores the saved view's dates and uses the cadence's window: daily covers yesterday, weekly the seven
+days ending yesterday, monthly the whole previous calendar month.
+
+<Callout type="warning">
+Saving a view over 1 to 31 July and scheduling it weekly gives you last week every week, not July. Consecutive
+emails are designed to tile exactly, with no gaps and no days counted twice.
+</Callout>
+
+If you genuinely want a fixed window emailed, export the CSV by hand instead. See
+[Export a report to CSV](/docs/reports/export-a-report-to-csv).
+
+## A slot was missed entirely
+
+Two rules govern recovery, and both exist to stop a bad morning turning into a mailbox full of duplicates.
+
+- **A failed send does not retry until the next occurrence.** The failure is recorded against that occurrence, so a
+  fault at 07:00 does not produce a dozen retries or a dozen duplicate emails.
+- **A report is never delivered more than 12 hours late.** After an outage, a 7am report recovered at 8am still
+  arrives. The same report recovered at 11pm is skipped, rather than landing attached to the wrong day.
+
+So a single missing morning with a healthy card the next day is the system working as intended. Use "Send now" if
+you want that day's figures anyway.
+
+## The schedule vanished
+
+Two ways a schedule disappears from your view.
+
+It was deleted with "Stop sending", which is permanent and has to be set up again.
+
+Or your own roles changed. The Scheduled reports list only shows schedules whose underlying report you can run, so
+a schedule you can no longer read is not listed at all. An admin can still see it.
+
+## An outside address stopped receiving it
+
+Check who set the schedule up. The card says "Set up by" and their name on schedules you cannot manage.
+
+Outside addresses keep receiving a report only while that person still has access to it. If they left the school or
+lost the role, the outside deliveries stop even though the internal ones keep going. An owner or admin should
+recreate the schedule under their own name.
+
+## Still nothing
+
+Check the recipient's spam folder and any mail filters on their side, then compare against another schedule at the
+same school. If one schedule delivers and another does not, the difference is in the card. If none of them deliver,
+[contact us](/contact) with the school name and the schedule's name.

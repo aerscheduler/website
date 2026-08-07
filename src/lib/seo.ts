@@ -16,6 +16,10 @@ export const PRIMARY_NAV = [
   { name: "App", href: "/app" },
   { name: "Integrations", href: "/integrations" },
   { name: "Resources", href: "/resources" },
+  // Docs earns a sitelink because "aerscheduler docs" and "aerscheduler help"
+  // are navigational searches from existing customers, and the whole point of
+  // the docs is that those people find an answer instead of sending an email.
+  { name: "Docs", href: "/docs" },
 ] as const;
 
 export type BreadcrumbItem = { name: string; href: string };

@@ -1,0 +1,107 @@
+<Summary>
+Open the course from <Where app="web">Training → Courses</Where>, check which version the
+page has selected, then click **Enroll a student** and pick the member. The student is
+pinned to that exact version for the whole course, so the version is the part to get right.
+</Summary>
+
+<Roles>Owners, Admins, holders of the Enroll and graduate grant</Roles>
+
+## Check the version first
+
+An enrollment points at a **syllabus version**, not at the course. Whichever version the
+course page has selected is what the student will be trained, graded and graduated against,
+for the whole course. The page opens on the current published, non-retired version, and a
+version dropdown appears in the header once the course has more than one.
+
+They are never migrated to a later revision, and there is no supported way to move a student
+from one version to another. If you pick the wrong one, the fix is to end the enrollment and
+enroll them again on the right version.
+
+## Enroll from the course page
+
+<Steps>
+<Step n={1} title="Open the course">
+<Where app="web">Training → Courses</Where>, then **Open syllabus** on the course card.
+</Step>
+<Step n={2} title="Check the version">
+The page opens on the current published, non-retired one. If the course has more than one
+version, change it in the header dropdown.
+</Step>
+<Step n={3} title="Click Enroll a student">
+</Step>
+<Step n={4} title="Choose the member">
+Students are listed first. Staff appear further down with **(staff)** beside their name.
+<Screenshot id="training-enroll-dialog" />
+</Step>
+<Step n={5} title="Click Enroll">
+</Step>
+</Steps>
+
+If the course has an enrollment fee, the amount as it stands today is recorded as owed
+against this student on the spot. Changing the price later never re-prices them. See
+[Charge a course enrollment fee](/docs/training/course-enrollment-fee).
+
+## Where the enrollment then appears
+
+| Screen | What it shows |
+|---|---|
+| <Where app="web">Training → Students</Where> | Everyone whose enrollment is currently In training |
+| The course's **Students** section | Everyone ever enrolled on this course, at any status |
+| The person's page → **Training** | Their enrollments, in-training first |
+| <Where app="web">My training</Where> | The student's own view of it |
+| <Where app="mobile">Training</Where> | On the instructor's list of students they can grade, and on the student's own list |
+
+<Screenshot id="person-training-card" />
+
+<Callout type="note">
+<Where app="web">Training → Students</Where> only ever lists people who are currently In
+training. Graduated, terminated and transferred students are not on that page and have not
+been deleted: find them on the course's own Students section, on the person's page, or in
+the Student progress report.
+</Callout>
+
+## One active enrollment per version
+
+A student may hold only one **active** enrollment per version. A second attempt is refused
+with "That student is already enrolled on this version."
+
+Re-enrolling after a termination is allowed, and is the normal way to restart somebody who
+quit and came back. The old enrollment and everything on it stays exactly as it was.
+
+Somebody doing a Private and an Instrument at the same time simply has two enrollments, on
+two different courses, and appears twice in the reports.
+
+## Messages that stop an enrollment
+
+| Message | What to do |
+|---|---|
+| "A Part 141 course must be published before anyone can be enrolled on it." | Publish the draft first. Part 141 does not allow enrollment against a draft. See [Publish a syllabus version](/docs/training/publish-a-syllabus-version). |
+| "This version has been retired. Enroll on the current version instead; students already on this one finish on it." | Select the current version in the header dropdown and try again. |
+| "That student is already enrolled on this version." | They have an active enrollment. Open their record instead. |
+| "That member is archived. Restore them before enrolling them." | Restore them on the People page first. |
+
+## Enrolling an instructor
+
+The picker is deliberately not students-only. A CFI adding an instrument rating is a normal
+thing, so instructors and other staff appear in the list with **(staff)** beside the name.
+
+Their record works exactly like a student's: they countersign their own lessons from
+<Where app="web">My training</Where>, and another instructor grades them.
+
+## What happens next
+
+<CardGrid>
+<DocCard href="/docs/training/grade-a-lesson-at-close-out" title="Grade at close-out">
+The intended path. Close the booking out, then grade and sign in the Training record
+section.
+</DocCard>
+<DocCard href="/docs/training/credit-prior-training" title="Credit prior training">
+Post hours from another school or a device, dated when they were actually flown.
+</DocCard>
+<DocCard href="/docs/training/read-a-training-record" title="Read a training record">
+Overview, Lessons, Requirements and Ledger, and what each of them counts.
+</DocCard>
+<DocCard href="/docs/training/course-enrollment-fee" title="Bill the enrollment fee">
+One click from the student's record, and only ever once.
+</DocCard>
+</CardGrid>

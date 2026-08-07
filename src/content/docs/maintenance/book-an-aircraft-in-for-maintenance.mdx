@@ -1,0 +1,87 @@
+<Summary>
+Start a booking, set the type to **Maintenance**, pick the aircraft and the window, and
+save. Nobody is assigned to it, it blocks the whole window on the dispatch board, and it is
+never invoiced.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers, Technicians</Roles>
+
+## Make the booking
+
+<Steps>
+  <Step n={1} title="Start a new booking">
+    From <Where app="web">Schedule</Where>, or from the app. A technician-only account goes
+    straight there: the call to action reads "Schedule maintenance" rather than "Book a
+    flight", and the Type is already fixed to Maintenance.
+
+    <Screenshot id="me-book-maintenance" />
+  </Step>
+  <Step n={2} title="Set the type to Maintenance">
+    If you hold another role as well, pick it from the Type list.
+  </Step>
+  <Step n={3} title="Pick the aircraft and the window">
+    Book the whole time the aircraft will be unavailable, including the ferry out and back
+    if it is going to another field.
+  </Step>
+  <Step n={4} title="Put what is being done in the notes">
+    There is nobody to assign, so the notes are the only place the shift on the other end
+    can read what this block is for.
+  </Step>
+  <Step n={5} title="Save">
+    The aircraft is blocked for the whole window on the dispatch board.
+  </Step>
+</Steps>
+
+## Nobody can be assigned to it
+
+A maintenance booking carries no people by design. Try to add one and it is refused: a
+maintenance booking cannot have anybody assigned to it, because it takes the aircraft off
+the line rather than putting somebody in it.
+
+## It works on a grounded aircraft
+
+Maintenance is the one booking type a grounded aircraft accepts. Every other type is refused
+with "Resource is grounded."
+
+<Screenshot id="booking-airworthiness-notice" />
+
+That exemption holds all the way through: creating the booking, editing it, dragging it on
+the dispatch board, and ramping it out. It exists because these bookings are how a grounded
+aircraft gets to the shop and back.
+
+## It is never invoiced
+
+Closing out a maintenance booking never produces an invoice, whatever rates the aircraft
+carries. Shop time is not a rental.
+
+## Only the person who booked it sees it on their own calendar
+
+Personal calendars are built from who is assigned to a booking, and a maintenance booking has
+nobody assigned. The person who created it sees it on their own calendar as a special case.
+
+<Callout type="warning">
+A second technician covering the shift will not see it on their calendar at all. They have
+to look at the dispatch board, where it blocks the lane in the normal way, or at the
+aircraft's own schedule.
+</Callout>
+
+## Which roles can book maintenance
+
+| Role | Can book maintenance? |
+|---|---|
+| Owner, Admin | Yes |
+| Dispatcher | Yes |
+| Technician | Yes, and it is the only type they can book |
+| Instructor, Student, Renter | No |
+
+## Aircraft only, not simulators or classrooms
+
+A maintenance booking is refused on a simulator or a room. To keep a sim or a classroom
+clear while it is being worked on, block the window with an ordinary booking instead.
+
+<Callout type="tip">
+Booking maintenance is not the same as grounding. A booking blocks one window. Grounding
+stops every booking on the tail until an admin lifts it. If the aircraft is not airworthy,
+do both: ground it, then book the shop time. See
+[Ground an aircraft](/docs/maintenance/ground-an-aircraft).
+</Callout>

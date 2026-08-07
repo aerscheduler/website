@@ -1,0 +1,166 @@
+<Summary>
+Four toggles under <Where app="web">Settings → Booking preferences</Where> change how
+booking works for the whole school. Three more rules live elsewhere: the booking window on a
+membership plan, the overnight minimum in billing settings, and the school's time zone.
+</Summary>
+
+<Roles>Owners, Admins</Roles>
+
+## Where booking preferences live
+
+<Where app="web">Settings → Booking preferences</Where>. Settings as a whole is admin
+only, so an owner or an admin can change these and nobody else can, including dispatchers.
+
+<Screenshot id="booking-preferences-tab" />
+
+Every one of these is **off** by default, and a school that has never opened this tab behaves
+as though all four are off.
+
+## Allow multi-day bookings
+
+Off, a booking has to start and end on the same local day, and anything that crosses local
+midnight is refused.
+
+On, the booking form's date field becomes **Out on** and gains **Back on** and **Back at**, so
+a booking can keep the aircraft for a night or a week. A multi-day booking overrides the
+resource's normal operating hours: the aircraft is simply gone until it is back, rather than
+free again the next morning.
+
+<Callout type="important">
+The toggle is greyed out, not just refused on save, until your school has a time zone set. The
+reason is money. A trip's bill depends on how many nights it spans, and nights can only be
+counted in the airport's own zone. If the count fell back to whatever device somebody happened
+to be holding, two people booking the same trip would be billed differently. Set a zone under
+<Where app="web">Settings → Organization</Where> first.
+</Callout>
+
+A flight that ends exactly at midnight is not a multi-day booking. 10pm to midnight is an
+ordinary evening flight. 10pm to 12:15am is a night away.
+
+See [Book a trip that keeps the aircraft overnight](/docs/scheduling/overnight-and-multi-day-trips).
+
+## Require payment method before self-book
+
+On, a student or renter booking **themselves** must have a card saved before the booking is
+accepted. The refusal reads "Add a payment method before booking. Open Payment methods in your
+profile, then try again."
+
+What it does not touch:
+
+- owners, admins and dispatchers booking on somebody's behalf
+- a booking where the person doing the booking is not sitting in the student or renter seat,
+  for example an instructor booking a dual
+
+<Callout type="note">
+This setting does nothing at all until your school has finished Stripe onboarding and card
+payments are live. Turning it on before that changes nothing and blocks nobody.
+</Callout>
+
+## Members can only book approved resources
+
+A check-out is an explicit approval linking one member to one tail, granted from the aircraft
+record or the person's record.
+
+On, **students and renters** can book only the aircraft they are approved on. A renter with
+no approvals is told they are not checked out on any aircraft and asked to talk to the
+school.
+
+Four groups are not checked, on purpose:
+
+- **Owners, admins and dispatchers.** They can still assign anyone to any aircraft from the
+  dispatch board, which is what you want when somebody is being checked out in the first
+  place.
+- **Instructors.** A CFI is not held to the approved list, so turning this on cannot ground
+  your dual bookings.
+- **Guest flights**, which have no member to check.
+- **Rooms and simulators.** Check-outs are about aeroplanes.
+
+<Callout type="note">
+If your school has never opened Booking preferences at all, this counts as off.
+</Callout>
+
+## Instructors can override reservation prices
+
+On, an instructor can adjust the resource rate and the instruction rate on a booking, using
+**Override payment** on the reservation panel in the console or **Override Payment** on the
+reservation screen in the app. The setting gates both identically.
+
+Admins, owners and dispatchers can always override, whatever this is set to.
+
+<Callout type="warning">
+This is not limited to an instructor's own bookings. Switched on, any instructor can
+override the rates on any booking in the school. An instructor's copy of the setting is read
+from their session, so they see the action the next time they sign in rather than the moment
+you save it.
+</Callout>
+
+## Booking windows on membership plans
+
+If your school runs membership plans, each plan can carry a **Booking window**: how many days
+ahead members on that tier may book. It is the classic club rule, where full members book the
+season and associates book inside the week.
+
+Set it on the plan under <Where app="web">Settings → Memberships</Where>. Two things to
+know before you do:
+
+- It applies to **every** reservation type, so a club that sets "associates book seven days
+  out" meaning aircraft has also limited their ground school and their simulator time.
+- It applies even when staff book on that member's behalf, because the rule is about whose
+  membership it is, not who typed it in.
+
+The refusal names the plan and the numbers: "The Associate tier can book up to 7 days ahead.
+That booking is 12 days out."
+
+A window only applies while the membership is **active**. A pending or lapsed membership has
+no window at all, so the restriction disappears rather than tightening.
+
+## The overnight minimum
+
+A floor on billable hours per night the aircraft is kept away. Set the school's figure under
+<Where app="web">Settings → Billing</Where>, and override it for one aircraft on that
+aircraft's rates.
+
+Without one, a member can keep an aeroplane all weekend, fly 1.5 hours, and owe you 1.5 hours.
+AerScheduler discloses the minimum on the booking form and again in the ramp in modal, before
+any invoice exists, in the form "This will bill 4.0 hours rather than the 1.5 flown."
+
+A booking that comes back the same day is never affected.
+
+## How far ahead anyone can book
+
+Nobody can book more than **365 days** ahead, whatever their role and whatever their
+membership plan says. The date picker simply stops there.
+
+Bookings also snap to 15 minute marks. There is no way to express an 09:07 departure.
+
+## Settings a dispatcher cannot reach
+
+Dispatchers run the board. They can create any reservation type, assign anyone, edit,
+reschedule, drag, cancel, ramp out, ramp in and fill in who pays what. What they cannot do:
+
+- open Settings at all, so booking preferences, the school's time zone, the overnight minimum
+  and the cost-splitting rules are out of reach
+- raise an invoice for a booking by hand
+- see financial reports
+- override prices, unless they are also an admin
+
+That last one is worth planning around. The cost-splitting rules decide which fields in the
+Who pays what panel matter, and the dispatcher filling that panel in cannot read them. Tell
+them once.
+
+## Related
+
+<CardGrid>
+<DocCard href="/docs/scheduling/who-can-do-what-on-the-schedule" title="Who can book, edit and cancel">
+Scheduling permissions by role.
+</DocCard>
+<DocCard href="/docs/scheduling/airport-time-and-time-zones" title="Why the schedule shows airport time">
+Setting the school's zone, which multi-day bookings depend on.
+</DocCard>
+<DocCard href="/docs/scheduling/why-was-my-booking-refused" title="Why was my booking refused?">
+What your members see when one of these rules catches them.
+</DocCard>
+<DocCard href="/docs/billing/charge-a-minimum-for-overnight-trips" title="Charge a minimum for overnight trips">
+The overnight minimum from the billing side.
+</DocCard>
+</CardGrid>

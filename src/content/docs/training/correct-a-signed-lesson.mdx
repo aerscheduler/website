@@ -1,0 +1,93 @@
+<Summary>
+A signed record can never be edited. Open the student's record, go to Lessons, click
+**Amend** on the signed record, say why, then fix and sign the correction that appears
+beside it. The original stays on the record, struck through and badged Superseded.
+</Summary>
+
+<Roles>Instructors, Admins</Roles>
+
+## Amend the record
+
+<Where app="web">Training → Students → the student → Lessons</Where>
+
+<Steps>
+  <Step n={1} title="Find the signed record">
+    Expand the lesson. Each record underneath shows its own state: Grading, Awaiting
+    student, Signed, Superseded.
+  </Step>
+  <Step n={2} title="Click Amend">
+    Only a signed record has one. A draft carries **Continue** and **Sign** instead, so if
+    you cannot find Amend, the record is not signed yet: edit it directly.
+  </Step>
+  <Step n={3} title="Say why, in the Why box">
+    At least three characters, and worth writing properly: this reason is stored on the
+    reversal in the ledger and is what an inspector reads. Something like "Landed 12 minutes
+    before official night."
+  </Step>
+  <Step n={4} title="Click Amend">
+    A new record appears beside the original, badged Correction, not yet signed.
+  </Step>
+</Steps>
+
+<Screenshot id="amend-record-dialog" />
+
+## Why the numbers drop straight away
+
+The correction arrives unsigned, and only a signed record counts. So the moment you click
+Amend, before you have changed anything:
+
+- the lesson stops counting toward lessons complete, and
+- every hour the original credited is reversed out of the ledger with a negative entry.
+
+That is intended. A record somebody has declared wrong should not keep crediting hours while
+it is being fixed.
+
+<Callout type="warning">
+If you amend a record and walk away without signing the correction, the student's hours and
+lesson count stay understated indefinitely. It looks exactly like data loss and it is not.
+Finish the correction in the same sitting.
+</Callout>
+
+## Finish and sign the correction
+
+Find the new record, click **Continue**, fix the grade, hours and notes, then **Save and
+sign**. The correction starts from the original's grade, hours, notes and task grades, so
+usually you are changing one number.
+
+Signing the correction posts its credits, and the student's totals come back.
+
+<Screenshot id="enrollment-lessons" />
+
+<Callout type="note">
+The correction is stamped with whoever saves it as the instructor, and it does not carry the
+original's link back to the booking it was flown on. The flight itself is untouched.
+</Callout>
+
+## What an inspector sees afterwards
+
+Both records. The original stays signed and visible, struck through and flagged Superseded;
+the correction sits beside it. Both also appear on the Training records report, each with
+its own flag, and the reversal appears on the Ledger tab carrying your reason.
+
+That is the whole point of amending rather than editing. Nothing is removed, so the history
+of the change is readable a year later. See
+[Pull training records for an FAA inspection](/docs/training/training-records-for-an-faa-inspection).
+
+## A record can only be amended once
+
+A record that has already been superseded cannot be amended again. If the correction is also
+wrong, amend the correction: it is a signed record in its own right once you have signed it.
+
+## Amending is web only
+
+The iPhone app does not offer Amend. A signed record shows there as a read-only Signed and
+final panel, and the screen tells you corrections are made in the web console.
+
+<CardGrid>
+  <DocCard href="/docs/training/read-a-training-record" title="Read a training record">
+    What Superseded, Correction and Awaiting student mean on the Lessons tab.
+  </DocCard>
+  <DocCard href="/docs/training/training-troubleshooting" title="Training: why it did that">
+    The numbers dropped, the section vanished, the button is disabled.
+  </DocCard>
+</CardGrid>

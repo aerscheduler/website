@@ -1,0 +1,116 @@
+<Summary>
+Open the invoice from <Where app="web">Billing</Where> and click Send payment reminder. A
+daily sweep already chases unpaid member invoices without you doing anything. If you want
+teeth, set Ground members with unpaid invoices on
+<Where app="web">Settings → Billing</Where>.
+</Summary>
+
+<Roles>Owners, Admins</Roles>
+
+## Send a reminder by hand
+
+<Steps>
+<Step n={1} title="Open the invoice on Billing">
+Set the Status filter to Outstanding to see only what is owed.
+</Step>
+
+<Step n={2} title="Click Send payment reminder">
+It is in the invoice detail panel, and on the Recent invoices panel on the Dashboard.
+
+<Screenshot id="invoice-detail-panel" />
+</Step>
+</Steps>
+
+The member gets a Payment reminder email and a push notification, both carrying a link to
+pay. The send is stamped on the invoice, so the automatic sweep will not immediately send a
+second one on top of yours.
+
+Reminders are for members. A guest invoice cannot be reminded from here.
+
+## The automatic reminders
+
+A daily sweep chases unpaid member invoices on its own. An invoice is picked up when:
+
+- it is past its due date, or
+- it is 7 or more days old and has no due date.
+
+After that, the same invoice is reminded at most once every 7 days.
+
+Voided invoices and paid invoices are never chased.
+
+## Why flight invoices show no due date
+
+<Callout type="warning">
+An invoice raised by a flight close-out is created without a due date, so the Due column on
+Billing shows a dash. Stripe's copy of the same invoice still gives the member 30 days to
+pay. That is why the two can look different, and it is why automatic reminders on a flight
+invoice start about a week after it is raised rather than on a deadline.
+</Callout>
+
+Invoices that do carry a due date here:
+
+- a manual invoice, if you set one when you created it
+- a membership dues invoice, if the plan has Days to pay filled in
+
+## Ground members who owe money
+
+This blocks a member from booking an aircraft once they hold too many unpaid invoices.
+
+<Steps>
+<Step n={1} title="Open Settings → Billing">
+This whole card is saved by the organization owner. An admin can open it and type in it,
+but Save changes will be refused.
+</Step>
+
+<Step n={2} title="Enter a number in Ground members with unpaid invoices">
+It is a count of unpaid invoices. Not days late, and not dollars owed. Leave it blank or
+set it to 0 to switch it off, which is the default.
+
+<Screenshot id="billing-settings-card" />
+</Step>
+
+<Step n={3} title="Click Save changes" />
+</Steps>
+
+A member at or above that number is grounded. Paying releases them automatically. The
+threshold is checked when an invoice is created, and again on a nightly sweep. Voided
+invoices do not count toward it.
+
+## What grounding blocks and what it does not
+
+| | |
+|---|---|
+| Blocked | Booking an aircraft |
+| Not blocked | Ground school, simulators, rooms |
+
+<Callout type="note">
+The member is not sent a separate notification telling them they have been grounded for
+money. They find out when a booking is refused, so it is worth a phone call as well as a
+reminder.
+</Callout>
+
+<Callout type="warning">
+The nightly re-check only inspects invoices that carry a due date, and flight invoices have
+none. In practice a flight invoice counts toward grounding at the moment it is created, not
+later. If somebody has quietly built up a stack of unpaid flight invoices and is still
+booking, that is why. Mark the invoices paid, void the ones that are wrong, or speak to
+them directly.
+</Callout>
+
+## Guest invoices are chased by Stripe
+
+Send payment reminder is refused on a guest invoice: "Guest invoices are emailed by
+Stripe". A guest is not a member, has no account, and gets nothing from AerScheduler.
+Chase them from your own Stripe dashboard, where the invoice was sent from. See
+[Bill a discovery or guest flight](/docs/billing/bill-a-discovery-or-guest-flight).
+
+## Related
+
+<CardGrid>
+<DocCard href="/docs/billing/pay-an-invoice-and-save-a-card" title="Pay your invoice and set up autopay">
+What the member sees, and how autopay stops this happening again.
+</DocCard>
+<DocCard href="/docs/billing/mark-an-invoice-paid-void-or-refund-it" title="Mark paid, void or refund">
+Once the check turns up, or when the invoice was wrong all along.
+</DocCard>
+</CardGrid>

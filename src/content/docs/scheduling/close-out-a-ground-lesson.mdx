@@ -1,0 +1,84 @@
+<Summary>
+Nothing ramps in a classroom. Open the booking, press **Review times**, type the instruction
+time, and the lesson goes straight to Awaiting review. There is no Hobbs, no tach, and no
+separate out and in step.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers, Instructors, Students</Roles>
+
+## Why this booking looks different
+
+A flight has two meters, so it needs two events: ramp out records the departure readings and
+ramp in records the return. A ground lesson has neither. So the close-out collapses into one
+step, and the section on the booking reads "Record the instruction time once the lesson is
+done." instead of offering a Ramp out button.
+
+You get this shorter close-out on:
+
+- a booking whose type is **Ground**
+- any booking with no aircraft on it, including a dual briefing booked without a tail
+- any booking that reserves a room
+
+## Press Review times
+
+<Steps>
+<Step n={1} title="Open the booking">
+From <Where app="web">Calendar</Where>, or from <Where app="web">You → Schedule</Where> if
+it is your own lesson. Click the block to open the reservation detail panel.
+</Step>
+<Step n={2} title="Press Review times">
+It sits where Ramp out sits on a flight, in the Dispatch section. The modal that opens is
+titled Review times, not Ramp out.
+</Step>
+<Step n={3} title="Enter the instruction time">
+In hours, so a ninety minute lesson is 1.5. This is the figure the school bills at the
+instructor rate.
+
+<Screenshot id="review-times-modal-ground" />
+</Step>
+<Step n={4} title="Press Review times again to save">
+The badge on the booking changes to Awaiting review.
+</Step>
+</Steps>
+
+<Callout type="important">
+Instruction time is **required** here. On a flight it is optional extra detail, and the help
+text under the field says "Optional. Billed at the instructor rate." On a lesson with no
+meters it is the only figure recorded, so the modal will not save without it.
+</Callout>
+
+On the iOS app the same action is on the reservation screen, where the Ramp In button is
+labelled **Review** for a booking with no meters.
+
+## What happens next
+
+The lesson sits at Awaiting review until every person on it confirms with their own four
+character PIN. When the last one signs off, the invoice is raised automatically. A lesson
+nobody signs off is a lesson nobody is billed for, so this is worth chasing the same day.
+
+See [Sign off a flight with your PIN](/docs/scheduling/sign-off-with-your-pin) for how the
+confirmation works and what to do if somebody has not set a PIN yet.
+
+## A ground lesson cannot be booked on an aircraft
+
+A Ground booking takes a room, and the resource picker offers rooms only. If you want the
+aircraft time recorded, book a **Dual** instead. A dual booked with no tail on it gets this
+same short close-out, and a dual with an aircraft gets the full ramp out and ramp in. See
+[Which reservation type should I use?](/docs/scheduling/reservation-types).
+
+<Callout type="note">
+Being grounded stops somebody flying, not learning. A member who is grounded, including
+automatically for unpaid invoices, can still be booked into a ground lesson, because the
+grounding rule only bites on bookings that have an aircraft on them.
+</Callout>
+
+## Related
+
+<CardGrid>
+<DocCard href="/docs/scheduling/ramp-out-and-ramp-in" title="Ramp out and ramp in a flight">
+The two step version, for anything with meters.
+</DocCard>
+<DocCard href="/docs/scheduling/sign-off-with-your-pin" title="Sign off a flight with your PIN">
+What happens after Awaiting review.
+</DocCard>
+</CardGrid>

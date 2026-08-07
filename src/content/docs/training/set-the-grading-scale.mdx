@@ -1,0 +1,96 @@
+<Summary>
+Open the course and go to **Requirements**. The **Grading scale** card at the top holds the
+marks this course version uses and which of them mean the lesson is complete. It defaults to
+S, U and I with S completing the lesson, and it freezes when the version is published.
+</Summary>
+
+<Roles>Owners, Admins, holders of the Configure training grant</Roles>
+
+The scale belongs to the syllabus **version**, not to the school, so two courses can grade
+differently and a revision can change the marks without touching students on the old
+version.
+
+<Screenshot id="syllabus-grading-scale" />
+
+## Edit the scale
+
+<Steps>
+<Step n={1} title="Course → Requirements">
+The **Grading scale** card sits above the requirement list. The version has to be a draft.
+</Step>
+<Step n={2} title="Edit the codes">
+One row per mark.
+</Step>
+<Step n={3} title="Tick Completes the lesson">
+On every mark that means the student may move on.
+</Step>
+<Step n={4} title="Add or remove marks">
+**Add grade** for another row, the trash icon to drop one.
+</Step>
+<Step n={5} title="Click Save scale">
+The button only appears once something has actually changed.
+</Step>
+</Steps>
+
+Two rules are enforced on save:
+
+- At least one mark has to complete the lesson, or the save is refused with "At least one
+  grade has to mean the lesson is complete."
+- Two marks cannot share a name.
+
+## Which marks complete the lesson
+
+"Complete" on a lesson means the record is **signed** and carries a mark this card says
+completes the lesson. Both halves are required.
+
+That is what fills the lessons-complete bar on a student's record, and what the syllabus
+uses to work out which lesson is **Next up**. Distinct lessons are counted, never records,
+so a student who flew the same lesson three times before passing counts as one lesson done.
+
+## What a U does to the record
+
+An unsatisfactory grade is a real record, not a failure to record anything.
+
+- It is signed, frozen and permanently on the student's training record.
+- It appears on the Training records report for an inspector to read.
+- It never moves the lessons-complete bar, so the lesson stays outstanding and stays
+  **Next up**.
+- Its hours are still credited to every requirement the lesson credits. The student flew
+  them.
+
+<Callout type="warning">
+The close-out lesson picker and the "Next up" strip on the booking form treat a lesson as
+flown as soon as **any** signed record exists for it, including one graded U. So the same
+student can read as "Flight 5 ✓, next up Flight 6" at the close-out while their training
+record still shows Flight 5 incomplete and Next up. The training record is the one to
+believe.
+</Callout>
+
+## Where a custom scale cannot be graded
+
+The **Grade** dropdown in the close-out **Training record** section always offers S, U and I.
+It does not read the course's own scale.
+
+If your course grades 1 to 4, or Introduced / Practiced / Perfected, the signature from a
+close-out is refused, with a message naming your course's actual marks, for example:
+`"S" is not one of this course's grades (1, 2, 3, 4).`
+
+<Callout type="important">
+Grading from the flight close-out is the path the whole module is built around, so changing
+the scale costs you the fastest way to grade. Unless you have a firm reason to change it,
+keep the default S, U and I.
+
+If you do need your own marks, plan on grading from the student's training record or the
+iPhone app instead. See
+[Grade a lesson from a training record](/docs/training/grade-a-lesson-from-a-training-record).
+</Callout>
+
+## The scale freezes when you publish
+
+Publishing the version locks the grading scale along with the lessons, the tasks and the
+requirements. There is no unpublish.
+
+To change the marks on a published course, create a new version, edit its scale, publish
+that, and retire the old one. Students already enrolled stay on their version and keep
+grading against the marks they started with. See
+[Publish a syllabus version](/docs/training/publish-a-syllabus-version).

@@ -1,0 +1,86 @@
+<Summary>
+Only admins and technicians ever receive maintenance reminders or squawk alerts. You can
+turn maintenance reminders off for yourself under
+<Where app="web">You → Notification settings</Where>. Squawk alerts have no switch and
+cannot be turned off.
+</Summary>
+
+<Roles>Owners, Admins, Technicians</Roles>
+
+## Only admins and technicians are notified
+
+There is no way to send maintenance reminders to anybody else. Dispatchers, instructors,
+students and renters are never emailed or pushed about an inspection or a squawk, whatever
+their notification settings say.
+
+If the person who needs to know about the fleet is not getting anything, the fix is their
+role, not their preferences.
+
+## Turn maintenance reminders off for yourself
+
+<Steps>
+  <Step n={1} title="Open your notification preferences">
+    <Where app="web">You → Notification settings</Where>, or
+    <Where app="mobile">Settings → Notifications</Where> in the app.
+  </Step>
+  <Step n={2} title="Find the Maintenance section">
+    It only renders for admins and technicians, so if you cannot see it, you are not one.
+
+    <Screenshot id="notification-preferences-maintenance" />
+  </Step>
+  <Step n={3} title="Toggle Maintenance reminders">
+    One switch, covering aircraft inspection and due-item reminders. Email switches live on
+    the console. Push categories are managed in the app, as the footer of the page says.
+  </Step>
+</Steps>
+
+This is a personal setting. Turning it off for yourself does not stop anybody else being
+notified.
+
+## Squawk alerts cannot be turned off
+
+Every squawk filed sends an email and a push to every admin and technician in the school,
+except the person who filed it. There is no switch for it on either surface.
+
+<Callout type="note">
+On a busy fleet this is the noisiest thing in the module. If it is too much, the practical
+lever is the role: an admin who does not want squawk email and does not need admin rights
+can hold a narrower role instead.
+</Callout>
+
+## When a reminder is actually sent
+
+Each inspection sends up to two: a warning when it enters its **Due soon** band, and one
+when it comes due.
+
+The **Due soon** band is exactly the warning lead you set on the inspection. "Warn me 10
+hours out" means the warning goes at 10 hours remaining, not at some separate idea of soon.
+
+An inspection with no warning lead at all sends no warning, only the due notification. The
+Add inspections form forces a lead of at least 1 hour or 1 day, so this only shows up on
+inspections created another way.
+
+## Hour-based inspections only notify after a close-out
+
+Calendar inspections are checked automatically through the day, so a 12-month annual will
+warn you on its own.
+
+Hour-based inspections work differently. Their countdown, their notification and their
+automatic grounding all happen at one moment: when somebody closes out a flight on that
+aircraft and enters the meters.
+
+<Callout type="warning">
+That means an aircraft flown on somebody else's paperwork, or a tach corrected by hand under
+<Where app="web">Aircraft → the tail → Edit</Where>, can sit at Overdue on screen with nobody
+emailed and the aircraft still bookable. A single closed-out flight on that tail brings
+everything back into line. See
+[Troubleshooting inspections and squawks](/docs/maintenance/troubleshooting-inspections-and-squawks).
+</Callout>
+
+## Where the email link takes you
+
+A maintenance reminder links straight to the inspection it is about, which opens properly in
+the iOS app.
+
+A squawk alert's button lands on that squawk's own page, on both surfaces. Searching its
+title from anywhere in the console opens the same page.

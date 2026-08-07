@@ -1,0 +1,117 @@
+<Summary>
+<Where app="web">People → Invite</Where>. One email or a pasted roster, tick the roles the
+whole batch should get, press **Send invite**. The alternative is to hand out your join
+code from <Where app="web">Settings → Organization → Identity</Where> and approve people as
+they arrive.
+</Summary>
+
+<Roles>Owners, Admins</Roles>
+
+## Invitation or join code?
+
+| | Invitation | Join code |
+|---|---|---|
+| How it reaches them | An email to a specific address | You tell them the code |
+| Roles | Attached in advance, applied on acceptance | Chosen by you when you accept the request, or none at all |
+| Approval | None needed. An invited person joins immediately | Depends on whether your school approves people before they join |
+| Best for | Your instructors and your existing roster | A poster on the wall, a link in a welcome pack |
+
+An outstanding invitation beats the approval setting. An invited person joins straight
+away, code or not.
+
+## Send invitations
+
+<Steps>
+  <Step n={1} title="Open People and press Invite">
+    The button only appears for admins and owners.
+  </Step>
+  <Step n={2} title="Type one email, or paste a whole roster">
+    The **Email** box takes one address. The **Bulk invite** box takes a list, one address
+    per line, and commas and semicolons split too. The hint underneath tells you how many
+    valid addresses it found.
+  </Step>
+  <Step n={3} title="Tick the roles for this batch">
+    Admin, Instructor, Student, Renter, Dispatcher, Technician.
+  </Step>
+  <Step n={4} title="Optionally choose a membership plan">
+    Only if your school runs membership plans. It is applied as pending when they accept,
+    and nothing is charged until you start it from their record. See
+    [Add a member to a plan](/docs/billing/add-a-member-to-a-plan).
+  </Step>
+  <Step n={5} title="Press Send invite">
+    Each address gets an email with a link that puts them into your school with exactly
+    those roles. They appear on People once they accept.
+  </Step>
+</Steps>
+
+<Callout type="warning">
+Everyone in one batch gets the **same** roles. Two role sets means two invites. Send the
+instructors, then send the students.
+</Callout>
+
+Duplicate addresses are removed and invalid ones are dropped without stopping the send. If
+part of a batch fails you are told: "Invited 4 people. 1 couldn't be sent."
+
+<Callout type="note">
+**Owner** is not offered at invite time. Invite the person as an admin, then grant owner
+afterwards from <Where app="web">People → ⋯ → Edit roles</Where>.
+</Callout>
+
+## The shorter invite flow
+
+While you are still setting the school up, the dashboard offers a shorter version of this
+that asks who you are inviting (Instructor, Student, Renter, Technician, Office staff) and
+sets the roles for you. It reaches the same place.
+
+**Office staff** means dispatcher: runs the board, no settings and no billing.
+
+## Or hand out your join code
+
+Your code is on <Where app="web">Settings → School → Organization → Identity</Where> with a
+copy button, and in the iOS app under
+<Where app="mobile">Organization settings → Organization Invitation Code</Where>. People
+enter it at app.aerscheduler.com/join or in the app.
+
+What happens next depends on one setting:
+
+- **Approve people before they join is off** (the default): the code alone lets them in.
+- **It is on**: the code creates a join request, and nothing happens until an admin acts.
+
+That switch is set during setup, from the booking rules step on your dashboard, or in the
+iOS app under
+<Where app="mobile">Organization settings → Joining Organization Restriction</Where>.
+
+## Accept or decline a join request
+
+<Steps>
+  <Step n={1} title="Open People">
+    A yellow **Join requests (N)** panel sits above the roster whenever anybody is waiting.
+  </Step>
+  <Step n={2} title="Choose a starting role for each person">
+    Student, Renter, Instructor, Technician, Dispatcher, Admin, or **No role yet**.
+  </Step>
+  <Step n={3} title="Press Accept, or the × to decline">
+    Accepting makes them a member with that role and lets them sign in to your school.
+    Declining removes the request.
+  </Step>
+</Steps>
+
+<Callout type="warning">
+Accepting with **No role yet** creates a member who can see the schedule, the roster and
+the fleet but cannot book anything at all. If a new student says the Book button is
+missing, look for them under the **No role yet** role filter and give them a role.
+</Callout>
+
+Two things about that panel worth knowing:
+
+- It is invisible when the queue is empty, so a school that has never turned approval on
+  will never see it. If somebody says "I entered the code and nothing happened", this panel
+  is where they are.
+- The count in the heading is the whole queue, not the page. Forty people waiting reads as
+  40 even though 25 fit on screen.
+
+## After they are in
+
+- Change what they can do: [Roles, and what each one can do](/docs/getting-started/roles-and-permissions).
+- Ask them for a medical or a rental agreement: [Track medicals, certificates and other documents](/docs/getting-started/member-documents).
+- Check a renter out on a tail: [Check a renter out on an aircraft](/docs/getting-started/approve-a-member-on-an-aircraft).
