@@ -114,6 +114,15 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     crop: '[data-doc-shot="reservation-detail-panel"]',
   },
   {
+    id: "close-out-readings",
+    screen: "What the flight recorded, in the close-out",
+    route: "/schedule?reservation={awaitingReviewReservationId}",
+    alt: "Hobbs, tach, hours flown and instruction time recorded on a flight",
+    dataState:
+      "A booking that has ramped in, so both pairs of readings, the hours flown and the instruction time are all present, with the ramped out and ramped in times underneath. Absent entirely on a booking that has not flown.",
+    crop: '[data-doc-shot="close-out-readings"]',
+  },
+  {
     id: "reservation-detail-awaiting-signoff",
     screen: "Reservation detail panel, close-out section",
     route: "/schedule?reservation={awaitingReviewReservationId}",
@@ -273,8 +282,19 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/schedule?reservation={splitReservationId}",
     alt: "Who pays what panel",
     dataState:
-      "A booking with more than one person billed for it that has ramped in and has not been invoiced. The panel renders itself once there are two payers; it disappears the moment the invoices exist, because the server refuses to change the shares after that. The per-payer leg and share fields have no ids of their own, so the live mismatch warnings are not reachable from a capture step yet. BLOCKED ON A CONSOLE FIX: at the panel's own width the Instruction (hrs) column label is 92px wide in a 66px column, so it runs 26px under Share % and the two headings render on top of each other as unreadable text. The capture itself works; the file was deleted rather than published, because a screenshot of two collided labels reads as a broken image. Widen that column (or shorten the label) in web, then re-run this id.",
+      "A booking with more than one person billed for it that has ramped in and has not been invoiced. The panel renders itself once there are two payers; it disappears the moment the invoices exist, because the server refuses to change the shares after that. The per-payer leg and share fields have no ids of their own, so the live mismatch warnings are not reachable from a capture step yet. The panel now folds behind a summary, so the step has to open it first. THE COLLIDED LABELS ARE FIXED: the field grid was asking for up to five columns off the VIEWPORT width inside a panel capped at 448px, which ran Instruction (hrs) underneath Share %. It is two columns now, at every width.",
     crop: '[data-doc-shot="who-pays-what-panel"]',
+    open: ['button:has-text("Who pays what")'],
+  },
+  {
+    id: "who-pays-split-evenly",
+    screen: "Who pays what, after Split evenly",
+    route: "/schedule?reservation={splitReservationId}",
+    alt: "Who pays what, after Split evenly",
+    dataState:
+      "The same booking, with Split evenly pressed: consecutive Hobbs legs per payer, instruction divided, 50/50 shares, and the running totals underneath reporting that the individual hours add up to what the aircraft flew and the shares come to 100%. The button only appears once the booking has ramped in, since before that there are no hours to divide.",
+    crop: '[data-doc-shot="who-pays-what-panel"]',
+    open: ['button:has-text("Who pays what")', 'button:has-text("Split evenly")'],
   },
   {
     id: "cancel-reservation-dialog",
@@ -580,7 +600,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/schedule?reservation={scheduledReservationId}",
     alt: "Reservation detail sheet, Close-out section",
     dataState:
-      "Today's dual booking with an aircraft and an instructor, not yet ramped, so the step badge reads Not started and the Ramp out button is the only action.",
+      "Today's dual booking with an aircraft and an instructor, not yet ramped, so the progress row highlights Dispatch and the Ramp out button is the only action. There are no readings yet, so that block is absent, and everything secondary is folded.",
     crop: '[data-doc-shot="close-out-not-started"]',
   },
   {
@@ -1258,7 +1278,24 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     dataState:
       "A completed dual booking with an enrolled student, Hobbs out and in plus briefing time entered, and the Training record block expanded so the lesson dropdown (with completed lessons prefixed by a tick), the grade and the prefilled Flight and Ground fields all show. The block starts collapsed behind a Grade this lesson button, so the step has to open it.",
     crop: '[data-doc-shot="closeout-training-section"]',
-    open: ['button:has-text("Grade this lesson")'],
+    //Two clicks now: the whole Training record block folds away behind a summary ("1 of 2
+    //graded"), because a booking with two students on it opened a grading form per student
+    //per course and buried the close-out itself.
+    open: ['button:has-text("Grade the lesson")', 'button:has-text("Grade this lesson")'],
+  },
+  {
+    id: "task-grades",
+    screen: "Per-task ACS grades in the close-out grader",
+    //The two-student booking, deliberately, and not {trainingReservationId}: the grader
+    //that opens is the FIRST one on the sheet, and on that booking the first student's
+    //first course is one whose next lesson carries no tasks, so the shot has nothing in it.
+    //Here the first grader is a Part 141 flight lesson with four ACS tasks on it.
+    route: "/schedule?reservation={splitReservationId}",
+    alt: "Per-task ACS grades in the close-out grader",
+    dataState:
+      "A completed dual booking whose FIRST student's first course has a next lesson carrying ACS tasks, so each task shows its code and this course's marks as buttons and the header counts how many are marked. Nothing is marked: unmarked is the state the reader has to recognise.",
+    crop: '[data-doc-shot="task-grades"]',
+    open: ['button:has-text("Grade the lesson")', 'button:has-text("Grade this lesson")'],
   },
   {
     id: "booking-next-up-hint",

@@ -10,6 +10,28 @@ a plan into a billable flight.
 Staff can ramp any booking. Everybody else can ramp the bookings they are on, and the
 maintenance they scheduled themselves.
 
+## Reading the close-out
+
+The section shows four things, in this order:
+
+1. **Where the booking is**, as a row of steps: Dispatch, In flight, Review, Billed. Done
+   steps carry a tick, the live one is filled in, and anything still grey has not happened.
+   A booking with no aircraft has three steps rather than four, because nothing ramps.
+2. **What has been recorded so far**: the Hobbs and tach readings, the hours flown, the
+   instruction time, and the times the aircraft actually left and came back. Nothing at all
+   before it has flown.
+
+   <Screenshot id="close-out-readings" />
+
+3. **The one action it is waiting on**, as a single button.
+4. **Everything else, folded away**: who pays what, the training records, and the
+   adjustments. Each says what it holds while it is shut ("2 payers, split recorded", "1 of 2
+   graded"), so a booking that needs nothing from you can be read without opening anything.
+
+A folded card that has a problem in it opens itself and says so. That happens when the
+individual hours do not add up to what the aircraft flew, or the shares do not come to 100%,
+which are the two things the server will refuse to bill.
+
 ## Ramp out
 
 <Steps>
@@ -115,6 +137,13 @@ Correcting the times after somebody has already signed off **wipes every sign-of
 booking**, and everyone has to confirm again with their PIN. Once the last pilot has signed
 off, or any invoice exists, the correction is refused outright: void the invoice first.
 </Callout>
+
+## If something is wrong with the aeroplane
+
+**Report a squawk** is in the close-out of any booking with an aircraft on it, with the tail
+already filled in. It is there for everybody who can ramp the booking, which is the point:
+the Maintenance page is staff-only, so this is how the person who just flew it reports what
+they found. See [Report a squawk](/docs/maintenance/report-a-squawk).
 
 Next: [Sign off a flight with your PIN](/docs/scheduling/sign-off-with-your-pin), which is
 what actually produces the invoice.
