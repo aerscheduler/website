@@ -1,8 +1,8 @@
 <Summary>
-Email switches live on <Where app="web">Notification settings</Where>, reached from the
-account menu at the foot of the left rail. Push switches live only in the iOS app, under
-<Where app="mobile">Settings → Notifications → Push</Where>. Both are per school and both
-save as you touch them.
+Email and push switches both live on <Where app="web">Notification settings</Where>,
+reached from the account menu at the foot of the left rail, and on
+<Where app="mobile">Settings → Notifications</Where> in the iOS app. Both channels are per
+school and both save as you touch them. Push still needs the iOS app installed to arrive.
 </Summary>
 
 ## Two places, two different jobs
@@ -14,17 +14,18 @@ save as you touch them.
 
 In the iOS app, tapping a notification takes you to the thing it is about.
 
-## Choose which emails you get
+## Choose which emails and push alerts you get
 
 <Steps>
   <Step n={1} title="Open the account menu at the foot of the left rail and choose Notification settings">
     Or go straight to app.aerscheduler.com/me/notifications.
   </Step>
-  <Step n={2} title="Leave Email notifications on">
-    That master switch is the top of the page. Everything below it is a category.
+  <Step n={2} title="Leave Email notifications and Push notifications on">
+    Each channel has its own master switch at the top of its card. Everything below is a category.
   </Step>
   <Step n={3} title="Turn off the categories you do not want">
-    Each one saves immediately. There is no Save button.
+    Each one saves immediately. There is no Save button. Email and push are independent: turning
+    reservation email off does not turn reservation push off.
 
     <Screenshot id="me-notifications" />
   </Step>
@@ -42,6 +43,7 @@ In the iOS app, tapping a notification takes you to the thing it is about.
 | Endorsements | An endorsement about to expire | Instructors and admins |
 | Maintenance | Inspection reminders | Admins and technicians |
 | Status | Being grounded | Everyone |
+| Announcements | School-wide notices from admins | Everyone |
 
 Groups you would never receive anything from are hidden rather than shown greyed out, which
 is why two people at the same school see different pages.
@@ -53,14 +55,10 @@ category means nothing is happening, not that it is off.
 
 <Screenshot id="notification-preferences-maintenance" />
 
-## Push notifications
+## Push delivery still needs the phone
 
-Push goes to the iOS app, and the push switches exist only there:
-<Where app="mobile">Settings → Notifications → Push</Where>. The web page's switches are
-email only, which the line at the bottom of that page says.
-
-The two channels are independent. Turning reservation email off does not turn reservation
-push off.
+You can choose push categories from the console. The alerts themselves only land on a device
+with the AerScheduler iOS app signed in. Android users get email instead.
 
 ## What the master switch does not stop
 
@@ -70,28 +68,7 @@ invitations, email verification and password resets. Those are how you get back 
 account, so they are not optional.
 </Callout>
 
-School-wide announcements are also always delivered. Everyone in the school with the app
-installed receives the push, and announcements are never emailed. The role tags on an
-announcement describe who a notice is aimed at; the board itself is readable by everybody.
-
 ## Preferences are per school
 
 If you fly at two schools you have two sets of switches. Switch schools first, then set
 them. See [Fly at more than one school](/docs/getting-started/switch-between-schools).
-
-## Unsubscribing from an email you did not expect
-
-Every notification email carries an unsubscribe link in the footer. One click, no sign-in,
-and that category stops. It is the quickest route for somebody who cannot remember their
-password, and the only route for somebody who is not at a computer.
-
-## Related
-
-<CardGrid>
-  <DocCard href="/docs/maintenance/who-gets-maintenance-reminders-and-squawk-alerts" title="Maintenance alerts">
-    Who is told when an inspection comes due or a squawk is logged.
-  </DocCard>
-  <DocCard href="/docs/getting-started/the-mobile-app" title="What the iOS app does">
-    Including the half of notification settings that lives only there.
-  </DocCard>
-</CardGrid>

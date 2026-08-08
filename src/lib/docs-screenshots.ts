@@ -508,9 +508,42 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/me/notifications",
     alt: "Email notifications",
     dataState:
-      "Signed in as an instructor so the Endorsements section renders, with the master Email notifications switch on and one individual category switched off.",
+      "Signed in as an instructor so the Endorsements section renders, with the master Email notifications switch on and one individual category switched off. The Push card is below on the same page.",
     crop: '[data-doc-shot="me-notifications"]',
   },
+  {
+    id: "announcement-form-dialog",
+    screen: "New announcement dialog",
+    route: "/operations/announcements",
+    alt: "New announcement dialog",
+    dataState:
+      "The New announcement dialog open with a title, a short message, and Expires left as Never. Nothing here is stored state: the dialog always opens blank, so the steps below type the whole notice.",
+    crop: '[data-doc-shot="announcement-form-dialog"]',
+    open: [
+      'button:has-text("New announcement")',
+      "fill:#announcement-title=Runway 4L closed Saturday morning",
+      "fill:#announcement-message=Expect delays taxiing to the run-up area. Use 22 if you can.",
+    ],
+  },
+  {
+    id: "joining-and-fleet-settings",
+    screen: "Settings, School",
+    route: "/settings?tab=organization",
+    alt: "Joining and fleet settings",
+    dataState:
+      "The Joining & fleet card with Approve people before they join off and Update aircraft home base on ramp in on, so the second switch is the one an article about home-base-on-ramp-in points at.",
+    crop: '[data-doc-shot="joining-and-fleet-settings"]',
+  },
+  {
+    id: "leave-organization-card",
+    screen: "Profile, Leave this school",
+    route: "/me/profile",
+    alt: "Leave this school card",
+    dataState:
+      "Signed in as a member who is not the sole owner, so the Leave this school card is visible at the foot of Profile & account.",
+    crop: '[data-doc-shot="leave-organization-card"]',
+  },
+
   {
     id: "join-school-code",
     screen: "Join your school",

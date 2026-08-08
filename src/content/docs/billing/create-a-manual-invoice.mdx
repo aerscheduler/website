@@ -20,8 +20,9 @@ Your school needs Stripe connected before any invoice can be raised. See
 only.
 </Step>
 
-<Step n={2} title="Pick the Customer">
-Search the member list. The web dialog can only invoice a member of your organization.
+<Step n={2} title="Pick who is billed">
+Search the member list, or turn on <strong>Guest recipient</strong> and enter a name and an
+email address for someone who is not a member.
 </Step>
 
 <Step n={3} title="Add line items">
@@ -65,9 +66,9 @@ Optional, same as the web console.
 
 ## Invoicing a guest
 
-Only the iOS app can do this. The Generate Invoice screen has a guest recipient field where
-you type a name and an email address; the web console's New invoice dialog offers the member
-list and nothing else.
+Turn on <strong>Guest recipient</strong> in the New invoice dialog (or use the same fields on
+the iOS Generate Invoice screen). Type a name and an email address. Stripe creates a guest
+customer and emails them a pay link. You cannot pick both a member and a guest on one invoice.
 
 ## Limits on line items and memos
 
@@ -120,9 +121,9 @@ can save them.
 
 
 <Callout type="note">
-The toggle says who, not where. A dispatcher or instructor granted the permission creates
-invoices through the app's Generate Invoice screen; the web console's New invoice button
-stays owner and admin only.
+The Billing page itself stays owner and admin only, because it lists every invoice in the
+school. A dispatcher or instructor with the grant raises a manual invoice from the iOS app's
+Generate Invoice screen; admins also use New invoice in the console, including for guests.
 </Callout>
 
 ## Related

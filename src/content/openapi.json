@@ -7211,6 +7211,10 @@
                   "ratingId": {
                     "type": "integer",
                     "description": "An instruction rate to price this course from. Pricing only — a rating is a rate card, not the course."
+                  },
+                  "targetDays": {
+                    "type": "integer",
+                    "description": "How many days the school plans this course to take. Feeds the pace on a student's record: with no target, nobody is ever behind. Omit for no plan."
                   }
                 },
                 "required": [
@@ -7583,8 +7587,13 @@
                   "ratingId": {
                     "type": "integer"
                   },
+                  "targetDays": {
+                    "type": "integer",
+                    "description": "How many days the school plans this course to take, or null for no plan."
+                  },
                   "archived": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "description": "Archive the course. It stops appearing on the Training page and cannot be enrolled on; existing students are untouched. Reversible."
                   }
                 }
               }
@@ -10813,7 +10822,7 @@
           "Training"
         ],
         "summary": "Set the grading scale",
-        "description": "Declares this course's marks and which of them mean a lesson is complete. `\"3\"` passes at a school marking 1–4 and fails at one marking 1–3, so guessing from the string is how a gradebook quietly disagrees with the school using it. Draft versions only. Requires the **admin** role.",
+        "description": "Declares this course's marks and which of them mean a lesson is complete. `\"3\"` passes at a school marking 1–4 and fails at one marking 1–3, so guessing from the string is how a gradebook quietly disagrees with the school using it. Draft versions only. Requires the **admin** role.\n\n**The scale is written as rows and read back as two fields.** Anywhere a course version is returned, `gradingScale` is the list of codes in display order and `gradeOptions` is the same list with each mark's `passing` flag. Build a grade picker from `gradingScale`, and read `gradeOptions` when you need to know what a mark means.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -10924,7 +10933,7 @@
         "description": "The lessons a booking could be closing out, unfinished ones first, filtered to what the booking type can be — a `dual` booking offers flight lessons, `ground` offers ground. A rental or a guest flight offers nothing.",
         "responses": {
           "200": {
-            "description": "Success.",
+            "description": "One entry per enrollment. Each lesson carries its ACS `tasks` (`id`, `name`, `acsCode`, `standard`), which are what `taskGrades` on a saved record refer to.",
             "content": {
               "application/json": {
                 "schema": {
@@ -13974,35 +13983,79 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "description": "The invoice.",
+                "description": "The invoice. Exactly one of `customer` or `guest` is required.",
                 "properties": {
-                  "orgUserId": {
-                    "type": "integer",
-                    "description": "Who is being billed."
+                  "customer": {
+                    "type": "object",
+                    "description": "Bill a member. Mutually exclusive with `guest`.",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "Organization user id."
+                      }
+                    },
+                    "required": [
+                      "id"
+                    ]
+                  },
+                  "guest": {
+                    "type": "object",
+                    "description": "Bill a non-member by name and email. Mutually exclusive with `customer`.",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "Guest display name."
+                      },
+                      "email": {
+                        "type": "string",
+                        "format": "email",
+                        "description": "Where Stripe sends the pay link."
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "email"
+                    ]
+                  },
+                  "memo": {
+                    "type": "string",
+                    "description": "Optional note shown on the invoice."
                   },
                   "items": {
                     "type": "array",
-                    "description": "Line items. Amounts are in cents.",
+                    "description": "Line items. `unitPrice` is in cents.",
                     "items": {
                       "type": "object",
                       "properties": {
-                        "description": {
+                        "name": {
                           "type": "string"
                         },
-                        "amount": {
-                          "type": "integer"
+                        "qty": {
+                          "type": "number"
+                        },
+                        "unitPrice": {
+                          "type": "integer",
+                          "description": "Unit price in cents."
                         }
-                      }
+                      },
+                      "required": [
+                        "name",
+                        "qty",
+                        "unitPrice"
+                      ]
                     }
                   },
                   "dueAt": {
                     "type": "string",
                     "format": "date-time",
                     "description": "When payment is due."
+                  },
+                  "dueIn": {
+                    "type": "integer",
+                    "description": "Days until due, used when Stripe needs a relative due."
                   }
                 },
                 "required": [
-                  "orgUserId",
                   "items"
                 ]
               }

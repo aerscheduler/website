@@ -208,6 +208,15 @@ export const DOC_SECTIONS: DocSection[] = [
         seoQuery: "AerScheduler iPhone app features",
       },
       {
+        slug: "post-an-announcement",
+        title: "Post an announcement",
+        description:
+          "Owners and admins post a school notice from Operations → Announcements. Members see it on home and can be notified by push.",
+        kind: "task",
+        audience: ["Owners", "Admins"],
+        seoQuery: "post flight school announcement AerScheduler",
+      },
+      {
         slug: "settings-reference",
         title: "Every setting, and what it changes",
         description:
