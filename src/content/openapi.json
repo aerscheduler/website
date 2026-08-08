@@ -13128,6 +13128,16 @@
                   },
                   "resourceId": {
                     "type": "integer"
+                  },
+                  "priority": {
+                    "type": "string",
+                    "enum": [
+                      "grounding",
+                      "high",
+                      "normal",
+                      "low"
+                    ],
+                    "description": "How urgent it is. Defaults to `normal`. `grounding` records that the aircraft should not fly, and is what the Squawks report's Grounding filter selects; it does not by itself set the aircraft's `grounded` flag."
                   }
                 },
                 "required": [
@@ -21813,6 +21823,21 @@
           "description": {
             "type": "string",
             "description": "Full description of the discrepancy."
+          },
+          "priority": {
+            "type": "string",
+            "description": "How urgent it is. Set when the squawk is filed; `normal` if nothing was given.",
+            "enum": [
+              "grounding",
+              "high",
+              "normal",
+              "low"
+            ],
+            "example": "normal"
+          },
+          "grounding": {
+            "type": "boolean",
+            "description": "Convenience for `priority == \"grounding\"`. Records the reporter's judgement that the aircraft should not fly. It does NOT set the aircraft's `grounded` flag, which is an administrator action on the resource itself."
           },
           "reportedAt": {
             "type": "string",
