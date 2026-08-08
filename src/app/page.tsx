@@ -4,18 +4,24 @@ import Link from "next/link";
 import {
   Check,
   ChevronRight,
-  Plane,
   CalendarDays,
   CreditCard,
   GraduationCap,
   PlayCircle,
+  Wrench,
+  BarChart3,
   Users,
   MoonStar,
 } from "lucide-react";
 import { Button } from "@/components/button";
 import { ProductMock } from "@/components/product-mock";
 import { PhoneMock } from "@/components/phone-mock";
-import { MembershipsMock, ReportsMock } from "@/components/mocks";
+import {
+  BillingMock,
+  TrainingMock,
+  MaintenanceMock,
+  ReportsMock,
+} from "@/components/mocks";
 import { StoreBadges } from "@/components/store-badges";
 import { HeroAtmosphere } from "@/components/hero-atmosphere";
 import { Reveal, RevealGroup } from "@/components/reveal";
@@ -56,9 +62,9 @@ export default function HomePage() {
             <h1 className="animate-fade-up-delay-1 mt-3 max-w-xl text-[2.5rem] font-semibold leading-[1.08] tracking-tight text-brand-surface sm:text-5xl lg:text-[3.35rem]">
               The command deck for your flight school.
             </h1>
-            <p className="animate-fade-up-delay-2 mt-5 max-w-md text-lg leading-relaxed text-muted-foreground">
-              Schedule aircraft, manage instructors and renters, and keep billing
-              square on the web and in a native iOS app.
+            <p className="animate-fade-up-delay-2 mt-5 max-w-lg text-lg leading-relaxed text-muted-foreground">
+              Scheduling, billing, training records, maintenance, and reporting
+              on one system, on the web and in a native iOS app.
             </p>
             <div className="animate-fade-up-delay-3 mt-8 flex flex-wrap items-center gap-3">
               <Button href={SIGNUP_URL} size="lg">
@@ -71,7 +77,7 @@ export default function HomePage() {
               </Button>
             </div>
             <p className="animate-fade-up-delay-3 mt-4 text-sm text-muted-foreground">
-              {TRIAL_DAYS}-day free trial · No credit card · Or explore the demo — no
+              {TRIAL_DAYS}-day free trial · No credit card · Or explore the demo with no
               signup
             </p>
           </div>
@@ -90,7 +96,7 @@ export default function HomePage() {
               href={DEMO_URL}
               eyebrow="Live demo"
               title="Try it before you sign up"
-              body="Open a sample flight school and click around as any role — no account, no sales call."
+              body="Open a sample flight school and click around as any role. No account, no sales call."
             />
             <ValuePoint
               href="/pricing"
@@ -118,78 +124,81 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Product teaser → /product */}
+      {/* Five modules: the product spine */}
       <section className="relative bg-[#fafbfc]">
         <div className="pointer-events-none absolute inset-0 grid-lines opacity-30" aria-hidden />
         <div className="relative mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-24">
           <Reveal className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
             <div className="max-w-2xl">
               <h2 className="text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
-                Everything your operation needs to fly.
+                Five modules. One operation.
               </h2>
               <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-                Scheduling, roster, billing, and maintenance on one data layer,
-                so a reservation becomes an invoice without a spreadsheet in between.
+                Everything a flight school runs day to day, on one data layer,
+                so a reservation becomes a graded lesson, an invoice, and a
+                report without a spreadsheet in between.
               </p>
             </div>
             <Button href="/features" variant="secondary">
-              Explore features
+              Explore all features
               <ChevronRight className="size-4 opacity-80" />
             </Button>
           </Reveal>
 
-          <RevealGroup className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <RevealGroup className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             <TeaserCard
               href="/features/scheduling"
               icon={<CalendarDays className="size-5" />}
-              title="Dispatch"
-              body="Lane boards, conflict-aware booking, ramp-in close-out."
-            />
-            <TeaserCard
-              href="/features/fleet"
-              icon={<Plane className="size-5" />}
-              title="Fleet"
-              body="Aircraft, sims, and rooms, with rates and grounding."
+              title="Scheduling"
+              body="Dispatch boards, conflict-aware booking, ramp-in close-out."
             />
             <TeaserCard
               href="/features/billing"
               icon={<CreditCard className="size-5" />}
               title="Billing"
-              body="Flights draft invoices. Cards on file when you're ready."
+              body="Flights draft invoices. Cards on file when you are ready."
             />
-            {/* Training took the fourth slot from the native-app card, which was pointing at
-                /app two screens above the mobile spotlight that sells the same thing harder,
-                with a phone mock and the store badges. The grid stays at four. */}
             <TeaserCard
               href="/features/training"
               icon={<GraduationCap className="size-5" />}
               title="Training"
               body="Syllabi, graded lessons, hours, and endorsements."
             />
+            <TeaserCard
+              href="/features/maintenance"
+              icon={<Wrench className="size-5" />}
+              title="Maintenance"
+              body="Squawks, inspections, and grounding that blocks the board."
+            />
+            <TeaserCard
+              href="/features/reports"
+              icon={<BarChart3 className="size-5" />}
+              title="Reporting"
+              body="Revenue, hours, utilization, and a dashboard you build."
+            />
           </RevealGroup>
         </div>
       </section>
 
-      {/* Reports spotlight — the newest thing worth showing, and the one
-          competitors do worst. Mirrors the mobile spotlight's layout with the
-          visual on the opposite side so the page alternates down the scroll. */}
+      {/* Scheduling spotlight */}
       <section className="border-t border-border bg-white">
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:gap-16 lg:py-28">
           <Reveal>
-            <p className="text-sm font-semibold text-primary">Reports &amp; dashboards</p>
+            <p className="text-sm font-semibold text-primary">Scheduling</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
-              The numbers behind the schedule.
+              A dispatch board that feels like the ramp.
             </h2>
             <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-              Reports across revenue, hours, instruction, and compliance — and a
-              dashboard you build yourself, where every figure opens the report
-              behind it.
+              Lane views for every aircraft, sim, and classroom. Students and
+              renters book themselves. Close out with Hobbs and tach, and the
+              invoice starts drafting itself.
             </p>
             <ul className="mt-6 space-y-3">
               {[
-                "Booked vs flown vs billed, per tail",
-                "Revenue by aircraft, instructor, or lesson type",
-                "Save a view, pin it to the board, export it",
+                "Day and week boards by resource",
+                "Dual, solo, rental, ground, and sim reservations",
+                "Self-booking with approval when you want it",
+                "Conflict-aware create and edit",
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2.5 text-sm text-foreground">
                   <Check className="mt-0.5 size-4 shrink-0 text-primary" />
@@ -198,95 +207,109 @@ export default function HomePage() {
               ))}
             </ul>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button href="/features/reports">
-                Explore reporting
+              <Button href="/features/scheduling">
+                Explore scheduling
                 <ChevronRight className="size-4 opacity-80" />
               </Button>
-              <Button href="/resources/flight-school-reports" variant="secondary">
-                Reporting guide
+              <Button href="/resources/flight-school-scheduling-software" variant="secondary">
+                Scheduling guide
               </Button>
             </div>
           </Reveal>
-          {/* The visual lands just after the sentence that sets it up. */}
           <Reveal delay={120} className="flex min-w-0 justify-center lg:justify-end">
-            <ReportsMock />
+            <ProductMock />
           </Reveal>
         </div>
       </section>
 
-      {/* Billing edge cases.
-          The two bookings a school actually rings up about, and the two most competitors
-          cannot express: a flight shared between people, and an aircraft kept overnight.
-          Cards rather than a two-column spotlight because both only land once you have seen
-          the arithmetic, and a worked example needs prose room the spotlight bullets don't
-          have. Backgrounds from here down are shifted one step to keep the page alternating. */}
+      {/* Billing spotlight + hard cases tucked underneath */}
       <section className="border-t border-border bg-[#fafbfc]">
-        <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-24">
-          <Reveal className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
-            <div className="max-w-2xl">
-              <p className="text-sm font-semibold text-primary">Billing that matches the flight</p>
+        <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-28">
+          <div className="grid items-center gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
+            <Reveal delay={120} className="order-2 flex min-w-0 justify-center lg:order-1">
+              <BillingMock />
+            </Reveal>
+            <Reveal className="order-1 lg:order-2">
+              <p className="text-sm font-semibold text-primary">Billing</p>
               <h2 className="mt-3 text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
-                The two bookings other software makes you fake.
+                Ramp-in drafts the invoice.
               </h2>
               <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-                A flight two people share, and an aircraft somebody keeps for the
-                weekend. Most schools handle both with a spreadsheet and an apology.
-                Here they are just bookings.
+                Close out a flight and the line items write themselves. Collect
+                with saved cards. No separate billing tool taped onto the
+                schedule.
               </p>
-            </div>
-            <Button href="/features/billing" variant="secondary">
-              How billing works
-              <ChevronRight className="size-4 opacity-80" />
-            </Button>
-          </Reveal>
+              <ul className="mt-6 space-y-3">
+                {[
+                  "Auto-drafted invoices from Hobbs and tach close-out",
+                  "Aircraft and instruction rates on the same invoice",
+                  "Saved cards and autopay for members",
+                  "AR dashboard: outstanding, paid, and void",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2.5 text-sm text-foreground">
+                    <Check className="mt-0.5 size-4 shrink-0 text-primary" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Button href="/features/billing">
+                  Explore billing
+                  <ChevronRight className="size-4 opacity-80" />
+                </Button>
+                <Button href="/resources/quickbooks-integration" variant="secondary">
+                  QuickBooks
+                </Button>
+              </div>
+            </Reveal>
+          </div>
 
-          <RevealGroup className="mt-12 grid gap-4 lg:grid-cols-2">
-            <ExampleCard
-              icon={<Users className="size-5" />}
-              eyebrow="Split billing"
-              title="One flight, one invoice each"
-              body="Put everyone who flew on the booking and pick how the charge divides: evenly, by the hours each pilot flew, per head for a ground school, or a share you set yourself."
-              example="Two renters share the 172. One booking, one close-out, two invoices that add up to exactly what the flight cost. Nobody re-types anything."
-              href="/resources/split-billing-shared-flights"
-            />
-            <ExampleCard
-              icon={<MoonStar className="size-5" />}
-              eyebrow="Overnight & multi-day"
-              title="A weekend away, priced like one"
-              body="Book the whole trip as one reservation and the tail is unavailable for every day of it. Charge a minimum for each night it is away, school-wide or per aircraft."
-              example="Out Friday, back Sunday, 1.5 hours flown. Two nights at a 2.0 hour minimum bills 4.0 hours, and the member reads that on the booking screen before they agree to it."
-              href="/resources/overnight-and-multi-day-rentals"
-            />
-          </RevealGroup>
+          {/* Specialty cases: proof under Billing, not peers of the product */}
+          <Reveal className="mt-14 border-t border-border pt-10">
+            <p className="text-sm font-semibold text-primary">
+              Billing that matches real flights
+            </p>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+              The bookings most schools fake in a spreadsheet are just bookings
+              here.
+            </p>
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
+              <HardCaseCard
+                icon={<Users className="size-4" />}
+                title="Split billing"
+                body="One flight, one invoice each. Split evenly, by hours flown, or by a share you set."
+                href="/resources/split-billing-shared-flights"
+              />
+              <HardCaseCard
+                icon={<MoonStar className="size-4" />}
+                title="Overnight and multi-day"
+                body="Book the whole trip. Charge a minimum for each night the aircraft is away."
+                href="/resources/overnight-and-multi-day-rentals"
+              />
+            </div>
+          </Reveal>
         </div>
       </section>
 
-      {/* Memberships spotlight.
-          Aimed squarely at flying clubs and FBOs, who are a different buyer from a flight
-          school: they are not shopping for a syllabus, they are shopping for a way to stop
-          chasing dues on the 1st. Visual on the LEFT so the page keeps alternating after the
-          reports spotlight put its mock on the right. */}
+      {/* Training spotlight */}
       <section className="border-t border-border bg-white">
-        <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:gap-16 lg:py-28">
-          <Reveal delay={120} className="order-2 flex min-w-0 justify-center lg:order-1">
-            <MembershipsMock />
-          </Reveal>
-          <Reveal className="order-1 lg:order-2">
-            <p className="text-sm font-semibold text-primary">Clubs &amp; memberships</p>
+        <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:gap-16 lg:py-28">
+          <Reveal>
+            <p className="text-sm font-semibold text-primary">Training</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
-              Dues collect themselves on the 1st.
+              Syllabus, hours, and endorsements in one record.
             </h2>
             <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-              Set your tiers once — full, associate, social — and every member is billed
-              on schedule. Joining fees, monthly or annual dues, and a part-month for
-              anyone who joins on the 20th.
+              Build or import a syllabus, enroll a student, grade lessons off
+              the flights you already booked, and sign endorsements. Part 61
+              and Part 141.
             </p>
             <ul className="mt-6 space-y-3">
               {[
-                "A plan per tier, priced the way your club actually prices",
-                "Join mid-month and pay for the days you get, not the whole month",
-                "Pause a member for the winter and the meter stops",
-                "Dues land in the same invoices, reports, and QuickBooks sync",
+                "Private, Instrument, Commercial, and CFI syllabi to start from",
+                "Graded lessons tied to the bookings on the board",
+                "Hour requirements tracked apart from lesson checklists",
+                "Endorsements from AC 61-65K, with expiry where it matters",
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2.5 text-sm text-foreground">
                   <Check className="mt-0.5 size-4 shrink-0 text-primary" />
@@ -295,20 +318,82 @@ export default function HomePage() {
               ))}
             </ul>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button href="/features/memberships">
-                Explore memberships
+              <Button href="/features/training">
+                Explore training
                 <ChevronRight className="size-4 opacity-80" />
               </Button>
-              <Button href="/resources/flying-club-dues-and-fees" variant="secondary">
-                Dues &amp; fees guide
+              <Button href="/resources/flight-training-records" variant="secondary">
+                Training records guide
               </Button>
             </div>
           </Reveal>
+          <Reveal delay={120} className="flex min-w-0 justify-center lg:justify-end">
+            <TrainingMock />
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Maintenance + Reporting twin spotlights */}
+      <section className="border-t border-border bg-[#fafbfc]">
+        <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-28">
+          <Reveal className="max-w-2xl">
+            <h2 className="text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
+              Keep the fleet airworthy. See the numbers.
+            </h2>
+            <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
+              Maintenance and reporting sit on the same data as the schedule.
+              Grounded tails leave the board, and every figure opens the report
+              behind it.
+            </p>
+          </Reveal>
+
+          <div className="mt-14 grid gap-16 lg:grid-cols-2 lg:gap-12">
+            <Reveal>
+              <div className="flex min-w-0 justify-center">
+                <MaintenanceMock />
+              </div>
+              <p className="mt-8 text-sm font-semibold text-primary">Maintenance</p>
+              <h3 className="mt-2 text-2xl font-semibold tracking-tight text-brand-surface">
+                Squawks next to the schedule.
+              </h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                Log issues at the aircraft, track inspections by hours or date,
+                and ground a tail so it cannot be booked.
+              </p>
+              <Button href="/features/maintenance" variant="secondary" className="mt-6">
+                Explore maintenance
+                <ChevronRight className="size-4 opacity-80" />
+              </Button>
+            </Reveal>
+
+            <Reveal delay={100}>
+              <div className="flex min-w-0 justify-center">
+                <ReportsMock />
+              </div>
+              <p className="mt-8 text-sm font-semibold text-primary">Reporting</p>
+              <h3 className="mt-2 text-2xl font-semibold tracking-tight text-brand-surface">
+                The numbers behind the schedule.
+              </h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                Revenue, hours, instruction, and utilization. Save a view, pin
+                it to a dashboard, export it.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Button href="/features/reports" variant="secondary">
+                  Explore reporting
+                  <ChevronRight className="size-4 opacity-80" />
+                </Button>
+                <Button href="/resources/flight-school-reports" variant="ghost">
+                  Reporting guide
+                </Button>
+              </div>
+            </Reveal>
+          </div>
         </div>
       </section>
 
       {/* Mobile spotlight */}
-      <section className="border-t border-border bg-[#fafbfc]">
+      <section className="border-t border-border bg-white">
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:gap-16 lg:py-28">
           <Reveal delay={120} className="order-2 flex min-w-0 justify-center lg:order-1">
             <PhoneMock className="animate-float" />
@@ -345,6 +430,35 @@ export default function HomePage() {
                 <ChevronRight className="size-4 opacity-80" />
               </Button>
             </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Clubs side door: demoted from a full spotlight */}
+      <section className="border-t border-border bg-[#fafbfc]">
+        <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+          <Reveal>
+            <Link
+              href="/features/memberships"
+              className="group flex flex-col items-start justify-between gap-4 rounded-2xl border border-border bg-white px-6 py-5 transition-colors hover:border-primary/30 sm:flex-row sm:items-center sm:gap-8 sm:px-8"
+            >
+              <div className="max-w-2xl">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
+                  Also for flying clubs
+                </p>
+                <p className="mt-2 text-lg font-semibold tracking-tight text-brand-surface">
+                  Membership dues that collect themselves on the 1st.
+                </p>
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                  Tiers, joining fees, prorated mid-month joins. Same invoices
+                  and reports as the rest of the school.
+                </p>
+              </div>
+              <span className="inline-flex shrink-0 items-center gap-0.5 text-sm font-semibold text-primary">
+                Explore memberships
+                <ChevronRight className="size-3.5 transition-transform duration-150 group-hover:translate-x-0.5" />
+              </span>
+            </Link>
           </Reveal>
         </div>
       </section>
@@ -418,7 +532,7 @@ export default function HomePage() {
             </h2>
             <p className="mt-3 text-base leading-relaxed text-white/65">
               Open the live demo and walk a real schedule, roster, and reports as any
-              role — nothing to install, no signup. Ready to make it yours? Add a tail
+              role. Nothing to install, no signup. Ready to make it yours? Add a tail
               and go, or bring your questions.
             </p>
           </Reveal>
@@ -481,51 +595,33 @@ function ValuePoint({
   );
 }
 
-/**
- * A capability with the arithmetic shown.
- *
- * Bigger than `TeaserCard` on purpose: split billing and overnight minimums are the two
- * things an operator reads twice, and the worked example in `example` is what settles it.
- * The example sits in its own tinted box so it reads as a number rather than more prose.
- */
-function ExampleCard({
+function HardCaseCard({
   icon,
-  eyebrow,
   title,
   body,
-  example,
   href,
 }: {
   icon: ReactNode;
-  eyebrow: string;
   title: string;
   body: string;
-  example: string;
   href: string;
 }) {
   return (
     <Link
       href={href}
-      className="group flex flex-col rounded-2xl border border-border bg-white p-7 shadow-sm transition-colors hover:border-primary/30"
+      className="group flex gap-3 rounded-xl border border-border bg-white p-5 transition-colors hover:border-primary/30"
     >
-      <div className="flex items-center gap-3">
-        <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-          {icon}
-        </span>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
-          {eyebrow}
-        </p>
-      </div>
-      <h3 className="mt-5 text-xl font-semibold tracking-tight text-brand-surface">{title}</h3>
-      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{body}</p>
-      <p className="mt-5 rounded-lg bg-[#fafbfc] px-4 py-3 text-sm leading-relaxed text-foreground">
-        {example}
-      </p>
-      {/* mt-auto so both cards' links sit on the same line however the copy wraps. */}
-      <span className="mt-auto inline-flex items-center gap-0.5 pt-6 text-sm font-semibold text-primary">
-        Read the guide
-        <ChevronRight className="size-3.5 transition-transform duration-150 group-hover:translate-x-0.5" />
+      <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+        {icon}
       </span>
+      <div>
+        <p className="font-semibold tracking-tight text-foreground">{title}</p>
+        <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{body}</p>
+        <span className="mt-3 inline-flex items-center gap-0.5 text-sm font-semibold text-primary">
+          Read the guide
+          <ChevronRight className="size-3.5 transition-transform duration-150 group-hover:translate-x-0.5" />
+        </span>
+      </div>
     </Link>
   );
 }

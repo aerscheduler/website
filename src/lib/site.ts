@@ -75,4 +75,4 @@ export const SUPPORT_EMAIL = "support@aerscheduler.com";
 
 /** Longer default meta description for SEO. */
 export const SITE_DESCRIPTION =
-  "Flight school management software for aircraft scheduling, billing, maintenance, and compliance. Native iOS app. Self-serve from $20/mo per aircraft.";
+  "Flight school management software for scheduling, billing, training records, maintenance, and reporting. Native iOS app. Self-serve from $20/mo per aircraft.";
