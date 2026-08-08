@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ChevronRight, CornerDownLeft, Loader2, Search, X } from "lucide-react";
@@ -21,20 +22,29 @@ import {
 import { cn } from "@/lib/cn";
 
 /**
- * Site-wide search, in the header.
+ * Site-wide search: an icon in the header that opens a dialog.
  *
  * Shaped after the console's command palette so the two feel like one product:
  * results grouped by kind under their own heading, keyboard navigation across
  * the groups, the match bolded, and `docs:` style filters promoted into a chip.
  *
- * What is deliberately different is where the work happens. The console queries
- * Postgres because it is searching a school's live records. This is searching a
- * fixed set of pages, so the whole corpus ships as a static asset and the query
- * runs in the browser. No request per keystroke, no debounce, no empty state
- * while the network thinks.
+ * An icon rather than a field, and a dialog rather than a dropdown, for two
+ * reasons. The bar is full: the comment on NAV_DESKTOP records that Features,
+ * Integrations, Resources, Pricing and Docs only stop colliding at lg, and an
+ * inline field left about 160px for the query, which a filter chip alone could
+ * fill. And a dialog is not bound to the trigger's width, so a result gets the
+ * full line rather than two words and an ellipsis. The same dialog serves
+ * mobile, where it goes full-screen, so there is one search on the site rather
+ * than a real one on desktop and a link somewhere else on phones.
+ *
+ * What is deliberately different from the console is where the work happens.
+ * The console queries Postgres because it is searching a school's live records.
+ * This is searching a fixed set of pages, so the whole corpus ships as a static
+ * asset and the query runs in the browser. No request per keystroke, no
+ * debounce, no empty state while the network thinks.
  */
 
-/** Suggested when the field is open and empty. The four things people look for. */
+/** Suggested when the dialog is open and empty. The four things people look for. */
 const SUGGESTIONS: { label: string; href: string }[] = [
   { label: "Getting started", href: "/docs/getting-started" },
   { label: "Pricing", href: "/pricing" },
@@ -42,68 +52,137 @@ const SUGGESTIONS: { label: string; href: string }[] = [
   { label: "API reference", href: "/docs/api" },
 ];
 
+/**
+ * The header trigger, and the dialog it owns.
+ *
+ * One component rather than a trigger that a parent wires to a dialog, because
+ * the shortcut listener and the open state have to be singular. Two mounted
+ * instances (one for the desktop bar, one for the mobile bar) would both answer
+ * Cmd-K and both open.
+ */
 export function SiteSearch({ className }: { className?: string }) {
-  const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const [typeFilter, setTypeFilter] = useState<SearchType | null>(null);
-  const [engine, setEngine] = useState<SearchEngine | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [failed, setFailed] = useState(false);
-  const [active, setActive] = useState(0);
-
-  const containerRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const listRef = useRef<HTMLDivElement>(null);
+  const [primed, setPrimed] = useState(false);
 
   /**
-   * Pull the index down on first intent rather than on page load.
+   * Start the index download on hover or focus, before the click lands.
    *
-   * Called on focus and on the shortcut, so by the time anybody has typed two
-   * characters the fetch is usually already done and the results appear with
-   * the keystroke. Re-callable: `loadSearchIndex` caches its own promise, so
-   * repeated focus costs nothing.
+   * `loadSearchIndex` caches its own promise, so this is free to call often and
+   * the dialog's own call joins whatever is already in flight. It buys the few
+   * hundred milliseconds between a person deciding to search and finishing the
+   * click, which is usually the whole fetch.
    */
-  const ensureIndex = useCallback(() => {
-    if (engine || loading) return;
-    setLoading(true);
-    loadSearchIndex()
-      .then((loaded) => {
-        setEngine(loaded);
-        setFailed(false);
-      })
-      .catch(() => setFailed(true))
-      .finally(() => setLoading(false));
-  }, [engine, loading]);
+  const prime = useCallback(() => {
+    if (primed) return;
+    setPrimed(true);
+    loadSearchIndex().catch(() => {
+      // Swallowed on purpose. This is a speculative prefetch; the dialog runs
+      // the same call and is the one that reports failure to the reader.
+    });
+  }, [primed]);
 
-  // Cmd-K / Ctrl-K from anywhere, and Escape to get out.
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if ((event.key === "k" || event.key === "K") && (event.metaKey || event.ctrlKey)) {
         event.preventDefault();
-        ensureIndex();
+        prime();
         setOpen(true);
-        inputRef.current?.focus();
-      }
-      if (event.key === "Escape" && open) {
-        setOpen(false);
-        inputRef.current?.blur();
       }
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [ensureIndex, open]);
+  }, [prime]);
 
-  // Click outside closes. Pointerdown rather than click so it fires before the
-  // link under the cursor navigates.
+  return (
+    <>
+      <button
+        type="button"
+        aria-label="Search"
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        onMouseEnter={prime}
+        onFocus={prime}
+        onClick={() => {
+          prime();
+          setOpen(true);
+        }}
+        className={cn(
+          "inline-flex items-center gap-2 rounded-full text-muted-foreground transition-colors hover:text-foreground",
+          // Square on mobile so it sits beside the hamburger as a peer; on
+          // desktop it grows a keyboard hint, which is the only way anybody
+          // discovers the shortcut.
+          "size-10 justify-center border border-border lg:size-auto lg:border-0 lg:px-3 lg:py-1.5",
+          className
+        )}
+      >
+        <Search className="size-5 lg:size-4" aria-hidden />
+        <span className="hidden text-sm font-medium lg:inline">Search</span>
+        <kbd className="hidden rounded border border-border px-1.5 py-0.5 text-[10px] font-medium xl:block">
+          <ShortcutHint />
+        </kbd>
+      </button>
+
+      {open ? <SearchDialog onClose={() => setOpen(false)} /> : null}
+    </>
+  );
+}
+
+/**
+ * The shortcut label, rendered only after mount.
+ *
+ * `navigator.platform` does not exist on the server, so branching on it during
+ * render makes the markup depend on where it was produced and React logs a
+ * hydration mismatch. Empty on the first client render, correct on the second.
+ */
+function ShortcutHint() {
+  const [label, setLabel] = useState("");
   useEffect(() => {
-    if (!open) return;
-    const onPointerDown = (event: PointerEvent) => {
-      if (!containerRef.current?.contains(event.target as Node)) setOpen(false);
+    setLabel(/Mac|iPhone|iPad/i.test(navigator.platform) ? "\u2318K" : "Ctrl K");
+  }, []);
+  return <>{label}</>;
+}
+
+function SearchDialog({ onClose }: { onClose: () => void }) {
+  const router = useRouter();
+  const [query, setQuery] = useState("");
+  const [typeFilter, setTypeFilter] = useState<SearchType | null>(null);
+  const [engine, setEngine] = useState<SearchEngine | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [failed, setFailed] = useState(false);
+  const [active, setActive] = useState(0);
+  const [mounted, setMounted] = useState(false);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+
+  // Portals need a DOM to portal into, which the server render does not have.
+  useEffect(() => setMounted(true), []);
+
+  useEffect(() => {
+    let live = true;
+    loadSearchIndex()
+      .then((loaded) => live && setEngine(loaded))
+      .catch(() => live && setFailed(true))
+      .finally(() => live && setLoading(false));
+    return () => {
+      live = false;
     };
-    document.addEventListener("pointerdown", onPointerDown);
-    return () => document.removeEventListener("pointerdown", onPointerDown);
-  }, [open]);
+  }, []);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => inputRef.current?.focus());
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  // Lock the page while the dialog is up, or the phone scrolls the article
+  // behind the keyboard.
+  useEffect(() => {
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, []);
 
   // Promote `docs: hobbs` into a chip plus the text, so the prefix is not left
   // sitting in the field duplicating the chip beside it.
@@ -130,19 +209,16 @@ export function SiteSearch({ className }: { className?: string }) {
     listRef.current?.querySelector('[data-active="true"]')?.scrollIntoView({ block: "nearest" });
   }, [active]);
 
-  const close = () => {
-    setOpen(false);
-    setQuery("");
-    setTypeFilter(null);
-  };
-
   const go = (href: string) => {
-    close();
+    onClose();
     router.push(href);
   };
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "ArrowDown") {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      onClose();
+    } else if (event.key === "ArrowDown") {
       event.preventDefault();
       setActive((i) => (flat.length === 0 ? 0 : (i + 1) % flat.length));
     } else if (event.key === "ArrowUp") {
@@ -162,79 +238,72 @@ export function SiteSearch({ className }: { className?: string }) {
     }
   };
 
-  /**
-   * Open means open, including while the index is still downloading.
-   *
-   * This was gated on the fetch having finished, which meant pressing the
-   * shortcut on a cold page did nothing visible for as long as the download
-   * took. The panel knows how to render a loading state; withholding it just
-   * makes the shortcut feel broken.
-   */
-  const showPanel = open;
+  if (!mounted) return null;
 
-  return (
-    <div ref={containerRef} className={cn("relative", className)}>
+  return createPortal(
+    <div
+      className="fixed inset-0 z-[100] flex justify-center bg-foreground/25 backdrop-blur-sm sm:items-start sm:p-4 sm:pt-[12vh]"
+      onMouseDown={(event) => {
+        // Backdrop only. mousedown rather than click so a drag that starts on a
+        // result and ends on the backdrop does not close it mid-selection.
+        if (event.target === event.currentTarget) onClose();
+      }}
+    >
       <div
-        className={cn(
-          "flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-1.5 transition",
-          open ? "ring-2 ring-brand/35" : "hover:border-foreground/25"
-        )}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Search the site"
+        className="flex h-full w-full flex-col overflow-hidden bg-background shadow-2xl sm:h-auto sm:max-h-[70vh] sm:max-w-2xl sm:rounded-xl sm:border sm:border-border"
       >
-        <Search className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+        <div className="flex items-center gap-2 border-b border-border px-4 py-3">
+          <Search className="size-4 shrink-0 text-muted-foreground" aria-hidden />
 
-        {typeFilter ? (
-          <span className="flex shrink-0 items-center gap-1 rounded bg-muted px-1.5 py-0.5 text-xs font-medium">
-            {TYPE_CHIP_LABEL[typeFilter]}
-            <button
-              type="button"
-              onClick={() => {
-                setTypeFilter(null);
-                inputRef.current?.focus();
-              }}
-              aria-label={`Remove ${TYPE_LABEL[typeFilter]} filter`}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              <X className="size-3" aria-hidden />
-            </button>
-          </span>
-        ) : null}
+          {typeFilter ? (
+            <span className="flex shrink-0 items-center gap-1 rounded bg-muted px-1.5 py-0.5 text-xs font-medium">
+              {TYPE_CHIP_LABEL[typeFilter]}
+              <button
+                type="button"
+                onClick={() => {
+                  setTypeFilter(null);
+                  inputRef.current?.focus();
+                }}
+                aria-label={`Remove ${TYPE_LABEL[typeFilter]} filter`}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <X className="size-3" aria-hidden />
+              </button>
+            </span>
+          ) : null}
 
-        <input
-          ref={inputRef}
-          type="search"
-          role="combobox"
-          aria-expanded={showPanel}
-          aria-controls="site-search-results"
-          aria-label="Search documentation, features, and guides"
-          placeholder="Search docs, features, guides..."
-          value={query}
-          onFocus={() => {
-            ensureIndex();
-            setOpen(true);
-          }}
-          onChange={(event) => setQuery(event.target.value)}
-          onKeyDown={onKeyDown}
-          className="w-full min-w-0 bg-transparent text-sm outline-none placeholder:text-muted-foreground [&::-webkit-search-cancel-button]:hidden"
-        />
+          <input
+            ref={inputRef}
+            type="search"
+            role="combobox"
+            aria-expanded
+            aria-controls="site-search-results"
+            aria-label="Search documentation, features, and guides"
+            placeholder="Search docs, features, guides..."
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            onKeyDown={onKeyDown}
+            className="w-full min-w-0 bg-transparent text-base outline-none placeholder:text-muted-foreground sm:text-sm [&::-webkit-search-cancel-button]:hidden"
+          />
 
-        {loading ? (
-          <Loader2 className="size-4 shrink-0 animate-spin text-muted-foreground" aria-hidden />
-        ) : (
-          // Hidden until xl. At lg the field is 160px wide, and the badge eats
-          // enough of it to cut the placeholder mid-word.
-          <kbd className="hidden shrink-0 rounded border border-border px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground xl:block">
-            {typeof navigator !== "undefined" && /Mac/i.test(navigator.platform) ? "⌘K" : "Ctrl K"}
-          </kbd>
-        )}
-      </div>
+          {loading ? (
+            <Loader2 className="size-4 shrink-0 animate-spin text-muted-foreground" aria-hidden />
+          ) : null}
 
-      {showPanel ? (
-        <div
-          id="site-search-results"
-          ref={listRef}
-          role="listbox"
-          className="absolute right-0 z-50 mt-2 max-h-[70vh] w-[min(34rem,calc(100vw-2rem))] overflow-y-auto rounded-xl border border-border bg-background shadow-xl"
-        >
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close search"
+            className="shrink-0 rounded p-1 text-muted-foreground hover:text-foreground"
+          >
+            <X className="size-4" aria-hidden />
+          </button>
+        </div>
+
+        <div id="site-search-results" ref={listRef} role="listbox" className="min-h-0 flex-1 overflow-y-auto">
           <SearchPanel
             query={query}
             typeFilter={typeFilter}
@@ -251,8 +320,9 @@ export function SiteSearch({ className }: { className?: string }) {
             }}
           />
         </div>
-      ) : null}
-    </div>
+      </div>
+    </div>,
+    document.body
   );
 }
 

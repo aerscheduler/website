@@ -9,7 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import Link from "next/link";
-import { Menu, X, ChevronRight, ChevronDown, Search } from "lucide-react";
+import { Menu, X, ChevronRight, ChevronDown } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { SiteSearch } from "@/components/site-search";
 import { Button } from "@/components/button";
@@ -439,16 +439,17 @@ export function SiteHeader() {
                 {item.label}
               </RightNavLink>
             ))}
-            {/*
-              The field is narrow because this bar is already full: the comment
-              on NAV_DESKTOP records that Features, Integrations, Resources,
-              Pricing and Docs only stop colliding at lg. The RESULTS panel is
-              positioned independently and stays wide, so a narrow input costs
-              nothing but placeholder text.
-            */}
-            <SiteSearch className="ml-2 w-40 xl:w-64" />
           </div>
         </nav>
+
+        {/*
+          Sits outside both the desktop nav and the mobile button so there is
+          exactly ONE instance on the page. Two would each register a Cmd-K
+          listener and both open. It restyles itself across the breakpoint: a
+          bordered square beside the hamburger on mobile, an icon with a label
+          and a shortcut hint on desktop.
+        */}
+        <SiteSearch className="ml-auto lg:ml-0" />
 
         <div className={cn("hidden items-center gap-2", NAV_DESKTOP)}>
           {signedIn ? (
@@ -467,7 +468,7 @@ export function SiteHeader() {
         <button
           type="button"
           className={cn(
-            "ml-auto inline-flex size-10 items-center justify-center rounded-full border border-border",
+            "inline-flex size-10 items-center justify-center rounded-full border border-border",
             NAV_MOBILE_ONLY
           )}
           onClick={() => setOpen((v) => !v)}
@@ -489,23 +490,6 @@ export function SiteHeader() {
         )}
       >
         <div className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-3">
-          {/*
-            A link to the full page rather than the header's dropdown. This
-            panel is an overflow-y-auto scroll container, so an absolutely
-            positioned results list would be clipped by it, and /search is the
-            better small-screen experience regardless: it autofocuses, the
-            keyboard has the whole screen under it, and there is no dropdown to
-            fight the page scroll.
-          */}
-          <Link
-            href="/search"
-            onClick={() => setOpen(false)}
-            className="mb-2 flex items-center gap-2 rounded-lg border border-border px-3 py-2.5 text-sm text-muted-foreground"
-          >
-            <Search className="size-4" aria-hidden />
-            Search docs, features, guides
-          </Link>
-
           <MobileMegaSection
             id="features"
             label="Features"
