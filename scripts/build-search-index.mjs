@@ -245,6 +245,12 @@ for (const section of sections) {
     // records is most of a megabyte. The UI shows the head of `body` when a
     // record has no description of its own.
     for (const [index, faq] of (article.faqs ?? []).entries()) {
+      if (typeof faq?.q !== "string" || typeof faq?.a !== "string") {
+        errors.push(
+          `docs/${section.slug}/${article.slug} faq[${index}] must use { q, a } (got ${JSON.stringify(faq)})`
+        );
+        continue;
+      }
       push({
         id: `docs:${section.slug}/${article.slug}#faq-${index}`,
         type: "docs",

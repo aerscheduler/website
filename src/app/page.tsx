@@ -198,6 +198,7 @@ export default function HomePage() {
                 "Day and week boards by resource",
                 "Dual, solo, rental, ground, and sim reservations",
                 "Self-booking with approval when you want it",
+                "Standby and timed slot offers when a cancel opens a seat",
                 "Conflict-aware create and edit",
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2.5 text-sm text-foreground">
@@ -211,8 +212,8 @@ export default function HomePage() {
                 Explore scheduling
                 <ChevronRight className="size-4 opacity-80" />
               </Button>
-              <Button href="/resources/flight-school-scheduling-software" variant="secondary">
-                Scheduling guide
+              <Button href="/docs/scheduling/standby-and-slot-offers" variant="secondary">
+                Standby & slot offers
               </Button>
             </div>
           </Reveal>

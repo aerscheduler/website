@@ -354,19 +354,16 @@ export const DOC_SECTIONS: DocSection[] = [
         seoQuery: "how to join standby and accept a slot offer in AerScheduler",
         faqs: [
           {
-            question: "Does AerScheduler rebook me automatically when a slot opens?",
-            answer:
-              "No. You get a time-limited offer to accept. Decline or expiry can move the offer to the next eligible member.",
+            q: "Does AerScheduler rebook me automatically when a slot opens?",
+            a: "No. You get a time-limited offer to accept. Decline or expiry can move the offer to the next eligible member.",
           },
           {
-            question: "Where do I set days and types I want, not just one booking?",
-            answer:
-              "On the web, open You → Profile → Standby. On iOS, open Settings → Standby. You can also reach it from Schedule → Slot offers → Manage standby. If your school requires checkouts, the aircraft list is limited to what you are approved on.",
+            q: "Where do I set days and types I want, not just one booking?",
+            a: "On the web, open You → Profile → Standby. On iOS, open Settings → Standby. You can also reach it from Schedule → Slot offers → Manage standby. If your school requires checkouts, the aircraft list is limited to what you are approved on.",
           },
           {
-            question: "Why did I not get an offer for a dual I was standing by for?",
-            answer:
-              "Eligibility still applies. Your roles, checkouts, grounding, and schedule clashes filter candidates. On duals the instructor must confirm first. A renter-only account will not receive a dual offer. Slots that start in under 30 minutes are not offered by default.",
+            q: "Why did I not get an offer for a dual I was standing by for?",
+            a: "Eligibility still applies. Your roles, checkouts, grounding, and schedule clashes filter candidates. On duals the instructor must confirm first. A renter-only account will not receive a dual offer. Slots that start in under 30 minutes are not offered by default.",
           },
         ],
       },
