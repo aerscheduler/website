@@ -24560,6 +24560,14 @@
               "system"
             ]
           },
+          "purpose": {
+            "type": "string",
+            "description": "claim books the seat; instructor_confirm asks the instructor to confirm first.",
+            "enum": [
+              "claim",
+              "instructor_confirm"
+            ]
+          },
           "start": {
             "type": "string",
             "format": "date-time",
