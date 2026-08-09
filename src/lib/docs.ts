@@ -217,6 +217,33 @@ export const DOC_SECTIONS: DocSection[] = [
         seoQuery: "post flight school announcement AerScheduler",
       },
       {
+        slug: "delete-your-school",
+        title: "Delete your school (30-day countdown)",
+        description:
+          "An owner schedules permanent deletion from Settings. The school stays for 30 days, every admin and owner is notified, and any of them can cancel before the date.",
+        kind: "task",
+        audience: ["Owners", "Admins"],
+        seoQuery: "delete flight school AerScheduler organization",
+        faqs: [
+          {
+            q: "Is deleting a school immediate?",
+            a: "No. Scheduling deletion starts a 30-day countdown. The school keeps working until that date, and any admin or owner can cancel from Settings → School.",
+          },
+          {
+            q: "Who is told when a school is scheduled for deletion?",
+            a: "Every admin and owner gets an email and an in-app notification with the deletion date and a link back to Settings.",
+          },
+          {
+            q: "Who can cancel a scheduled deletion?",
+            a: "Any admin or owner. Cancelling clears the countdown. Nothing has been removed yet.",
+          },
+          {
+            q: "Why won't it let me schedule deletion?",
+            a: "Every invoice for the school must be settled first. The server refuses while anything is unpaid.",
+          },
+        ],
+      },
+      {
         slug: "settings-reference",
         title: "Every setting, and what it changes",
         description:

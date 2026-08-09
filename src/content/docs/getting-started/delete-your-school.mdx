@@ -1,0 +1,66 @@
+<Summary>
+An owner schedules deletion from Settings → School. The school stays for 30 days, every
+admin and owner is notified, and any of them can cancel before that date.
+</Summary>
+
+<Roles>Owners (schedule), Admins and Owners (cancel)</Roles>
+
+## What happens when you delete
+
+Deleting a school is not instant. It starts a **30-day countdown**:
+
+1. An owner confirms from <Where app="web">Settings → School</Where> (or Organization
+   Settings in the iOS app).
+2. AerScheduler emails and notifies every admin and owner with the deletion date.
+3. Until that date, the school keeps working as usual: bookings, invoices, training,
+   everything.
+4. Any admin or owner can cancel from the same Settings place.
+5. If nobody cancels, the school and everything in it is permanently removed on the date.
+
+<Callout type="important">
+After the countdown ends there is no undo. Bookings, invoices, training records,
+documents and every member's access go with the school.
+</Callout>
+
+## Schedule deletion
+
+<Steps>
+  <Step n={1} title="Open Settings → School">
+    Only an owner sees Delete this school. Settle every unpaid invoice first: the server
+    refuses while anything is still owed.
+  </Step>
+  <Step n={2} title="Click Delete organization">
+    Type the school's exact name to confirm. That cannot be done by accident.
+  </Step>
+  <Step n={3} title="Confirm Schedule deletion">
+    The card switches to Deletion scheduled with the date. Every admin and owner gets an
+    email and an in-app notification.
+  </Step>
+</Steps>
+
+In the iOS app the same flow is under Organization Settings → Delete Organization.
+
+## Cancel a scheduled deletion
+
+<Steps>
+  <Step n={1} title="Open Settings → School">
+    While a countdown is running, the destructive card is replaced by Deletion scheduled
+    and a Cancel deletion button. Admins see this too, not only owners.
+  </Step>
+  <Step n={2} title="Click Cancel deletion">
+    The countdown clears immediately. Nothing has been removed. Admins and owners get a
+    short notice that it was cancelled.
+  </Step>
+</Steps>
+
+In the iOS app: Organization Settings → Cancel Deletion.
+
+## Gotchas
+
+- **Unpaid invoices block scheduling**, not cancelling. Pay or void them first.
+- **Only an owner can start the countdown.** An admin who is not an owner cannot.
+- **Cancelling is admin or owner.** If you received the email, you can stop it.
+- **The demo sandbox cannot be deleted.** That control is turned off there on purpose.
+- **Leaving a school is different.** Leave removes only your membership. Delete removes
+  the whole school after 30 days. See
+  [Switch between schools](/docs/getting-started/switch-between-schools).

@@ -1776,11 +1776,45 @@
         "tags": [
           "Organizations"
         ],
-        "summary": "Delete your organization",
-        "description": "Irreversible, and takes every record in it. Requires the **owner** role.",
+        "summary": "Schedule your organization for deletion",
+        "description": "Puts the school on a **30-day** countdown. The school stays usable until then. Every admin and owner is emailed and notified. Requires the **owner** role. Refused while any invoice is unpaid, or if a countdown is already running.",
         "responses": {
-          "204": {
-            "description": "Success. No body."
+          "200": {
+            "description": "The organization with its deletion date.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "scheduledDeletionAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unpaid invoices, already scheduled, or a demo organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "401": {
             "description": "No token, an expired token, or a malformed one. Sign in again.",
@@ -1814,6 +1848,88 @@
           }
         },
         "operationId": "deleteOrganization"
+      }
+    },
+    "/organizations/cancelDeletion": {
+      "post": {
+        "tags": [
+          "Organizations"
+        ],
+        "summary": "Cancel a scheduled organization deletion",
+        "description": "Clears the 30-day countdown. Requires the **admin** role (owners hold admin).",
+        "responses": {
+          "200": {
+            "description": "The organization with the countdown cleared.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "scheduledDeletionAt": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "format": "date-time"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "No deletion is currently scheduled.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "cancelOrganizationDeletion"
       }
     },
     "/organizations/{orgId}": {
@@ -21006,6 +21122,14 @@
           "showInDirectory": {
             "type": "boolean",
             "description": "Whether the organization opts into the public directory."
+          },
+          "scheduledDeletionAt": {
+            "format": "date-time",
+            "description": "When set, the school will be hard-deleted at this time. Null means no countdown is running. Owners schedule via DELETE /organizations; admins cancel via POST /organizations/cancelDeletion.",
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "details": {
             "type": "object",

@@ -83,8 +83,10 @@ Everything an admin can do, plus:
 - Edit another owner's roles.
 - Change billing settings and connect Stripe.
 - Manage API keys and the QuickBooks connection.
-- Delete the organization, from <Where app="web">Settings → School</Where> or from the app.
-  You type the school's name to confirm, and it is refused while any invoice is unpaid.
+- Schedule deletion of the organization, from <Where app="web">Settings → School</Where> or
+  from the app. That starts a 30-day countdown (not an immediate wipe). You type the
+  school's name to confirm, and it is refused while any invoice is unpaid. See
+  [Delete your school](/docs/getting-started/delete-your-school).
 
 An owner cannot be removed by anybody. The last owner cannot give up the role or leave the
 school.
@@ -100,7 +102,8 @@ behalf.
 
 An admin cannot change an owner's roles, remove an owner, or remove or demote the last
 admin (including themselves). An admin who is not the owner cannot connect Stripe or change
-billing settings, and cannot delete the organization.
+billing settings, and cannot schedule deletion of the organization. An admin can cancel a
+deletion that is already scheduled.
 
 ## Dispatcher
 
