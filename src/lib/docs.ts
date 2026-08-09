@@ -366,7 +366,7 @@ export const DOC_SECTIONS: DocSection[] = [
           {
             question: "Why did I not get an offer for a dual I was standing by for?",
             answer:
-              "Eligibility still applies. Your roles, checkouts, grounding, and schedule clashes filter candidates. On duals the instructor must confirm first. A renter-only account will not receive a dual offer. Slots that start in under 15 minutes are not offered.",
+              "Eligibility still applies. Your roles, checkouts, grounding, and schedule clashes filter candidates. On duals the instructor must confirm first. A renter-only account will not receive a dual offer. Slots that start in under 30 minutes are not offered by default.",
           },
         ],
       },
