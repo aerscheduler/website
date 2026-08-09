@@ -361,7 +361,7 @@ export const DOC_SECTIONS: DocSection[] = [
           {
             question: "Where do I set days and types I want, not just one booking?",
             answer:
-              "On the web, open You → Profile → Standby. On iOS, open Settings → Standby. You can also reach it from Schedule → Slot offers → Manage standby.",
+              "On the web, open You → Profile → Calendar. On iOS, open Settings → Standby. You can also reach it from Schedule → Slot offers → Manage standby.",
           },
           {
             question: "Why did I not get an offer for a dual I was standing by for?",
