@@ -97,6 +97,10 @@
       "description": "Per-member in-app notifications."
     },
     {
+      "name": "Standby",
+      "description": "Standby interest, cancellation recovery, and time-limited slot offers."
+    },
+    {
       "name": "Reports",
       "description": "The reporting engine and saved views."
     },
@@ -15743,6 +15747,1005 @@
         }
       }
     },
+    "/standby": {
+      "post": {
+        "tags": [
+          "Standby"
+        ],
+        "summary": "Create standby interest",
+        "description": "Creates standby interest for yourself. Owners, admins, and dispatchers may create it for another member.",
+        "responses": {
+          "201": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/StandbyInterest"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The matching criteria are invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "createStandbyInterest",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The matching criteria.",
+                "properties": {
+                  "orgUserId": {
+                    "type": "integer"
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "on_reservation",
+                      "open_window",
+                      "standing"
+                    ]
+                  },
+                  "watchedReservationId": {
+                    "type": "integer"
+                  },
+                  "start": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "end": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "criteria": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "reservationType": {
+                    "type": "string"
+                  },
+                  "resourceId": {
+                    "type": "integer"
+                  },
+                  "instructorOrgUserId": {
+                    "type": "integer"
+                  },
+                  "priority": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 10
+                  }
+                },
+                "required": [
+                  "kind"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Standby"
+        ],
+        "summary": "List organization standby interest",
+        "description": "Owners, admins, and dispatchers can list standby interest, optionally for one watched reservation.",
+        "responses": {
+          "200": {
+            "description": "The standby interest records.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/StandbyInterest"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listStandbyInterest",
+        "parameters": [
+          {
+            "name": "reservationId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Only interest watching this reservation."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
+      }
+    },
+    "/standby/me": {
+      "get": {
+        "tags": [
+          "Standby"
+        ],
+        "summary": "List my standby interest",
+        "description": "Lists standby interest owned by the signed-in member.",
+        "responses": {
+          "200": {
+            "description": "Your standby interest records.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/StandbyInterest"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listMyStandbyInterest",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
+      }
+    },
+    "/standby/{id}": {
+      "delete": {
+        "tags": [
+          "Standby"
+        ],
+        "summary": "Withdraw standby interest",
+        "description": "Withdraws your own active interest. Desk staff may withdraw any interest in their organization.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/StandbyInterest"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The interest is no longer active.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "withdrawStandbyInterest",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The standby interest id."
+          }
+        ]
+      }
+    },
+    "/slot-offers": {
+      "get": {
+        "tags": [
+          "Standby"
+        ],
+        "summary": "List pending slot offers",
+        "description": "Owners, admins, and dispatchers can list pending offers for their organization.",
+        "responses": {
+          "200": {
+            "description": "The pending offers.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/SlotOffer"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listPendingSlotOffers",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Standby"
+        ],
+        "summary": "Create a slot offer",
+        "description": "Desk staff can offer a slot directly or start recovery from a cancelled reservation.",
+        "responses": {
+          "201": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/SlotOffer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The offer is invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "createSlotOffer",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The offered window, or a sourceReservationId for recovery.",
+                "properties": {
+                  "sourceReservationId": {
+                    "type": "integer"
+                  },
+                  "offeredToOrgUserId": {
+                    "type": "integer"
+                  },
+                  "start": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "end": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "reservationType": {
+                    "type": "string"
+                  },
+                  "timeZoneName": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "resourceId": {
+                    "type": "integer"
+                  },
+                  "instructorOrgUserId": {
+                    "type": "integer"
+                  },
+                  "locationId": {
+                    "type": "integer"
+                  },
+                  "standbyInterestId": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/slot-offers/me": {
+      "get": {
+        "tags": [
+          "Standby"
+        ],
+        "summary": "List my slot offers",
+        "description": "Lists every slot offer sent to the signed-in member.",
+        "responses": {
+          "200": {
+            "description": "Your slot offers.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/SlotOffer"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listMySlotOffers",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1–1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
+      }
+    },
+    "/slot-offers/{id}/accept": {
+      "post": {
+        "tags": [
+          "Standby"
+        ],
+        "summary": "Accept a slot offer",
+        "description": "Claims a pending offer and creates the corresponding reservation.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/SlotOffer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The offer expired or was already answered.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "acceptSlotOffer",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The slot offer id."
+          }
+        ]
+      }
+    },
+    "/slot-offers/{id}/decline": {
+      "post": {
+        "tags": [
+          "Standby"
+        ],
+        "summary": "Decline a slot offer",
+        "description": "Declines your pending offer and rolls recovery to the next eligible member.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/SlotOffer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The offer is no longer pending.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "declineSlotOffer",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The slot offer id."
+          }
+        ]
+      }
+    },
+    "/slot-offers/{id}/withdraw": {
+      "post": {
+        "tags": [
+          "Standby"
+        ],
+        "summary": "Withdraw a slot offer",
+        "description": "Desk staff withdraw a pending offer and, for cancellation recovery, roll to the next eligible member.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/SlotOffer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The offer is no longer pending.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "withdrawSlotOffer",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The slot offer id."
+          }
+        ]
+      }
+    },
     "/currencies": {
       "get": {
         "tags": [
@@ -23322,6 +24325,358 @@
             "nullable": true,
             "additionalProperties": true,
             "description": "The aircraft, simulator or room it touched, if any."
+          }
+        },
+        "additionalProperties": true
+      },
+      "StandbyInterest": {
+        "type": "object",
+        "description": "A member's request to be considered when a matching scheduling slot opens.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier, stable for the life of the record."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the record was created."
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the record last changed."
+          },
+          "kind": {
+            "type": "string",
+            "description": "How this interest matches: one reservation, a time window, or standing criteria.",
+            "enum": [
+              "on_reservation",
+              "open_window",
+              "standing"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "description": "Current lifecycle state.",
+            "enum": [
+              "active",
+              "fulfilled",
+              "withdrawn",
+              "expired"
+            ]
+          },
+          "source": {
+            "type": "string",
+            "description": "Who created the interest.",
+            "enum": [
+              "member",
+              "desk",
+              "system"
+            ]
+          },
+          "priority": {
+            "type": "integer",
+            "description": "Desk priority from 0 to 10."
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "description": "When this interest stops matching, if set.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "start": {
+            "format": "date-time",
+            "description": "Start of an open-window interest.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "end": {
+            "format": "date-time",
+            "description": "End of an open-window interest.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reservationType": {
+            "description": "Optional reservation type filter on the interest row.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "criteria": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Standing match criteria. Empty lists mean any. Used when kind is standing.",
+            "additionalProperties": true,
+            "properties": {
+              "daysOfWeek": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 6
+                },
+                "description": "0 = Sunday through 6 = Saturday."
+              },
+              "localTimeStart": {
+                "type": "string",
+                "description": "HH:mm local start bound."
+              },
+              "localTimeEnd": {
+                "type": "string",
+                "description": "HH:mm local end bound."
+              },
+              "resourceIds": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                }
+              },
+              "resourceTypes": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "plane",
+                    "simulator",
+                    "room"
+                  ]
+                }
+              },
+              "instructorOrgUserIds": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                }
+              },
+              "reservationTypes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "orgUser": {
+            "type": "object",
+            "description": "Member who owns this interest.",
+            "additionalProperties": true
+          },
+          "watchedReservation": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Reservation watched when kind is on_reservation.",
+            "additionalProperties": true
+          },
+          "resource": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Optional resource filter on the interest row.",
+            "additionalProperties": true
+          },
+          "instructorOrgUser": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Optional instructor filter on the interest row.",
+            "additionalProperties": true
+          },
+          "notificationDelivery": {
+            "type": "object",
+            "description": "Channels currently enabled for slot offers.",
+            "properties": {
+              "email": {
+                "type": "boolean",
+                "description": "Email delivery is enabled."
+              },
+              "push": {
+                "type": "boolean",
+                "description": "Push delivery is enabled."
+              },
+              "sms": {
+                "type": "boolean",
+                "description": "SMS delivery is enabled."
+              },
+              "anyChannelEnabled": {
+                "type": "boolean",
+                "description": "At least one delivery channel is enabled."
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "SlotOffer": {
+        "type": "object",
+        "description": "A time-limited offer to claim an available scheduling slot.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier, stable for the life of the record."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the record was created."
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the record last changed."
+          },
+          "status": {
+            "type": "string",
+            "description": "Current offer state.",
+            "enum": [
+              "pending",
+              "accepted",
+              "declined",
+              "expired",
+              "withdrawn",
+              "superseded"
+            ]
+          },
+          "trigger": {
+            "type": "string",
+            "description": "How recovery began.",
+            "enum": [
+              "cancel_recovery",
+              "desk",
+              "system"
+            ]
+          },
+          "start": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Start of the offered slot."
+          },
+          "end": {
+            "type": "string",
+            "format": "date-time",
+            "description": "End of the offered slot."
+          },
+          "reservationType": {
+            "type": "string",
+            "description": "Reservation type created on acceptance."
+          },
+          "timeZoneName": {
+            "type": "string",
+            "description": "IANA time zone used to present the slot."
+          },
+          "title": {
+            "description": "Optional reservation title.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "holdUntil": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Deadline for accepting this offer."
+          },
+          "respondedAt": {
+            "format": "date-time",
+            "description": "When the offer left pending state.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "offerGroupId": {
+            "type": "string",
+            "description": "Stable id shared by each candidate in one recovery chain."
+          },
+          "offeredTo": {
+            "type": "object",
+            "description": "Member who may accept this offer.",
+            "additionalProperties": true
+          },
+          "createdBy": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Desk member who created a desk offer, if any.",
+            "additionalProperties": true
+          },
+          "standbyInterest": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Interest that matched this offer, if any.",
+            "additionalProperties": true
+          },
+          "resource": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Resource on the offered slot.",
+            "additionalProperties": true
+          },
+          "instructorOrgUser": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Instructor on the offered slot.",
+            "additionalProperties": true
+          },
+          "sourceReservation": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Canceled reservation that triggered recovery.",
+            "additionalProperties": true
+          },
+          "resultingReservation": {
+            "description": "Reservation created by acceptance.",
+            "additionalProperties": true,
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "notificationDelivery": {
+            "type": "object",
+            "description": "Channels currently enabled for slot offers for the recipient.",
+            "properties": {
+              "email": {
+                "type": "boolean",
+                "description": "Email delivery is enabled."
+              },
+              "push": {
+                "type": "boolean",
+                "description": "Push delivery is enabled."
+              },
+              "sms": {
+                "type": "boolean",
+                "description": "SMS delivery is enabled."
+              },
+              "anyChannelEnabled": {
+                "type": "boolean",
+                "description": "At least one delivery channel is enabled."
+              }
+            },
+            "additionalProperties": true
           }
         },
         "additionalProperties": true

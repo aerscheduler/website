@@ -1,0 +1,65 @@
+<Summary>
+Stand by for a booking you want, or set standing preferences for the kinds of
+slots you want. When a matching time opens, AerScheduler sends you a time-limited
+offer to accept. It does not rebook you silently.
+</Summary>
+
+<Roles>Students, Renters, Instructors, Owners, Admins, Dispatchers</Roles>
+
+## Three ways to ask for a slot
+
+| Kind | Where you set it | What it matches |
+|---|---|---|
+| One booking | Open that reservation and press **Stand by for this booking** | Only that booking, if it cancels |
+| Standing preference | <Where app="web">You → Profile → Standby</Where>, or Settings → Standby on iOS | Days, types, hours, aircraft, and instructors you choose |
+| Open window | Same Standby screen | One date range you are free |
+
+Leave a standing field blank to mean any. Pick at least one constraint before you save.
+
+## Accept or decline an offer
+
+When a matching slot opens, you get an offer with a hold deadline.
+
+<Steps>
+  <Step n={1} title="Open your offers">
+    On the web, go to <Where app="web">You → Schedule → Slot offers</Where>. On iOS,
+    open Slot offers from the notification or from your schedule flow.
+  </Step>
+  <Step n={2} title="Accept or Decline">
+    Accept creates the reservation on your schedule. Decline (or letting the hold
+    expire) can roll the offer to the next eligible member.
+  </Step>
+</Steps>
+
+Turn on **Slot offers & standby** under notification settings (email and/or push). Offers
+expire quickly, and with both channels off you will only see them if you open the list
+yourself.
+
+## What the front desk does
+
+On <Where app="web">Calendar</Where>, staff can:
+
+- See who is standing by on a reservation
+- Press **Offer this slot** on a canceled booking to start or resume recovery
+- Open **Pending offers** to withdraw an offer that should not stay held
+
+Withdrawing a pending recovery offer moves the chain to the next eligible member.
+
+## Who actually gets offered
+
+Eligibility still applies. A renter standing by on a dual booking will not receive that
+dual offer. Role, checkout approvals, grounding, and schedule clashes all filter the list
+before ranking.
+
+Standing preferences and open windows rank behind a member who stood by on that exact
+reservation, so a specific watcher still goes first.
+
+<Callout type="warning">
+Accepting an offer books a real reservation. Soft holds from pending offers block other
+people from taking the same aircraft or instructor until the hold ends or is withdrawn.
+</Callout>
+
+## Related
+
+- <DocsLink href="scheduling/cancel-a-reservation">Cancel a booking and record why</DocsLink>
+- <DocsLink href="scheduling/change-or-cancel-your-booking">Change or cancel your booking</DocsLink>

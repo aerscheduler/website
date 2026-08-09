@@ -345,6 +345,32 @@ export const DOC_SECTIONS: DocSection[] = [
         seoQuery: "how to cancel a reservation and record a no show",
       },
       {
+        slug: "standby-and-slot-offers",
+        title: "Stand by for a slot and accept an offer",
+        description:
+          "Join standby on a booking, set standing preferences or an open window, and accept a time-limited offer when a matching slot opens. The desk can offer canceled slots and withdraw pending holds.",
+        kind: "task",
+        audience: ["Students", "Renters", "Instructors", "Owners", "Admins", "Dispatchers"],
+        seoQuery: "how to join standby and accept a slot offer in AerScheduler",
+        faqs: [
+          {
+            question: "Does AerScheduler rebook me automatically when a slot opens?",
+            answer:
+              "No. You get a time-limited offer to accept. Decline or expiry can move the offer to the next eligible member.",
+          },
+          {
+            question: "Where do I set days and types I want, not just one booking?",
+            answer:
+              "On the web, open You → Profile → Standby. On iOS, open Settings → Standby. You can also reach it from Schedule → Slot offers → Manage standby.",
+          },
+          {
+            question: "Why did I not get an offer for a dual I was standing by for?",
+            answer:
+              "Eligibility still applies. Your roles, checkouts, grounding, and schedule clashes filter candidates. A renter-only account will not receive a dual offer.",
+          },
+        ],
+      },
+      {
         slug: "ramp-out-and-ramp-in",
         title: "Ramp out and ramp in a flight",
         description:
