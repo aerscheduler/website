@@ -1,7 +1,7 @@
 <Summary>
 Open the invoice from <Where app="web">Billing</Where> and click Send payment reminder. A
-daily sweep already chases unpaid member invoices without you doing anything. If you want
-teeth, set Ground members with unpaid invoices on
+daily sweep already chases unpaid member invoices for up to four weeks, then hands further
+chase back to you. If you want teeth, set Ground members with unpaid invoices on
 <Where app="web">Settings → Billing</Where>.
 </Summary>
 
@@ -34,7 +34,13 @@ A daily sweep chases unpaid member invoices on its own. An invoice is picked up 
 - it is past its due date, or
 - it is 7 or more days old and has no due date.
 
-After that, the same invoice is reminded at most once every 7 days.
+After that, the same invoice is reminded at most once every 7 days, and at most four
+times in total. On the fourth automatic reminder the member is told it is the last one
+from AerScheduler, and every admin and owner gets a notice that further chase is on the
+school.
+
+Sending a reminder by hand does not count toward that four, and you can keep using Send
+payment reminder after the automatic sweep has stopped.
 
 Voided invoices and paid invoices are never chased.
 

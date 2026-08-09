@@ -557,7 +557,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "chase-unpaid-invoices",
         title: "Chase an unpaid invoice",
         description:
-          "Send a reminder by hand, let the nightly sweep do it for you, and optionally ground members once they owe too many invoices.",
+          "Send a reminder by hand, let the nightly sweep chase for up to four weeks, then take over. Optionally ground members once they owe too many invoices.",
         kind: "task",
         audience: ["Admins", "Owners"],
         seoQuery: "send payment reminder for an unpaid flight school invoice",
