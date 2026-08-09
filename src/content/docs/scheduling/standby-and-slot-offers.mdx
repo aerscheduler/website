@@ -52,6 +52,11 @@ On <Where app="web">Calendar</Where>, staff can:
 - Press **Offer this slot** on a canceled booking to start or resume recovery
 - Open **Pending offers** to withdraw an offer that should not stay held
 
+While an offer is pending, the day board shows a dashed **Offer** / **Confirm** hold on that
+aircraft for the offered window. That time is not free: dragging or booking over it is refused
+with a clear reason, and the soft hold lasts until someone accepts, declines, the hold expires,
+or the desk withdraws it.
+
 Withdrawing a pending recovery offer moves the chain to the next eligible member.
 
 ## Who actually gets offered
@@ -68,6 +73,12 @@ instructor declines or the confirm expires, students are not offered that window
 Offers are not sent when the slot starts too soon (under 30 minutes by default) or when there would
 not be enough time left to respond before it starts. The hold never runs past the slot
 start.
+
+Cancel recovery also waits through **quiet hours** (default 9pm to 7am at the location)
+before creating an offer, so a late-night cancel does not soft-hold the aircraft overnight.
+Desk-created offers skip quiet hours. Schools also limit how many offers can be pending at
+once, and someone who declined or let an offer expire is not offered a similar overlapping
+window again for a couple of days.
 
 Standing preferences and open windows rank behind a member who stood by on that exact
 reservation, so a specific watcher still goes first.
