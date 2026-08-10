@@ -12,7 +12,7 @@ type Options = {
   threshold?: number;
   /**
    * Keep reporting after the first entry. Only for cheap always-on decoration
-   * (pausing an idle float); reveals must stay once-only — re-firing on every
+   * (pausing an idle float); reveals must stay once-only: re-firing on every
    * scroll past is what turns a page into a slot machine.
    */
   repeat?: boolean;
@@ -56,8 +56,8 @@ export function useInView<T extends HTMLElement = HTMLDivElement>({
     io.observe(el);
 
     // The spec guarantees an initial callback on observe. Some environments
-    // never service it — a tab the compositor has parked as hidden or occluded
-    // is the common one — and there the reveal would leave the page
+    // never service it: a tab the compositor has parked as hidden or occluded
+    // is the common one: and there the reveal would leave the page
     // permanently blank. Content must never be hostage to its own animation,
     // so if nothing has arrived by now, show everything and stop waiting.
     const safety = window.setTimeout(() => {

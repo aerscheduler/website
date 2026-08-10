@@ -54,7 +54,7 @@ const FAQS = [
   },
   {
     q: "Can I use one syllabus and just edit it as we improve it?",
-    a: "You can, and it is the most common mistake. Editing a live syllabus changes the standard for every student already enrolled against it, including ones most of the way through. AerScheduler versions the syllabus instead: a published version is immutable, revisions create a new version, and each enrollment stays pointed at the version it started on. Existing students finish what they started and new students get the improvement.",
+    a: "You can, and it is the most common mistake. Editing a live syllabus changes the standard for every student already enrolled against it, including ones most of the way through. AerScheduler versions the syllabus instead. A published version is immutable, revisions create a new version, and each enrollment stays pointed at the version it started on. Existing students finish what they started and new students get the improvement.",
   },
   {
     q: "How is this different from a progress bar?",
@@ -62,7 +62,7 @@ const FAQS = [
   },
   {
     q: "Does a student who stops flying show up anywhere?",
-    a: "Yes, and that is the point of measuring silence separately. A gap with no lesson in it is the single most useful thing a school can be told, because it is fixable with a phone call. It is advisory only and never gates anything: a weekend-only student reads as behind a full-time schedule and is perfectly fine, so it exists to start a conversation.",
+    a: "Yes, and that is the point of measuring silence separately. A gap with no lesson in it is the single most useful thing a school can be told, because it is fixable with a phone call. It is advisory only and never gates anything. A weekend-only student reads as behind a full-time schedule and is perfectly fine, so it exists to start a conversation.",
   },
   {
     q: "What about endorsements?",
@@ -78,7 +78,7 @@ const FAQS = [
   },
   {
     q: "Does this work for Part 61, or only Part 141?",
-    a: "Both, and a course is trained under exactly one. Part 141 is the stricter shape, so the module is built to it: an approved syllabus, ordered stages, immutable published versions, and a ledger that survives an audit. A Part 61 school gets the same structure without the approval process, which is worth having anyway. The four built-in syllabi ship as Part 61 courses. Stage-check records themselves are not built yet — a stage can be marked as requiring one and a check instructor can be designated for a course, but the check is not recorded in the software today.",
+    a: "Both, and a course is trained under exactly one. Part 141 is the stricter shape, so the module is built to it, with an approved syllabus, ordered stages, immutable published versions, and a ledger that survives an audit. A Part 61 school gets the same structure without the approval process, which is worth having anyway. The four built-in syllabi ship as Part 61 courses. Stage-check records themselves are not built yet. A stage can be marked as requiring one and a check instructor can be designated for a course, but the check is not recorded in the software today.",
   },
   {
     q: "Do I have to write a syllabus from scratch?",

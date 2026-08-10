@@ -12,7 +12,7 @@ import {
 /**
  * The API reference renderer.
  *
- * Deliberately plain server-rendered HTML — no spec-viewer widget. Two reasons:
+ * Deliberately plain server-rendered HTML: no spec-viewer widget. Two reasons:
  * the endpoint text is the thing worth indexing, and a docs page that needs
  * JavaScript to show a URL is a worse docs page. It also means these render at
  * the site's own typography rather than an embedded iframe's.
@@ -225,7 +225,7 @@ export function EndpointSection({ endpoint }: { endpoint: Endpoint }) {
 
 /**
  * Minimal inline-markdown renderer for the spec's descriptions: paragraphs,
- * `**bold**`, and `` `code` ``. Deliberately not a markdown library — the spec
+ * `**bold**`, and `` `code` ``. Deliberately not a markdown library: the spec
  * is authored knowing this is what renders it, and a full parser here would be
  * a dependency plus a sanitisation question for three constructs.
  */
@@ -243,8 +243,8 @@ export function Prose({ text, className }: { text: string; className?: string })
 }
 
 /**
- * Exported because tag descriptions render in three other places — the docs hub, the tag
- * page's lead paragraph, and its prev/next footer — each with its own typography. They used
+ * Exported because tag descriptions render in three other places: the docs hub, the tag
+ * page's lead paragraph, and its prev/next footer: each with its own typography. They used
  * `{tag.description}` raw, so a spec author writing `**bold**` (which is exactly what the
  * operation descriptions beside them expect) got literal asterisks on the page. Using
  * `Prose` there would have imposed its 15px body size on a 18px lead, so the inline

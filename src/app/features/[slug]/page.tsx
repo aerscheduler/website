@@ -44,12 +44,12 @@ const FEATURE_SEO: Record<
       "Configure ratings, dual rates, and instructor availability for private, instrument, and commercial training.",
   },
   training: {
-    // Commercial intent ("software", "tracking"), so it does not compete with
+    // Commercial intent ("software", ", tracking"), so it does not compete with
     // /resources/flight-training-records, which owns the informational query
     // "what training records does a flight school have to keep".
     title: "Part 141 & Part 61 Syllabus and Training Records Software",
     description:
-      "Track flight training against a versioned syllabus: stages, lessons, graded tasks, hour requirements, AC 61-65K endorsements, and records that cannot be edited after signing.",
+      "Track flight training against a versioned syllabus, with stages, lessons, graded tasks, hour requirements, AC 61-65K endorsements, and records that cannot be edited after signing.",
   },
   billing: {
     title: "Flight School Billing & Invoicing Software",
@@ -57,12 +57,12 @@ const FEATURE_SEO: Record<
       "Turn closed-out flights into invoices, take cards online with Stripe, and keep accounts receivable current.",
   },
   memberships: {
-    // Commercial intent ("software", "billing"), so it does not compete with
+    // Commercial intent ("software", ", billing"), so it does not compete with
     // /resources/flying-club-dues-and-fees, which owns the informational query
     // "how do flying clubs structure dues and initiation fees".
     title: "Flying Club Membership & Dues Billing Software",
     description:
-      "Charge joining fees and recurring dues automatically: membership tiers, monthly or annual billing, prorated first periods, and a record of every period billed, waived or owed.",
+      "Charge joining fees and recurring dues automatically. Membership tiers, monthly or annual billing, prorated first periods, and a record of every period billed, waived, or owed.",
   },
   maintenance: {
     title: "Aircraft Maintenance Squawk Tracking",
@@ -75,12 +75,12 @@ const FEATURE_SEO: Record<
       "The native AerScheduler app for booking, invoices, documents, and squawks. The same operation as the web desk.",
   },
   reports: {
-    // Deliberately commercial-intent ("reporting software", "dashboards") so it
+    // Deliberately commercial-intent ("reporting software", ", dashboards") so it
     // doesn't compete with /resources/flight-school-reports, which owns the
     // informational query "what reports does a flight school need".
     title: "Flight School Reporting Software & Dashboards",
     description:
-      "Built-in reports for revenue, aircraft utilization, instructor activity, and compliance — each one filterable and savable, plus a dashboard where every figure opens the report behind it.",
+      "Built-in reports for revenue, aircraft utilization, instructor activity, and compliance. Each one is filterable and savable, plus a dashboard where every figure opens the report behind it.",
   },
   integrations: {
     title: "Flight School Software Integrations",

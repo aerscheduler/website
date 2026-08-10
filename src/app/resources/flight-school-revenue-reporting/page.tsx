@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: TITLE,
     description:
-      "Billed, collected, and outstanding — broken down by aircraft, instructor, customer, and lesson type.",
+      "Billed, collected, and outstanding, broken down by aircraft, instructor, customer, and lesson type.",
     url: "/resources/flight-school-revenue-reporting",
   },
 };
@@ -29,7 +29,7 @@ const FAQS = [
   },
   {
     q: "Can I see revenue by aircraft or by instructor?",
-    a: `Yes. ${SITE_NAME} groups revenue by aircraft, instructor, customer, lesson type, reservation type, or location — the same report, cut whichever way answers the question in front of you.`,
+    a: `Yes. ${SITE_NAME} groups revenue by aircraft, instructor, customer, lesson type, reservation type, or location. The same report, cut whichever way answers the question in front of you.`,
   },
   {
     q: "How do I find revenue my flight school is losing?",
@@ -45,7 +45,7 @@ const FAQS = [
   },
   {
     q: "Who can see revenue reports?",
-    a: "Owners and admins only. Dispatchers, instructors, technicians, students, and renters have no access to financial reports — enforced on the server, not merely hidden in the interface.",
+    a: "Owners and admins only. Dispatchers, instructors, technicians, students, and renters have no access to financial reports. That is enforced on the server, not merely hidden in the interface.",
   },
 ];
 
@@ -99,7 +99,7 @@ export default function FlightSchoolRevenueReportingPage() {
 
         <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
           <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">
-            Billed, collected, outstanding — all three, always
+            Billed, collected, outstanding: all three, always
           </h2>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground">
             These three move independently, and watching any one of them alone
@@ -129,7 +129,7 @@ export default function FlightSchoolRevenueReportingPage() {
               },
               {
                 by: "By customer",
-                q: "Who are your best students — and who has quietly stopped flying?",
+                q: "Who are your best students, and who has quietly stopped flying?",
               },
               {
                 by: "By lesson type",

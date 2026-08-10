@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: TITLE,
     description:
-      "Joining fees, monthly dues, tiers, and the awkward cases — mid-month joiners, seasonal members, and members who leave.",
+      "Joining fees, monthly dues, tiers, and the awkward cases: mid-month joiners, seasonal members, and members who leave.",
     url: PATH,
   },
 };
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
  * The tiers almost every club converges on, whatever it calls them.
  *
  * Ranges are what clubs publish on their own membership pages, not invented figures. The
- * point of the table is the SHAPE — that a club needs several tiers rather than one price —
+ * point of the table is the SHAPE: that a club needs several tiers rather than one price,
  * because that is the thing a club has to recognise before "tiers are plans" means anything.
  */
 const TIERS = [
@@ -59,8 +59,8 @@ const TIERS = [
 /**
  * The cases that break a naive setup.
  *
- * Every one of these is a real complaint about club software rather than a hypothetical —
- * they are the reasons a club that "just needs a monthly charge" ends up back on a
+ * Every one of these is a real complaint about club software rather than a hypothetical.
+ * They are the reasons a club that "just needs a monthly charge" ends up back on a
  * spreadsheet within a year.
  */
 const EDGE_CASES = [
@@ -69,7 +69,7 @@ const EDGE_CASES = [
     problem:
       "Charging a full month for eleven days annoys the newest member you have. Waiting until the 1st gives away most of a month.",
     answer:
-      "Charge the part-month. Twelve days at $95 a month is $36.77, then the full amount from the 1st — and the invoice says it is a part period, so nobody has to ask.",
+      "Charge the part-month. Twelve days at $95 a month is $36.77, then the full amount from the 1st, and the invoice says it is a part period, so nobody has to ask.",
   },
   {
     case: "A member is away for the winter",
@@ -81,7 +81,7 @@ const EDGE_CASES = [
   {
     case: "The club raises its dues",
     problem:
-      "Changing the price cannot quietly re-price somebody who joined at the old rate — that is a conversation, not a database update.",
+      "Changing the price cannot quietly re-price somebody who joined at the old rate. That is a conversation, not a database update.",
     answer:
       "A membership keeps the price it started at. Raising the plan changes it for new members; moving an existing member to the new rate is a separate, deliberate action, effective from their next period.",
   },
@@ -104,11 +104,11 @@ const EDGE_CASES = [
 const FAQS = [
   {
     q: "What is the difference between a joining fee and dues?",
-    a: "A joining fee is one-time, paid on the way in — clubs call it an initiation fee, an application fee or a buy-in. Dues are recurring, and are what keep the aircraft insured, hangared and reserved for maintenance whether anybody flies or not. Most clubs charge both; plenty charge only one. A capital buy-in that makes you a part owner of the aircraft is a different thing again, and is usually handled outside the billing system because it is refundable when you leave.",
+    a: "A joining fee is one-time, paid on the way in. Clubs call it an initiation fee, an application fee, or a buy-in. Dues are recurring, and are what keep the aircraft insured, hangared, and reserved for maintenance whether anybody flies or not. Most clubs charge both; plenty charge only one. A capital buy-in that makes you a part owner of the aircraft is a different thing again, and is usually handled outside the billing system because it is refundable when you leave.",
   },
   {
     q: "How much do flying clubs charge in monthly dues?",
-    a: "Published rates at ordinary general-aviation clubs usually fall between $50 and $150 a month for a full flying membership, with non-flying or social tiers around $25. Equity clubs that own their aircraft outright sit higher, and clubs with a large membership sharing a small fleet sit lower. What matters more than the figure is that dues cover the fixed costs — insurance, hangar, annual, engine reserve — so that the hourly rate only has to cover flying.",
+    a: "Published rates at ordinary general-aviation clubs usually fall between $50 and $150 a month for a full flying membership, with non-flying or social tiers around $25. Equity clubs that own their aircraft outright sit higher, and clubs with a large membership sharing a small fleet sit lower. What matters more than the figure is that dues cover the fixed costs (insurance, hangar, annual, engine reserve) so that the hourly rate only has to cover flying.",
   },
   {
     q: "Should dues be monthly, quarterly or annual?",
@@ -116,7 +116,7 @@ const FAQS = [
   },
   {
     q: "Should everyone be billed on the same day, or on their own anniversary?",
-    a: "Clubs overwhelmingly bill everyone on the same date — usually the 1st — because the treasurer wants one run, one reconciliation and one figure to report at the board meeting. FBOs and schools with rolling sign-ups more often bill each account on its own anniversary. Both work; billing everyone on the same day is the one that makes proration worth having.",
+    a: "Clubs overwhelmingly bill everyone on the same date (usually the 1st) because the treasurer wants one run, one reconciliation and one figure to report at the board meeting. FBOs and schools with rolling sign-ups more often bill each account on its own anniversary. Both work; billing everyone on the same day is the one that makes proration worth having.",
   },
   {
     q: "Do dues usually include flying time?",
@@ -128,7 +128,7 @@ const FAQS = [
   },
   {
     q: "Can members sign up and pay online themselves?",
-    a: "Members pay online — dues and joining fees arrive as ordinary invoices with a payment link, and a saved card can settle them automatically. Joining is deliberately not self-service: putting somebody on a plan is a decision the club makes, usually after a checkout and a signed agreement, so a member cannot add, change or cancel their own membership.",
+    a: "Members pay online. Dues and joining fees arrive as ordinary invoices with a payment link, and a saved card can settle them automatically. Joining is deliberately not self-service. Putting somebody on a plan is a decision the club makes, usually after a checkout and a signed agreement, so a member cannot add, change, or cancel their own membership.",
   },
 ];
 
@@ -160,7 +160,7 @@ export default function Page() {
           <h2 className="text-2xl font-semibold tracking-tight">Two charges, doing two jobs</h2>
           <p className="text-muted-foreground">
             A <strong>joining fee</strong> is paid once. It covers the work of bringing somebody
-            in — the checkout, the paperwork, adding them to the insurance — and it makes joining
+            in (the checkout, the paperwork, adding them to the insurance) and it makes joining
             a decision rather than a whim, which is most of why clubs charge one.
           </p>
           <p className="text-muted-foreground">
@@ -179,8 +179,8 @@ export default function Page() {
         <section className="mt-10 space-y-4">
           <h2 className="text-2xl font-semibold tracking-tight">The tiers clubs settle on</h2>
           <p className="text-muted-foreground">
-            Almost no club has one membership. The names vary, the shape does not — and the
-            reason is usually retention: a member whose medical lapses, or whose job takes them
+            Almost no club has one membership. The names vary; the shape does not. The
+            reason is usually retention. A member whose medical lapses, or whose job takes them
             away for a year, is far more likely to come back if there is a cheaper tier to move
             to than if the only options are full price or leaving.
           </p>
@@ -211,7 +211,7 @@ export default function Page() {
           </h2>
           <p className="text-muted-foreground">
             Charging every member the same amount on the same day is straightforward. What makes
-            dues a chore is everything that is not that — and it is worth knowing how your
+            dues a chore is everything that is not that, and it is worth knowing how your
             software handles each before you have thirty members rather than three.
           </p>
 
@@ -237,7 +237,7 @@ export default function Page() {
             The practical argument for collecting dues in the same system that schedules the
             aircraft is not that it saves a login. It is that a member has one account and one
             balance. Dues, joining fees and flying appear in the same invoice list, settle with
-            the same saved card, and land in the same monthly revenue figure — so the question
+            the same saved card, and land in the same monthly revenue figure, so the question
             &ldquo;is this member paid up?&rdquo; has one answer instead of two.
           </p>
           <ul className="space-y-2">
@@ -259,9 +259,9 @@ export default function Page() {
         <section className="mt-10 space-y-4">
           <h2 className="text-2xl font-semibold tracking-tight">A note on signed agreements</h2>
           <p className="text-muted-foreground">
-            Most clubs pair joining with a signed document — bylaws, an operating agreement, a
+            Most clubs pair joining with a signed document: bylaws, an operating agreement, a
             rental agreement. {SITE_NAME} does not collect signatures today, so it will not
-            pretend to: a membership records whether the agreement is <em>on file</em>, as a
+            pretend to. A membership records whether the agreement is <em>on file</em>, as a
             note for the office, and nothing is blocked either way. If signing matters to your
             club, keep doing it the way you do now and tick the box when the paperwork is in.
           </p>

@@ -3,8 +3,8 @@
   "info": {
     "title": "AerScheduler API",
     "version": "1.0.0",
-    "summary": "Schedule aircraft, close out flights, and bill for them — from your own software.",
-    "description": "The AerScheduler REST API. Schedule aircraft, close flights out, invoice them, and pull the numbers back — from your own software.\n\n## Getting started\n\n**The API is used with an API key**, and only with an API key.\n\nCreate one in the web console at **Settings → API keys**. Give it a name you'll\nrecognise and tick the roles it needs. The secret is shown once, at that moment,\nand is never retrievable again — we store only a hash.\n\nThe roles a key may hold are `admin`, `dispatcher`, `instructor`, `student`,\n`renter` and `technician`. `owner` cannot be granted to a key. Give a key the\nleast it needs — one that reads the schedule is a `dispatcher`, not an\n`admin` — because every permission rule that applies to a person holding those\nroles applies to the key.\n\nRevoking is in the same place, and takes effect on the very next request.\n\n**Key management is deliberately absent from the reference below**, and that is\nnot an oversight. `/apiKeys` is the one part of this API a key cannot use: a key\ncannot create, list or revoke a key, even one holding the admin role. If it\ncould, a single leaked key would be a permanent foothold — you revoke it and\nwhatever took it has already issued itself three more. So those routes answer\n403 to a key, and documenting them beside endpoints that work would be a trap.\nEverything in the reference works with the credential this page tells you to use.\n\nEverything after that — every request your software makes — uses the key:\n\n```bash\nexport AERSCHEDULER_KEY=ask_live_…\n\ncurl -s https://api.aerscheduler.com/resources/planes \\\n  -H \"Authorization: Bearer $AERSCHEDULER_KEY\"\n```\n\nThat is the whole setup. There is no sign-in step and no token to refresh: a key\nis a long-lived credential you store once, and it keeps working until you revoke\nit or its expiry passes.\n\nKeys carry **roles**, so a key is scoped to what it actually needs. A key that\nreads the schedule should be a `dispatcher`, not an `admin`. Every permission\nrule that applies to a person holding those roles applies to the key.\n\nCreating and revoking keys requires a signed-in administrator — a key cannot mint\nanother key, so a leaked key cannot issue itself replacements.\n\n## Conventions\n\nEvery one of these holds across the whole API, so you can write one client wrapper and stop thinking about it:\n\n- **Responses are wrapped.** A body-bearing success is `{ \"data\": … }`. An error is `{ \"message\": \"…\" }`, and the message is written to be safe to show a user. A few endpoints noted individually break this: `/health`, the CSV export, and the OAuth redirects.\n- **Status codes mean what they say.** `200` read or update, `201` created, `204` done with nothing to return, `400` your request was wrong, `401` sign in again, `403` signed in but not allowed, `404` no such thing, `429` slow down.\n- **`401` and `403` are different.** `401` means the token is dead — get a new one. `403` means the token is fine and the answer is still no; retrying will not help.\n- **Collections are `GET /thing`, items are `GET /thing/{id}`.** Create is `POST` to the collection, update is `PATCH` to the item, delete is `DELETE` on the item. Where a resource deviates, the endpoint says so.\n- **Your organization is implied.** The token carries it. You never pass an organization id, and you can never read another organization's records.\n- **Ids are integers** and stable for the life of the record.\n- **Money is in cents**, as an integer. Never a float.\n\n## Time zones\n\nScheduling is anchored to the **airport's** time zone, not the caller's device. A booking made at 7am at the field is 7am at the field regardless of where the person making it happens to be.\n\nIn practice that means: send `start` and `end` with an **explicit UTC offset or `Z`**. A bare local datetime like `2026-08-04T15:00:00` is rejected — it would be read in the server's zone and silently book a different instant than the person picked. Send `timeZoneName` (an IANA zone) alongside so the booking knows which zone it was made in.\n\n## Reservation types\n\nWhich `type` a caller may create depends on the roles they hold. Roles are additive: an instructor who is also a technician may create both sets.\n\n| Role | May create |\n|---|---|\n| owner, admin, dispatcher | solo, dual, ground, guest, sim, rental, maintenance |\n| instructor | solo, dual, ground, guest, sim |\n| student | solo, dual, ground, sim |\n| renter | rental |\n| technician | maintenance |\n\n## Rate limits\n\nLimits are applied per signed-in account, not per IP, so a whole school behind one office address does not share one budget.\n\n| | Limit |\n|---|---|\n| Per account | 300 requests/minute, 5,000/hour |\n| Unauthenticated | 100 requests per 5 minutes, per IP |\n| Unauthenticated endpoints | Tighter still, and limited per IP |\n\nEvery response carries `RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset`. A `429` carries `Retry-After` in seconds — honour it rather than retrying on a fixed interval.\n\n## Pagination\n\n**Every list is capped at 1,000 rows**, whether or not you ask for a limit. Pass `limit` and `offset` to page:\n\n```\nGET /reservations?startDate=…&endDate=…&limit=100&offset=200\n```\n\nEvery list response carries a `pagination` object beside `data`:\n\n```json\n{\n  \"data\": [ … ],\n  \"pagination\": { \"total\": 7823, \"limit\": 1000, \"offset\": 0, \"returned\": 1000, \"hasMore\": true }\n}\n```\n\n- `total` — how many there are in all, before the page was taken.\n- `returned` — how many are in `data` right now.\n- `hasMore` — whether another page exists. **Check it.** It is how you find out a collection is bigger than one page, and some of ours are: our largest school has over 7,000 reservations.\n\nAsking for more than 1,000 gives you 1,000 rather than an error, so you never need to know the ceiling to write a working request. `offset` past the end returns an empty `data` and `hasMore: false`.\n\nCursor pagination is coming and will be additive — `limit`/`offset` will keep working.\n\n### Ordering\n\n`sort` names a field to order by, as a dot path into the row, and `order` is `asc` (the default) or `desc`:\n\n```\nGET /invoices?sort=total&order=desc&limit=50\n```\n\n**Sort here rather than after you receive the page.** Ordering is applied to the whole collection before the page is cut, so `sort=total&order=desc&limit=50` gives you the fifty largest invoices. Sorting the page yourself orders the fifty rows you happen to be holding, which is a different — and usually wrong — answer.\n\nNumbers order as numbers and ISO timestamps as instants, so `total` does not put `1000` before `90`. Empty values sort last in both directions: an invoice with no `paidAt` is not the most recent payment. Ties keep the endpoint's own order, so paging a sort by a coarse field like status will not skip or repeat rows.\n\nOmit `sort` and you get the order the endpoint has always used.\n\n## Versioning\n\n**The unprefixed paths are v1.** `https://api.aerscheduler.com/reservations` is the v1 reservations endpoint; there is no `/v1/` to add and adding one will 404. That is deliberate — a version segment you never change is decoration, and we would rather not pretend.\n\nThis document describes **v1.0.0**, which you can read at `info.version` in the spec.\n\n**What can change under you, without notice:**\n\n- New endpoints.\n- New fields on an existing response.\n- New optional request parameters.\n- New values in an enum you are already handling.\n\nSo parse leniently: ignore fields you do not recognise, and do not assume an enum is closed. An integration that breaks when we add a field is an integration that will break.\n\n**What will never change within v1:**\n\n- An endpoint disappearing, or moving.\n- A field disappearing from a response, or changing type.\n- A previously optional request parameter becoming required.\n- A success status code changing.\n\nAnything in that second list means **v2**, which would be served alongside v1 at `/v2/…` rather than replacing it. You would get notice by email before it existed, and v1 would keep working for a stated period afterwards — we are not going to break a customer's software to save ourselves a route table.\n\n**Deprecations** are announced in the changelog and carry a `Deprecation` header on the affected endpoint before anything is removed.",
+    "summary": "Schedule aircraft, close out flights, and bill for them from your own software.",
+    "description": "The AerScheduler REST API. Schedule aircraft, close flights out, invoice them, and pull the numbers back from your own software.\n\n## Getting started\n\n**The API is used with an API key**, and only with an API key.\n\nCreate one in the web console at **Settings → API keys**. Give it a name you'll\nrecognise and tick the roles it needs. The secret is shown once, at that moment,\nand is never retrievable again: we store only a hash.\n\nThe roles a key may hold are `admin`, `dispatcher`, `instructor`, `student`,\n`renter` and `technician`. `owner` cannot be granted to a key. Give a key the\nleast it needs (one that reads the schedule is a `dispatcher`, not an\n`admin`) because every permission rule that applies to a person holding those\nroles applies to the key.\n\nRevoking is in the same place, and takes effect on the very next request.\n\n**Key management is deliberately absent from the reference below**, and that is\nnot an oversight. `/apiKeys` is the one part of this API a key cannot use: a key\ncannot create, list or revoke a key, even one holding the admin role. If it\ncould, a single leaked key would be a permanent foothold: you revoke it and\nwhatever took it has already issued itself three more. So those routes answer\n403 to a key, and documenting them beside endpoints that work would be a trap.\nEverything in the reference works with the credential this page tells you to use.\n\nEverything after that (every request your software makes) uses the key:\n\n```bash\nexport AERSCHEDULER_KEY=ask_live_…\n\ncurl -s https://api.aerscheduler.com/resources/planes \\\n  -H \"Authorization: Bearer $AERSCHEDULER_KEY\"\n```\n\nThat is the whole setup. There is no sign-in step and no token to refresh: a key\nis a long-lived credential you store once, and it keeps working until you revoke\nit or its expiry passes.\n\nKeys carry **roles**, so a key is scoped to what it actually needs. A key that\nreads the schedule should be a `dispatcher`, not an `admin`. Every permission\nrule that applies to a person holding those roles applies to the key.\n\nCreating and revoking keys requires a signed-in administrator: a key cannot mint\nanother key, so a leaked key cannot issue itself replacements.\n\n## Conventions\n\nEvery one of these holds across the whole API, so you can write one client wrapper and stop thinking about it:\n\n- **Responses are wrapped.** A body-bearing success is `{ \"data\": … }`. An error is `{ \"message\": \"…\" }`, and the message is written to be safe to show a user. A few endpoints noted individually break this: `/health`, the CSV export, and the OAuth redirects.\n- **Status codes mean what they say.** `200` read or update, `201` created, `204` done with nothing to return, `400` your request was wrong, `401` sign in again, `403` signed in but not allowed, `404` no such thing, `429` slow down.\n- **`401` and `403` are different.** `401` means the token is dead: get a new one. `403` means the token is fine and the answer is still no; retrying will not help.\n- **Collections are `GET /thing`, items are `GET /thing/{id}`.** Create is `POST` to the collection, update is `PATCH` to the item, delete is `DELETE` on the item. Where a resource deviates, the endpoint says so.\n- **Your organization is implied.** The token carries it. You never pass an organization id, and you can never read another organization's records.\n- **Ids are integers** and stable for the life of the record.\n- **Money is in cents**, as an integer. Never a float.\n\n## Time zones\n\nScheduling is anchored to the **airport's** time zone, not the caller's device. A booking made at 7am at the field is 7am at the field regardless of where the person making it happens to be.\n\nIn practice that means: send `start` and `end` with an **explicit UTC offset or `Z`**. A bare local datetime like `2026-08-04T15:00:00` is rejected: it would be read in the server's zone and silently book a different instant than the person picked. Send `timeZoneName` (an IANA zone) alongside so the booking knows which zone it was made in.\n\n## Reservation types\n\nWhich `type` a caller may create depends on the roles they hold. Roles are additive: an instructor who is also a technician may create both sets.\n\n| Role | May create |\n|---|---|\n| owner, admin, dispatcher | solo, dual, ground, guest, sim, rental, maintenance |\n| instructor | solo, dual, ground, guest, sim |\n| student | solo, dual, ground, sim |\n| renter | rental |\n| technician | maintenance |\n\n## Rate limits\n\nLimits are applied per signed-in account, not per IP, so a whole school behind one office address does not share one budget.\n\n| | Limit |\n|---|---|\n| Per account | 300 requests/minute, 5,000/hour |\n| Unauthenticated | 100 requests per 5 minutes, per IP |\n| Unauthenticated endpoints | Tighter still, and limited per IP |\n\nEvery response carries `RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset`. A `429` carries `Retry-After` in seconds: honour it rather than retrying on a fixed interval.\n\n## Pagination\n\n**Every list is capped at 1,000 rows**, whether or not you ask for a limit. Pass `limit` and `offset` to page:\n\n```\nGET /reservations?startDate=…&endDate=…&limit=100&offset=200\n```\n\nEvery list response carries a `pagination` object beside `data`:\n\n```json\n{\n  \"data\": [ … ],\n  \"pagination\": { \"total\": 7823, \"limit\": 1000, \"offset\": 0, \"returned\": 1000, \"hasMore\": true }\n}\n```\n\n- `total` (how many there are in all, before the page was taken.\n- `returned`) how many are in `data` right now.\n- `hasMore`: whether another page exists. **Check it.** It is how you find out a collection is bigger than one page, and some of ours are: our largest school has over 7,000 reservations.\n\nAsking for more than 1,000 gives you 1,000 rather than an error, so you never need to know the ceiling to write a working request. `offset` past the end returns an empty `data` and `hasMore: false`.\n\nCursor pagination is coming and will be additive: `limit`/`offset` will keep working.\n\n### Ordering\n\n`sort` names a field to order by, as a dot path into the row, and `order` is `asc` (the default) or `desc`:\n\n```\nGET /invoices?sort=total&order=desc&limit=50\n```\n\n**Sort here rather than after you receive the page.** Ordering is applied to the whole collection before the page is cut, so `sort=total&order=desc&limit=50` gives you the fifty largest invoices. Sorting the page yourself orders the fifty rows you happen to be holding, which is a different (and usually wrong) answer.\n\nNumbers order as numbers and ISO timestamps as instants, so `total` does not put `1000` before `90`. Empty values sort last in both directions: an invoice with no `paidAt` is not the most recent payment. Ties keep the endpoint's own order, so paging a sort by a coarse field like status will not skip or repeat rows.\n\nOmit `sort` and you get the order the endpoint has always used.\n\n## Versioning\n\n**The unprefixed paths are v1.** `https://api.aerscheduler.com/reservations` is the v1 reservations endpoint; there is no `/v1/` to add and adding one will 404. That is deliberate: a version segment you never change is decoration, and we would rather not pretend.\n\nThis document describes **v1.0.0**, which you can read at `info.version` in the spec.\n\n**What can change under you, without notice:**\n\n- New endpoints.\n- New fields on an existing response.\n- New optional request parameters.\n- New values in an enum you are already handling.\n\nSo parse leniently: ignore fields you do not recognise, and do not assume an enum is closed. An integration that breaks when we add a field is an integration that will break.\n\n**What will never change within v1:**\n\n- An endpoint disappearing, or moving.\n- A field disappearing from a response, or changing type.\n- A previously optional request parameter becoming required.\n- A success status code changing.\n\nAnything in that second list means **v2**, which would be served alongside v1 at `/v2/…` rather than replacing it. You would get notice by email before it existed, and v1 would keep working for a stated period afterwards: we are not going to break a customer's software to save ourselves a route table.\n\n**Deprecations** are announced in the changelog and carry a `Deprecation` header on the affected endpoint before anything is removed.",
     "contact": {
       "name": "AerScheduler support",
       "email": "support@aerscheduler.com",
@@ -78,11 +78,11 @@
     },
     {
       "name": "Training",
-      "description": "Courses, syllabi, enrollments and training records. A course is trained under Part 61 or Part 141; the shape is identical and only the enforcement differs. A **published syllabus version is immutable** — revising it makes a new version, and an enrollment stays pinned to the one it started under. A student's standing against each requirement is a **ledger**: entries are only ever appended, and a correction is a reversing entry rather than an edit, so hours flown are always traceable to the lesson that earned them."
+      "description": "Courses, syllabi, enrollments and training records. A course is trained under Part 61 or Part 141; the shape is identical and only the enforcement differs. A **published syllabus version is immutable**: revising it makes a new version, and an enrollment stays pinned to the one it started under. A student's standing against each requirement is a **ledger**: entries are only ever appended, and a correction is a reversing entry rather than an edit, so hours flown are always traceable to the lesson that earned them."
     },
     {
       "name": "Memberships",
-      "description": "What a club or an FBO charges people for **belonging**, as opposed to for flying. A plan carries a one-time join fee, recurring dues, or both; a membership is one person's copy of a plan with the money **snapshotted at the moment it started**, so re-pricing a plan never re-prices anybody already on it. Every dues period is a ledger row, and a period is billed because the membership's own cursor says it is owed — never because of what day it happens to be. Dues and join fees are raised as ordinary invoices, so they appear under **Invoices** and in the revenue reports with everything else."
+      "description": "What a club or an FBO charges people for **belonging**, as opposed to for flying. A plan carries a one-time join fee, recurring dues, or both; a membership is one person's copy of a plan with the money **snapshotted at the moment it started**, so re-pricing a plan never re-prices anybody already on it. Every dues period is a ledger row, and a period is billed because the membership's own cursor says it is owed: never because of what day it happens to be. Dues and join fees are raised as ordinary invoices, so they appear under **Invoices** and in the revenue reports with everything else."
     },
     {
       "name": "Documents",
@@ -98,7 +98,7 @@
     },
     {
       "name": "Standby",
-      "description": "Standby interest, cancellation recovery, and time-limited slot offers."
+      "description": "Standby interest, cancellation recovery, and time-limited offers."
     },
     {
       "name": "Reports",
@@ -210,7 +210,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -484,7 +484,7 @@
           "Members"
         ],
         "summary": "Set a member's roles",
-        "description": "Replaces the whole role set — send every role you want them to keep, not just the change. Requires the **admin** role.\n\nTwo invariants are enforced: an organization must always have at least one owner and at least one administrator, and an owner must also be an administrator.",
+        "description": "Replaces the whole role set: send every role you want them to keep, not just the change. Requires the **admin** role.\n\nTwo invariants are enforced: an organization must always have at least one owner and at least one administrator, and an owner must also be an administrator.",
         "responses": {
           "200": {
             "description": "Roles updated."
@@ -584,7 +584,7 @@
           "Members"
         ],
         "summary": "Archive or restore a member",
-        "description": "Retires somebody from the roster, or brings them back. Requires the **admin** role — a dispatcher cannot.\n\nAn archived member **is not notified, ever** — no email, no push, no in-app notice. They are left out of `GET /orgUsers` unless you pass `archived=true` (which is also how you list them again), and they cannot be added to a booking. Nothing is deleted: their flights, invoices and history are untouched, and restoring them is the same call with `false`.\n\nUse this rather than grounding to tidy a roster. **Grounding is a live restriction and emails the member**, so grounding a batch of people who stopped flying years ago sends each of them an unexpected notice.",
+        "description": "Retires somebody from the roster, or brings them back. Requires the **admin** role (a dispatcher cannot.\n\nAn archived member **is not notified, ever**) no email, no push, no in-app notice. They are left out of `GET /orgUsers` unless you pass `archived=true` (which is also how you list them again), and they cannot be added to a booking. Nothing is deleted: their flights, invoices and history are untouched, and restoring them is the same call with `false`.\n\nUse this rather than grounding to tidy a roster. **Grounding is a live restriction and emails the member**, so grounding a batch of people who stopped flying years ago sends each of them an unexpected notice.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -651,7 +651,7 @@
             "schema": {
               "type": "integer"
             },
-            "description": "The user id — not the membership id."
+            "description": "The user id: not the membership id."
           }
         ],
         "requestBody": {
@@ -681,7 +681,7 @@
           "Members"
         ],
         "summary": "Get a person's contact details",
-        "description": "Phone numbers, date of birth, address and emergency contacts.\n\nReadable by the person themselves, an **admin** or **dispatcher** of your organization, or an **instructor** the person is assigned to as a student. Anyone else gets 403 — these are home phone numbers and next of kin, not roster data.",
+        "description": "Phone numbers, date of birth, address and emergency contacts.\n\nReadable by the person themselves, an **admin** or **dispatcher** of your organization, or an **instructor** the person is assigned to as a student. Anyone else gets 403. these are home phone numbers and next of kin, not roster data.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -747,7 +747,7 @@
           "Members"
         ],
         "summary": "Update a person's contact details",
-        "description": "Writable by the person themselves and by an **admin** or **dispatcher** — the front desk genuinely does take a corrected number over the counter. Instructors are read-only.\n\nEvery change is written to the audit trail, with phone numbers masked.\n\n**Phone numbers** are normalized to E.164 and validated; an unreal number is a 400, not a silent accept. Omit a field to leave it alone; send `null` or `\"\"` to clear it.",
+        "description": "Writable by the person themselves and by an **admin** or **dispatcher**: the front desk genuinely does take a corrected number over the counter. Instructors are read-only.\n\nEvery change is written to the audit trail, with phone numbers masked.\n\n**Phone numbers** are normalized to E.164 and validated; an unreal number is a 400, not a silent accept. Omit a field to leave it alone; send `null` or `\"\"` to clear it.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -959,7 +959,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -1406,7 +1406,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -1431,7 +1431,7 @@
           "Availability"
         ],
         "summary": "Get your recurring availability",
-        "description": "Your standing weekly availability pattern, keyed by day of week — an object, not a list, so it is not paged.",
+        "description": "Your standing weekly availability pattern, keyed by day of week: an object, not a list, so it is not paged.",
         "responses": {
           "200": {
             "description": "Your weekly pattern.",
@@ -1681,7 +1681,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -2115,7 +2115,7 @@
             "description": "Success. No body."
           },
           "400": {
-            "description": "They cannot be removed — the last owner or administrator, for instance.",
+            "description": "They cannot be removed: the last owner or administrator, for instance.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2196,7 +2196,7 @@
             "description": "Success. No body."
           },
           "400": {
-            "description": "You cannot leave — you are the last owner or administrator.",
+            "description": "You cannot leave: you are the last owner or administrator.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2342,7 +2342,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -2453,7 +2453,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -2795,7 +2795,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -2906,7 +2906,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -3129,7 +3129,7 @@
           "Members"
         ],
         "summary": "List members",
-        "description": "Every member of your organization with the roles they hold. **This is the endpoint for “who is in this organization”**, including “who are the instructors” — pass the role as a filter rather than looking for a per-role endpoint.\n\nRole filters combine as OR: `?instructor=true&student=true` returns anyone holding either. Roles are additive, so one person can come back under several filters.",
+        "description": "Every member of your organization with the roles they hold. **This is the endpoint for “who is in this organization”**, including “who are the instructors”: pass the role as a filter rather than looking for a per-role endpoint.\n\nRole filters combine as OR: `?instructor=true&student=true` returns anyone holding either. Roles are additive, so one person can come back under several filters.",
         "responses": {
           "200": {
             "description": "The members.",
@@ -3264,7 +3264,7 @@
             "schema": {
               "type": "boolean"
             },
-            "description": "Set `true` to return only members with no role at all — the people who have joined but not been set up yet. Overrides every other role filter."
+            "description": "Set `true` to return only members with no role at all: the people who have joined but not been set up yet. Overrides every other role filter."
           },
           {
             "name": "groupId",
@@ -3291,7 +3291,7 @@
             "schema": {
               "type": "boolean"
             },
-            "description": "Archived members — people the school has retired from the roster — are **left out by default**. Set `true` to list them instead of the current members. There is no value that returns both."
+            "description": "Archived members (people the school has retired from the roster) are **left out by default**. Set `true` to list them instead of the current members. There is no value that returns both."
           },
           {
             "name": "approvedForResourceId",
@@ -3300,7 +3300,7 @@
             "schema": {
               "type": "integer"
             },
-            "description": "An aircraft id. Every member returned carries `approvedForResource`, saying whether they are checked out on that aircraft — so you can read approvals for a whole roster in one request instead of one per person."
+            "description": "An aircraft id. Every member returned carries `approvedForResource`, saying whether they are checked out on that aircraft, so you can read approvals for a whole roster in one request instead of one per person."
           },
           {
             "name": "approved",
@@ -3341,7 +3341,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -3444,7 +3444,7 @@
           "Members"
         ],
         "summary": "Get the person behind a membership",
-        "description": "Resolves a membership id to the underlying person. Useful when you have an `orgUserId` from a booking and want the account behind it — the two ids are different and are not interchangeable.",
+        "description": "Resolves a membership id to the underlying person. Useful when you have an `orgUserId` from a booking and want the account behind it: the two ids are different and are not interchangeable.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -3636,7 +3636,7 @@
           "Reservations"
         ],
         "summary": "List reservations",
-        "description": "Bookings overlapping a date window. **`startDate` and `endDate` are required** — unlike every other list in this API, this one will not return an unbounded set.",
+        "description": "Bookings overlapping a date window. **`startDate` and `endDate` are required**: unlike every other list in this API, this one will not return an unbounded set.",
         "responses": {
           "200": {
             "description": "The bookings.",
@@ -3798,7 +3798,7 @@
               "type": "string",
               "format": "date-time"
             },
-            "description": "Only bookings that finished before this instant, ISO 8601. Note the date range is an *overlap* query — narrowing `endDate` will not exclude a flight that is still out, and this will."
+            "description": "Only bookings that finished before this instant, ISO 8601. Note the date range is an *overlap* query: narrowing `endDate` will not exclude a flight that is still out, and this will."
           },
           {
             "name": "limit",
@@ -3830,7 +3830,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -3853,7 +3853,7 @@
           "Reservations"
         ],
         "summary": "Create a reservation",
-        "description": "Books a resource, a person, or both.\n\n`start` and `end` **must carry an explicit UTC offset or `Z`**. A bare local datetime is rejected: it would be read in the server's zone and silently book a different instant than the customer picked.\n\nWhich `type` values you may create depends on your roles — see the Reservation types section. The server also refuses double-bookings and bookings on grounded aircraft.\n\nPass a `recurrence` object to create a repeating series. Occurrences are real reservations, so each one can be ramped, reviewed, and invoiced independently.",
+        "description": "Books a resource, a person, or both.\n\n`start` and `end` **must carry an explicit UTC offset or `Z`**. A bare local datetime is rejected: it would be read in the server's zone and silently book a different instant than the customer picked.\n\nWhich `type` values you may create depends on your roles: see the Reservation types section. The server also refuses double-bookings and bookings on grounded aircraft.\n\nPass a `recurrence` object to create a repeating series. Occurrences are real reservations, so each one can be ramped, reviewed, and invoiced independently.",
         "responses": {
           "201": {
             "description": "The booking that was created, or the series.",
@@ -3938,7 +3938,7 @@
                       "rental",
                       "maintenance"
                     ],
-                    "description": "What kind of booking. Restricted by the caller's roles — see the table above.\n\n`shared` is several pilots with no instructor — two pilots splitting a cross-country, or a safety-pilot arrangement under 91.109. `solo` means ONE occupant (14 CFR 61.87) and takes exactly one person; an instructor aboard makes it a `dual`."
+                    "description": "What kind of booking. Restricted by the caller's roles (see the table above.\n\n`shared` is several pilots with no instructor) two pilots splitting a cross-country, or a safety-pilot arrangement under 91.109. `solo` means ONE occupant (14 CFR 61.87) and takes exactly one person; an instructor aboard makes it a `dual`."
                   },
                   "start": {
                     "type": "string",
@@ -3955,7 +3955,7 @@
                   "timeZoneName": {
                     "type": "string",
                     "example": "America/Denver",
-                    "description": "IANA zone the booking is being made in — the field's zone, not the caller's device."
+                    "description": "IANA zone the booking is being made in: the field's zone, not the caller's device."
                   },
                   "notes": {
                     "type": "string",
@@ -3982,7 +3982,7 @@
                   },
                   "personnel": {
                     "type": "object",
-                    "description": "Who is on the booking. One person cannot fill two seats on the same booking.\n\n**Several people may share a side.** How many depends on the booking type: a `ground` class takes up to 12 students, `sim` up to 6, `dual` and `solo` up to 4, and `rental` up to 4 renters. `maintenance` takes nobody and `guest` takes one guest. Exceeding a limit is a 400 naming the side and the number allowed.\n\n**Order matters.** The first person on a side is the leading payer: they are billed when the organization's rule for a charge is \"one person pays\", and they take the remainder cent of an uneven division.\n\nEveryone listed must be free for the slot and must meet the currency and grounding rules — the booking is refused naming whoever does not, not silently trimmed.",
+                    "description": "Who is on the booking. One person cannot fill two seats on the same booking.\n\n**Several people may share a side.** How many depends on the booking type: a `ground` class takes up to 12 students, `sim` up to 6, `dual` and `solo` up to 4, and `rental` up to 4 renters. `maintenance` takes nobody and `guest` takes one guest. Exceeding a limit is a 400 naming the side and the number allowed.\n\n**Order matters.** The first person on a side is the leading payer: they are billed when the organization's rule for a charge is \"one person pays\", and they take the remainder cent of an uneven division.\n\nEveryone listed must be free for the slot and must meet the currency and grounding rules: the booking is refused naming whoever does not, not silently trimmed.",
                     "properties": {
                       "instructors": {
                         "type": "array",
@@ -4143,7 +4143,7 @@
             }
           },
           "400": {
-            "description": "Rejected — usually a clash.",
+            "description": "Rejected: usually a clash.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4228,7 +4228,7 @@
           "Reservations"
         ],
         "summary": "Cancel a reservation",
-        "description": "Cancels rather than destroys: the booking stays readable with `cancelledAt` set, which is what keeps cancellation reporting honest. Both fields are required — `cancellationCategory` is what the report counts, `cancellationReason` is the detail that makes a count actionable. Get the current list of categories from `GET /reports/cancellations/categories`; sending a value that isn't on it is rejected.",
+        "description": "Cancels rather than destroys: the booking stays readable with `cancelledAt` set, which is what keeps cancellation reporting honest. Both fields are required: `cancellationCategory` is what the report counts, `cancellationReason` is the detail that makes a count actionable. Get the current list of categories from `GET /reports/cancellations/categories`; sending a value that isn't on it is rejected.",
         "responses": {
           "204": {
             "description": "Success. No body."
@@ -4434,7 +4434,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -4574,7 +4574,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -4891,7 +4891,7 @@
           "Reservations"
         ],
         "summary": "Invoice a reservation",
-        "description": "Generates the bill for a closed-out flight. Requires the **admin** role.\n\n**Returns an ARRAY.** A booking shared between several people produces one invoice PER PAYER — a Stripe invoice bills exactly one customer, so splitting a booking's cost has to be several invoices rather than one invoice with shares underneath it. A booking with one payer returns an array of one.\n\nHow the cost divides is set per organization and per booking type — see the cost-splitting rules in the console. With no rules configured, one person is billed for the whole booking, which is how this endpoint has always behaved.\n\n**Partial success is possible and is not an error.** If the payment processor accepts some invoices and rejects another, the ones that succeeded are real and are returned, with a `warnings` array naming who could not be billed. Call this endpoint again to bill only the payers who still have no invoice — it will not duplicate the ones already raised. A 400 means nothing was billed at all.\n\nA share below the processor's 50-cent minimum is skipped rather than raised, and reported in `warnings`.",
+        "description": "Generates the bill for a closed-out flight. Requires the **admin** role.\n\n**Returns an ARRAY.** A booking shared between several people produces one invoice PER PAYER: a Stripe invoice bills exactly one customer, so splitting a booking's cost has to be several invoices rather than one invoice with shares underneath it. A booking with one payer returns an array of one.\n\nHow the cost divides is set per organization and per booking type: see the cost-splitting rules in the console. With no rules configured, one person is billed for the whole booking, which is how this endpoint has always behaved.\n\n**Partial success is possible and is not an error.** If the payment processor accepts some invoices and rejects another, the ones that succeeded are real and are returned, with a `warnings` array naming who could not be billed. Call this endpoint again to bill only the payers who still have no invoice: it will not duplicate the ones already raised. A 400 means nothing was billed at all.\n\nA share below the processor's 50-cent minimum is skipped rather than raised, and reported in `warnings`.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -4930,7 +4930,7 @@
             }
           },
           "400": {
-            "description": "The flight is not closed out, every payer is already invoiced, or the organization's split rules cannot be applied to it — for example a booking set to split by each person's own time where somebody's hours have not been entered. The message says what to fix.",
+            "description": "The flight is not closed out, every payer is already invoiced, or the organization's split rules cannot be applied to it: for example a booking set to split by each person's own time where somebody's hours have not been entered. The message says what to fix.",
             "content": {
               "application/json": {
                 "schema": {
@@ -5002,7 +5002,7 @@
           "Reservations"
         ],
         "summary": "Set who pays what",
-        "description": "Records each person's stake in the cost of a booking: their own meter readings when the charge is split by the time each person flew, their percentage when it is split by set shares, or a waiver for somebody who is on the booking but owes nothing (a safety pilot).\n\n**Replaces the whole set.** Shares have to total 100% across everybody, so merging one person into an existing set is how a total quietly stops adding up. Send everybody every time.\n\nOnly people already on the booking may be given a stake. Refused once the booking has been invoiced — the invoices describe the hours and shares they were computed from, and rewriting those underneath them would leave the money disagreeing with its own record.\n\nWhether the shares total 100%, and whether the individual meter readings add up to what the aircraft actually ran, is checked when the booking is INVOICED rather than here — so a half-finished close-out can still be saved.",
+        "description": "Records each person's stake in the cost of a booking: their own meter readings when the charge is split by the time each person flew, their percentage when it is split by set shares, or a waiver for somebody who is on the booking but owes nothing (a safety pilot).\n\n**Replaces the whole set.** Shares have to total 100% across everybody, so merging one person into an existing set is how a total quietly stops adding up. Send everybody every time.\n\nOnly people already on the booking may be given a stake. Refused once the booking has been invoiced: the invoices describe the hours and shares they were computed from, and rewriting those underneath them would leave the money disagreeing with its own record.\n\nWhether the shares total 100%, and whether the individual meter readings add up to what the aircraft actually ran, is checked when the booking is INVOICED rather than here, so a half-finished close-out can still be saved.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -5096,7 +5096,7 @@
                         },
                         "weightBps": {
                           "type": "integer",
-                          "description": "Their share in basis points — 6000 is 60%. Only used when the charge is split by set shares."
+                          "description": "Their share in basis points: 6000 is 60%. Only used when the charge is split by set shares."
                         },
                         "hobbsOut": {
                           "type": "integer",
@@ -5240,7 +5240,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -5263,7 +5263,7 @@
           "Memberships"
         ],
         "summary": "Create a membership plan",
-        "description": "Tiers are plans — full, associate, social — so a new tier is a new plan rather than a setting. Amounts are in **cents**. Leave `duesCents` empty for a join-fee-only plan, or `joinFeeCents` empty for dues with no fee. Requires the **admin** role.",
+        "description": "Tiers are plans (full, associate, social) so a new tier is a new plan rather than a setting. Amounts are in **cents**. Leave `duesCents` empty for a join-fee-only plan, or `joinFeeCents` empty for dues with no fee. Requires the **admin** role.",
         "responses": {
           "201": {
             "description": "Success.",
@@ -5407,14 +5407,14 @@
                       "integer",
                       "null"
                     ],
-                    "description": "How far ahead a member on this tier may book, in days. Null means no limit. An **entitlement**, so it is read live — relaxing it relaxes it for everyone immediately, unlike dues."
+                    "description": "How far ahead a member on this tier may book, in days. Null means no limit. An **entitlement**, so it is read live: relaxing it relaxes it for everyone immediately, unlike dues."
                   },
                   "agreementDocumentTypeId": {
                     "type": [
                       "integer",
                       "null"
                     ],
-                    "description": "The document a member on this plan is expected to have on file. Recorded only — nothing is enforced on it."
+                    "description": "The document a member on this plan is expected to have on file. Recorded only: nothing is enforced on it."
                   }
                 },
                 "required": [
@@ -5518,7 +5518,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -5878,7 +5878,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -5903,7 +5903,7 @@
           "Memberships"
         ],
         "summary": "Set or clear a tier's rate for one aircraft",
-        "description": "What members on this tier pay per hour for this aircraft, in cents. **Sending both rates as null clears the override**, returning the aircraft to its published rate.\n\nThe override applies to a booking only when **everyone being billed on it resolves to the same rate** — one pilot, or several on the same tier. Pilots on different tiers, or anyone without an active membership, fall back to the aircraft's own rate rather than being priced off somebody else's tier. Requires the **admin** role.",
+        "description": "What members on this tier pay per hour for this aircraft, in cents. **Sending both rates as null clears the override**, returning the aircraft to its published rate.\n\nThe override applies to a booking only when **everyone being billed on it resolves to the same rate**: one pilot, or several on the same tier. Pilots on different tiers, or anyone without an active membership, fall back to the aircraft's own rate rather than being priced off somebody else's tier. Requires the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -6140,7 +6140,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -6163,7 +6163,7 @@
           "Memberships"
         ],
         "summary": "Put a member on a plan",
-        "description": "Snapshots the plan's prices onto the membership. Starts **pending** unless `start` is true — a membership that begins billing the moment it is created is rarely what the desk wants. A member may hold only one live membership at a time. Requires the **admin** role.",
+        "description": "Snapshots the plan's prices onto the membership. Starts **pending** unless `start` is true: a membership that begins billing the moment it is created is rarely what the desk wants. A member may hold only one live membership at a time. Requires the **admin** role.",
         "responses": {
           "201": {
             "description": "Success.",
@@ -6247,7 +6247,7 @@
                   },
                   "waiveJoinFee": {
                     "type": "boolean",
-                    "description": "Join with no join fee — a founding member, or a transfer from another club."
+                    "description": "Join with no join fee: a founding member, or a transfer from another club."
                   },
                   "notes": {
                     "type": [
@@ -6333,7 +6333,7 @@
           "Memberships"
         ],
         "summary": "Cadences and statuses",
-        "description": "The billing cadences and membership statuses this server accepts. A vocabulary, not a permission — any member may read it.",
+        "description": "The billing cadences and membership statuses this server accepts. A vocabulary, not a permission: any member may read it.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -6537,7 +6537,7 @@
           "Memberships"
         ],
         "summary": "Update a membership",
-        "description": "Everything that does not change what it costs. `agreementOnFile` records that the member's paperwork is in — it is a record, never a gate, and nothing is blocked when it is missing. Requires the **admin** role.",
+        "description": "Everything that does not change what it costs. `agreementOnFile` records that the member's paperwork is in: it is a record, never a gate, and nothing is blocked when it is missing. Requires the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -6655,7 +6655,7 @@
           "Memberships"
         ],
         "summary": "Start, pause, resume or end a membership",
-        "description": "Only an **active** membership accrues dues. Pausing keeps the row and stops the meter, so a member away for the winter does not come back months in arrears. **Cancelled is terminal** — bringing somebody back is a new membership, because reviving one would resume a cursor that has been sitting still and bill every period since. Requires the **admin** role.",
+        "description": "Only an **active** membership accrues dues. Pausing keeps the row and stops the meter, so a member away for the winter does not come back months in arrears. **Cancelled is terminal**: bringing somebody back is a new membership, because reviving one would resume a cursor that has been sitting still and bill every period since. Requires the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -6940,7 +6940,7 @@
           "Memberships"
         ],
         "summary": "Bill the next dues period",
-        "description": "**Which** period is decided by the server from the membership's own cursor and is deliberately not accepted from the request — a client that could name the period could bill the same month twice. An outstanding part-period from joining mid-cycle is billed first, at its own price. A period that has already been billed answers 409 rather than raising a second invoice. Requires the **admin** role.",
+        "description": "**Which** period is decided by the server from the membership's own cursor and is deliberately not accepted from the request: a client that could name the period could bill the same month twice. An outstanding part-period from joining mid-cycle is billed first, at its own price. A period that has already been billed answers 409 rather than raising a second invoice. Requires the **admin** role.",
         "responses": {
           "201": {
             "description": "Success.",
@@ -7018,7 +7018,7 @@
           "Memberships"
         ],
         "summary": "Waive the next dues period",
-        "description": "Records the period as deliberately not charged — a comped month, or a leave of absence — so nothing comes back for it later. Requires the **admin** role.",
+        "description": "Records the period as deliberately not charged (a comped month, or a leave of absence) so nothing comes back for it later. Requires the **admin** role.",
         "responses": {
           "201": {
             "description": "Success.",
@@ -7116,7 +7116,7 @@
           "Training"
         ],
         "summary": "List courses",
-        "description": "The courses your school teaches. Requires the **admin** role — a syllabus is not students' business.",
+        "description": "The courses your school teaches. Requires the **admin** role: a syllabus is not students' business.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -7211,7 +7211,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -7322,7 +7322,7 @@
                       "part61",
                       "part141"
                     ],
-                    "description": "Which regime this course is trained under. Defaults to `part61`. Cannot be changed later — a school moving to Part 141 creates a new course."
+                    "description": "Which regime this course is trained under. Defaults to `part61`. Cannot be changed later: a school moving to Part 141 creates a new course."
                   },
                   "certificateSought": {
                     "type": "string",
@@ -7330,7 +7330,7 @@
                   },
                   "ratingId": {
                     "type": "integer",
-                    "description": "An instruction rate to price this course from. Pricing only — a rating is a rate card, not the course."
+                    "description": "An instruction rate to price this course from. Pricing only: a rating is a rate card, not the course."
                   },
                   "targetDays": {
                     "type": "integer",
@@ -7438,7 +7438,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -7463,7 +7463,7 @@
           "Training"
         ],
         "summary": "Create a course from a template",
-        "description": "Builds a complete course — stages, lessons, ACS-coded tasks and requirements, with the credit map already wired — as an editable **draft**. Templates are always created as Part 61: a template cannot be an FAA-approved Training Course Outline, because approval is per school and per FSDO. Requires the **admin** role.",
+        "description": "Builds a complete course (stages, lessons, ACS-coded tasks and requirements, with the credit map already wired) as an editable **draft**. Templates are always created as Part 61: a template cannot be an FAA-approved Training Course Outline, because approval is per school and per FSDO. Requires the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -7728,7 +7728,7 @@
           "Training"
         ],
         "summary": "Create a syllabus version",
-        "description": "Pass `copyFromVersionId` to fork an existing version — the normal way to revise a published syllabus, since the published one cannot be edited. The copy is deep and the new version is an editable draft. Requires the **admin** role.",
+        "description": "Pass `copyFromVersionId` to fork an existing version: the normal way to revise a published syllabus, since the published one cannot be edited. The copy is deep and the new version is an editable draft. Requires the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -7808,7 +7808,7 @@
                 "properties": {
                   "label": {
                     "type": "string",
-                    "description": "Free text, e.g. \"Rev B\" — schools match what they filed with their FSDO."
+                    "description": "Free text, e.g. \"Rev B\": schools match what they filed with their FSDO."
                   },
                   "copyFromVersionId": {
                     "type": "integer"
@@ -7897,7 +7897,7 @@
           "Training"
         ],
         "summary": "Publish a syllabus version",
-        "description": "**Freezes the version permanently.** After this, no stage, lesson, task or requirement under it can be changed — students are enrolled against exactly these lessons. To revise, create a new version from this one. Requires the **admin** role.",
+        "description": "**Freezes the version permanently.** After this, no stage, lesson, task or requirement under it can be changed: students are enrolled against exactly these lessons. To revise, create a new version from this one. Requires the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -8286,7 +8286,7 @@
           "Training"
         ],
         "summary": "Create or update a lesson",
-        "description": "Omit `lessonId` to create. `credits` declares what this lesson is designed to credit and from which clock — this is what makes one flight post to several requirements at once. Only works on a draft. Requires the **admin** role.",
+        "description": "Omit `lessonId` to create. `credits` declares what this lesson is designed to credit and from which clock: this is what makes one flight post to several requirements at once. Only works on a draft. Requires the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -8647,7 +8647,7 @@
           "Training"
         ],
         "summary": "Create or update a requirement",
-        "description": "What a student must accumulate — 35 hours total, 3 hours night, 10 towered landings. Measured in hours **or** a count, never both. `source` is `part61`, `part141` or `school`; only FAA-sourced ones can block a Part 141 graduation. Requires the **admin** role.",
+        "description": "What a student must accumulate: 35 hours total, 3 hours night, 10 towered landings. Measured in hours **or** a count, never both. `source` is `part61`, `part141` or `school`; only FAA-sourced ones can block a Part 141 graduation. Requires the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -8760,7 +8760,7 @@
                   },
                   "recencyCalendarMonths": {
                     "type": "integer",
-                    "description": "Training older than this many CALENDAR months stops counting toward this requirement. §61.109(a)(4) wants the three hours of test preparation within 2. Omit or send null for a requirement with no window — but note that omitting it on an update CLEARS an existing window."
+                    "description": "Training older than this many CALENDAR months stops counting toward this requirement. §61.109(a)(4) wants the three hours of test preparation within 2. Omit or send null for a requirement with no window: but note that omitting it on an update CLEARS an existing window."
                   }
                 },
                 "required": [
@@ -8866,7 +8866,7 @@
           "Training"
         ],
         "summary": "List enrollments",
-        "description": "Staff see everyone's. **A student always sees only their own**, whatever they ask for — §141.101 gives them the right to their record, and no right to anyone else's.",
+        "description": "Staff see everyone's. **A student always sees only their own**, whatever they ask for: §141.101 gives them the right to their record, and no right to anyone else's.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -8979,7 +8979,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -9096,7 +9096,7 @@
           "Training"
         ],
         "summary": "A student's progress",
-        "description": "The syllabus, every graded record against it, and where the ledger stands on each requirement — including what a simulator or transfer ceiling disallowed. Readable by the student themselves, and by instructors and admins.",
+        "description": "The syllabus, every graded record against it, and where the ledger stands on each requirement: including what a simulator or transfer ceiling disallowed. Readable by the student themselves, and by instructors and admins.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -9164,7 +9164,7 @@
           "Training"
         ],
         "summary": "Graduate a student",
-        "description": "Under Part 141 this refuses while any FAA-sourced requirement is unmet, and requires the chief instructor to have certified the record. Under Part 61 nothing blocks — the instructor decides readiness. Requires the **admin** role.",
+        "description": "Under Part 141 this refuses while any FAA-sourced requirement is unmet, and requires the chief instructor to have certified the record. Under Part 61 nothing blocks: the instructor decides readiness. Requires the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -9363,7 +9363,7 @@
           "Training"
         ],
         "summary": "Certify a training record",
-        "description": "§141.85 — the chief instructor certifying the record before graduation. Requires the **admin** role.",
+        "description": "§141.85. the chief instructor certifying the record before graduation. Requires the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -9431,7 +9431,7 @@
           "Training"
         ],
         "summary": "List the training grants on offer",
-        "description": "The four grants a school can hand out, with a description of each. Any member may read this — it is a vocabulary, not a permission.",
+        "description": "The four grants a school can hand out, with a description of each. Any member may read this: it is a vocabulary, not a permission.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -9517,7 +9517,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -9685,7 +9685,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -9866,7 +9866,7 @@
           "Training"
         ],
         "summary": "Bill the course enrollment fee",
-        "description": "Raises an invoice for the fee this enrollment snapshotted when the student enrolled. Refuses if the course had no fee or the fee has already been invoiced — a second invoice for the same fee is not something a refund undoes cleanly. Requires the **manageEnrollment** grant or the **admin** role.",
+        "description": "Raises an invoice for the fee this enrollment snapshotted when the student enrolled. Refuses if the course had no fee or the fee has already been invoiced: a second invoice for the same fee is not something a refund undoes cleanly. Requires the **manageEnrollment** grant or the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -10079,7 +10079,7 @@
           "Training"
         ],
         "summary": "Sign a lesson",
-        "description": "**Freezes the record and posts what it earned to the ledger, atomically.** By default the credits come from what the syllabus says the lesson credits; pass `credits` to override — weather turns a night cross-country into a local day flight, and the record has to be able to say so. Requires the **instructor** or **admin** role.",
+        "description": "**Freezes the record and posts what it earned to the ledger, atomically.** By default the credits come from what the syllabus says the lesson credits; pass `credits` to override: weather turns a night cross-country into a local day flight, and the record has to be able to say so. Requires the **instructor** or **admin** role.",
         "responses": {
           "200": {
             "description": "Signed. `creditsPosted` is how many ledger entries it wrote.",
@@ -10363,7 +10363,7 @@
           "Training"
         ],
         "summary": "Post credit by hand",
-        "description": "For transferred training and backfills. Measured in hours **or** a count, never both, and never negative — to take credit back, reverse the entry that granted it. A `manual` credit must carry a note. Requires the **admin** role.",
+        "description": "For transferred training and backfills. Measured in hours **or** a count, never both, and never negative: to take credit back, reverse the entry that granted it. A `manual` credit must carry a note. Requires the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -10460,7 +10460,7 @@
                   "occurredAt": {
                     "type": "string",
                     "format": "date-time",
-                    "description": "When the training actually happened. Defaults to now. Send it for transferred hours — a requirement with a recency window judges credit by this date, not by when the row was written."
+                    "description": "When the training actually happened. Defaults to now. Send it for transferred hours: a requirement with a recency window judges credit by this date, not by when the row was written."
                   }
                 },
                 "required": [
@@ -10577,7 +10577,7 @@
           "Training"
         ],
         "summary": "List endorsements",
-        "description": "A pilot's signed endorsements. Readable by the person they belong to and by instructors and admins — **a member always sees only their own**, whatever they ask for. Superseded ones are hidden unless asked for: a renewed 90-day solo replaces the earlier one, and listing both invites signing against the wrong row.",
+        "description": "A pilot's signed endorsements. Readable by the person they belong to and by instructors and admins: **a member always sees only their own**, whatever they ask for. Superseded ones are hidden unless asked for: a renewed 90-day solo replaces the earlier one, and listing both invites signing against the wrong row.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -10681,7 +10681,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -10704,7 +10704,7 @@
           "Training"
         ],
         "summary": "Sign an endorsement",
-        "description": "The `renderedText` you send is stored **verbatim and never regenerated**. AC 61-65K replaced AC 61-65H and will itself be replaced; an endorsement has to keep saying what was signed on the day it was signed. Pass `supersedesId` to replace an earlier one — a renewed 90-day solo is a new endorsement, not an edit. Requires the **instructor** or **admin** role.",
+        "description": "The `renderedText` you send is stored **verbatim and never regenerated**. AC 61-65K replaced AC 61-65H and will itself be replaced; an endorsement has to keep saying what was signed on the day it was signed. Pass `supersedesId` to replace an earlier one: a renewed 90-day solo is a new endorsement, not an edit. Requires the **instructor** or **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -10789,7 +10789,7 @@
                   "expiresAt": {
                     "type": "string",
                     "format": "date-time",
-                    "description": "Defaults from the template — 90 days for a solo endorsement. Omit for one that does not expire."
+                    "description": "Defaults from the template: 90 days for a solo endorsement. Omit for one that does not expire."
                   },
                   "enrollmentId": {
                     "type": "integer",
@@ -10917,7 +10917,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -11050,7 +11050,7 @@
           "Training"
         ],
         "summary": "Which lesson is this booking?",
-        "description": "The lessons a booking could be closing out, unfinished ones first, filtered to what the booking type can be — a `dual` booking offers flight lessons, `ground` offers ground. A rental or a guest flight offers nothing.",
+        "description": "The lessons a booking could be closing out, unfinished ones first, filtered to what the booking type can be: a `dual` booking offers flight lessons, `ground` offers ground. A rental or a guest flight offers nothing.",
         "responses": {
           "200": {
             "description": "One entry per enrollment. Each lesson carries its ACS `tasks` (`id`, `name`, `acsCode`, `standard`), which are what `taskGrades` on a saved record refer to.",
@@ -11154,7 +11154,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -11179,7 +11179,7 @@
           "Cost splitting"
         ],
         "summary": "Your cost-splitting rules",
-        "description": "How this organization divides a booking's cost when more than one person is on it. Requires the **admin** role.\n\nReturns the stored rules, the effective rule for every bookable type (`resolved`), the vocabulary this server accepts (`apportionments`, `chargeLines`, `bookableTypes`, `personnelLimits`), human copy for each option, the four starting-point `presets`, and worked `examples` computed by the actual billing engine — so an integration can show a customer what a rule will do without reimplementing the arithmetic.\n\nThe rules table is SPARSE. An organization with no rules divides nothing: one person is billed for the whole booking, which is how AerScheduler has always behaved.",
+        "description": "How this organization divides a booking's cost when more than one person is on it. Requires the **admin** role.\n\nReturns the stored rules, the effective rule for every bookable type (`resolved`), the vocabulary this server accepts (`apportionments`, `chargeLines`, `bookableTypes`, `personnelLimits`), human copy for each option, the four starting-point `presets`, and worked `examples` computed by the actual billing engine, so an integration can show a customer what a rule will do without reimplementing the arithmetic.\n\nThe rules table is SPARSE. An organization with no rules divides nothing: one person is billed for the whole booking, which is how AerScheduler has always behaved.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -11235,7 +11235,7 @@
           "Cost splitting"
         ],
         "summary": "Set a cost-splitting rule",
-        "description": "Sets how one charge divides, for one booking type or as the organization-wide default. Requires the **admin** role.\n\nSend `apportionment: null` to REMOVE the rule and return that charge to the product default. Absence is meaningful here — an explicit `whole` is not the same thing, because it would survive a later change to what the default is.\n\nOmit `reservationType` (or send null) to set the organization-wide default for that charge.",
+        "description": "Sets how one charge divides, for one booking type or as the organization-wide default. Requires the **admin** role.\n\nSend `apportionment: null` to REMOVE the rule and return that charge to the product default. Absence is meaningful here: an explicit `whole` is not the same thing, because it would survive a later change to what the default is.\n\nOmit `reservationType` (or send null) to set the organization-wide default for that charge.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -11246,7 +11246,7 @@
                   "properties": {
                     "data": {
                       "type": "object",
-                      "description": "The full rule set again — one rule can change what several booking types resolve to."
+                      "description": "The full rule set again: one rule can change what several booking types resolve to."
                     }
                   }
                 }
@@ -11313,7 +11313,7 @@
                   },
                   "apportionment": {
                     "type": "string",
-                    "description": "`whole` (one person pays), `equal` (divided evenly), `measured` (each pays their own logged time), `full_to_each` (each pays the full amount — this MULTIPLIES what you collect), or `weighted` (set shares). Null removes the rule."
+                    "description": "`whole` (one person pays), `equal` (divided evenly), `measured` (each pays their own logged time), `full_to_each` (each pays the full amount: this MULTIPLIES what you collect), or `weighted` (set shares). Null removes the rule."
                   }
                 },
                 "required": [
@@ -11581,7 +11581,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -11721,7 +11721,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -11861,7 +11861,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -11999,7 +11999,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -12137,7 +12137,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -12266,7 +12266,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -12388,7 +12388,7 @@
           "Resources"
         ],
         "summary": "List who is approved on a resource",
-        "description": "The members checked out to book this aircraft — the read in the opposite direction to `GET /users/{userId}/approvedResources`. Use this rather than asking every member what they are approved for.",
+        "description": "The members checked out to book this aircraft: the read in the opposite direction to `GET /users/{userId}/approvedResources`. Use this rather than asking every member what they are approved for.",
         "responses": {
           "200": {
             "description": "The approved members.",
@@ -12492,7 +12492,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -12711,7 +12711,7 @@
           "Audit"
         ],
         "summary": "List audit events",
-        "description": "The organization's activity, newest first. Administrators only — this is every member's movements in one list.\n\nPaged with `limit` and `offset` like every other collection here; `pagination.total` tells you how many match your filters.",
+        "description": "The organization's activity, newest first. Administrators only: this is every member's movements in one list.\n\nPaged with `limit` and `offset` like every other collection here; `pagination.total` tells you how many match your filters.",
         "responses": {
           "200": {
             "description": "The audit events.",
@@ -12862,7 +12862,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -12887,7 +12887,7 @@
           "Audit"
         ],
         "summary": "Get one thing's history",
-        "description": "Everything recorded about a single entity, oldest first — what the reservation and invoice drawers render. Guarded by the same rule that guards the entity itself, so this is never more permissive than the record it describes.\n\nHistory begins when auditing was switched on; anything older cannot be reconstructed.",
+        "description": "Everything recorded about a single entity, oldest first: what the reservation and invoice drawers render. Guarded by the same rule that guards the entity itself, so this is never more permissive than the record it describes.\n\nHistory begins when auditing was switched on; anything older cannot be reconstructed.",
         "responses": {
           "200": {
             "description": "The events, oldest first.",
@@ -13001,7 +13001,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -13159,7 +13159,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -13569,7 +13569,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -13594,7 +13594,7 @@
           "Maintenance"
         ],
         "summary": "List maintenance reminders",
-        "description": "Live reminders across the fleet, most urgent first.\n\nEach reminder carries a computed `due` block — how many hours are left on the meter, or how many days until the date — so you don't have to recombine the template's interval with the aircraft's meters yourself.",
+        "description": "Live reminders across the fleet, most urgent first.\n\nEach reminder carries a computed `due` block (how many hours are left on the meter, or how many days until the date) so you don't have to recombine the template's interval with the aircraft's meters yourself.",
         "responses": {
           "200": {
             "description": "The reminders.",
@@ -13716,7 +13716,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -13741,7 +13741,7 @@
           "Maintenance"
         ],
         "summary": "List inspection presets",
-        "description": "The AVIATES airworthiness inspections — annual, VOR, 100-hour, AD review, transponder, ELT and static/altimeter — plus the shop intervals that come up as often.\n\nReference data, not records: nothing exists until you POST a preset's `payload` to `/maintenance/reminders/templates` like any other template. The intervals are the common case and are editable afterwards; `caveat` says where a default doesn't apply to every aircraft.",
+        "description": "The AVIATES airworthiness inspections (annual, VOR, 100-hour, AD review, transponder, ELT and static/altimeter) plus the shop intervals that come up as often.\n\nReference data, not records: nothing exists until you POST a preset's `payload` to `/maintenance/reminders/templates` like any other template. The intervals are the common case and are editable afterwards; `caveat` says where a default doesn't apply to every aircraft.",
         "responses": {
           "200": {
             "description": "The presets.",
@@ -13827,7 +13827,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -14023,7 +14023,7 @@
           "Invoices"
         ],
         "summary": "Create an invoice",
-        "description": "Bills a member for something that isn't a flight — a checkout fee, a headset, a late cancellation. Line items are validated against the organization before anything is written.\n\nFor billing a completed flight, use `POST /reservations/{id}/invoices` instead: it prices the booking from the meters you recorded.",
+        "description": "Bills a member for something that isn't a flight: a checkout fee, a headset, a late cancellation. Line items are validated against the organization before anything is written.\n\nFor billing a completed flight, use `POST /reservations/{id}/invoices` instead: it prices the booking from the meters you recorded.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -14188,7 +14188,7 @@
           "Invoices"
         ],
         "summary": "List invoices",
-        "description": "Every invoice in the organization. **Administrators only** — this is the whole membership's payment history plus revenue aggregates, so it is treated as a financial surface rather than an operational one. Dispatchers get the per-reservation invoice instead.",
+        "description": "Every invoice in the organization. **Administrators only**: this is the whole membership's payment history plus revenue aggregates, so it is treated as a financial surface rather than an operational one. Dispatchers get the per-reservation invoice instead.",
         "responses": {
           "200": {
             "description": "The invoices.",
@@ -14322,7 +14322,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -14347,7 +14347,7 @@
           "Invoices"
         ],
         "summary": "Summarise invoices",
-        "description": "Revenue and outstanding totals for a window, in cents, with the counts behind them. **Administrators only**, like the list.\n\nTakes the same `startDate`, `endDate` and `q` as `GET /invoices`, so it describes exactly the invoices that endpoint would return — except `paid`, which narrows the list but not this. Use it instead of adding up a list you fetched: lists are capped at 1,000 rows, so summing what you received would give you the total of an arbitrary thousand invoices for any organization with more than that.",
+        "description": "Revenue and outstanding totals for a window, in cents, with the counts behind them. **Administrators only**, like the list.\n\nTakes the same `startDate`, `endDate` and `q` as `GET /invoices`, so it describes exactly the invoices that endpoint would return: except `paid`, which narrows the list but not this. Use it instead of adding up a list you fetched: lists are capped at 1,000 rows, so summing what you received would give you the total of an arbitrary thousand invoices for any organization with more than that.",
         "responses": {
           "200": {
             "description": "The totals.",
@@ -14856,7 +14856,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -15141,7 +15141,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -15533,7 +15533,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -15611,7 +15611,7 @@
           "Notifications"
         ],
         "summary": "Register a push device token",
-        "description": "Despite the path, this does not update notifications — it registers a device for push. A separate concern that shares the route for historical reasons.",
+        "description": "Despite the path, this does not update notifications: it registers a device for push. A separate concern that shares the route for historical reasons.",
         "responses": {
           "200": {
             "description": "Registered."
@@ -15969,7 +15969,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -16080,7 +16080,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -16182,7 +16182,7 @@
         "tags": [
           "Standby"
         ],
-        "summary": "List pending slot offers",
+        "summary": "List pending offers",
         "description": "Owners, admins, and dispatchers can list pending offers for their organization.",
         "responses": {
           "200": {
@@ -16269,7 +16269,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -16291,7 +16291,7 @@
         "tags": [
           "Standby"
         ],
-        "summary": "Create a slot offer",
+        "summary": "Create an offer",
         "description": "Desk staff can offer a slot directly or start recovery from a cancelled reservation.",
         "responses": {
           "201": {
@@ -16406,11 +16406,11 @@
         "tags": [
           "Standby"
         ],
-        "summary": "List my slot offers",
-        "description": "Lists every slot offer sent to the signed-in member.",
+        "summary": "List my offers",
+        "description": "Lists every offer sent to the signed-in member.",
         "responses": {
           "200": {
-            "description": "Your slot offers.",
+            "description": "Your offers.",
             "content": {
               "application/json": {
                 "schema": {
@@ -16493,7 +16493,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -16517,7 +16517,7 @@
         "tags": [
           "Standby"
         ],
-        "summary": "Accept a slot offer",
+        "summary": "Accept an offer",
         "description": "Claims a pending offer and creates the corresponding reservation.",
         "responses": {
           "200": {
@@ -16585,7 +16585,7 @@
             "schema": {
               "type": "integer"
             },
-            "description": "The slot offer id."
+            "description": "The offer id."
           }
         ]
       }
@@ -16595,7 +16595,7 @@
         "tags": [
           "Standby"
         ],
-        "summary": "Decline a slot offer",
+        "summary": "Decline an offer",
         "description": "Declines your pending offer and rolls recovery to the next eligible member.",
         "responses": {
           "200": {
@@ -16663,7 +16663,7 @@
             "schema": {
               "type": "integer"
             },
-            "description": "The slot offer id."
+            "description": "The offer id."
           }
         ]
       }
@@ -16673,8 +16673,8 @@
         "tags": [
           "Standby"
         ],
-        "summary": "Withdraw a slot offer",
-        "description": "Desk staff withdraw a pending offer and, for cancellation recovery, roll to the next eligible member.",
+        "summary": "Withdraw an offer",
+        "description": "Desk staff withdraw a pending offer and free the reserved window. Withdraw stops the chain; decline and expiry still roll to the next eligible member.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -16741,7 +16741,7 @@
             "schema": {
               "type": "integer"
             },
-            "description": "The slot offer id."
+            "description": "The offer id."
           }
         ]
       }
@@ -16838,7 +16838,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -16863,7 +16863,7 @@
           "Currencies"
         ],
         "summary": "Get a currency record",
-        "description": "Note this takes a CURRENCY id, not a currency-type id — the two are one path segment apart and are easy to confuse.",
+        "description": "Note this takes a CURRENCY id, not a currency-type id: the two are one path segment apart and are easy to confuse.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -17207,7 +17207,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -17747,7 +17747,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -18039,7 +18039,7 @@
           "Reports"
         ],
         "summary": "Organization overview",
-        "description": "The headline numbers for a window — the figures behind the dashboard.",
+        "description": "The headline numbers for a window: the figures behind the dashboard.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -18118,7 +18118,7 @@
           "Search"
         ],
         "summary": "Search across the organization",
-        "description": "One search over aircraft, members, bookings, locations, maintenance, compliance and training. The results are narrowed to what your roles allow, per entity type — so this is safe to expose to any member.\n\n`q` is optional: omitting it returns the newest few of each type, which is what a search screen shows before anyone types.\n\nThe response's `types` is the list this caller may search at all, which is not the same as the types that matched: use it for a category filter, and never assume a type is in it.",
+        "description": "One search over aircraft, members, bookings, locations, maintenance, compliance and training. The results are narrowed to what your roles allow, per entity type, so this is safe to expose to any member.\n\n`q` is optional. Omitting it returns the newest few of each type, which is what a search screen shows before anyone types.\n\nThe response's `types` is the list this caller may search at all, which is not the same as the types that matched: use it for a category filter, and never assume a type is in it.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -18399,7 +18399,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -18692,7 +18692,7 @@
             "description": "Success. No body."
           },
           "400": {
-            "description": "The location could not be deleted — usually because something still references it.",
+            "description": "The location could not be deleted: usually because something still references it.",
             "content": {
               "application/json": {
                 "schema": {
@@ -18752,7 +18752,7 @@
           "Resources"
         ],
         "summary": "List resources",
-        "description": "Every bookable resource — aircraft, simulators, and rooms together. Use `/resources/planes`, `/simulators`, or `/rooms` for one kind.",
+        "description": "Every bookable resource: aircraft, simulators, and rooms together. Use `/resources/planes`, `/simulators`, or `/rooms` for one kind.",
         "responses": {
           "200": {
             "description": "The resources.",
@@ -18838,7 +18838,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -19148,7 +19148,7 @@
             "description": "Success. No body."
           },
           "400": {
-            "description": "The resource could not be deleted — usually because something still references it.",
+            "description": "The resource could not be deleted: usually because something still references it.",
             "content": {
               "application/json": {
                 "schema": {
@@ -19294,7 +19294,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -19382,7 +19382,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "description": "The requirement to track. Attaching member groups is what actually creates the per-member `Currency` records — a type created with no groups tracks nobody.",
+                "description": "The requirement to track. Attaching member groups is what actually creates the per-member `Currency` records: a type created with no groups tracks nobody.",
                 "properties": {
                   "name": {
                     "type": "string"
@@ -19616,7 +19616,7 @@
             "description": "Success. No body."
           },
           "400": {
-            "description": "The currency type could not be deleted — usually because something still references it.",
+            "description": "The currency type could not be deleted: usually because something still references it.",
             "content": {
               "application/json": {
                 "schema": {
@@ -19762,7 +19762,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -20051,7 +20051,7 @@
             "description": "Success. No body."
           },
           "400": {
-            "description": "The document type could not be deleted — usually because something still references it.",
+            "description": "The document type could not be deleted: usually because something still references it.",
             "content": {
               "application/json": {
                 "schema": {
@@ -20197,7 +20197,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -20510,7 +20510,7 @@
             "description": "Success. No body."
           },
           "400": {
-            "description": "The member group could not be deleted — usually because something still references it.",
+            "description": "The member group could not be deleted: usually because something still references it.",
             "content": {
               "application/json": {
                 "schema": {
@@ -20656,7 +20656,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -20954,7 +20954,7 @@
             "description": "Success. No body."
           },
           "400": {
-            "description": "The resource group could not be deleted — usually because something still references it.",
+            "description": "The resource group could not be deleted: usually because something still references it.",
             "content": {
               "application/json": {
                 "schema": {
@@ -21100,7 +21100,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -21437,7 +21437,7 @@
             "description": "Success. No body."
           },
           "400": {
-            "description": "The reminder template could not be deleted — usually because something still references it.",
+            "description": "The reminder template could not be deleted: usually because something still references it.",
             "content": {
               "application/json": {
                 "schema": {
@@ -21583,7 +21583,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Field to order by before paging, as a dot path into the row — `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+            "description": "Field to order by before paging, as a dot path into the row: `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
           },
           {
             "name": "order",
@@ -21806,7 +21806,7 @@
             "description": "Success. No body."
           },
           "400": {
-            "description": "The saved report view could not be deleted — usually because something still references it.",
+            "description": "The saved report view could not be deleted: usually because something still references it.",
             "content": {
               "application/json": {
                 "schema": {
@@ -21867,7 +21867,7 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "AerScheduler API key",
-        "description": "An API key, sent as `Authorization: Bearer ask_live_…`.\n\nCreate one in the web console at **Settings → API keys**. The secret is shown once and stored only as a hash — if you lose it, revoke the key and create another.\n\nA key is scoped to one organization and carries the roles you gave it — every permission rule that applies to a member holding those roles applies to the key. Grant the least it needs."
+        "description": "An API key, sent as `Authorization: Bearer ask_live_…`.\n\nCreate one in the web console at **Settings → API keys**. The secret is shown once and stored only as a hash: if you lose it, revoke the key and create another.\n\nA key is scoped to one organization and carries the roles you gave it: every permission rule that applies to a member holding those roles applies to the key. Grant the least it needs."
       }
     },
     "schemas": {
@@ -21922,7 +21922,7 @@
       },
       "ApiKey": {
         "type": "object",
-        "description": "A credential that lets software act on your organization's behalf. The secret is never included — only a hash is stored.",
+        "description": "A credential that lets software act on your organization's behalf. The secret is never included: only a hash is stored.",
         "properties": {
           "id": {
             "type": "integer",
@@ -21950,7 +21950,7 @@
           },
           "roles": {
             "type": "array",
-            "description": "What the key can do. These are real roles — every rule that applies to a member holding them applies to the key.",
+            "description": "What the key can do. These are real roles: every rule that applies to a member holding them applies to the key.",
             "items": {
               "type": "string",
               "enum": [
@@ -21990,7 +21990,7 @@
           },
           "lastUsedAt": {
             "format": "date-time",
-            "description": "When it last authenticated a request, to the nearest minute. Null if never used — which is how you find keys to turn off.",
+            "description": "When it last authenticated a request, to the nearest minute. Null if never used: which is how you find keys to turn off.",
             "type": [
               "string",
               "null"
@@ -22007,7 +22007,7 @@
       },
       "ApiKeyWithSecret": {
         "type": "object",
-        "description": "A newly created key. This is the ONLY response that ever contains the secret — store it now.",
+        "description": "A newly created key. This is the ONLY response that ever contains the secret: store it now.",
         "properties": {
           "id": {
             "type": "integer",
@@ -22076,7 +22076,7 @@
           },
           "hasMore": {
             "type": "boolean",
-            "description": "Whether another page exists. Check this — some collections are larger than one page."
+            "description": "Whether another page exists. Check this: some collections are larger than one page."
           }
         },
         "additionalProperties": true
@@ -22222,7 +22222,7 @@
       },
       "Location": {
         "type": "object",
-        "description": "A base of operations — a field, hangar, or classroom building.",
+        "description": "A base of operations: a field, hangar, or classroom building.",
         "properties": {
           "id": {
             "type": "integer",
@@ -22248,7 +22248,7 @@
             "description": "Whether this location appears in the public directory."
           },
           "timeZone": {
-            "description": "IANA time zone of the field, e.g. `America/Denver`. Scheduling is anchored to the AIRPORT's zone, not the caller's device — see the Time zones section.",
+            "description": "IANA time zone of the field, e.g. `America/Denver`. Scheduling is anchored to the AIRPORT's zone, not the caller's device: see the Time zones section.",
             "example": "America/Denver",
             "type": [
               "string",
@@ -22415,7 +22415,7 @@
                 "description": "Bill by Hobbs (true) or tach (false)."
               },
               "overnightMinimumTenths": {
-                "description": "This aircraft's least billable time per night away, in TENTHS of an hour, applied as a floor on a booking that spans nights. `20` bills at least 2.0 hours a night.\n\n`null` means inherit the organization's figure; `0` means exempt this aircraft entirely. The two are not interchangeable — an exempt aircraft must stay exempt when the school-wide figure changes.",
+                "description": "This aircraft's least billable time per night away, in TENTHS of an hour, applied as a floor on a booking that spans nights. `20` bills at least 2.0 hours a night.\n\n`null` means inherit the organization's figure; `0` means exempt this aircraft entirely. The two are not interchangeable: an exempt aircraft must stay exempt when the school-wide figure changes.",
                 "example": 20,
                 "type": [
                   "integer",
@@ -22548,7 +22548,7 @@
       },
       "UserDetails": {
         "type": "object",
-        "description": "A person's contact record. Returned only to the person themselves, an admin or dispatcher of your organization, or an instructor the person is assigned to as a student — so expect it to be absent on most reads.",
+        "description": "A person's contact record. Returned only to the person themselves, an admin or dispatcher of your organization, or an instructor the person is assigned to as a student, so expect it to be absent on most reads.",
         "properties": {
           "phone": {
             "description": "Primary, SMS-capable number, in **E.164** (`+13035551234`). Numbers sent to this API are normalized to E.164 on write and rejected if they are not real, dialable numbers; a number with no country code is read as US unless you send `defaultCountry`.",
@@ -22581,7 +22581,7 @@
             ]
           },
           "dateOfBirth": {
-            "description": "Date of birth, `YYYY-MM-DD`. A calendar date — no time, no zone.",
+            "description": "Date of birth, `YYYY-MM-DD`. A calendar date: no time, no zone.",
             "format": "date",
             "example": "1994-03-17",
             "type": [
@@ -22734,7 +22734,7 @@
       },
       "OrganizationUser": {
         "type": "object",
-        "description": "A person's membership of an organization. This — not `User` — is what schedules, invoices, and permissions hang off, because one person can belong to several organizations with different roles in each.",
+        "description": "A person's membership of an organization. This (not `User`) is what schedules, invoices, and permissions hang off, because one person can belong to several organizations with different roles in each.",
         "properties": {
           "id": {
             "type": "integer",
@@ -22809,7 +22809,7 @@
           },
           "type": {
             "type": "string",
-            "description": "What kind of booking this is. Which types a caller may CREATE depends on their roles — see the Reservation types section.",
+            "description": "What kind of booking this is. Which types a caller may CREATE depends on their roles: see the Reservation types section.",
             "enum": [
               "solo",
               "shared",
@@ -22834,7 +22834,7 @@
           },
           "timeZoneName": {
             "type": "string",
-            "description": "IANA zone the booking is anchored to, e.g. `America/Denver`. Resolved from the LOCATION, falling back to the organization — not from the caller's device, because how many nights a trip spans decides what it bills.",
+            "description": "IANA zone the booking is anchored to, e.g. `America/Denver`. Resolved from the LOCATION, falling back to the organization: not from the caller's device, because how many nights a trip spans decides what it bills.",
             "example": "America/Denver"
           },
           "notes": {
@@ -22862,7 +22862,7 @@
             ]
           },
           "cancellationCategory": {
-            "description": "Fixed-list reason. Null on bookings cancelled before this was introduced, and on those the system cancelled for you — reports count those as “Not recorded”, not as a category somebody chose. May also read back a RETIRED value such as `other`, which is no longer accepted on write but is still reported on.",
+            "description": "Fixed-list reason. Null on bookings cancelled before this was introduced, and on those the system cancelled for you: reports count those as “Not recorded”, not as a category somebody chose. May also read back a RETIRED value such as `other`, which is no longer accepted on write but is still reported on.",
             "type": [
               "string",
               "null"
@@ -22930,14 +22930,14 @@
           },
           "invoices": {
             "type": "array",
-            "description": "ONE PER PAYER. A booking shared between several people mints an invoice each — a Stripe invoice bills exactly one customer. A booking with one payer has an array of one, and an un-billed booking has an empty array.\n\nDo not read `invoices[0]` as \"the invoice\": on a split booking that is one person's share. Ask whether EVERY payer has one.",
+            "description": "ONE PER PAYER. A booking shared between several people mints an invoice each: a Stripe invoice bills exactly one customer. A booking with one payer has an array of one, and an un-billed booking has an empty array.\n\nDo not read `invoices[0]` as \"the invoice\": on a split booking that is one person's share. Ask whether EVERY payer has one.",
             "items": {
               "$ref": "#/components/schemas/Invoice"
             }
           },
           "invoice": {
             "$ref": "#/components/schemas/Invoice",
-            "description": "**Deprecated — use `invoices`.** The first non-void invoice, kept so clients written before split billing keep working. On a booking with one payer this is exactly what it always meant; on a split booking it is only ONE person's share, so anything that reports whether a flight has been billed should read `invoices`. This field will be removed."
+            "description": "**Deprecated: use `invoices`.** The first non-void invoice, kept so clients written before split billing keep working. On a booking with one payer this is exactly what it always meant; on a split booking it is only ONE person's share, so anything that reports whether a flight has been billed should read `invoices`. This field will be removed."
           },
           "review": {
             "type": "object",
@@ -23040,7 +23040,7 @@
       },
       "MaintenanceDue": {
         "type": "object",
-        "description": "How much is left on a reminder, worked out from its template's interval and the aircraft's current meters. Computed on read — it is not stored.",
+        "description": "How much is left on a reminder, worked out from its template's interval and the aircraft's current meters. Computed on read: it is not stored.",
         "properties": {
           "kind": {
             "type": "string",
@@ -23082,7 +23082,7 @@
           },
           "dueAt": {
             "format": "date-time",
-            "description": "When it comes due. Null on a meter-based interval — nobody can know the date.",
+            "description": "When it comes due. Null on a meter-based interval: nobody can know the date.",
             "type": [
               "string",
               "null"
@@ -23138,7 +23138,7 @@
           },
           "urgency": {
             "type": "number",
-            "description": "Sort key — ascending is most urgent first, comparable across all three kinds."
+            "description": "Sort key: ascending is most urgent first, comparable across all three kinds."
           }
         },
         "additionalProperties": true
@@ -23284,7 +23284,7 @@
       },
       "InspectionPreset": {
         "type": "object",
-        "description": "A ready-made inspection interval. Reference data — POST its `payload` to `/maintenance/reminders/templates` to actually create one.",
+        "description": "A ready-made inspection interval. Reference data. POST its `payload` to `/maintenance/reminders/templates` to actually create one.",
         "properties": {
           "id": {
             "type": "string",
@@ -23408,7 +23408,7 @@
       },
       "MembershipPlan": {
         "type": "object",
-        "description": "What an organization charges people to belong — a one-time join fee, recurring dues, or both. Tiers are plans: full, associate, social.",
+        "description": "What an organization charges people to belong: a one-time join fee, recurring dues, or both. Tiers are plans: full, associate, social.",
         "properties": {
           "id": {
             "type": "integer",
@@ -23580,7 +23580,7 @@
           },
           "status": {
             "type": "string",
-            "description": "`pending` — set up, not started, bills nothing. `active` — the only status that accrues dues. `suspended` — paused, keeps the row and stops the meter. `cancelled` — over, and terminal.",
+            "description": "`pending` (set up, not started, bills nothing. `active`) the only status that accrues dues. `suspended` (paused, keeps the row and stops the meter. `cancelled`) over, and terminal.",
             "enum": [
               "pending",
               "active",
@@ -23620,7 +23620,7 @@
           },
           "joinFeeStatus": {
             "type": "string",
-            "description": "`none`, `owed` — never invoiced, or `invoiced`.",
+            "description": "`none`, `owed`: never invoiced, or `invoiced`.",
             "enum": [
               "none",
               "owed",
@@ -23657,7 +23657,7 @@
           },
           "agreementOnFileAt": {
             "format": "date-time",
-            "description": "When staff recorded that the member's agreement is on file. A record only — nothing is gated on it.",
+            "description": "When staff recorded that the member's agreement is on file. A record only: nothing is gated on it.",
             "type": [
               "string",
               "null"
@@ -23699,7 +23699,7 @@
           },
           "status": {
             "type": "string",
-            "description": "`pending` — owed, not yet invoiced. `billed` — an invoice exists. `waived` — deliberately not charged. `failed` — billing was attempted and refused, and the row is kept so it can be retried.",
+            "description": "`pending` (owed, not yet invoiced. `billed`) an invoice exists. `waived` (deliberately not charged. `failed`) billing was attempted and refused, and the row is kept so it can be retried.",
             "enum": [
               "pending",
               "billed",
@@ -23810,7 +23810,7 @@
       },
       "CurrencyType": {
         "type": "object",
-        "description": "A recurring requirement members must stay current on — a flight review, a medical, a checkout.",
+        "description": "A recurring requirement members must stay current on: a flight review, a medical, a checkout.",
         "properties": {
           "id": {
             "type": "integer",
@@ -23889,7 +23889,7 @@
       },
       "Currency": {
         "type": "object",
-        "description": "One member's standing against one currency type. Created automatically when a type is attached to a member group — there is no endpoint that creates one directly.",
+        "description": "One member's standing against one currency type. Created automatically when a type is attached to a member group: there is no endpoint that creates one directly.",
         "properties": {
           "id": {
             "type": "integer",
@@ -23932,7 +23932,7 @@
       },
       "DocumentType": {
         "type": "object",
-        "description": "A category of member document — medical, photo ID, endorsement.",
+        "description": "A category of member document: medical, photo ID, endorsement.",
         "properties": {
           "id": {
             "type": "integer",
@@ -24169,7 +24169,7 @@
             "example": "N172TS"
           },
           "subtitle": {
-            "description": "Context under the title — who, what, or where.",
+            "description": "Context under the title: who, what, or where.",
             "type": [
               "string",
               "null"
@@ -24226,7 +24226,7 @@
           },
           "types": {
             "type": "array",
-            "description": "Every type this caller may search — the full category list, not just the types that matched. Narrowed by role: a member who cannot read squawks never sees `squawk` here.",
+            "description": "Every type this caller may search: the full category list, not just the types that matched. Narrowed by role: a member who cannot read squawks never sees `squawk` here.",
             "items": {
               "type": "string",
               "enum": [
@@ -24274,7 +24274,7 @@
           },
           "action": {
             "type": "string",
-            "description": "Dotted and past tense — `reservation.rescheduled`, `invoice.voided`, `resource.grounded`. Stable: values are never renamed, because rows written months ago still carry the old string."
+            "description": "Dotted and past tense: `reservation.rescheduled`, `invoice.voided`, `resource.grounded`. Stable: values are never renamed, because rows written months ago still carry the old string."
           },
           "entityType": {
             "type": "string",
@@ -24290,7 +24290,7 @@
           },
           "entityId": {
             "type": "integer",
-            "description": "The id of that thing. Not a foreign key — an event outlives the row it describes, so this can point at something that has since been deleted."
+            "description": "The id of that thing. Not a foreign key: an event outlives the row it describes, so this can point at something that has since been deleted."
           },
           "summary": {
             "type": "string",
@@ -24497,7 +24497,7 @@
           },
           "notificationDelivery": {
             "type": "object",
-            "description": "Channels currently enabled for slot offers.",
+            "description": "Channels currently enabled for offers.",
             "properties": {
               "email": {
                 "type": "boolean",
@@ -24553,7 +24553,7 @@
           },
           "trigger": {
             "type": "string",
-            "description": "How recovery began.",
+            "description": "How the offer began: cancel_recovery from a canceled booking, desk from staff, system from AerScheduler AI idle-window scanner.",
             "enum": [
               "cancel_recovery",
               "desk",
@@ -24665,7 +24665,7 @@
           },
           "notificationDelivery": {
             "type": "object",
-            "description": "Channels currently enabled for slot offers for the recipient.",
+            "description": "Channels currently enabled for offers for the recipient.",
             "properties": {
               "email": {
                 "type": "boolean",

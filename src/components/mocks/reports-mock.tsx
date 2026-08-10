@@ -9,7 +9,7 @@ import { cn } from "@/lib/cn";
  *
  * Two details are the whole point of the product and so are the two things this
  * mock must not smooth away: each tile states **its own window** (that is what
- * lets "this week" sit beside "year to date"), and one tile is **pinned** to a
+ * lets "this week" sit beside ", year to date"), and one tile is **pinned** to a
  * range of its own while the rest follow the board's selector. A mock showing
  * four identical cards over one date range would be a picture of the old
  * Overview we replaced.
@@ -26,7 +26,7 @@ const TILES = [
     label: "Revenue this week",
     values: ["$17,370", "$17,370"],
     delta: "+9%",
-    window: "Jul 24 – Jul 31",
+    window: "Jul 24–Jul 31",
   },
 ] as const;
 
@@ -38,7 +38,7 @@ const FLEET = [
   { tail: "N6614D", pct: 20 },
 ];
 
-const WINDOWS = ["Jul 2 – Jul 31", "Jan 1 – Jul 31"] as const;
+const WINDOWS = ["Jul 2–Jul 31", "Jan 1–Jul 31"] as const;
 
 export function ReportsMock() {
   const [range, setRange] = useState(0);

@@ -10,7 +10,7 @@ const TIMEOUT_MS = 2500;
 /**
  * Whether the visitor appears signed in to the console (app.aerscheduler.com).
  *
- * Defaults to false so SSR and crawlers always see Login / Get started — the
+ * Defaults to false so SSR and crawlers always see Login / Get started: the
  * iframe probe only runs in the browser after hydration and never changes the
  * HTML Google indexes.
  */

@@ -3,7 +3,7 @@
  *
  * Two things read from it: the atmosphere behind the headline, and the state of
  * the dispatch board in the product mock. A school owner opening the site at
- * 18:00 should see an evening sky over a day that has mostly been flown — not
+ * 18:00 should see an evening sky over a day that has mostly been flown: not
  * the same 09:00 screenshot everybody else gets.
  *
  * Phases are cut on flight-school hours rather than astronomical ones: `dawn`
@@ -24,7 +24,7 @@ export type Phase = (typeof PHASES)[number];
 
 /**
  * Rendered on the server, where we have no idea what timezone the visitor is
- * in. Also the first client render, so hydration matches — the real phase is
+ * in. Also the first client render, so hydration matches: the real phase is
  * swapped in on mount. `midday` because it is the most neutral of the six and
  * the least jarring thing to cross-fade away from.
  */
@@ -183,7 +183,7 @@ export function deskState(hour: number) {
     upcoming,
     lastLanded: last,
     next: upcoming[0] ?? null,
-    /** Everything billed so far today — the number that counts up in the float. */
+    /** Everything billed so far today: the number that counts up in the float. */
     billedToday: flown.reduce((sum, b) => sum + b.amount, 0),
   };
 }

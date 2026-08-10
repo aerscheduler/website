@@ -21,16 +21,16 @@ import {
   TRIAL_DAYS,
 } from "@/lib/site";
 
-const TITLE = "Live Demo — Try Flight School Software, No Signup";
+const TITLE = "Live Demo: Try Flight School Software, No Signup";
 const DESCRIPTION =
-  "Try AerScheduler free with no signup. Open a live, fully-loaded sample flight school in your browser — schedule aircraft, run reports, and explore every role. No account, no credit card, no sales call.";
+  "Try AerScheduler free with no signup. Open a live, fully-loaded sample flight school in your browser: schedule aircraft, run reports, and explore every role. No account, no credit card, no sales call.";
 
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: "/demo" },
   openGraph: {
-    title: `${SITE_NAME} Live Demo — No Signup`,
+    title: `${SITE_NAME} Live Demo: No Signup`,
     description: DESCRIPTION,
     url: "/demo",
   },
@@ -41,7 +41,7 @@ const EXPLORE: { icon: React.ReactNode; title: string; body: string }[] = [
   {
     icon: <CalendarDays className="size-5" />,
     title: "A working dispatch board",
-    body: "A full day of flights across a real fleet — drag a booking, close one out, see the ramp.",
+    body: "A full day of flights across a real fleet. Drag a booking, close one out, see the ramp.",
   },
   {
     icon: <Users className="size-5" />,
@@ -56,11 +56,11 @@ const EXPLORE: { icon: React.ReactNode; title: string; body: string }[] = [
   {
     icon: <Wrench className="size-5" />,
     title: "Maintenance & squawks",
-    body: "A grounded aircraft, an open squawk, and an overdue inspection — the parts of the day that matter most.",
+    body: "A grounded aircraft, an open squawk, and an overdue inspection. The parts of the day that matter most.",
   },
 ];
 
-/** Single source for the FAQ — rendered below AND emitted as FAQPage JSON-LD, so
+/** Single source for the FAQ: rendered below AND emitted as FAQPage JSON-LD, so
  *  the two can never drift and the page is eligible for FAQ rich results. */
 const FAQ: { q: string; a: string }[] = [
   {
@@ -69,7 +69,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Is this the real software?",
-    a: "Yes — it's the actual AerScheduler web console, running on a sample flight school. What you see in the demo is what you'd run your own operation on.",
+    a: "Yes. It's the actual AerScheduler web console, running a sample flight school. What you see in the demo is what you'd run your own operation on.",
   },
   {
     q: "Can I try it as an instructor or a student, not just an admin?",
@@ -126,12 +126,12 @@ export default function DemoPage() {
           <div>
             <Breadcrumbs items={[{ name: "Live demo", href: "/demo" }]} />
             <h1 className="mt-6 max-w-xl text-4xl font-semibold tracking-tight text-brand-surface sm:text-5xl">
-              Try AerScheduler — live, with no signup
+              Try AerScheduler live, with no signup
             </h1>
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground">
               One click opens a fully-loaded sample flight school in your browser. Move
-              flights, run the reports, and see the whole operation from every seat —
-              no account, no credit card, nothing to install.
+              flights, run the reports, and see the whole operation from every seat.
+              No account, no credit card, nothing to install.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button href={DEMO_URL} size="lg">
@@ -167,7 +167,7 @@ export default function DemoPage() {
             </h2>
             <p className="mt-3 text-base leading-relaxed text-muted-foreground">
               Empty demos prove nothing. This one comes pre-loaded with a fleet, a full
-              roster, months of history, and the messy bits — so you can judge the
+              roster, months of history, and the messy bits, so you can judge the
               product on the work you actually do.
             </p>
           </div>
@@ -204,7 +204,7 @@ export default function DemoPage() {
           <Reassure
             icon={<RotateCcw className="size-5" />}
             title="Reset anytime"
-            body="A reset button puts it all back. Break things, try the edge cases — that's what it's for."
+            body="A reset button puts it all back. Break things, try the edge cases. That's what it's for."
           />
           <Reassure
             icon={<PlayCircle className="size-5" />}
@@ -214,7 +214,7 @@ export default function DemoPage() {
         </div>
       </section>
 
-      {/* FAQ — plain-language answers double as long-tail SEO */}
+      {/* FAQ: plain-language answers double as long-tail SEO */}
       <section className="border-b border-border bg-white">
         <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
           <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">
@@ -237,7 +237,7 @@ export default function DemoPage() {
             </h2>
             <p className="mt-3 text-base leading-relaxed text-white/65">
               The fastest way to know if AerScheduler fits your school is to fly it.
-              Open the demo — it&rsquo;s already waiting.
+              Open the demo. It&rsquo;s already waiting.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3">

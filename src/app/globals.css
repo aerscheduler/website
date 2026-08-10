@@ -27,7 +27,7 @@
 
   --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
 
-  /* Motion. One curve, three durations — every transition on the site picks
+  /* Motion. One curve, three durations: every transition on the site picks
      from these so nothing drifts out of step with anything else. The curve is
      a decelerating ease-out: fast off the mark, long settle. */
   --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
@@ -74,7 +74,7 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Decoration bleeds past the viewport on purpose — the hero sky is drawn wider
+  /* Decoration bleeds past the viewport on purpose: the hero sky is drawn wider
      than the page so its gradient never shows an edge, and each mock sits in a
      glow that extends beyond it. On a phone that bleed became a horizontal
      scroll of the whole page. `clip` rather than `hidden`: hidden on body makes
@@ -92,8 +92,8 @@ body {
    Hero sky
 
    Six pre-authored gradients, one per phase of the day; `HeroAtmosphere` fades
-   the visitor's local one to opacity 1. Brand blue stays dominant throughout —
-   warmth only enters at dawn and dusk, which is both what the sky actually does
+   the visitor's local one to opacity 1. Brand blue stays dominant throughout.
+   Warmth only enters at dawn and dusk, which is both what the sky actually does
    and the only two times a warm hero would not fight the product screenshot
    sitting on top of it.
 
@@ -106,11 +106,11 @@ body {
   will-change: opacity;
 }
 
-.sky--active {
+.sky--active { /* em-dash-ok: BEM modifier */
   opacity: 0.9;
 }
 
-.sky--night {
+.sky--night { /* em-dash-ok: BEM modifier */
   background:
     radial-gradient(ellipse 70% 55% at 78% 18%, rgba(30, 58, 110, 0.5), transparent 58%),
     radial-gradient(ellipse 55% 50% at 92% 55%, rgba(16, 35, 63, 0.45), transparent 52%),
@@ -127,7 +127,7 @@ body {
   animation: sky-drift-a 26s ease-in-out infinite alternate;
 }
 
-.sky--dawn {
+.sky--dawn { /* em-dash-ok: BEM modifier */
   background:
     radial-gradient(ellipse 70% 55% at 78% 18%, rgba(255, 176, 122, 0.42), transparent 58%),
     radial-gradient(ellipse 55% 50% at 92% 55%, rgba(120, 150, 220, 0.4), transparent 52%),
@@ -144,7 +144,7 @@ body {
   animation: sky-drift-b 21s ease-in-out infinite alternate;
 }
 
-.sky--morning {
+.sky--morning { /* em-dash-ok: BEM modifier */
   background:
     radial-gradient(ellipse 70% 55% at 78% 18%, rgba(125, 211, 252, 0.48), transparent 58%),
     radial-gradient(ellipse 55% 50% at 92% 55%, rgba(56, 160, 235, 0.38), transparent 52%),
@@ -162,7 +162,7 @@ body {
 }
 
 /* The original mesh, kept as the neutral midday state and the SSR default. */
-.sky--midday {
+.sky--midday { /* em-dash-ok: BEM modifier */
   background:
     radial-gradient(ellipse 70% 55% at 78% 18%, rgba(56, 189, 248, 0.45), transparent 58%),
     radial-gradient(ellipse 55% 50% at 92% 55%, rgba(25, 103, 210, 0.38), transparent 52%),
@@ -179,7 +179,7 @@ body {
   animation: sky-drift-b 18s ease-in-out infinite alternate;
 }
 
-.sky--evening {
+.sky--evening { /* em-dash-ok: BEM modifier */
   background:
     radial-gradient(ellipse 70% 55% at 78% 18%, rgba(255, 205, 140, 0.36), transparent 58%),
     radial-gradient(ellipse 55% 50% at 92% 55%, rgba(56, 150, 225, 0.4), transparent 52%),
@@ -196,7 +196,7 @@ body {
   animation: sky-drift-a 23s ease-in-out infinite alternate;
 }
 
-.sky--dusk {
+.sky--dusk { /* em-dash-ok: BEM modifier */
   background:
     radial-gradient(ellipse 70% 55% at 78% 18%, rgba(255, 158, 128, 0.4), transparent 58%),
     radial-gradient(ellipse 55% 50% at 92% 55%, rgba(88, 108, 190, 0.42), transparent 52%),
@@ -328,7 +328,7 @@ body {
    Reduced motion
 
    Everything above is decoration. A visitor who has asked their OS to stop
-   animations gets the finished state instantly — including the reveals, which
+   animations gets the finished state instantly: including the reveals, which
    must be forced visible or the page would simply be blank.
 --------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {

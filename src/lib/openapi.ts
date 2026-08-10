@@ -4,14 +4,14 @@
  * `src/content/openapi.json` is refreshed from the DEPLOYED API by
  * `scripts/sync-openapi.mjs` at the start of every build, so these pages cannot
  * drift from what the API actually serves. The file stays committed only as the
- * fallback for a build that cannot reach the API — it is no longer the source.
+ * fallback for a build that cannot reach the API: it is no longer the source.
  *
  * It used to be, on the theory that regenerating it was a step in shipping a
  * server change. It is written by the server's generator into a different git
  * repo, so that step was silently skippable, and got skipped. See the script.
  *
  * Everything here runs at build time. The reference pages are static HTML with
- * the real endpoint text in them — which is the point. A client-rendered spec
+ * the real endpoint text in them: which is the point. A client-rendered spec
  * viewer would give search engines an empty div, and "how do I book an aircraft
  * over an API" is exactly the query these pages should answer.
  */
@@ -141,7 +141,7 @@ export function getTagDocs(): TagDoc[] {
       name: tag.name,
       slug: slugifyTag(tag.name),
       description: tag.description,
-      // Collections before their items, and reads before writes within a path —
+      // Collections before their items, and reads before writes within a path,
       // which is the order somebody learning the API wants to read them in,
       // rather than the arbitrary order they appear in the document.
       endpoints: (byTag.get(tag.name) ?? []).sort((a, b) => {
@@ -243,7 +243,7 @@ export const statusLabel = (code: string): string =>
 
 /** Renders a schema reference or inline type into a short human string. */
 export function typeLabel(schema: Record<string, unknown> | undefined): string {
-  if (!schema) return "—";
+  if (!schema) return "–";
   const ref = schema.$ref as string | undefined;
   if (ref) return ref.replace("#/components/schemas/", "");
 

@@ -52,13 +52,13 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
     eyebrow: "Schedule",
     headline: "A dispatch board that feels like the ramp.",
     summary:
-      "Day and week boards for every aircraft, sim, and classroom: conflict-aware booking, ramp-in close-out, and a live view for the front desk.",
+      "Day and week boards for every aircraft, sim, and classroom, with conflict-aware booking, ramp-in close-out, and a live view for the front desk.",
     bullets: [
       "Lane views across aircraft, simulators, and rooms",
       "Dual, solo, shared, rental, ground, sim, and maintenance reservations",
-      "Several people on one booking — a ground school class, or two pilots sharing a flight",
-      "Multi-day trips: out Friday, back Sunday, one reservation, and the tail is gone in between",
-      "Standby and timed slot offers for cancels, plus optional AI fill of matching idle aircraft time",
+      "Several people on one booking, whether a ground school class or two pilots sharing a flight",
+      "Multi-day trips. Out Friday, back Sunday, one reservation, and the tail is gone in between",
+      "Standby and timed offers for cancels, plus optional AI fill of matching idle aircraft time",
       "Ramp-out to ramp-in with Hobbs, tach, and fuel, then an invoice draft",
       "Conflict-aware create and edit so double-books don’t leave the desk",
       "Live refresh so the iPad on the counter stays current",
@@ -133,7 +133,7 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
     summary:
       "Medicals, BFRs, checkouts, documents, and grounded assets on one board so dispatch doesn’t release a flight that shouldn’t go.",
     bullets: [
-      "Org Go/No-Go board: grounded aircraft and grounded members",
+      "Org Go/No-Go board for grounded aircraft and grounded members",
       "Currency types (medical, BFR, checkout, and custom) with renewals",
       "Member document vault with expiry awareness",
       "Personal currencies for students, renters, and instructors",
@@ -175,7 +175,7 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
       "Four syllabi to start from: Private, Instrument, Commercial, and CFI",
       "Stages, lessons, graded tasks, and your own grading scale",
       "A published version is immutable, so revising it never moves a student's goalposts",
-      "Hour requirements tracked apart from lessons — one night cross-country credits four at once",
+      "Hour requirements tracked apart from lessons. One night cross-country credits four at once",
       "Endorsements from AC 61-65K, with expiry on the 90-day solo",
       "A signed lesson is frozen; a correction supersedes it and the original stays readable",
       "Pace and silence per student, so somebody who has stopped flying surfaces",
@@ -195,7 +195,7 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
     summary:
       "Close out a flight and the line items write themselves. Collect with saved cards. No separate billing tool taped onto the schedule.",
     bullets: [
-      "Split a booking between everyone on it — each person gets their own invoice",
+      "Split a booking between everyone on it. Each person gets their own invoice",
       "Charge a class per head, divide a shared aircraft, or bill each pilot for the hours they flew",
       "An overnight minimum so a weekend away bills for the nights, not just the Hobbs",
       "Auto-drafted itemized invoices from Hobbs/tach close-out",
@@ -220,14 +220,14 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
     eyebrow: "Money",
     headline: "Dues collect themselves. Nobody chases the 1st of the month.",
     summary:
-      "Set up your tiers once — full, associate, social — and every member is billed on schedule. Joining fees, monthly or annual dues, and a part-month for anyone who joins mid-cycle.",
+      "Set up your tiers once (full, associate, social) and every member is billed on schedule. Joining fees, monthly or annual dues, and a part-month for anyone who joins mid-cycle.",
     bullets: [
-      "A plan per tier: full, associate, family, social — priced how your club actually prices",
+      "A plan per tier (full, associate, family, social), priced how your club actually prices",
       "One-time joining fee and recurring dues, together or on their own",
-      "Monthly, quarterly or annual — bill everyone on the same day, or each member on their own anniversary",
+      "Monthly, quarterly or annual. Bill everyone on the same day, or each member on their own anniversary",
       "Join on the 20th and pay for the days you get, not a whole month",
       "Dues invoices raise themselves overnight, or wait for you to press the button",
-      "Pause a member for the winter and the meter stops — no arrears when they come back",
+      "Pause a member for the winter and the meter stops. No arrears when they come back",
       "Every period is on the record: billed, waived, or still owed",
       "Dues land in the same invoice list, the same reports, and the same QuickBooks sync as everything else",
     ],
@@ -278,12 +278,12 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
     eyebrow: "Insights",
     headline: "Every report you need, and a dashboard you build yourself.",
     summary:
-      "Revenue, utilization, instructor activity, squawks, currency — filter any report the way you think about it, save it, export it, schedule it by email, and pin it to a dashboard where every number opens the report behind it.",
+      "Revenue, utilization, instructor activity, squawks, currency. Filter any report the way you think about it, save it, export it, schedule it by email, and pin it to a dashboard where every number opens the report behind it.",
     bullets: [
       "Reports across financial, operations, fleet, people, and compliance",
       "Filter, group, and re-order any report, then save the view for next month",
-      "Build your own dashboard: drag, resize, and give each tile its own date range",
-      "Click any figure to open the report that produced it — same numbers, always",
+      "Build your own dashboard. Drag, resize, and give each tile its own date range",
+      "Click any figure to open the report that produced it. Same numbers, always",
       "Export any report to CSV",
       "Financial reports stay owner-and-admin only; dispatchers see operations",
       "Email any saved view to your team daily, weekly, or monthly",
@@ -303,11 +303,11 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
     eyebrow: "Connect",
     headline: "Connect the tools your school already uses.",
     summary:
-      "Stripe payments, Google Calendar sync, and QuickBooks Online run today — shipped to every plan, not locked behind enterprise.",
+      "Stripe payments, Google Calendar sync, and QuickBooks Online run today. Shipped to every plan, not locked behind enterprise.",
     bullets: [
       "Stripe for invoices, cards, and school collections (available now)",
       "Google Calendar sync (available now)",
-      "QuickBooks Online — paid invoices as Sales Receipts (available now)",
+      "QuickBooks Online: paid invoices as Sales Receipts (available now)",
       "Request other tools; roadmap follows real school demand",
       "No premium tier for integrations",
     ],

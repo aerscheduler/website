@@ -19,7 +19,7 @@ Leave a standing field blank to mean any. Pick at least one constraint before yo
 Owners and admins can turn the whole feature off under
 <Where app="web">Settings → Booking preferences → Offer open slots after a cancel</Where>.
 It is on by default. When it is off, cancel recovery does not send offers and the
-Standby / Slot offers screens are hidden.
+Standby / Offers screens are hidden.
 
 If your school requires a checkout before you book an aircraft, the Standby aircraft list
 shows only the fleet you are checked out on, the same rule as booking. Assigned instructors
@@ -27,20 +27,20 @@ sort first; you can still prefer any instructor on the school roster.
 
 ## Accept or decline an offer
 
-When a matching slot opens, you get an offer with a hold deadline.
+When a matching slot opens, you get an offer with a deadline to respond.
 
 <Steps>
   <Step n={1} title="Open your offers">
-    On the web, go to <Where app="web">You → Schedule → Slot offers</Where>. On iOS,
-    open Slot offers from the notification or from your schedule flow.
+    On the web, go to <Where app="web">You → Schedule → Offers</Where>. On iOS,
+    open Offers from the notification or from your schedule flow.
   </Step>
   <Step n={2} title="Accept or Decline">
-    Accept creates the reservation on your schedule. Decline (or letting the hold
+    Accept creates the reservation on your schedule. Decline (or letting the offer
     expire) can roll the offer to the next eligible member.
   </Step>
 </Steps>
 
-Turn on **Slot offers & standby** under notification settings (email and/or push). Offers
+Turn on **Offers & standby** under notification settings (email and/or push). Offers
 expire quickly, and with both channels off you will only see them if you open the list
 yourself.
 
@@ -50,15 +50,15 @@ On <Where app="web">Calendar</Where>, staff can:
 
 - See who is standing by on a reservation
 - Press **Offer this slot** on a canceled booking to start or resume recovery
-- Open **Pending offers** to withdraw an offer that should not stay held
+- Open **Pending offers** to withdraw an offer that should not stay open
 
-While an offer is pending, the day and week boards show a dashed **Offer** / **Confirm** hold on that
-aircraft for the offered window. That time is not free: dragging or booking over it is refused
-with a clear reason, and the soft hold lasts until someone accepts, declines, the hold expires,
-or the desk withdraws it.
+While an offer is pending, the day and week boards show a dashed **Offer** / **Confirm**
+block on that aircraft for the offered window. That time is not free: dragging or booking
+over it is refused with a clear reason. The reservation stays reserved for the offered
+member until someone accepts, declines, the offer expires, or the desk withdraws it.
 
 Withdrawing a pending offer **stops the chain** and frees the window so the desk can book by hand.
-Member decline or hold expiry still moves recovery to the next eligible person.
+Member decline or offer expiry still moves recovery to the next eligible person.
 
 ## Who actually gets offered
 
@@ -72,16 +72,16 @@ offer go to a student or other watcher. Desk-created offers skip that step. If t
 instructor declines or the confirm expires, students are not offered that window.
 
 Offers are not sent when the slot starts too soon (under 30 minutes by default) or when there would
-not be enough time left to respond before it starts. The hold never runs past the slot
+not be enough time left to respond before it starts. The offer window never runs past the slot
 start.
 
 Standing preferences and open windows rank behind a member who stood by on that exact
 reservation, so a specific watcher still goes first.
 
-## School slot offer rules
+## School offer rules
 
 Owners set these under
-<Where app="web">Settings → Booking preferences</Where> when slot offers are on.
+<Where app="web">Settings → Booking preferences</Where> when offers are on.
 
 ### Fill idle time automatically
 
@@ -100,12 +100,12 @@ for walk-up bookings.
 ### Max AI offers per day
 
 Caps how many new AerScheduler AI offers the school can create in a local day (default 20),
-on top of the max-pending soft-hold cap.
+on top of the max-pending offers cap.
 
 ### Quiet hours
 
 Cancel recovery waits through this local window (default 9pm to 7am) before creating an
-offer, so a late-night cancel does not soft-hold the aircraft overnight. The clock is the
+offer, so a late-night cancel does not reserve the aircraft overnight. The clock is the
 **airport time zone**, then the school zone if the airport has none. Desk-created offers
 skip quiet hours and still go out immediately.
 
@@ -117,24 +117,24 @@ same cancelled booking.
 
 ### Max pending offers
 
-Each pending offer soft-holds the aircraft. This cap limits how many of those holds can
+Each pending offer reserves the aircraft. This cap limits how many of those offers can
 be open at once for the school (default 10).
 
-### Hold when slot is within 24 hours
+### Offer window when slot is within 24 hours
 
-When the slot starts within 24 hours, the offer soft-holds the aircraft for a shorter time
+When the slot starts within 24 hours, the offer reserves the aircraft for a shorter time
 (default 30 minutes). Keep this short so a last-minute recovery does not lock the plane for
-hours. The hold never runs past the slot start.
+hours. The offer window never runs past the slot start.
 
-### Hold when slot is further out
+### Offer window when slot is further out
 
-When the slot starts more than 24 hours from now, the offer soft-holds the aircraft longer
-(default 2 hours) so the member has time to see the notification and respond. The hold never
-runs past the slot start.
+When the slot starts more than 24 hours from now, the offer reserves the aircraft longer
+(default 2 hours) so the member has time to see the notification and respond. The offer
+window never runs past the slot start.
 
 <Callout type="warning">
-Accepting an offer books a real reservation. Soft holds from pending offers block other
-people from taking the same aircraft or instructor until the hold ends or is withdrawn.
+Accepting an offer books a real reservation. Pending offers block other people from taking
+the same aircraft or instructor until the offer ends or is withdrawn.
 </Callout>
 
 ## Related

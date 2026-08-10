@@ -9,12 +9,12 @@ import { signupUrl } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Flight School Software Integrations",
   description:
-    "AerScheduler integrates with Stripe, Google Calendar, and QuickBooks Online. Connect the tools your flight school already uses — on every plan.",
+    "AerScheduler integrates with Stripe, Google Calendar, and QuickBooks Online. Connect the tools your flight school already uses, on every plan.",
   alternates: { canonical: "/integrations" },
   openGraph: {
     title: "Flight School Software Integrations",
     description:
-      "Stripe, Google Calendar, and QuickBooks Online — available now on every plan.",
+      "Stripe, Google Calendar, and QuickBooks Online, available now on every plan.",
     url: "/integrations",
   },
 };
@@ -54,7 +54,7 @@ const INTEGRATIONS: {
     status: "available",
     blurb: "Paid invoices post to QuickBooks as Sales Receipts.",
     detail:
-      "Connect QuickBooks Online from Settings. Paid AerScheduler invoices sync as Sales Receipts — matched to customers by email, without CSV exports.",
+      "Connect QuickBooks Online from Settings. Paid AerScheduler invoices sync as Sales Receipts, matched to customers by email, without CSV exports.",
     logo: "/integrations/quickbooks.svg",
     logoAlt: "QuickBooks logo",
     learnMoreHref: "/resources/quickbooks-integration",
@@ -74,7 +74,7 @@ export default function IntegrationsPage() {
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
             Stripe payments, Google Calendar sync, and QuickBooks Online are live
-            today — in the same self-serve product, not as an enterprise add-on.
+            today, in the same self-serve product, not as an enterprise add-on.
           </p>
         </div>
       </section>

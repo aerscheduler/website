@@ -1,7 +1,7 @@
 /**
  * Contact form topics.
  *
- * These values are the contract with the API's `POST /contact` — the labels
+ * These values are the contract with the API's `POST /contact`: the labels
  * live on the server too (src/routes/contact.ts), which is what gets written
  * into the support email. Adding a topic here is safe on its own: the server
  * files anything it doesn't recognize under "Something else" rather than

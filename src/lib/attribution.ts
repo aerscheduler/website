@@ -196,7 +196,7 @@ function externalReferrer(): string | undefined {
 /**
  * The channel this visit belongs to, for reporting.
  *
- * Deliberately coarse: "paid-search", "paid-social", "organic", "referral", "direct".
+ * Deliberately coarse: "paid-search", ", paid-social", ", organic", ", referral", ", direct".
  * The campaign name answers which ad; this answers which budget.
  */
 export function channelOf(a: Attribution | null): string {

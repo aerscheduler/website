@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: TITLE,
     description:
-      "Booked vs flown vs billed hours per aircraft — the utilization numbers that show where a flight school is losing revenue.",
+      "Booked vs flown vs billed hours per aircraft. The utilization numbers that show where a flight school is losing revenue.",
     url: "/resources/aircraft-utilization-report",
   },
 };
@@ -29,7 +29,7 @@ const FAQS = [
   },
   {
     q: "What is a good utilization rate for a training aircraft?",
-    a: "It varies with fleet size, climate, and whether the aircraft is a primary trainer or a complex type, so a single benchmark is misleading. The number that matters more is your own trend: whether efficiency — flown hours as a share of booked hours — is improving month over month, and whether any one tail is drifting away from the rest of the fleet.",
+    a: "It varies with fleet size, climate, and whether the aircraft is a primary trainer or a complex type, so a single benchmark is misleading. The number that matters more is your own trend: whether efficiency (flown hours as a share of booked hours) is improving month over month, and whether any one tail is drifting away from the rest of the fleet.",
   },
   {
     q: "Why are my booked hours higher than my flown hours?",
@@ -82,7 +82,7 @@ export default function AircraftUtilizationReportPage() {
               Aircraft utilization reports for flight schools
             </h1>
             <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-              One number — hours flown — is how most schools measure a tail, and
+              One number (hours flown) is how most schools measure a tail, and
               it hides the two most expensive problems in the building. Here is
               what to measure instead, and what each gap is telling you.
             </p>
@@ -109,7 +109,7 @@ export default function AircraftUtilizationReportPage() {
             <div className="px-5 py-4">
               <dt className="text-sm font-semibold text-foreground">Booked hours</dt>
               <dd className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                What the schedule promised. This is demand — and the number a
+                What the schedule promised. This is demand, and the number a
                 busy-looking calendar reflects.
               </dd>
             </div>
@@ -134,7 +134,7 @@ export default function AircraftUtilizationReportPage() {
           <p className="mt-4 text-base leading-relaxed text-muted-foreground">
             The distance between booked and flown is your{" "}
             <strong className="font-semibold text-foreground">efficiency</strong>.
-            A school running 400 booked hours and 256 flown is at 64% — and the
+            A school running 400 booked hours and 256 flown is at 64%, and the
             other 36% is weather, cancellations, no-shows, and maintenance
             pulling a tail off the line. You cannot fix that number without
             knowing which of those four it is, which is what a cancellations
@@ -151,7 +151,7 @@ export default function AircraftUtilizationReportPage() {
           </h2>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground">
             This one is pure leakage. The aircraft flew, fuel was burned, an
-            instructor was paid — and no invoice exists. It usually comes from
+            instructor was paid, and no invoice exists. It usually comes from
             flights that were never closed out, so the hours were never known.
             It is invisible on a calendar and invisible in a bank statement,
             because you cannot miss money you never billed.
@@ -193,7 +193,7 @@ export default function AircraftUtilizationReportPage() {
           </h2>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground">
             The Utilization and Fleet reports carry these numbers, and both are
-            reachable from the dashboard — pin a utilization tile for the fleet
+            reachable from the dashboard: pin a utilization tile for the fleet
             and a second one filtered to a single aircraft, each with its own
             date range. See{" "}
             <Link

@@ -24,7 +24,7 @@ const EMAIL_PATTERN = /^[^\s@,;:<>"'\\]+@[^\s@,;:<>"'\\]+\.[a-z]{2,}$/i;
 
 /**
  * Client-side validation mirrors the server's rules so people get instant
- * feedback. The server re-validates everything — this is UX, not a control.
+ * feedback. The server re-validates everything: this is UX, not a control.
  */
 function validate(values: Record<FieldName, string>): FieldErrors {
   const errors: FieldErrors = {};
@@ -136,7 +136,7 @@ export function ContactForm() {
       setStatus({
         kind: "failed",
         message: body?.message ?? "Something went wrong sending your message.",
-        // Rate limited or server-side failure — always give people a way
+        // Rate limited or server-side failure: always give people a way
         // through that doesn't depend on us.
         showEmailFallback: response.status === 429 || response.status >= 500,
       });
@@ -162,7 +162,7 @@ export function ContactForm() {
         <h2 className="mt-5 text-2xl font-semibold tracking-tight text-brand-surface">Message sent</h2>
         <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">
           Thanks for writing in. We read every message and usually reply within
-          one business day — check your spam folder if you don&apos;t see us.
+          one business day. Check your spam folder if you don&apos;t see us.
         </p>
         <p className="mt-4 text-sm text-muted-foreground">
           In a hurry? Email{" "}
@@ -191,7 +191,7 @@ export function ContactForm() {
       onSubmit={handleSubmit}
       noValidate
       // `relative overflow-hidden` keeps the honeypot from widening the page on
-      // mobile — an absolute `-left-[9999px]` child otherwise expands scroll width.
+      // mobile: an absolute `-left-[9999px]` child otherwise expands scroll width.
       className="relative overflow-hidden rounded-2xl border border-border bg-white p-5 shadow-lg sm:p-8"
     >
       {status.kind === "failed" && (

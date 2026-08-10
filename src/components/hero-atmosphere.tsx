@@ -6,7 +6,7 @@ import { DEFAULT_PHASE, PHASES, phaseForHour, type Phase } from "@/lib/time-of-d
 /**
  * Six skies stacked on top of each other; the one matching the visitor's local
  * hour is faded to opacity 1 and the rest sit at 0. Cross-fading pre-authored
- * layers keeps every gradient hand-tuned — interpolating one gradient through
+ * layers keeps every gradient hand-tuned: interpolating one gradient through
  * the day would drag the mid-points through muddy colours nobody chose.
  *
  * Renders `DEFAULT_PHASE` on the server and on the first client paint so the
@@ -32,7 +32,7 @@ export function HeroAtmosphere() {
       {PHASES.map((p) => (
         <div
           key={p}
-          className={`sky sky--${p} absolute inset-0${p === phase ? " sky--active" : ""}`}
+          className={`sky sky--${p} absolute inset-0${p === phase ? " sky--active" : ""}`} // em-dash-ok: BEM modifier
         />
       ))}
       <div className="absolute inset-0 grid-lines opacity-40" />

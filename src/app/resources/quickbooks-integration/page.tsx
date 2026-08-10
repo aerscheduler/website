@@ -9,7 +9,7 @@ import { PRICE_PER_AIRCRAFT, signupUrl, SITE_NAME, TRIAL_DAYS } from "@/lib/site
 
 export const metadata: Metadata = {
   title: "QuickBooks Online Integration for Flight Schools",
-  description: `${SITE_NAME} syncs paid flight school invoices to QuickBooks Online as Sales Receipts — matched to customers by email, on every plan. No CSV exports.`,
+  description: `${SITE_NAME} syncs paid flight school invoices to QuickBooks Online as Sales Receipts, matched to customers by email, on every plan. No CSV exports.`,
   alternates: { canonical: "/resources/quickbooks-integration" },
   openGraph: {
     title: "QuickBooks Online Integration for Flight Schools",
@@ -34,11 +34,11 @@ const FAQS = [
   },
   {
     q: "Is QuickBooks an add-on or enterprise-only feature?",
-    a: `No. QuickBooks Online is included on every AerScheduler plan — the same $${PRICE_PER_AIRCRAFT}/mo per aircraft pricing, with a ${TRIAL_DAYS}-day trial.`,
+    a: `No. QuickBooks Online is included on every AerScheduler plan, at the same $${PRICE_PER_AIRCRAFT}/mo per aircraft pricing, with a ${TRIAL_DAYS}-day trial.`,
   },
   {
     q: "Do I still need Stripe?",
-    a: "Yes. Stripe remains the payment rail for students and renters. QuickBooks is the books of record — payments happen in AerScheduler, then post to QuickBooks.",
+    a: "Yes. Stripe remains the payment rail for students and renters. QuickBooks is the books of record. Payments happen in AerScheduler, then post to QuickBooks.",
   },
 ];
 
@@ -64,8 +64,8 @@ export default function QuickBooksIntegrationPage() {
             </h1>
             <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
               Stop exporting CSVs at month-end. AerScheduler posts paid invoices
-              to QuickBooks Online as Sales Receipts — matched to the right
-              customer by email — so your books stay current as flights close out.
+              to QuickBooks Online as Sales Receipts, matched to the right
+              customer by email, so your books stay current as flights close out.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button href={signupUrl("quickbooks")} size="lg">
@@ -85,7 +85,7 @@ export default function QuickBooksIntegrationPage() {
           </h2>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground">
             Most schools already run books in QuickBooks Online. The gap is
-            getting ramp activity — dual instruction, rentals, ground — into
+            getting ramp activity (dual instruction, rentals, ground) into
             those books without retyping every paid invoice. A native QuickBooks
             integration keeps scheduling, Stripe payments, and accounting in one
             loop instead of a spreadsheet in the middle.
@@ -101,7 +101,7 @@ export default function QuickBooksIntegrationPage() {
               "Each paid invoice syncs to QuickBooks as a Sales Receipt",
               "Customers match by email; missing customers are created automatically",
               "Retry and status live on the invoice if a sync needs attention",
-              "Included on every plan — not an enterprise upsell",
+              "Included on every plan, not an enterprise upsell",
             ].map((item) => (
               <li key={item} className="flex items-start gap-3 text-foreground">
                 <Check className="mt-0.5 size-4 shrink-0 text-primary" />
@@ -116,7 +116,7 @@ export default function QuickBooksIntegrationPage() {
           <p className="mt-4 text-base leading-relaxed text-muted-foreground">
             Payment already happened in AerScheduler. Posting a QuickBooks
             invoice would leave an unpaid document on your books and force a
-            second payment step. Sales Receipts record the sale as paid —
+            second payment step. Sales Receipts record the sale as paid,
             cleaner for schools that collect with Stripe and report in QuickBooks.
           </p>
 

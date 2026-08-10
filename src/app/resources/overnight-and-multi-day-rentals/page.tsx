@@ -55,7 +55,7 @@ const FAQS = [
   },
   {
     q: "What is an overnight minimum?",
-    a: "The least billable time you charge for each night an aircraft is kept away. Set 2.0 hours a night and a trip out Friday back Sunday bills at least 4.0 hours, however little it actually flew. It is a floor, not a surcharge: a trip that flew six hours is billed for six.",
+    a: "The least billable time you charge for each night an aircraft is kept away. Set 2.0 hours a night and a trip out Friday back Sunday bills at least 4.0 hours, however little it actually flew. It is a floor, not a surcharge. A trip that flew six hours is billed for six.",
   },
   {
     q: "Why would I charge a minimum at all?",

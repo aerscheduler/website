@@ -35,7 +35,7 @@ export type ScreenshotSpec = {
   caption?: string;
   /** What has to exist in the org before this image is worth taking. */
   dataState: string;
-  // Desktop only. There was a `viewport: "phone"` option and a `manual: "ios"`
+  // Desktop only. There was a `viewport: "phone"` option and a `manual: ", ios"`
   // flag for shooting the mobile app; both are gone. The documentation
   // illustrates the web console, which is the full operations surface, and a
   // phone-width image of it is a narrower picture of the same thing rather than
@@ -901,7 +901,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     // needs BOTH halves: two tails picked, and a reading typed. The chips are
     // matched on `font-mono`, which is what tells a tail chip apart from the
     // segmented controls above it; plain `[aria-pressed=false]` also matches
-    // "On the calendar" and "Count Hobbs Time", and `.first()` would click one
+    // "On the calendar" and "Count Hobbs Time"and `.first()` would click one
     // of those instead. Each click flips a chip to pressed, so the same selector
     // picks a different tail the second time.
     //
@@ -1293,7 +1293,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
       '[data-doc-shot="add-credit-dialog"] [role="combobox"]',
       '[role="option"]:has-text("Night flight training")',
       // Addressed by an attribute that is merely PRESENT, because a fill step splits on
-      // its first "=" and any [attr="value"] selector would be cut in half by its own
+      // its first "=" and any [attr=", value"] selector would be cut in half by its own
       // quotes. Hours is the only number input on screen, the date the only one with a
       // max. The date is deliberately old: prior training is the case this dialog is for.
       "fill:input[step]=18.4",
@@ -1552,7 +1552,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
       "Set to Every week, Monday, 7am, with the grey cadence box showing what the window covers and at least four members with email addresses listed under Send to. Captured as an owner so the outside addresses field renders. Needs a saved view on Revenue, since the clock icon that opens this dialog lives on a saved view's row.",
     // The clock icon on a saved view's row. Anchored to the start of the label
     // on purpose: a view that already goes out on a cadence reads "Edit the
-    // schedule for ...", and opens the same dialog in its editing state, which
+    // schedule for ..."and opens the same dialog in its editing state, which
     // is a different picture from the one this article wants.
     open: [
       "text=Saved views",

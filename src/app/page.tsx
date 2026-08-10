@@ -213,7 +213,7 @@ export default function HomePage() {
                 <ChevronRight className="size-4 opacity-80" />
               </Button>
               <Button href="/docs/scheduling/standby-and-slot-offers" variant="secondary">
-                Standby & slot offers
+                Standby & offers
               </Button>
             </div>
           </Reveal>

@@ -45,13 +45,13 @@ const ROWS: [string, string, string][] = [
   ],
   [
     "Hour requirements",
-    "Tracked as a ledger — one night cross-country credits four at once",
+    "Tracked as a ledger. One night cross-country credits four at once",
     "Lessons are ticked off; hour minimums are not modelled",
   ],
   [
     "Offline lesson grading",
     "Yes, on iOS",
-    "Yes, on iOS — the capability they are best known for",
+    "Yes, on iOS (the capability they are best known for)",
   ],
   [
     "Billing",

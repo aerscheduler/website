@@ -1,14 +1,14 @@
 /**
  * The reporting catalogue, as the marketing site describes it.
  *
- * Stated once because four pages reference it — the feature page, the pillar
- * guide, and two topic guides — and a list of reports that disagrees with
+ * Stated once because four pages reference it: the feature page, the pillar
+ * guide, and two topic guides: and a list of reports that disagrees with
  * itself across the site is the kind of thing prospects notice and trust less.
  *
  * Keep this honest against the real registry in
  * `server/src/reports/registry/`. If a report is added or renamed there, it
  * changes here. **Nothing in this file may describe something that has not
- * shipped** — anything on the roadmap belongs in `REPORTING_ROADMAP` below,
+ * shipped**: anything on the roadmap belongs in `REPORTING_ROADMAP` below,
  * which every surface renders with a "coming soon" label.
  */
 
@@ -29,7 +29,7 @@ export const REPORT_CATEGORIES: ReportCategory[] = [
       {
         name: "Revenue",
         description:
-          "Billed, collected, and outstanding — broken down by aircraft, instructor, customer, or lesson type.",
+          "Billed, collected, and outstanding, broken down by aircraft, instructor, customer, or lesson type.",
       },
       {
         name: "Payments received",
@@ -37,7 +37,7 @@ export const REPORT_CATEGORIES: ReportCategory[] = [
       },
       {
         name: "Items sold",
-        description: "Which line items earn — instruction, rental, fuel, fees.",
+        description: "Which line items earn: instruction, rental, fuel, fees.",
       },
       {
         name: "Tax collected",
@@ -81,7 +81,7 @@ export const REPORT_CATEGORIES: ReportCategory[] = [
       },
       {
         name: "Maintenance due",
-        description: "What is coming due by hours or by date — before it bites.",
+        description: "What is coming due by hours or by date, before it bites.",
       },
     ],
   },
@@ -124,7 +124,7 @@ export const REPORT_CATEGORIES: ReportCategory[] = [
  * The copy used to advertise "14 reports". Two problems, and the maintenance
  * one was the lesser: a count invites a comparison on **list length**, which is
  * a contest against incumbents we have no reason to enter and every reason to
- * lose. And it undersells this — each report filters, groups, and saves, so the
+ * lose. And it undersells this: each report filters, groups, and saves, so the
  * number of questions a school can actually ask is open-ended, not fourteen.
  *
  * The pillar guide still shows breadth, but by rendering the catalogue below
@@ -140,7 +140,7 @@ export const CATEGORY_COUNT_WORD = ["zero", "one", "two", "three", "four", "five
 /**
  * On the roadmap, not shipped.
  *
- * Empty as of the scheduled-reports release — that was the only entry, and it
+ * Empty as of the scheduled-reports release: that was the only entry, and it
  * now ships, so it moved into the copy proper.
  *
  * The list stays here rather than being deleted: keeping roadmap items in their

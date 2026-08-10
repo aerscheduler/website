@@ -348,10 +348,10 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "standby-and-slot-offers",
         title: "Stand by for a slot and accept an offer",
         description:
-          "Join standby on a booking, set standing preferences or an open window, and accept a time-limited offer when a matching slot opens. The desk can offer canceled slots and withdraw pending holds.",
+          "Join standby on a booking, set standing preferences or an open window, and accept a time-limited offer when a matching slot opens. The desk can offer canceled slots and withdraw pending offers.",
         kind: "task",
         audience: ["Students", "Renters", "Instructors", "Owners", "Admins", "Dispatchers"],
-        seoQuery: "how to join standby and accept a slot offer in AerScheduler",
+        seoQuery: "how to join standby and accept an offer in AerScheduler",
         faqs: [
           {
             q: "Does AerScheduler rebook me automatically when a slot opens?",
@@ -359,7 +359,7 @@ export const DOC_SECTIONS: DocSection[] = [
           },
           {
             q: "Where do I set days and types I want, not just one booking?",
-            a: "On the web, open You → Profile → Standby. On iOS, open Settings → Standby. You can also reach it from Schedule → Slot offers → Manage standby. If your school requires checkouts, the aircraft list is limited to what you are approved on.",
+            a: "On the web, open You → Profile → Standby. On iOS, open Settings → Standby. You can also reach it from Schedule → Offers → Manage standby. If your school requires checkouts, the aircraft list is limited to what you are approved on.",
           },
           {
             q: "Why did I not get an offer for a dual I was standing by for?",

@@ -5,7 +5,7 @@ import type { ResourceLink } from "@/lib/resources";
 /**
  * Developer-facing links, shared by the Features menu, the Resources menu, and
  * the footer, so the API is reachable from the nav in more than one plausible
- * place — somebody looking for it will try "Resources" or "Developers" first,
+ * place: somebody looking for it will try "Resources" or "Developers" first,
  * and it costs nothing to be in both.
  *
  * Kept separate from FEATURES because the API is not a feature detail page: it

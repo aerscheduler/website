@@ -31,7 +31,7 @@ import { signupUrl, type CampaignSource } from "@/lib/site";
  * Which setup track a feature page hands to the app.
  *
  * Someone reading the maintenance page should land on a checklist that starts with
- * maintenance, not with "add your first aircraft" — see `web/src/lib/onboarding-tracks.ts`.
+ * maintenance, not with "add your first aircraft". See `web/src/lib/onboarding-tracks.ts`.
  * Features with no track of their own send nothing and get the default order.
  */
 const FEATURE_SOURCE: Partial<Record<FeatureSlug, CampaignSource>> = {

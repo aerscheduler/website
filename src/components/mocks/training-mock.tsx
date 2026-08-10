@@ -21,26 +21,26 @@ type Lesson = { name: string; grade: string | null; note: string };
 
 const STAGES: { name: string; lessons: Lesson[] }[] = [
   {
-    name: "Stage 1 — Presolo",
+    name: "Stage 1: Presolo",
     lessons: [
-      { name: "Flight 1 — Effects of controls", grade: "Complete", note: "1.2 dual · Okafor" },
-      { name: "Flight 2 — Slow flight and stalls", grade: "Complete", note: "1.4 dual · Okafor" },
-      { name: "Flight 3 — Takeoffs and landings", grade: "Repeat", note: "1.1 dual · crosswind" },
-      { name: "Flight 4 — Presolo check", grade: null, note: "Not yet flown" },
+      { name: "Flight 1: Effects of controls", grade: "Complete", note: "1.2 dual · Okafor" },
+      { name: "Flight 2: Slow flight and stalls", grade: "Complete", note: "1.4 dual · Okafor" },
+      { name: "Flight 3: Takeoffs and landings", grade: "Repeat", note: "1.1 dual · crosswind" },
+      { name: "Flight 4: Presolo check", grade: null, note: "Not yet flown" },
     ],
   },
   {
-    name: "Stage 2 — Solo",
+    name: "Stage 2: Solo",
     lessons: [
-      { name: "Flight 8 — First solo", grade: null, note: "Needs A.2 endorsement" },
-      { name: "Flight 9 — Solo pattern work", grade: null, note: "Not yet flown" },
+      { name: "Flight 8: First solo", grade: null, note: "Needs A.2 endorsement" },
+      { name: "Flight 9: Solo pattern work", grade: null, note: "Not yet flown" },
     ],
   },
   {
-    name: "Stage 3 — Cross-country",
+    name: "Stage 3: Cross-country",
     lessons: [
-      { name: "Flight 14 — Dual cross-country", grade: null, note: "Not yet flown" },
-      { name: "Flight 15 — Night cross-country", grade: null, note: "Credits 4 requirements" },
+      { name: "Flight 14: Dual cross-country", grade: null, note: "Not yet flown" },
+      { name: "Flight 15: Night cross-country", grade: null, note: "Credits 4 requirements" },
     ],
   },
 ];
@@ -71,7 +71,7 @@ export function TrainingMock() {
       <div className="flex gap-1.5 overflow-x-auto border-b border-border px-4 py-2.5">
         {STAGES.map((s, i) => (
           <MockPill key={s.name} active={stage === i} onClick={() => setStage(i)}>
-            {s.name.split(" — ")[1]}
+            {s.name.split(": ")[1]}
           </MockPill>
         ))}
       </div>
@@ -93,7 +93,7 @@ export function TrainingMock() {
                 {l.grade}
               </span>
             ) : (
-              <span className="shrink-0 text-[10px] text-muted-foreground">—</span>
+              <span className="shrink-0 text-[10px] text-muted-foreground">–</span>
             )}
           </div>
         ))}

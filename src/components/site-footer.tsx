@@ -12,7 +12,7 @@ const COMPANY = [
   //Keeps the demo landing page linked from somewhere on the site. The header
   //used to be its only internal link and now goes straight to the demo itself,
   //which would otherwise leave a page sitting at 0.95 in the sitemap with
-  //nothing pointing at it — the state search engines read as "abandoned".
+  //nothing pointing at it: the state search engines read as "abandoned".
   { href: "/demo", label: "Demo" },
   { href: "/login", label: "Login" },
 ];

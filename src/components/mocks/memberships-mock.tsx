@@ -50,7 +50,7 @@ const ROWS = [
     name: "Ivy Petrosyan",
     tier: "Full",
     meta: "Deployed until the spring",
-    amount: "—",
+    amount: "–",
     cadence: "",
     status: "Paused" as const,
     tone: "text-muted-foreground bg-muted",

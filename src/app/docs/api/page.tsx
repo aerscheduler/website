@@ -19,8 +19,8 @@ const TAGS = getTagDocs();
 const COUNT = endpointCount();
 
 export const metadata: Metadata = {
-  title: "API Documentation — Flight School Scheduling API",
-  description: `The ${SITE_NAME} REST API: book aircraft, close out flights, and pull billing and utilization data from your own software. ${COUNT} documented endpoints, OpenAPI 3.1, free on every plan.`,
+  title: "API Documentation: Flight School Scheduling API",
+  description: `The ${SITE_NAME} REST API. Book aircraft, close out flights, and pull billing and utilization data from your own software. ${COUNT} documented endpoints, OpenAPI 3.1, free on every plan.`,
   keywords: [
     "flight school API",
     "aircraft scheduling API",
@@ -51,15 +51,15 @@ const FAQS = [
   },
   {
     q: "How do I authenticate with the AerScheduler API?",
-    a: "With an API key, and only with an API key. Create one in the web console under Settings → API keys, then send it as an Authorization: Bearer header on every request. The secret is shown once, when you create it, so store it then — only a hash is kept.",
+    a: "With an API key, and only with an API key. Create one in the web console under Settings → API keys, then send it as an Authorization: Bearer header on every request. The secret is shown once, when you create it, so store it then. Only a hash is kept.",
   },
   {
     q: "Who can create an API key?",
-    a: "Any administrator, from Settings → API keys in the web console. That is deliberately not something a key can do: a key cannot create or revoke another key, even one holding the admin role, so a leaked key can never issue itself replacements.",
+    a: "Any administrator, from Settings → API keys in the web console. That is deliberately not something a key can do. A key cannot create or revoke another key, even one holding the admin role, so a leaked key can never issue itself replacements.",
   },
   {
     q: "What can an API key do?",
-    a: "Exactly what the roles you gave it allow. A key behaves like a member holding those roles, and every permission rule that applies to a person applies to it. Give a key the least it needs — a key that reads the schedule should be a dispatcher, not an admin. The owner role cannot be granted to a key.",
+    a: "Exactly what the roles you gave it allow. A key behaves like a member holding those roles, and every permission rule that applies to a person applies to it. Give a key the least it needs. A key that reads the schedule should be a dispatcher, not an admin. The owner role cannot be granted to a key.",
   },
   {
     q: "Do keys expire?",
@@ -148,14 +148,14 @@ export default function ApiDocsPage() {
           <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">Quickstart</h2>
           <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
             One credential, then you&rsquo;re working. An administrator creates a key in the console
-            under <strong className="text-foreground">Settings &rarr; API keys</strong> — the secret
-            is shown once, right there — and every request after that just carries it. No sign-in
+            under <strong className="text-foreground">Settings &rarr; API keys</strong>. The secret
+            is shown once, right there, and every request after that just carries it. No sign-in
             step in your integration, and no token to refresh.
           </p>
 
           <div className="mt-6 space-y-4">
             <CodeBlock
-              label="1 — Store the key"
+              label="1. Store the key"
               code={`# An administrator creates it in the console:
 #   Settings → API keys → Create key
 # The secret is shown once, right there.
@@ -163,7 +163,7 @@ export default function ApiDocsPage() {
 export AERSCHEDULER_KEY=ask_live_…`}
             />
             <CodeBlock
-              label="2 — List your aircraft"
+              label="2. List your aircraft"
               code={`curl -s ${API_BASE_URL}/resources/planes \\
   -H "Authorization: Bearer $AERSCHEDULER_KEY"
 
@@ -171,7 +171,7 @@ export AERSCHEDULER_KEY=ask_live_…`}
 #     "pagination": { "total": 6, "hasMore": false, … } }`}
             />
             <CodeBlock
-              label="3 — Book one"
+              label="3. Book one"
               code={`curl -s -X POST ${API_BASE_URL}/reservations \\
   -H "Authorization: Bearer $AERSCHEDULER_KEY" \\
   -H 'Content-Type: application/json' \\
@@ -252,7 +252,7 @@ export AERSCHEDULER_KEY=ask_live_…`}
                 redirects.
               </Convention>
               <Convention title="401 and 403 mean different things">
-                <Code>401</Code> means the token is dead — get a new one. <Code>403</Code> means the
+                <Code>401</Code> means the token is dead. Get a new one. <Code>403</Code> means the
                 token is fine and the answer is still no. Retrying a <Code>403</Code> will never help.
               </Convention>
               <Convention title="Your organization is implied">
@@ -265,7 +265,7 @@ export AERSCHEDULER_KEY=ask_live_…`}
               <Convention title="Times carry an offset">
                 Send <Code>start</Code> and <Code>end</Code> with an explicit UTC offset or{" "}
                 <Code>Z</Code>. A bare local datetime is rejected rather than silently booked in the
-                server&rsquo;s zone — see below.
+                server&rsquo;s zone. See below.
               </Convention>
               <Convention title="Parse leniently">
                 New endpoints and new fields on existing responses ship without notice. Ignore fields
@@ -290,10 +290,10 @@ export AERSCHEDULER_KEY=ask_live_…`}
               </p>
               <p>
                 So <Code>start</Code> and <Code>end</Code> must carry an explicit UTC offset or{" "}
-                <Code>Z</Code>. A bare <Code>2026-08-04T15:00:00</Code> is rejected outright: it would
+                <Code>Z</Code>. A bare <Code>2026-08-04T15:00:00</Code> is rejected outright. It would
                 be read in the server&rsquo;s zone and silently book a different instant than the person
-                picked, and nothing downstream would notice. Send <Code>timeZoneName</Code> — an IANA
-                zone like <Code>America/Denver</Code> — alongside, so the booking records which zone it
+                picked, and nothing downstream would notice. Send <Code>timeZoneName</Code> (an IANA
+                zone like <Code>America/Denver</Code>) alongside, so the booking records which zone it
                 was made in.
               </p>
             </div>
@@ -342,7 +342,7 @@ export AERSCHEDULER_KEY=ask_live_…`}
           <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
             <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">Rate limits</h2>
             <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
-              Limits are applied per signed-in account, not per IP — a whole school behind one office
+              Limits are applied per signed-in account, not per IP. A whole school behind one office
               address does not share one budget.
             </p>
             <div className="mt-6 overflow-x-auto">
@@ -364,7 +364,7 @@ export AERSCHEDULER_KEY=ask_live_…`}
             <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground">
               Every response carries <Code>RateLimit-Limit</Code>, <Code>RateLimit-Remaining</Code>, and{" "}
               <Code>RateLimit-Reset</Code>. A <Code>429</Code> carries <Code>Retry-After</Code> in
-              seconds — honour it rather than retrying on a fixed interval.
+              seconds. Honour it rather than retrying on a fixed interval.
             </p>
           </div>
         </div>
@@ -373,7 +373,7 @@ export AERSCHEDULER_KEY=ask_live_…`}
         <div className="border-t border-border">
           <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
             <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">
-              Pagination — what to know before you build
+              Pagination: what to know before you build
             </h2>
             <div className="mt-4 max-w-2xl space-y-3 text-base leading-relaxed text-muted-foreground">
               <p>
@@ -402,15 +402,15 @@ export AERSCHEDULER_KEY=ask_live_…`}
               />
               <ul className="list-disc space-y-1.5 pl-5">
                 <li>
-                  <Code>total</Code> — how many there are in all, before the page was taken.
+                  <Code>total</Code>: how many there are in all, before the page was taken.
                 </li>
                 <li>
-                  <Code>returned</Code> — how many are in <Code>data</Code> right now.
+                  <Code>returned</Code>: how many are in <Code>data</Code> right now.
                 </li>
                 <li>
-                  <Code>hasMore</Code> — whether another page exists.{" "}
+                  <Code>hasMore</Code>: whether another page exists.{" "}
                   <strong className="text-foreground">Check it.</strong> Some collections are bigger
-                  than one page — our largest school has over 7,000 reservations.
+                  than one page: our largest school has over 7,000 reservations.
                 </li>
               </ul>
               <p>
@@ -418,7 +418,7 @@ export AERSCHEDULER_KEY=ask_live_…`}
                 <Code>offset</Code> past the end returns an empty <Code>data</Code> and{" "}
                 <Code>hasMore: false</Code>. Date-ranged endpoints still matter for anything that grows
                 without bound: <Code>GET /reservations</Code> requires a window, and the reporting
-                engine takes one too. Cursor pagination is planned and will be additive —{" "}
+                engine takes one too. Cursor pagination is planned and will be additive:
                 <Code>limit</Code>/<Code>offset</Code> will keep working.
               </p>
             </div>

@@ -95,7 +95,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         {/* Reveals start hidden in the stylesheet, so the server HTML and the
-            first client paint already agree — no class to add, nothing for
+            first client paint already agree: no class to add, nothing for
             React to flag as a hydration mismatch, and no flash of content that
             appears and then hides.
 

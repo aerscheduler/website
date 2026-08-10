@@ -47,7 +47,7 @@ const GUIDES = [
   {
     href: "/resources/flying-club-dues-and-fees",
     title: "Flying club dues & fees",
-    body: "What clubs charge to join and to stay, the tiers they settle on, and the five awkward cases — mid-month joiners, seasonal members, a comped month — that decide whether dues are a five-minute job.",
+    body: "What clubs charge to join and to stay, the tiers they settle on, and the five awkward cases (mid-month joiners, seasonal members, a comped month) that decide whether dues are a five-minute job.",
   },
   {
     href: "/resources/flight-training-records",

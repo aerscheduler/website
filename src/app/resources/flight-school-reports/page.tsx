@@ -16,11 +16,11 @@ const TITLE = "Flight School Reports: What to Track and Why";
 
 export const metadata: Metadata = {
   title: TITLE,
-  description: `The reports a flight school actually needs — aircraft utilization, revenue, instructor activity, squawks, and currency — and how to build a dashboard that answers them. From ${SITE_NAME}.`,
+  description: `The reports a flight school actually needs (aircraft utilization, revenue, instructor activity, squawks, and currency) and how to build a dashboard that answers them. From ${SITE_NAME}.`,
   alternates: { canonical: "/resources/flight-school-reports" },
   openGraph: {
     title: TITLE,
-    description: `Aircraft utilization, revenue by tail, instructor activity, and compliance — the reporting a flight school needs, and how ${SITE_NAME} delivers it.`,
+    description: `Aircraft utilization, revenue by tail, instructor activity, and compliance. The reporting a flight school needs, and how ${SITE_NAME} delivers it.`,
     url: "/resources/flight-school-reports",
   },
 };
@@ -32,7 +32,7 @@ const FAQS = [
   },
   {
     q: "How do I measure aircraft utilization at a flight school?",
-    a: "Compare booked hours against flown hours against billed hours for each aircraft over the same window. Booked-vs-flown shows how much of your schedule evaporates; flown-vs-billed shows how much flying never made it onto an invoice. Utilization on its own — hours per tail — hides both problems.",
+    a: "Compare booked hours against flown hours against billed hours for each aircraft over the same window. Booked-vs-flown shows how much of your schedule evaporates; flown-vs-billed shows how much flying never made it onto an invoice. Utilization on its own (hours per tail) hides both problems.",
   },
   {
     q: "Can I export flight school reports to CSV or Excel?",
@@ -40,7 +40,7 @@ const FAQS = [
   },
   {
     q: "Can I build a custom dashboard?",
-    a: "Yes. Add tiles for any metric from any report, drag and resize them, and give each tile its own date range and filters — so a 'this week' revenue card can sit next to a 'year to date' one. Every figure links through to the report that produced it.",
+    a: "Yes. Add tiles for any metric from any report, drag and resize them, and give each tile its own date range and filters, so a 'this week' revenue card can sit next to a 'year to date' one. Every figure links through to the report that produced it.",
   },
   {
     q: "Can I stop instructors and dispatchers seeing revenue?",
@@ -48,7 +48,7 @@ const FAQS = [
   },
   {
     q: "Can AerScheduler email reports on a schedule?",
-    a: "Yes. Save a report as a named view, then schedule it daily, weekly, or monthly to anyone at your school. The CSV arrives attached. Each email covers exactly the period since the last one — a weekly send covers the previous seven days — and times are your school's, so 7am means 7am at the field.",
+    a: "Yes. Save a report as a named view, then schedule it daily, weekly, or monthly to anyone at your school. The CSV arrives attached. Each email covers exactly the period since the last one (a weekly send covers the previous seven days) and times are your school's, so 7am means 7am at the field.",
   },
 ];
 
@@ -81,7 +81,7 @@ export default function FlightSchoolReportsPage() {
             </h1>
             <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
               Most schools run on a calendar and a bank balance. That tells you
-              the month was busy, not whether it was profitable — or which
+              the month was busy, not whether it was profitable: or which
               aircraft paid for itself. This guide covers the reports worth
               having, the numbers that actually change decisions,
               and how to get them without exporting anything to a spreadsheet.
@@ -151,7 +151,7 @@ export default function FlightSchoolReportsPage() {
           </h2>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground">
             The report you build at month-end is one you will want again next
-            month. Configure it once — filters, columns, grouping — and save it
+            month. Configure it once (filters, columns, grouping) and save it
             as a named view. Share it with the school and everyone reads the
             same definition of &ldquo;instructor hours&rdquo; instead of four
             people rebuilding it four slightly different ways.
@@ -163,7 +163,7 @@ export default function FlightSchoolReportsPage() {
           <p className="mt-4 text-base leading-relaxed text-muted-foreground">
             Most dashboards are a separate thing from the reports underneath
             them, which is why the summary and the detail so often disagree. In
-            AerScheduler a tile <em>is</em> a report — the number on the card is
+            AerScheduler a tile <em>is</em> a report. The number on the card is
             produced by running the report you click into, so the two cannot
             drift apart. Pin any saved view to the board, drag the tiles where
             you want them, and give each one its own window.
@@ -171,7 +171,7 @@ export default function FlightSchoolReportsPage() {
           <ul className="mt-6 space-y-3">
             {[
               "Number cards, line charts, bar charts, and tables",
-              "Per-tile date ranges — 'this week' beside 'year to date'",
+              "Per-tile date ranges: 'this week' beside 'year to date'",
               "Per-tile filters, so one card can watch a single aircraft",
               "Drag and resize freely; collapses to one column on a phone",
               "A needs-attention strip for overdue invoices, open squawks, and lapsing documents",
@@ -190,8 +190,8 @@ export default function FlightSchoolReportsPage() {
             Reporting access follows role, by category. Owners and admins see
             everything including revenue; dispatchers get operations, fleet,
             people, and compliance without the financials; technicians see fleet
-            reports. It is enforced on the server, not hidden in the interface —
-            a dispatcher cannot reach a revenue figure by guessing a URL.
+            reports. It is enforced on the server, not hidden in the interface.
+            A dispatcher cannot reach a revenue figure by guessing a URL.
           </p>
 
           <h2 className="mt-12 text-2xl font-semibold tracking-tight text-brand-surface">
@@ -199,12 +199,12 @@ export default function FlightSchoolReportsPage() {
           </h2>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground">
             The report you remember to run is the one that gets run. Schedule a
-            saved view and it arrives as a CSV — daily, weekly, or monthly — to
+            saved view and it arrives as a CSV (daily, weekly, or monthly) to
             whoever at the school should see it.
           </p>
           <ul className="mt-6 space-y-3">
             {[
-              "Each email covers the period since the last one — no gaps, nothing counted twice",
+              "Each email covers the period since the last one. No gaps, nothing counted twice",
               "A weekly send covers the previous seven days; monthly covers the previous calendar month",
               "Times are your school's, so 7am means 7am at the field",
               "Recipients are people at your school, picked from your roster",
@@ -245,7 +245,7 @@ export default function FlightSchoolReportsPage() {
             <GuideCard
               href="/resources/flight-school-revenue-reporting"
               title="Revenue reporting"
-              body="Revenue by aircraft, instructor, and lesson type — and where it leaks."
+              body="Revenue by aircraft, instructor, and lesson type, and where it leaks."
             />
           </div>
 

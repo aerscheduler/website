@@ -23,7 +23,7 @@ export type SearchRecord = {
   type: SearchType;
   title: string;
   href: string;
-  /** Breadcrumb above the title, e.g. ["Documentation", "Billing", "Invoices"]. */
+  /** Breadcrumb above the title, e.g. ["Documentation", ", Billing", ", Invoices"]. */
   path: string[];
   /** Present when the record has a written summary. Otherwise the UI uses `body`. */
   description?: string;
@@ -147,7 +147,7 @@ function buildEngine(records: SearchRecord[]): SearchEngine {
        * Fuzziness scaled to term length, and only past four characters.
        *
        * A blanket fuzzy match turns short terms into noise ("sim" matching
-       * "sum", "six", "sms"). Past four characters a typo is far more likely
+       * "sum", ", six", ", sms"). Past four characters a typo is far more likely
        * than a real word one edit away, so 0.2 (one edit per five characters)
        * recovers "reservtion" without inventing matches.
        */

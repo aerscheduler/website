@@ -1,7 +1,7 @@
 /**
  * Marketing site constants.
  *
- * APP_URL is where Google OAuth and signup/login CTAs land. Points at app —
+ * APP_URL is where Google OAuth and signup/login CTAs land. Points at app;
  * once console is cut over onto that host, the handoff just works. Override
  * with NEXT_PUBLIC_APP_URL for local/staging against console if needed.
  */
@@ -17,7 +17,7 @@ export const LOGIN_URL = `${APP_URL}/login`;
 /**
  * The live, no-signup demo. Lands in the real web console on a seeded sample
  * flight school (see the app's /demo route). This is the lowest-friction way into
- * the product — a prospect who isn't ready to create an account can look first —
+ * the product. A prospect who isn't ready to create an account can look first,
  * so it sits beside, not instead of, the signup CTAs.
  */
 export const DEMO_URL = `${APP_URL}/demo`;
@@ -28,7 +28,7 @@ export const DEMO_URL = `${APP_URL}/demo`;
  * The app maps these to a setup-checklist ordering (`web/src/lib/onboarding-tracks.ts`),
  * so someone who signs up from the QuickBooks page opens on billing → QuickBooks →
  * first invoice instead of a generic list. Keep the two in step: an unknown slug is
- * harmless — the app falls back to the default order — but it also does nothing.
+ * harmless (the app falls back to the default order) but it also does nothing.
  */
 export type CampaignSource =
   | "quickbooks"
@@ -39,14 +39,14 @@ export type CampaignSource =
 
 /**
  * A signup link that tells the app which conversation this visitor was already
- * having. Sits alongside any `utm_*` the ad platform appends — the app keeps both.
+ * having. Sits alongside any `utm_*` the ad platform appends: the app keeps both.
  */
 export const signupUrl = (source?: CampaignSource) =>
   source ? `${SIGNUP_URL}?src=${source}` : SIGNUP_URL;
 
 /**
  * Full-page Google OAuth via the API (no popup). Lands on APP_URL after Google
- * signs the user in — swapping APP_URL is all it takes to retarget console→app.
+ * signs the user in: swapping APP_URL is all it takes to retarget console→app.
  */
 export const GOOGLE_SIGNIN_URL = `${API_URL}/auth/google/start?return_to=${encodeURIComponent(APP_URL)}`;
 

@@ -7,7 +7,7 @@ import { JsonLd } from "@/components/json-ld";
 import { absoluteUrl, faqJsonLd } from "@/lib/seo";
 import { SIGNUP_URL, SITE_NAME, SITE_URL, SUPPORT_EMAIL, TRIAL_DAYS } from "@/lib/site";
 
-const DESCRIPTION = `Contact ${SITE_NAME} about flight school scheduling software — ask a product question, request an integration or feature, or get help migrating. We reply within one business day.`;
+const DESCRIPTION = `Contact ${SITE_NAME} about flight school scheduling software. Ask a product question, request an integration or feature, or get help migrating. We reply within one business day.`;
 
 export const metadata: Metadata = {
   title: "Contact Us",
@@ -32,7 +32,7 @@ const CONTACT_FAQS = [
   },
   {
     q: "Do I need to talk to sales to try AerScheduler?",
-    a: `No. AerScheduler is self-serve — you can create an account, add aircraft, and book your first lesson without talking to anyone. The ${TRIAL_DAYS}-day trial doesn't require a card.`,
+    a: `No. AerScheduler is self-serve. You can create an account, add aircraft, and book your first lesson without talking to anyone. The ${TRIAL_DAYS}-day trial doesn't require a card.`,
   },
   {
     q: "Can I request an integration?",
@@ -44,7 +44,7 @@ const CONTACT_FAQS = [
   },
   {
     q: "I'm switching from another system. Can you help?",
-    a: "We can. Follow the migration guide first — most schools are self-serve from there — then write in with your exports if you get stuck on data.",
+    a: "We can. Follow the migration guide first (most schools are self-serve from there), then write in with your exports if you get stuck on data.",
   },
 ];
 
@@ -123,7 +123,7 @@ export default function ContactPage() {
               </h1>
               <p className="mt-5 max-w-md text-lg leading-relaxed text-muted-foreground">
                 AerScheduler is self-serve, so most schools never need to. When
-                you do, a real person reads this — usually within one business
+                you do, a real person reads this: usually within one business
                 day.
               </p>
             </div>

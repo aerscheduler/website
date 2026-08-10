@@ -14,13 +14,13 @@ import { SITE_NAME, SITE_URL } from "@/lib/site";
  * One statically-generated reference page per API area.
  *
  * Separate pages rather than one long scroll: each area is a distinct thing
- * somebody searches for ("flight school billing API", "aircraft maintenance
+ * somebody searches for ("flight school billing API", ", aircraft maintenance
  * API"), each gets its own title, description, and canonical URL, and a page
  * about eight endpoints ranks better than a section of a page about a hundred
  * and forty.
  *
- * The sticky left rail (ApiDocsNav) lists every area — same component as the
- * hub — so readers can scan the whole surface without bouncing back to the
+ * The sticky left rail (ApiDocsNav) lists every area: same component as the
+ * hub, so readers can scan the whole surface without bouncing back to the
  * overview cards. Endpoint detail stays on these pages; the nav is pure links
  * over getTagDocs(), so regenerating OpenAPI keeps it in sync.
  */
@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const tag = getTagDoc(slug);
   if (!tag) return {};
 
-  const title = `${tag.name} API — ${SITE_NAME} Reference`;
+  const title = `${tag.name} API: ${SITE_NAME} Reference`;
   const description = `${plainText(tag.description)} ${tag.endpoints.length} endpoints with parameters, responses, and example requests. Part of the ${SITE_NAME} flight school API.`;
 
   return {

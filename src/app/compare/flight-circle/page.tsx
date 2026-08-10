@@ -89,7 +89,7 @@ const ROWS: [string, string, string][] = [
  * The four claims this page rests on, kept beside the table so the copy and the reasoning
  * cannot drift apart.
  *
- * Every one of these is checkable by an operator during a trial rather than a slogan — the
+ * Every one of these is checkable by an operator during a trial rather than a slogan: the
  * whole point of a comparison page is that a reader can call the bluff, and the fastest way
  * to lose a Part 141 school is a claim their own POI can disprove.
  */
@@ -104,7 +104,7 @@ const PROOFS = [
   },
   {
     title: "Try to fix a typo in a published syllabus",
-    body: "Ours refuses, and explains that students are enrolled against exactly those lessons. Revising forks a new version and anyone mid-course keeps the one they started under. That refusal is the feature — under Part 141 the syllabus is a document you filed, not a page you edit.",
+    body: "Ours refuses, and explains that students are enrolled against exactly those lessons. Revising forks a new version and anyone mid-course keeps the one they started under. That refusal is the feature: under Part 141 the syllabus is a document you filed, not a page you edit.",
   },
   {
     title: "Correct a lesson you already signed",
@@ -198,7 +198,7 @@ export default function CompareFlightCirclePage() {
         </h2>
         <ul className="mt-4 list-disc space-y-2 pl-5 text-muted-foreground">
           <li>
-            You want ground-school content — video, reading and quizzes — inside the same tool.
+            You want ground-school content (video, reading and quizzes) inside the same tool.
             We deliberately do not build courseware and link out to Sporty&apos;s, King or
             Gleim instead
           </li>

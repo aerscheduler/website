@@ -30,7 +30,7 @@ import {
  * closed out.
  *
  * A stable default hour is rendered on the server and on the first client paint
- * so hydration matches — the real hour arrives in an effect, and because the
+ * so hydration matches: the real hour arrives in an effect, and because the
  * board transitions rather than snaps, the correction reads as the board
  * catching up rather than a bug.
  */
@@ -75,12 +75,12 @@ export function ScheduleMock() {
     if (!inView || !spotlight) return;
     // Selects the block only. Setting `selectedTail` here would dim every other
     // lane, and arriving at a board with most of the day greyed out reads as a
-    // filtered view rather than a full one — dimming belongs to a deliberate
+    // filtered view rather than a full one: dimming belongs to a deliberate
     // click, not to the entrance.
     const timer = window.setTimeout(() => setSelectedBlock(spotlight.id), 260);
     return () => window.clearTimeout(timer);
-    // Only re-run on entry, not as the clock ticks past a block boundary —
-    // re-selecting under the visitor's cursor would fight them for control.
+    // Only re-run on entry, not as the clock ticks past a block boundary.
+    // Re-selecting under the visitor's cursor would fight them for control.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView]);
 
@@ -94,7 +94,7 @@ export function ScheduleMock() {
 
   return (
     // `min-w-0` so this wrapper, not just the shell inside it, can shrink below the
-    // board's natural width — it is the flex item, and without it the page picks up
+    // board's natural width: it is the flex item, and without it the page picks up
     // a horizontal scroll on a phone.
     <div ref={ref} className="min-w-0">
       <AppMockShell
@@ -110,7 +110,7 @@ export function ScheduleMock() {
           ) : (
             <MockFloat
               label="Next launch"
-              value={desk.next ? formatHour(desk.next.start) : "—"}
+              value={desk.next ? formatHour(desk.next.start) : "–"}
               meta={desk.next ? `${tailLabel(desk.next.tail)} · ${desk.next.label}` : "Ramp closed"}
             />
           )
@@ -133,7 +133,7 @@ export function ScheduleMock() {
           }}
         />
 
-        {/* Axis above the lanes, where a dispatch board actually puts it — and
+        {/* Axis above the lanes, where a dispatch board actually puts it: and
             clear of the invoice float, which sits over the bottom-left corner. */}
         <div className="grid grid-cols-[72px_1fr] border-b border-border text-[10px] text-muted-foreground">
           <span className="border-r border-border px-2 py-1">Today</span>
@@ -279,7 +279,7 @@ function Block({
  * count flashes the final number for a frame before dropping to zero.
  *
  * Starting from the previous value means the roll happens at the one moment it
- * is truthful — when the board learns the visitor's actual local hour and the
+ * is truthful: when the board learns the visitor's actual local hour and the
  * day's billing corrects from the server's guess to theirs.
  */
 function useCountUp(target: number) {

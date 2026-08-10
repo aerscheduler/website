@@ -5,7 +5,7 @@
  *
  * The docs pages render from `src/content/openapi.json`, a COMMITTED copy. The
  * server's generator writes that file, but it writes it into a different git
- * repo — the two live side by side on a developer's disk and nowhere else. So
+ * repo: the two live side by side on a developer's disk and nowhere else. So
  * shipping a server change updated `api.aerscheduler.com/openapi.json` while the
  * copy the site renders stayed at whatever was last hand-committed here.
  *
@@ -18,8 +18,8 @@
  * So the build now reads the same URL the docs page tells readers to read.
  *
  * The committed copy is kept, and is still the fallback: the original reason for
- * it — that a marketing deploy must not fail because the API is briefly
- * unreachable — is a good one. What it must not be is the *primary* source,
+ * it: that a marketing deploy must not fail because the API is briefly
+ * unreachable: is a good one. What it must not be is the *primary* source,
  * because nothing was keeping it honest.
  *
  * A fallback is announced loudly. Silence is what let this run for months.
@@ -44,8 +44,8 @@ async function fetchLiveSpec() {
       const res = await fetch(LIVE, { signal: AbortSignal.timeout(TIMEOUT_MS) });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const spec = await res.json();
-      //A 200 that isn't a spec — a captive portal, an HTML error page, a proxy
-      //banner — must not overwrite a good committed copy with junk.
+      //A 200 that isn't a spec: a captive portal, an HTML error page, a proxy
+      //banner: must not overwrite a good committed copy with junk.
       if (!spec || typeof spec !== "object" || !spec.openapi || !spec.paths) {
         throw new Error("response is not an OpenAPI document");
       }
@@ -67,7 +67,7 @@ if (!live) {
   //Not a build failure. The docs being a release behind is bad; the marketing
   //site failing to deploy because the API blipped is worse.
   console.warn(
-    `::warning::[openapi] could not read ${LIVE} — building from the committed copy, ` +
+    `::warning::[openapi] could not read ${LIVE}: building from the committed copy, ` +
       `which may be behind the deployed API.`
   );
   process.exit(0);

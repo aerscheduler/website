@@ -3,7 +3,7 @@
  *
  * This exists because the drift actually happened. The API moved to API keys and
  * the spec was updated, but the docs hub page kept its own hand-written
- * "POST your email and password to /auth" copy — in the quickstart, in the FAQ,
+ * "POST your email and password to /auth" copy: in the quickstart, in the FAQ,
  * and in the summary tiles. It sat on the public site for a day telling
  * integrators to authenticate a way we no longer advertise.
  *
@@ -11,13 +11,13 @@
  * says. Where that could be removed it was (see AUTH_SCHEME in lib/openapi.ts);
  * where prose genuinely has to be written by hand, this is the backstop.
  *
- * Password sign-in still WORKS — the app and console use it, and there are plans
+ * Password sign-in still WORKS: the app and console use it, and there are plans
  * for personal-credential access later. It is simply not what we point people
  * at, so it must not appear in the docs.
  *
  * There was also a rule here banning "Settings → API keys", because the docs
  * pointed at that screen before it existed. The screen shipped, so the rule is
- * gone — a guard against a claim that has become true is just noise.
+ * gone: a guard against a claim that has become true is just noise.
  *
  * Run: node scripts/check-docs-auth.mjs   (wired into `npm run build`)
  */
@@ -30,10 +30,10 @@ const SPEC = path.join(process.cwd(), "src", "content", "openapi.json");
 /** Phrases that mean we are pointing somebody at password auth. */
 const FORBIDDEN = [
   { pattern: /email and password/i, why: "points at password sign-in" },
-  { pattern: /"password"\s*:/, why: "a password in an example request" },
+  { pattern: /"password"\s*:/, why: ", a password in an example request" },
   { pattern: /POST\s+\S*\/auth\b/i, why: "tells the reader to call the sign-in endpoint" },
   { pattern: /accessToken/i, why: "the session-token envelope; keys are the published credential" },
-  { pattern: /AERSCHEDULER_TOKEN/, why: "stale env var name — keys use AERSCHEDULER_KEY" },
+  { pattern: /AERSCHEDULER_TOKEN/, why: "stale env var name: keys use AERSCHEDULER_KEY" },
   { pattern: /\bsign in for a token\b/i, why: "describes the session flow" },
 ];
 
@@ -79,7 +79,7 @@ for (const forbidden of ["/auth", "/auth/session"]) {
 if (problems.length) {
   console.error(`\n✗ API docs advertise something other than API keys (${problems.length}):\n`);
   for (const p of problems) {
-    console.error(`  ${p.file}:${p.line}  — ${p.why}`);
+    console.error(`  ${p.file}:${p.line}  ${p.why}`);
     console.error(`      ${p.text}`);
   }
   console.error(
