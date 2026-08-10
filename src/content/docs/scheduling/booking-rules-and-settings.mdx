@@ -1,6 +1,8 @@
 <Summary>
 Booking preferences under <Where app="web">Settings → Booking preferences</Where> change how
-booking works for the whole school, including the flying day window. Three more rules live
+booking works for the whole school, including the flying day window, multi-day trips, and
+opt-in cancel/edit locks, late-cancel fees, and booking caps. Currency checks at book are
+always on and live under Compliance, not in this opt-in section. Three more rules live
 elsewhere: the booking window on a membership plan, the overnight minimum in billing
 settings, and the school's time zone.
 </Summary>
@@ -154,6 +156,48 @@ AerScheduler discloses the minimum on the booking form and again in the ramp in 
 any invoice exists, in the form "This will bill 4.0 hours rather than the 1.5 flown."
 
 A booking that comes back the same day is never affected.
+
+## Booking and cancellation rules
+
+All of these live under <Where app="web">Settings → Booking preferences</Where>, in the
+**Booking and cancellation rules** section. Every one is **off by default**. Turn on only
+what your school needs.
+
+### Cancel and edit lock
+
+When set (for example 24 hours), members cannot cancel or edit a booking once it starts
+inside that window. Front desk, instructors, and technicians can still change or cancel it.
+
+Members who try see a clear message naming the hours and asking them to contact the front
+desk.
+
+### Late-cancel fee
+
+Optional, and only available when the cancel and edit lock is on and Stripe is connected.
+Inside the lock window, a member can still cancel if they agree to the fee. The fee is
+invoiced through Stripe before the booking comes off the board. Staff cancels never charge.
+
+If Stripe cannot bill the member, the cancel is refused and the booking stays, so you never
+lose the slot without collecting the fee.
+
+### Max upcoming bookings
+
+Caps how many future (not yet ended, not cancelled) bookings a student or renter may hold
+at once. Maintenance is not counted. The refusal names the member and the limit.
+
+A repeating series counts every date it would create. If the school limit is 20 and the
+member already holds 5 upcoming bookings, a repeat of 16 or more is refused before anything
+is booked. The booking form caps “After N bookings” at the school limit and blocks an end
+date that would clearly go over.
+
+### Max reservation length
+
+Caps how long a single booking may run. The refusal names both the school limit and the
+length they tried to book.
+
+Currency checks at book (medical, flight review, checkouts under Compliance) are separate
+from these rules and stay **always on**, as they always have been. Duals can still go when
+the currency allows flying with a current instructor who is current.
 
 ## How far ahead anyone can book
 

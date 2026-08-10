@@ -443,7 +443,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "booking-rules-and-settings",
         title: "Booking rules: the settings that change how booking works",
         description:
-          "Every setting that changes what your members can book and when, what each one actually does, and where it lives.",
+          "Flying day, multi-day trips, payment-method gate, cancel/edit lock, late-cancel fee, max upcoming bookings, and max reservation length. What each does and where it lives.",
         kind: "reference",
         audience: ["Owners", "Admins"],
         seoQuery: "flight school booking rules and settings",

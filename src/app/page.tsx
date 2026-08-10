@@ -198,6 +198,7 @@ export default function HomePage() {
                 "Day and week boards by resource",
                 "Dual, solo, rental, ground, and sim reservations",
                 "Self-booking with approval when you want it",
+                "Optional cancel locks, late fees, and booking caps",
                 "Standby, cancel recovery offers, and optional AI fill of idle matching time",
                 "Conflict-aware create and edit",
               ].map((item) => (

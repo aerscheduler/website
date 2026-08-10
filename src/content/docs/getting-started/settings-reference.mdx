@@ -50,7 +50,7 @@ disabled and says what is missing.
 
 ## School → Booking preferences
 
-Four toggles, all off by default.
+School-wide booking behaviour. Most switches are off by default.
 
 | Setting | What it changes |
 |---|---|
@@ -59,6 +59,16 @@ Four toggles, all off by default.
 | Require payment method before self-book | Students and renters need a card on file before booking themselves. Owners, admins and dispatchers can still book anyone, instructor-led bookings are unaffected, and it only applies when Stripe billing is on |
 | Flying day | Local hours when same-day bookings are allowed (default 6:00 AM to 10:00 PM). Per-plane override on the aircraft edit screen |
 | Allow multi-day bookings | Lets a booking keep a resource overnight, overriding flying day hours until it is back |
+| Cancel and edit lock | Hours before start when members cannot cancel or edit. Front desk, instructors, and technicians can still override |
+| Late-cancel fee | Optional fee (Stripe) so a member can still cancel inside the lock by agreeing to pay. Staff cancels never charge |
+| Max upcoming bookings | Caps how many future bookings one student or renter may hold, including every date in a repeating series |
+| Max reservation length | Caps how long a single booking may run |
+
+Currency checks at book (medical, flight review, checkouts) are always enforced when you
+configure currencies under Compliance. They are not a toggle on this tab.
+
+See [Booking rules and settings](/docs/scheduling/booking-rules-and-settings) for the full
+story.
 
 ## School → Groups
 

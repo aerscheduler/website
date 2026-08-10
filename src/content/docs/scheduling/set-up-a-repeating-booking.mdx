@@ -63,14 +63,19 @@ Press **Book reservation** and the toast reads `Repeating booking created`.
 ## How many bookings you get
 
 There is no "repeats forever". Every occurrence holds a real aircraft for a real hour, so
-a repeat that never ended would block the fleet indefinitely. Two limits apply:
+a repeat that never ended would block the fleet indefinitely. These limits apply:
 
 | Limit | Value |
 |---|---|
-| Bookings created at once | 200 |
+| Bookings created at once | 200, or your school's **max upcoming bookings** if that is lower |
 | How far out a daily or weekly repeat runs | About 400 days |
 | How far out a monthly repeat runs | About 3 years |
 | How far out a yearly repeat runs | About 10 years |
+
+If the school has set a max upcoming bookings rule under Booking preferences, a repeat that
+would push the member over that cap is refused. Existing upcoming bookings count toward the
+same limit, so a member with 5 already held and a school cap of 20 can only create a series
+of 15 more. The Repeat control will not offer an “After N” count above the school limit.
 
 <Callout type="warning">
 A monthly repeat on a day past the 28th **skips** the months that do not have that day. A
