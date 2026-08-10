@@ -1,6 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -169,10 +176,13 @@ function SearchDialog({ onClose }: { onClose: () => void }) {
     };
   }, []);
 
-  useEffect(() => {
-    const id = requestAnimationFrame(() => inputRef.current?.focus());
-    return () => cancelAnimationFrame(id);
-  }, []);
+  // Focus after the portal has painted the input. The previous rAF-on-mount
+  // ran while `mounted` was still false (dialog returns null), so Cmd-K opened
+  // an unfocused field and the next keystroke never typed into it.
+  useLayoutEffect(() => {
+    if (!mounted) return;
+    inputRef.current?.focus();
+  }, [mounted]);
 
   // Lock the page while the dialog is up, or the phone scrolls the article
   // behind the keyboard.
