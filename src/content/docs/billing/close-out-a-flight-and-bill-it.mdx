@@ -53,6 +53,11 @@ Ending readings cannot be lower than the readings recorded at ramp-out. If the m
 typed in wrong on the way out, fix that before you try to ramp in.
 </Callout>
 
+If the hours flown on Hobbs and tach disagree by an unusual amount, or the flight is far
+longer or shorter than the booking, a dialog lists what looks off before saving and asks
+you to confirm the readings anyway. It is a check, not a hard block: correct the reading
+if it is a typo, or confirm if the flight really did run that way.
+
 If the booking was away overnight and your school has set an overnight minimum, this
 dialog tells you before you save, in plain figures: away two nights, minimum 2.0 hours a
 night, so it will bill 4.0 hours rather than the 1.5 flown. See
@@ -128,7 +133,8 @@ already been completed". Do overrides before people start confirming.
 The reservation detail page and its Complete Reservation sheet run the same sequence: ramp
 out, ramp in, confirm with a PIN. Correcting readings (**Edit Time Details** there,
 **Correct times** in the console) and, for admins, **Create invoice** on a completed
-reservation that never produced one, are on both surfaces.
+reservation that never produced one, are on both surfaces. Correcting readings runs the
+same unusual-reading check as ramp-in.
 
 ## If no invoice appeared
 

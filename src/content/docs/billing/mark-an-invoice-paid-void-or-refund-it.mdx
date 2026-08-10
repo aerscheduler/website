@@ -65,6 +65,21 @@ already been paid." Voiding is not an undo for a payment. Once money has moved, 
 correction is a refund in Stripe.
 </Callout>
 
+## Voiding a past flight's only invoice
+
+If the invoice you are voiding is the only one on a booking that already flew and was
+never canceled, voiding it would leave that flight with no invoice at all. AerScheduler
+asks first instead of doing that silently:
+
+- **Void and leave unbilled** voids it and stops there. The flight shows up wherever your
+  unbilled work is tracked, for you to bill later by hand.
+- **Void and open close-out** voids it and takes you straight to the booking so you can
+  correct the close-out and raise a new invoice in the same visit.
+- **Cancel** backs out and leaves the invoice exactly as it was.
+
+Voiding an invoice that is not a past flight's only invoice, such as a duplicate on a
+booking with another live invoice, skips this and just voids.
+
 ## Refunds happen in your Stripe dashboard
 
 There is no refund action in AerScheduler. Not in the web console, not in the iOS app, not

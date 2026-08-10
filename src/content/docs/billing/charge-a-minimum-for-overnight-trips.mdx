@@ -14,7 +14,12 @@ a whole. Two nights at 2.0 hours a night bills 4.0 hours even if only 1.5 were f
 <Step n={2} title="Enter a figure in Overnight minimum (hrs/night)">
 In decimal hours, so 2.0 or 1.5. Leaving it blank means no minimum, which is the default.
 </Step>
-<Step n={3} title="Click Save changes">
+<Step n={3} title="Optionally set Return grace after midnight (minutes)">
+Landing within this many minutes after local midnight still counts as the same night, not
+another one. Blank or 0 means no grace: landing even a minute after midnight starts a new
+night, exactly as before this setting existed.
+</Step>
+<Step n={4} title="Click Save changes">
 Only the organization owner can save this card. An admin can read it but the save will be
 refused.
 </Step>
@@ -36,6 +41,12 @@ rather than whatever zone the person closing out happens to be in.
 | Out Friday, back Sunday | 2 |
 
 A booking that comes back the same day is never affected, however long it ran.
+
+<Callout type="note">
+With grace set, a landing inside that window after midnight still counts toward the
+night that just ended. Out Friday, back a few minutes after midnight Sunday with 15
+minutes of grace still counts as 1 night, not 2.
+</Callout>
 
 ## It is a floor, never a reduction
 
