@@ -1,7 +1,8 @@
 <Summary>
-Four toggles under <Where app="web">Settings → Booking preferences</Where> change how
-booking works for the whole school. Three more rules live elsewhere: the booking window on a
-membership plan, the overnight minimum in billing settings, and the school's time zone.
+Booking preferences under <Where app="web">Settings → Booking preferences</Where> change how
+booking works for the whole school, including the flying day window. Three more rules live
+elsewhere: the booking window on a membership plan, the overnight minimum in billing
+settings, and the school's time zone.
 </Summary>
 
 <Roles>Owners, Admins</Roles>
@@ -13,8 +14,23 @@ only, so an owner or an admin can change these and nobody else can, including di
 
 <Screenshot id="booking-preferences-tab" />
 
-Every one of these is **off** by default, and a school that has never opened this tab behaves
-as though all four are off.
+Payment-method and multi-day toggles are **off** by default. Flying day defaults to
+6:00 AM to 10:00 PM until you change it.
+
+## Flying day
+
+The local hours when aircraft can be booked on a normal day (default 6:00 AM to 10:00 PM).
+Same-day bookings must start and finish inside this window. The calendar board uses the same
+frame. AerScheduler AI idle offers only look inside it too.
+
+An individual aircraft can override the school hours on its edit screen (for example a
+night-capable tail that stays open later). Choose **24 hours** when the school truly books
+around the clock.
+
+<Callout type="note">
+Multi-day trips skip the flying-day window on purpose: once the aircraft is away overnight,
+it is gone until it is back, not free again at open the next morning.
+</Callout>
 
 ## Allow multi-day bookings
 
@@ -23,8 +39,8 @@ midnight is refused.
 
 On, the booking form's date field becomes **Out on** and gains **Back on** and **Back at**, so
 a booking can keep the aircraft for a night or a week. A multi-day booking overrides the
-resource's normal operating hours: the aircraft is simply gone until it is back, rather than
-free again the next morning.
+flying day hours: the aircraft is simply gone until it is back, rather than free again the
+next morning.
 
 <Callout type="important">
 The toggle is greyed out, not just refused on save, until your school has a time zone set. The
