@@ -26,4 +26,9 @@ export const INTEGRATION_LINKS: IntegrationLink[] = [
     label: "QuickBooks Online",
     description: "Paid invoices sync as Sales Receipts.",
   },
+  {
+    href: "/integrations",
+    label: "SMS alerts",
+    description: "Transactional US texts for the same categories as email and push.",
+  },
 ];

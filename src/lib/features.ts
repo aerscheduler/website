@@ -305,12 +305,13 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
     eyebrow: "Connect",
     headline: "Connect the tools your school already uses.",
     summary:
-      "Stripe payments, Google Calendar sync, and QuickBooks Online run today. Shipped to every plan, not locked behind enterprise.",
+      "Stripe payments, Google Calendar sync, QuickBooks Online, and US SMS alerts run today. Shipped to every plan, not locked behind enterprise.",
     bullets: [
       "Stripe for invoices, cards, and school collections (available now)",
       "Google Calendar sync (available now)",
+      "Apple Calendar and Outlook via private ICS subscription (available now)",
       "QuickBooks Online: paid invoices as Sales Receipts (available now)",
-      "Request other tools; roadmap follows real school demand",
+      "US SMS notifications via Telnyx, same categories as email and push (available now)",
       "No premium tier for integrations",
     ],
     personas: ["Owners", "Admins"],

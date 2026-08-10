@@ -164,12 +164,18 @@ export const DOC_SECTIONS: DocSection[] = [
       },
       {
         slug: "notifications-and-emails",
-        title: "Choose which emails and push alerts you get",
+        title: "Choose which emails, push, and SMS alerts you get",
         description:
-          "Notifications come by email and by push to the iOS app, grouped by category so you can turn off the ones you do not need without losing the ones you do.",
+          "Notifications come by email, push to the iOS app, and optional US SMS, grouped by category so you can turn off the ones you do not need without losing the ones you do.",
         kind: "task",
         audience: ["Owners", "Admins", "Dispatchers", "Instructors", "Students", "Renters", "Technicians"],
         seoQuery: "turn off flight school software email notifications",
+        faqs: [
+          {
+            q: "Can I get booking alerts by text?",
+            a: "Yes, for US mobile numbers. Verify your mobile on Notification settings, then turn on SMS and the categories you want. Reply STOP to opt out anytime.",
+          },
+        ],
       },
       {
         slug: "find-anything",
