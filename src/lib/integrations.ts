@@ -17,6 +17,11 @@ export const INTEGRATION_LINKS: IntegrationLink[] = [
     description: "Push lessons and reservations to personal calendars.",
   },
   {
+    href: "/integrations",
+    label: "Apple Calendar & Outlook",
+    description: "Subscribe with a private ICS link from your profile.",
+  },
+  {
     href: "/resources/quickbooks-integration",
     label: "QuickBooks Online",
     description: "Paid invoices sync as Sales Receipts.",

@@ -164,7 +164,7 @@ export const DOC_SECTIONS: DocSection[] = [
       },
       {
         slug: "notifications-and-emails",
-        title: "Choose which emails and alerts you get",
+        title: "Choose which emails and push alerts you get",
         description:
           "Notifications come by email and by push to the iOS app, grouped by category so you can turn off the ones you do not need without losing the ones you do.",
         kind: "task",
@@ -271,6 +271,25 @@ export const DOC_SECTIONS: DocSection[] = [
         kind: "overview",
         audience: ["Owners", "Admins", "Dispatchers", "Instructors", "Students", "Renters", "Technicians"],
         seoQuery: "how does the AerScheduler dispatch board work",
+      },
+      {
+        slug: "sync-your-personal-calendar",
+        title: "Sync flights to Google, Apple Calendar or Outlook",
+        description:
+          "Connect Google Calendar for a live push, or subscribe with a private ICS link for Apple Calendar and Outlook. One-way from AerScheduler into your calendar.",
+        kind: "task",
+        audience: ["Owners", "Admins", "Dispatchers", "Instructors", "Students", "Renters", "Technicians"],
+        seoQuery: "sync AerScheduler to Google Apple Outlook calendar",
+        faqs: [
+          {
+            q: "Does AerScheduler sync both ways with Google Calendar?",
+            a: "No. Flights go from AerScheduler into your calendar. Editing or deleting an event in Google, Apple Calendar or Outlook does not change the booking in AerScheduler.",
+          },
+          {
+            q: "What if someone gets my subscription link?",
+            a: "They can see your upcoming flights. Open Profile → Calendar (or Settings → Calendars in the app) and regenerate the link. The old one stops working.",
+          },
+        ],
       },
       {
         slug: "reservation-types",

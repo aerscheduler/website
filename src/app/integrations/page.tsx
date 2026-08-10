@@ -9,12 +9,12 @@ import { signupUrl } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Flight School Software Integrations",
   description:
-    "AerScheduler integrates with Stripe, Google Calendar, and QuickBooks Online. Connect the tools your flight school already uses, on every plan.",
+    "AerScheduler integrates with Stripe, Google Calendar, Apple Calendar / Outlook (ICS), and QuickBooks Online. Connect the tools your flight school already uses, on every plan.",
   alternates: { canonical: "/integrations" },
   openGraph: {
     title: "Flight School Software Integrations",
     description:
-      "Stripe, Google Calendar, and QuickBooks Online, available now on every plan.",
+      "Stripe, Google Calendar, Apple Calendar / Outlook, and QuickBooks Online, available now on every plan.",
     url: "/integrations",
   },
 };
@@ -45,9 +45,18 @@ const INTEGRATIONS: {
     status: "available",
     blurb: "Push lessons and reservations to personal calendars.",
     detail:
-      "Sync instructor and student schedules out to Google Calendar so flights show up next to everything else.",
+      "Sync instructor and student schedules out to Google Calendar so flights show up next to everything else. Connect from Profile → Calendar on web, or Settings → Calendars in the iOS and Android apps.",
     logo: "/integrations/google-calendar.svg",
     logoAlt: "Google Calendar logo",
+  },
+  {
+    name: "Apple Calendar & Outlook",
+    status: "available",
+    blurb: "Subscribe with a private ICS link.",
+    detail:
+      "Create a personal subscription URL from Profile → Calendar. Paste it into Apple Calendar, Outlook, or any app that supports calendar subscriptions. Regenerate the link anytime.",
+    logo: "/integrations/google-calendar.svg",
+    logoAlt: "Calendar subscription",
   },
   {
     name: "QuickBooks",
@@ -73,15 +82,16 @@ export default function IntegrationsPage() {
             Flight school software integrations
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-            Stripe payments, Google Calendar sync, and QuickBooks Online are live
-            today, in the same self-serve product, not as an enterprise add-on.
+            Stripe payments, Google Calendar, Apple Calendar / Outlook subscriptions,
+            and QuickBooks Online are live today, in the same self-serve product, not as
+            an enterprise add-on.
           </p>
         </div>
       </section>
 
       <section className="bg-white">
         <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-20">
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {INTEGRATIONS.map((item) => (
               <article
                 key={item.name}

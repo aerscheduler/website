@@ -675,6 +675,286 @@
         }
       }
     },
+    "/users/sms": {
+      "get": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Get your SMS opt-in status",
+        "description": "Whether your mobile is verified for transactional SMS. SMS is **US mobile numbers only**. When `available` is false, the product kill switch is off (`SMS_NOTIFICATIONS_ENABLED`) and clients should hide SMS UI. Category toggles still live on `GET/PATCH /orgUsers/preferences` (`smsEnabled` and `smsNotificationPreferences`).",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getSmsStatus"
+      }
+    },
+    "/users/sms/verify/start": {
+      "post": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Send an SMS verification code",
+        "description": "Texts a one-time code to the US mobile on your profile. Required before `smsEnabled` can be turned on.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "sent": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "No US mobile on file, or the number cannot receive SMS.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "startSmsVerification"
+      }
+    },
+    "/users/sms/verify/confirm": {
+      "post": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Confirm an SMS verification code",
+        "description": "Marks the mobile as opted-in and verified when the code matches.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "verified": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Code missing, expired, or incorrect.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "confirmSmsVerification",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The code from the text.",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "example": "123456"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/sms/opt-out": {
+      "post": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Opt out of SMS",
+        "description": "Turns off SMS for your account. Equivalent to replying STOP to an AerScheduler text.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "optedOut": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "optOutSms"
+      }
+    },
     "/users/{userId}/details": {
       "get": {
         "tags": [
@@ -3512,7 +3792,7 @@
           "Members"
         ],
         "summary": "Get your notification preferences",
-        "description": "What you have opted into, for this organization.",
+        "description": "What you have opted into for this organization: email, push, and SMS masters plus per-category switches. SMS also requires a verified US mobile via `/users/sms`.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -3567,7 +3847,7 @@
           "Members"
         ],
         "summary": "Update your notification preferences",
-        "description": "Changes only the keys you send.",
+        "description": "Changes only the keys you send. Setting `smsEnabled: true` requires a verified US mobile.",
         "responses": {
           "200": {
             "description": "Success.",

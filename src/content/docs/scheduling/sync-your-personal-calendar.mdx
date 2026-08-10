@@ -1,0 +1,51 @@
+<Summary>
+Connect Google Calendar for a live push of your flights, or subscribe with a private link for Apple Calendar and Outlook. Both are one-way: AerScheduler writes to your calendar; changes in your calendar app do not change bookings.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers, Instructors, Students, Renters, Technicians</Roles>
+
+## Google Calendar
+
+Google pushes each of your reservations into your **primary** Google Calendar when a booking is created, updated, or cancelled. Connecting also backfills your next 90 days of upcoming flights.
+
+<Steps>
+  <Step n="1" title="Open your calendar settings">
+    On the web console: <Where app>Profile → Calendar</Where>.
+    In the iOS or Android app: <Where app>Settings → Calendars</Where>.
+  </Step>
+  <Step n="2" title="Connect Google">
+    Tap <strong>Connect Google Calendar</strong>, choose the Google account, and allow calendar access. You should see a Connected badge when it works.
+  </Step>
+  <Step n="3" title="Disconnect later if you need to">
+    Use <strong>Disconnect</strong> on the same screen. AerScheduler stops writing new events. Events already on your calendar stay until you delete them in Google.
+  </Step>
+</Steps>
+
+<Callout type="note">
+  Flutter web cannot connect Google Calendar. Use the web console, or the iOS or Android app.
+</Callout>
+
+## Apple Calendar and Outlook
+
+These apps subscribe to a private ICS feed. AerScheduler does not need your Apple or Microsoft password.
+
+<Steps>
+  <Step n="1" title="Create a subscription link">
+    On the same Calendar screen, tap <strong>Create subscription link</strong>. Copy the HTTPS URL, or use <strong>Open</strong> / the webcal link when your device offers it.
+  </Step>
+  <Step n="2" title="Add it in your calendar app">
+    Apple Calendar: File → New Calendar Subscription (Mac) or add a subscribed calendar on iPhone/iPad and paste the URL.
+    Outlook: add an Internet calendar / subscribe from URL and paste the same link.
+  </Step>
+  <Step n="3" title="Regenerate if the link leaks">
+    Anyone with the link can see your upcoming flights. Tap <strong>Regenerate link</strong>, then update the subscription in your calendar app. The old URL stops working.
+  </Step>
+</Steps>
+
+## What syncs
+
+Events include the aircraft (or sim/room), reservation type or title, airport when known, and who is on the booking. Cancelled flights drop off Google immediately; ICS subscribers see the change on the next refresh.
+
+<Callout type="warning">
+  Editing or deleting an event in Google, Apple Calendar, or Outlook does not change the reservation in AerScheduler. Change the booking in AerScheduler if the flight moves.
+</Callout>
