@@ -188,7 +188,11 @@ if (existsSync(consoleLinksPath)) {
   let checked = 0;
 
   for (const href of hrefs) {
-    const normalized = href.replace(/^\/+/, "").replace(/^docs\//, "");
+    // In-product tips may deep-link with #section; the article path is what must exist.
+    const normalized = href
+      .replace(/^\/+/, "")
+      .replace(/^docs\//, "")
+      .split("#")[0];
     checked += 1;
     if (!known.has(normalized)) {
       errors.push(

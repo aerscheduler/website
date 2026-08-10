@@ -198,7 +198,7 @@ export default function HomePage() {
                 "Day and week boards by resource",
                 "Dual, solo, rental, ground, and sim reservations",
                 "Self-booking with approval when you want it",
-                "Standby and timed slot offers when a cancel opens a seat",
+                "Standby, cancel recovery offers, and optional AI fill of idle matching time",
                 "Conflict-aware create and edit",
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2.5 text-sm text-foreground">

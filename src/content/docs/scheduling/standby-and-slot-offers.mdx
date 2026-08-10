@@ -52,12 +52,13 @@ On <Where app="web">Calendar</Where>, staff can:
 - Press **Offer this slot** on a canceled booking to start or resume recovery
 - Open **Pending offers** to withdraw an offer that should not stay held
 
-While an offer is pending, the day board shows a dashed **Offer** / **Confirm** hold on that
+While an offer is pending, the day and week boards show a dashed **Offer** / **Confirm** hold on that
 aircraft for the offered window. That time is not free: dragging or booking over it is refused
 with a clear reason, and the soft hold lasts until someone accepts, declines, the hold expires,
 or the desk withdraws it.
 
-Withdrawing a pending recovery offer moves the chain to the next eligible member.
+Withdrawing a pending offer **stops the chain** and frees the window so the desk can book by hand.
+Member decline or hold expiry still moves recovery to the next eligible person.
 
 ## Who actually gets offered
 
@@ -74,14 +75,62 @@ Offers are not sent when the slot starts too soon (under 30 minutes by default) 
 not be enough time left to respond before it starts. The hold never runs past the slot
 start.
 
-Cancel recovery also waits through **quiet hours** (default 9pm to 7am at the location)
-before creating an offer, so a late-night cancel does not soft-hold the aircraft overnight.
-Desk-created offers skip quiet hours. Schools also limit how many offers can be pending at
-once, and someone who declined or let an offer expire is not offered a similar overlapping
-window again for a couple of days.
-
 Standing preferences and open windows rank behind a member who stood by on that exact
 reservation, so a specific watcher still goes first.
+
+## School slot offer rules
+
+Owners set these under
+<Where app="web">Settings → Booking preferences</Where> when slot offers are on.
+
+### Fill idle time automatically
+
+When this is on, AerScheduler AI looks for open aircraft time that matches standing
+preferences and sends the same kind of timed offer cancel recovery uses. It is off by
+default. Nobody is booked until they accept. The scanner only looks at flying-day hours
+(roughly 6am to 10pm local), skips gaps it already offered or cooled down, and respects a
+daily offer budget so the board is not flooded.
+
+### Minimum idle gap / look-ahead
+
+When fill-idle is on, set how long a free scrap must be before it is offered (default 90
+minutes) and how many days ahead the scanner looks (default 14). Shorter scraps stay free
+for walk-up bookings.
+
+### Max AI offers per day
+
+Caps how many new AerScheduler AI offers the school can create in a local day (default 20),
+on top of the max-pending soft-hold cap.
+
+### Quiet hours
+
+Cancel recovery waits through this local window (default 9pm to 7am) before creating an
+offer, so a late-night cancel does not soft-hold the aircraft overnight. The clock is the
+**airport time zone**, then the school zone if the airport has none. Desk-created offers
+skip quiet hours and still go out immediately.
+
+### Decline cooldown
+
+After someone declines or lets an offer expire, they are not offered another overlapping
+window on that same aircraft for this long (default 48 hours). It is not limited to the
+same cancelled booking.
+
+### Max pending offers
+
+Each pending offer soft-holds the aircraft. This cap limits how many of those holds can
+be open at once for the school (default 10).
+
+### Hold when slot is within 24 hours
+
+When the slot starts within 24 hours, the offer soft-holds the aircraft for a shorter time
+(default 30 minutes). Keep this short so a last-minute recovery does not lock the plane for
+hours. The hold never runs past the slot start.
+
+### Hold when slot is further out
+
+When the slot starts more than 24 hours from now, the offer soft-holds the aircraft longer
+(default 2 hours) so the member has time to see the notification and respond. The hold never
+runs past the slot start.
 
 <Callout type="warning">
 Accepting an offer books a real reservation. Soft holds from pending offers block other
