@@ -19,9 +19,11 @@ export const metadata: Metadata = {
 /**
  * Cards for this index.
  *
- * Deliberately longer copy than `RESOURCE_GROUPS` in `lib/resources.ts`, which
- * feeds the nav and footer where one line has to fit. The two lists do have to
- * be kept in step by hand. A new guide belongs in both, plus the sitemap.
+ * Deliberately longer copy than the curated `NAV_RESOURCE_GROUPS` /
+ * `RESOURCE_GROUPS` entries in `lib/resources.ts`, which feed the nav and
+ * footer where one line has to fit. A new guide belongs in RESOURCE_GROUPS
+ * (and the sitemap); promote it into NAV_RESOURCE_GROUPS or
+ * FOOTER_RESOURCE_LINKS only when it earns a permanent seat in the chrome.
  */
 const GUIDES = [
   {

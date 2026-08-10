@@ -16,6 +16,12 @@ export type ResourceGroup = {
   items: ResourceLink[];
 };
 
+/**
+ * Full catalog. Feeds `RESOURCE_LINKS` (feature pages, docs cross-links) and
+ * remains the source of truth for what exists. The mega-menu and footer use the
+ * curated subsets below so they stay short; everything else lives on
+ * `/resources`.
+ */
 export const RESOURCE_GROUPS: ResourceGroup[] = [
   {
     // Product documentation sits at the head of the menu because it answers a
@@ -140,3 +146,71 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
 export const RESOURCE_LINKS: ResourceLink[] = RESOURCE_GROUPS.flatMap(
   (group) => group.items
 );
+
+function linksByHref(...hrefs: string[]): ResourceLink[] {
+  return hrefs.map((href) => {
+    const link = RESOURCE_LINKS.find((item) => item.href === href);
+    if (!link) {
+      throw new Error(`Unknown resource href in nav/footer curation: ${href}`);
+    }
+    return link;
+  });
+}
+
+/**
+ * Mega-menu (and mobile Resources accordion). Four short columns, one row: the
+ * full catalog above was wrapping Documentation + Reporting into a second band
+ * and leaving empty space beside Training's single link. Topic guides, reporting
+ * deep-dives, and extra doc sections stay on `/resources`.
+ */
+export const NAV_RESOURCE_GROUPS: ResourceGroup[] = [
+  {
+    title: "Documentation",
+    items: linksByHref(
+      "/docs",
+      "/docs/getting-started",
+      "/docs/scheduling",
+      "/docs/billing"
+    ),
+  },
+  {
+    title: "Guides",
+    items: linksByHref(
+      "/resources/myfbo-alternative",
+      "/resources/flight-school-scheduling-software",
+      "/resources/quickbooks-integration",
+      "/migrating/my-fbo"
+    ),
+  },
+  {
+    title: "Compare",
+    items: linksByHref(
+      "/compare/flight-schedule-pro",
+      "/compare/flight-circle",
+      "/pricing"
+    ),
+  },
+  {
+    title: "Developers",
+    items: DEVELOPER_LINKS,
+  },
+];
+
+/**
+ * Footer Resources column. Hub + a few high-intent pages; the rest of the
+ * catalog is one click away on `/resources`. The hub itself is not in
+ * RESOURCE_GROUPS (the index isn't a guide), so it is hand-built here.
+ */
+export const FOOTER_RESOURCE_LINKS: ResourceLink[] = [
+  {
+    href: "/resources",
+    label: "All resources",
+    description: "Guides, comparisons, migrations, and documentation.",
+  },
+  ...linksByHref(
+    "/resources/myfbo-alternative",
+    "/migrating/my-fbo",
+    "/compare/flight-schedule-pro",
+    "/compare/flight-circle"
+  ),
+];

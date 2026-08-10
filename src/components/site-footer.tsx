@@ -1,97 +1,83 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { Logo } from "@/components/logo";
-import { FEATURE_GROUPS, FEATURES, featureHref } from "@/lib/features";
-import { RESOURCE_GROUPS } from "@/lib/resources";
+import { DEVELOPER_LINKS } from "@/lib/developers";
+import { FOOTER_RESOURCE_LINKS } from "@/lib/resources";
+
+const PRODUCT = [
+  { href: "/features", label: "Features" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/integrations", label: "Integrations" },
+  { href: "/docs", label: "Docs" },
+  { href: "/product", label: "Product overview" },
+  { href: "/app", label: "iOS App" },
+];
 
 const COMPANY = [
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
-  { href: "/product", label: "Product" },
-  { href: "/app", label: "iOS App" },
-  //Keeps the demo landing page linked from somewhere on the site. The header
-  //used to be its only internal link and now goes straight to the demo itself,
-  //which would otherwise leave a page sitting at 0.95 in the sitemap with
-  //nothing pointing at it: the state search engines read as "abandoned".
+  // Keeps the demo landing page linked from somewhere on the site. The header
+  // used to be its only internal link and now goes straight to the demo itself,
+  // which would otherwise leave a page sitting at 0.95 in the sitemap with
+  // nothing pointing at it: the state search engines read as "abandoned".
   { href: "/demo", label: "Demo" },
   { href: "/login", label: "Login" },
 ];
 
 /**
- * Two bands, because the link inventory is lopsided: four short feature groups
- * and Company run 2–6 items each, while Resources carries fourteen. Stacking
- * Resources under Company inside a five-column grid stretched that one cell to
- * twenty rows and left the rest of the footer as empty space.
+ * One compact band: logo plus four short columns. The old layout dumped every
+ * feature group and every resource group into the footer, which wrapped Company
+ * under Schedule and left a second Resources grid full of empty space.
  *
- * Resources keeps its own `RESOURCE_GROUPS` headings in a band underneath, so
- * every link still ships (they are the site's internal linking) without one
- * column dragging the footer three screens tall.
+ * Feature detail pages stay reachable from `/features` and the header mega-menu;
+ * the long resource catalog stays on `/resources`.
  */
 export function SiteFooter() {
   return (
     <footer className="border-t border-border bg-[#fafbfc]">
-      <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
-        <div className="grid gap-10 lg:grid-cols-[1fr_2.4fr]">
-          <div>
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-6">
+          <div className="sm:col-span-2">
             <Logo />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
               Schedule aircraft, manage your team, and keep billing square on the
               web and in a native iOS app.
             </p>
           </div>
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-5">
-            {FEATURE_GROUPS.map((group) => (
-              <FooterColumn key={group.title} title={group.title}>
-                {group.items.map((slug) => (
-                  <FooterLink key={slug} href={featureHref(slug)}>
-                    {FEATURES[slug].navLabel}
-                  </FooterLink>
-                ))}
-              </FooterColumn>
+          <FooterColumn title="Product">
+            {PRODUCT.map((item) => (
+              <FooterLink key={item.href} href={item.href}>
+                {item.label}
+              </FooterLink>
             ))}
-            <FooterColumn title="Company">
-              {COMPANY.map((item) => (
-                <FooterLink key={item.href} href={item.href}>
-                  {item.label}
-                </FooterLink>
-              ))}
-            </FooterColumn>
-          </div>
-        </div>
-
-        <div className="mt-12 border-t border-border pt-10">
-          <Link
-            href="/resources"
-            className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-primary"
-          >
-            Resources
-          </Link>
-          <div className="mt-6 grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-4">
-            {RESOURCE_GROUPS.map((group) => (
-              <FooterColumn key={group.title} title={group.title} muted>
-                {group.items.map((item) => (
-                  <FooterLink key={item.href} href={item.href}>
-                    {item.label}
-                  </FooterLink>
-                ))}
-              </FooterColumn>
+          </FooterColumn>
+          <FooterColumn title="Company">
+            {COMPANY.map((item) => (
+              <FooterLink key={item.href} href={item.href}>
+                {item.label}
+              </FooterLink>
             ))}
-          </div>
+          </FooterColumn>
+          <FooterColumn title="Resources">
+            {FOOTER_RESOURCE_LINKS.map((item) => (
+              <FooterLink key={item.href} href={item.href}>
+                {item.label}
+              </FooterLink>
+            ))}
+          </FooterColumn>
+          <FooterColumn title="Developers">
+            {DEVELOPER_LINKS.map((item) => (
+              <FooterLink key={item.href} href={item.href}>
+                {item.label}
+              </FooterLink>
+            ))}
+          </FooterColumn>
         </div>
       </div>
       <div className="border-t border-border">
         <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-5 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <p>© {new Date().getFullYear()} AerScheduler. All rights reserved.</p>
           <div className="flex flex-wrap gap-4">
-            <Link href="/features" className="hover:text-foreground">
-              Features
-            </Link>
-            <Link href="/pricing" className="hover:text-foreground">
-              Pricing
-            </Link>
-            <Link href="/integrations" className="hover:text-foreground">
-              Integrations
-            </Link>
             <Link href="/privacy" className="hover:text-foreground">
               Privacy
             </Link>
@@ -110,23 +96,14 @@ export function SiteFooter() {
 
 function FooterColumn({
   title,
-  muted,
   children,
 }: {
   title: string;
-  /** Sub-heading weight, for groups nested under the Resources band. */
-  muted?: boolean;
   children: ReactNode;
 }) {
   return (
     <div>
-      <h3
-        className={
-          muted
-            ? "text-xs font-medium text-foreground/70"
-            : "text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground"
-        }
-      >
+      <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
         {title}
       </h3>
       <ul className="mt-4 space-y-2.5">{children}</ul>

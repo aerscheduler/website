@@ -15,7 +15,7 @@ import { SiteSearch } from "@/components/site-search";
 import { Button } from "@/components/button";
 import { FEATURE_GROUPS, FEATURES, featureHref } from "@/lib/features";
 import { INTEGRATION_LINKS } from "@/lib/integrations";
-import { RESOURCE_GROUPS } from "@/lib/resources";
+import { NAV_RESOURCE_GROUPS } from "@/lib/resources";
 import { DEVELOPER_LINKS } from "@/lib/developers";
 import { APP_URL, DEMO_URL } from "@/lib/site";
 import { useAppAuthStatus } from "@/lib/use-app-auth-status";
@@ -94,9 +94,9 @@ const PANEL_WIDTH: Record<MegaId, number> = {
   // wrapping a fifth group onto a lonely second row.
   features: 880,
   integrations: 380,
-  // Four groups here for the same reason (Guides, Reporting, Developers,
-  // Compare): the panel grows sideways, which there is room for, rather than
-  // downwards, which there isn't.
+  // Four curated columns (see NAV_RESOURCE_GROUPS). Same ballpark as Features:
+  // wide enough for four label columns, short enough that mid-width desktops
+  // don't clip the panel off the right edge.
   resources: 880,
 };
 
@@ -380,11 +380,12 @@ export function SiteHeader() {
                       contentRefs.current.resources = el;
                     }}
                   >
-                    {/* One column per group. The panel is a fixed width, so
-                        these are not viewport-responsive: four groups, four
-                        columns. */}
+                    {/* Labels only, matching Features: descriptions belonged on
+                        the /resources index and were doubling the panel height.
+                        Four curated columns from NAV_RESOURCE_GROUPS stay on one
+                        row; the rest of the catalog is behind All resources. */}
                     <div className="grid grid-cols-4 gap-0 p-3">
-                      {RESOURCE_GROUPS.map((group) => (
+                      {NAV_RESOURCE_GROUPS.map((group) => (
                         <div key={group.title} className="px-3 py-3">
                           <p className="px-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
                             {group.title}
@@ -394,15 +395,10 @@ export function SiteHeader() {
                               <li key={item.href}>
                                 <Link
                                   href={item.href}
-                                  className="block rounded-lg px-2 py-2 hover:bg-muted"
+                                  className="block rounded-lg px-2 py-2 text-sm font-medium text-foreground hover:bg-muted"
                                   onClick={closeMega}
                                 >
-                                  <span className="block text-sm font-medium text-foreground">
-                                    {item.label}
-                                  </span>
-                                  <span className="mt-0.5 block text-xs leading-snug text-muted-foreground">
-                                    {item.description}
-                                  </span>
+                                  {item.label}
                                 </Link>
                               </li>
                             ))}
@@ -412,7 +408,7 @@ export function SiteHeader() {
                     </div>
                     <div className="flex items-center justify-between gap-3 border-t border-border bg-[#fafbfc] px-5 py-3">
                       <p className="text-xs text-muted-foreground">
-                        Guides for switching platforms and choosing software
+                        Guides, comparisons, reporting, and full documentation
                       </p>
                       <Link
                         href="/resources"
@@ -568,7 +564,7 @@ export function SiteHeader() {
             open={mobileOpen}
             setOpen={setMobileOpen}
           >
-            {RESOURCE_GROUPS.map((group) => (
+            {NAV_RESOURCE_GROUPS.map((group) => (
               <div key={group.title}>
                 <p className="px-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
                   {group.title}
