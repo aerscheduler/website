@@ -23,9 +23,11 @@ counter on the right reads something like `47 reservations`, and switches to
 <Screenshot id="schedule-day-board" />
 
 <Callout type="note">
-The board refreshes itself about every 20 seconds, so bookings appear and change
-without you doing anything. It skips the refresh while somebody is mid-drag, because
-pulling the block out from under the cursor would be worse.
+The board updates live when someone else books, moves or cancels a flight. If the
+live connection drops (sleeping laptop, flaky Wi-Fi), it reconnects on its own and
+falls back to a quiet refresh about every minute and a half. It holds updates while
+somebody is mid-drag, then applies them when the drag ends, so the block is never
+yanked out from under the cursor.
 </Callout>
 
 Cancelled bookings are not drawn on the board at all. To find one, use the

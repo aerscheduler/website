@@ -115,6 +115,10 @@
     {
       "name": "Service",
       "description": "Health and status."
+    },
+    {
+      "name": "Realtime",
+      "description": "WebSocket tickets for live console updates (schedule, notifications, billing)."
     }
   ],
   "paths": {
@@ -18599,6 +18603,87 @@
             }
           }
         }
+      }
+    },
+    "/realtime/ticket": {
+      "post": {
+        "tags": [
+          "Realtime"
+        ],
+        "summary": "Mint a WebSocket ticket",
+        "description": "Returns a short-lived, single-use ticket. Connect to `/realtime/ws` (see `path` / `url`) and send `{ \"v\": 1, \"type\": \"auth\", \"ticket\": \"…\" }` as the first frame so the ticket never sits in a URL. Prefer this over putting a JWT in the WebSocket URL. The upgrade itself is not part of this OpenAPI document.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "ticket",
+                        "expiresAt",
+                        "url",
+                        "path"
+                      ],
+                      "properties": {
+                        "ticket": {
+                          "type": "string",
+                          "description": "Single-use ticket, typically valid for about 60 seconds. Send it in the first WebSocket frame."
+                        },
+                        "expiresAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "Absolute WebSocket URL without a ticket query parameter."
+                        },
+                        "path": {
+                          "type": "string",
+                          "description": "Path-only WebSocket endpoint (`/realtime/ws`). Prefer building the URL from the same origin/proxy as the REST API."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not signed in.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not a member of an organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many ticket requests.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "createRealtimeTicket"
       }
     },
     "/locations": {
