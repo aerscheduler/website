@@ -122,7 +122,7 @@ export default function DemoPage() {
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-border">
         <div className="hero-mesh pointer-events-none absolute inset-0 opacity-60" aria-hidden />
-        <div className="relative mx-auto max-w-6xl px-4 pb-16 pt-12 sm:px-6 lg:grid lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-12 lg:pb-20 lg:pt-16">
+        <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-12 sm:px-6 lg:grid lg:grid-cols-[0.9fr_1.2fr] lg:items-center lg:gap-10 lg:pb-20 lg:pt-16">
           <div>
             <Breadcrumbs items={[{ name: "Live demo", href: "/demo" }]} />
             <h1 className="mt-6 max-w-xl text-4xl font-semibold tracking-tight text-brand-surface sm:text-5xl">
@@ -149,7 +149,7 @@ export default function DemoPage() {
             </p>
           </div>
 
-          <div className="mt-12 flex min-w-0 justify-center lg:mt-0 lg:justify-end">
+          <div className="mt-12 flex min-w-0 justify-center lg:mt-0">
             <ProductMock />
           </div>
         </div>

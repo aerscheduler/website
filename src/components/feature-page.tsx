@@ -60,7 +60,7 @@ export function FeaturePage({ feature }: { feature: Feature }) {
     <>
       <section className="relative overflow-hidden border-b border-border">
         <div className="hero-mesh pointer-events-none absolute inset-0 opacity-60" aria-hidden />
-        <div className="relative mx-auto max-w-6xl px-4 pb-14 pt-12 sm:px-6 lg:grid lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-12 lg:pb-20 lg:pt-16">
+        <div className="relative mx-auto max-w-7xl px-4 pb-14 pt-12 sm:px-6 lg:grid lg:grid-cols-[0.9fr_1.2fr] lg:items-center lg:gap-10 lg:pb-20 lg:pt-16">
           <div>
             <Breadcrumbs
               items={[
@@ -91,14 +91,14 @@ export function FeaturePage({ feature }: { feature: Feature }) {
               Built for {feature.personas.join(" · ")}
             </p>
           </div>
-          <div className="mt-12 flex justify-center lg:mt-0 lg:justify-end">
+          <div className="mt-12 flex min-w-0 justify-center lg:mt-0">
             <FeatureVisual slug={feature.slug} />
           </div>
         </div>
       </section>
 
       <section className="bg-white">
-        <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:py-20">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-20">
           <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">
             What you get
           </h2>
@@ -147,7 +147,7 @@ export function FeaturePage({ feature }: { feature: Feature }) {
 
       {related.length > 0 && (
         <section className="border-t border-border bg-[#fafbfc]">
-          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+          <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
             <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">
               Related features
             </h2>
@@ -173,7 +173,7 @@ export function FeaturePage({ feature }: { feature: Feature }) {
       )}
 
       <section className="border-t border-border bg-brand-surface text-white">
-        <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-8 px-4 py-14 sm:px-6 lg:flex-row lg:items-center">
+        <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-8 px-4 py-14 sm:px-6 lg:flex-row lg:items-center">
           <div>
             <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
               Try {feature.title.toLowerCase()} on your fleet.

@@ -35,7 +35,7 @@ const COMPANY = [
 export function SiteFooter() {
   return (
     <footer className="border-t border-border bg-[#fafbfc]">
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-6">
           <div className="sm:col-span-2">
             <Logo />
@@ -75,7 +75,7 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="border-t border-border">
-        <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-5 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-5 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <p>© {new Date().getFullYear()} AerScheduler. All rights reserved.</p>
           <div className="flex flex-wrap gap-4">
             <Link href="/privacy" className="hover:text-foreground">

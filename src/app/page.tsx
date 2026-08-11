@@ -54,7 +54,7 @@ export default function HomePage() {
       <section className="relative">
         <HeroAtmosphere />
 
-        <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 pb-20 pt-16 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:pb-28 lg:pt-20">
+        <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 pb-20 pt-16 sm:px-6 lg:grid-cols-[0.9fr_1.2fr] lg:gap-10 lg:pb-28 lg:pt-20">
           <div>
             <p className="animate-fade-up text-sm font-semibold tracking-tight text-primary">
               AerScheduler
@@ -82,7 +82,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="animate-fade-up-delay-2 flex min-w-0 justify-center lg:justify-end">
+          <div className="animate-fade-up-delay-2 flex min-w-0 justify-center">
             <ProductMock />
           </div>
         </div>
@@ -90,7 +90,7 @@ export default function HomePage() {
 
       {/* Value strip */}
       <section className="border-y border-border bg-white">
-        <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:py-16">
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:py-16">
           <RevealGroup className="grid gap-10 sm:grid-cols-3 sm:gap-0">
             <ValuePoint
               href={DEMO_URL}
@@ -127,7 +127,7 @@ export default function HomePage() {
       {/* Five modules: the product spine */}
       <section className="relative bg-[#fafbfc]">
         <div className="pointer-events-none absolute inset-0 grid-lines opacity-30" aria-hidden />
-        <div className="relative mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-24">
+        <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-24">
           <Reveal className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
             <div className="max-w-2xl">
               <h2 className="text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
@@ -182,7 +182,7 @@ export default function HomePage() {
 
       {/* Scheduling spotlight */}
       <section className="border-t border-border bg-white">
-        <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:gap-16 lg:py-28">
+        <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[0.9fr_1.2fr] lg:gap-14 lg:py-28">
           <Reveal>
             <p className="text-sm font-semibold text-primary">Scheduling</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
@@ -218,7 +218,7 @@ export default function HomePage() {
               </Button>
             </div>
           </Reveal>
-          <Reveal delay={120} className="flex min-w-0 justify-center lg:justify-end">
+          <Reveal delay={120} className="flex min-w-0 justify-center">
             <ProductMock />
           </Reveal>
         </div>
@@ -226,8 +226,8 @@ export default function HomePage() {
 
       {/* Billing spotlight + hard cases tucked underneath */}
       <section className="border-t border-border bg-[#fafbfc]">
-        <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-28">
-          <div className="grid items-center gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
+        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-28">
+          <div className="grid items-center gap-12 lg:grid-cols-[1.2fr_0.9fr] lg:gap-14">
             <Reveal delay={120} className="order-2 flex min-w-0 justify-center lg:order-1">
               <BillingMock />
             </Reveal>
@@ -295,7 +295,7 @@ export default function HomePage() {
 
       {/* Training spotlight */}
       <section className="border-t border-border bg-white">
-        <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:gap-16 lg:py-28">
+        <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[0.9fr_1.2fr] lg:gap-14 lg:py-28">
           <Reveal>
             <p className="text-sm font-semibold text-primary">Training</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
@@ -329,7 +329,7 @@ export default function HomePage() {
               </Button>
             </div>
           </Reveal>
-          <Reveal delay={120} className="flex min-w-0 justify-center lg:justify-end">
+          <Reveal delay={120} className="flex min-w-0 justify-center">
             <TrainingMock />
           </Reveal>
         </div>
@@ -337,7 +337,7 @@ export default function HomePage() {
 
       {/* Maintenance + Reporting twin spotlights */}
       <section className="border-t border-border bg-[#fafbfc]">
-        <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-28">
+        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-28">
           <Reveal className="max-w-2xl">
             <h2 className="text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
               Keep the fleet airworthy. See the numbers.

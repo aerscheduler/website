@@ -184,8 +184,8 @@ function ProductSection({
       }`}
     >
       <div
-        className={`mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:py-28 ${
-          reverse ? "" : ""
+        className={`mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:gap-14 lg:py-28 ${
+          reverse ? "lg:grid-cols-[1.2fr_0.9fr]" : "lg:grid-cols-[0.9fr_1.2fr]"
         }`}
       >
         <div className={reverse ? "lg:order-2" : ""}>
