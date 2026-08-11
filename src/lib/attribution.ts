@@ -88,6 +88,22 @@ function clean(value: string | null | undefined): string | undefined {
 }
 
 /**
+ * Infer a checklist track from the landing path when the CTA forgot `?src=`.
+ * Keep in step with `web/src/lib/onboarding-intent.ts`.
+ */
+function sourceFromLandingPath(landingPath: string): string | undefined {
+  const path = landingPath.split("?")[0] ?? landingPath;
+  if (/myfbo|maintenance|squawk|100-hour|annual/i.test(path)) return "maintenance";
+  if (/quickbooks/i.test(path)) return "quickbooks";
+  if (/split-billing|billing|invoice|membership|dues/i.test(path)) return "billing";
+  if (/training|curriculum|syllabus|part-61|part-141|endorsement/i.test(path)) return "training";
+  if (/report|utilization|revenue/i.test(path)) return "reports";
+  if (/flying-club|club/i.test(path)) return "clubs";
+  if (/schedul|self-booking|overnight|multi-day/i.test(path)) return "scheduling";
+  return undefined;
+}
+
+/**
  * The domain to scope the cookie to, so the console on `app.` can read it.
  *
  * Returns undefined off production hosts (localhost, Vercel previews), where a
@@ -160,13 +176,16 @@ export function captureAttribution(): Attribution | null {
     // organic search, forums and word of mouth show up. An untagged visit with no
     // referrer is someone typing the address in, which tells us nothing worth a cookie.
     const referrer = externalReferrer();
-    if (!src && Object.keys(tagged).length === 0 && !referrer) return null;
+    const landingPath = window.location.pathname.slice(0, 255);
+    // Content pages without ?src= still imply a setup track (MyFBO guide → maintenance).
+    const inferred = src ?? sourceFromLandingPath(landingPath);
+    if (!inferred && Object.keys(tagged).length === 0 && !referrer) return null;
 
     const record: Attribution = {
-      ...(src ? { src } : {}),
+      ...(inferred ? { src: inferred } : {}),
       ...tagged,
       ...(referrer ? { referrer } : {}),
-      landingPath: window.location.pathname.slice(0, 255),
+      landingPath,
       at: new Date().toISOString(),
     };
 

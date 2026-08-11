@@ -35,7 +35,9 @@ export type CampaignSource =
   | "billing"
   | "maintenance"
   | "clubs"
-  | "scheduling";
+  | "scheduling"
+  | "training"
+  | "reports";
 
 /**
  * A signup link that tells the app which conversation this visitor was already

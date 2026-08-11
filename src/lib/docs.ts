@@ -85,7 +85,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "set-up-your-school",
         title: "Set up your school on day one",
         description:
-          "The three-step wizard, then the dashboard checklist that tells you what is still missing. Everything here can be changed later, so do not stall on a decision.",
+          "The wizard (operation, first aircraft, billing), what you want working first, then the dashboard checklist that tells you what is still missing.",
         kind: "task",
         audience: ["Owners", "Admins"],
         seoQuery: "flight school software setup first day",

@@ -39,9 +39,11 @@ const FEATURE_SOURCE: Partial<Record<FeatureSlug, CampaignSource>> = {
   "self-booking": "scheduling",
   billing: "billing",
   memberships: "billing",
-  reports: "billing",
+  reports: "reports",
   maintenance: "maintenance",
   integrations: "quickbooks",
+  training: "training",
+  instruction: "training",
 };
 
 export function FeaturePage({ feature }: { feature: Feature }) {
