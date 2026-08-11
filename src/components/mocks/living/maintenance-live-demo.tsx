@@ -199,7 +199,11 @@ type MenuState = {
   toast: string | null;
 } | null;
 
-export function MaintenanceLiveDemo() {
+export function MaintenanceLiveDemo({
+  animated = true,
+}: {
+  animated?: boolean;
+} = {}) {
   const [tab, setTab] = useState<Tab>("Squawks");
   const tabRef = useRef<Tab>("Squawks");
   const [selected, setSelected] = useState("mag");
@@ -405,6 +409,7 @@ export function MaintenanceLiveDemo() {
       rest={{ x: 86, y: 90 }}
       fallback={<MaintenanceMock />}
       script={script}
+      animated={animated}
     >
       <AppMockShell
         path="/maintenance"

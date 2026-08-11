@@ -73,13 +73,18 @@ const GROUND_BLOCK: DemoBlock = {
 
 const REST = { x: 82, y: 88 };
 
-export function ScheduleHeroDemo() {
+export function ScheduleHeroDemo({
+  animated = true,
+}: {
+  /** When false, show the board at rest with no cursor or script loop. */
+  animated?: boolean;
+} = {}) {
   const reduced = usePrefersReducedMotion();
   if (reduced) return <ScheduleMock />;
-  return <LivingBoard />;
+  return <LivingScheduleBoard animated={animated} />;
 }
 
-function LivingBoard() {
+function LivingScheduleBoard({ animated = true }: { animated?: boolean }) {
   const { ref, inView } = useInView<HTMLDivElement>({
     repeat: true,
     rootMargin: "0px 0px -10% 0px",
@@ -125,7 +130,7 @@ function LivingBoard() {
       raf.current = null;
     };
 
-    if (!inView) {
+    if (!inView || !animated) {
       clearAll();
       setBlocks(SEED);
       setSelectedId(null);
@@ -558,10 +563,10 @@ function LivingBoard() {
     };
     // dragBlock reads live DOM; blocks state is updated inside the effect.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inView]);
+  }, [inView, animated]);
 
   return (
-    <div ref={ref} className="relative w-full min-w-0">
+    <div ref={animated ? ref : undefined} className="relative w-full min-w-0">
       <div ref={stageRef} className="relative w-full min-w-0">
         <AppMockShell
           path="/schedule"
@@ -665,7 +670,7 @@ function LivingBoard() {
             highlight={menu.highlight}
           />
         )}
-        <DemoCursor {...cursor} />
+        {animated ? <DemoCursor {...cursor} /> : null}
       </div>
     </div>
   );

@@ -59,7 +59,11 @@ type PayModal = {
   step: "confirm" | "charging" | "done";
 } | null;
 
-export function BillingLiveDemo() {
+export function BillingLiveDemo({
+  animated = true,
+}: {
+  animated?: boolean;
+} = {}) {
   const [tab, setTab] = useState<(typeof TABS)[number]>("Due");
   const [selected, setSelected] = useState("alex");
   const [invoices, setInvoices] = useState(() => SEED.map((r) => ({ ...r })));
@@ -199,6 +203,7 @@ export function BillingLiveDemo() {
       rest={{ x: 86, y: 90 }}
       fallback={<BillingMock />}
       script={script}
+      animated={animated}
     >
       <AppMockShell
         path="/billing"

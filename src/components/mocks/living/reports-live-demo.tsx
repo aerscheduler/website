@@ -142,7 +142,11 @@ const VIEW_MENU = [
   { id: "pin", label: "Pin to Overview", tone: "text-foreground" },
 ] as const;
 
-export function ReportsLiveDemo() {
+export function ReportsLiveDemo({
+  animated = true,
+}: {
+  animated?: boolean;
+} = {}) {
   const [view, setView] = useState<View>("overview");
   const viewRef = useRef<View>("overview");
   const [range, setRange] = useState<"30" | "ytd">("30");
@@ -411,6 +415,7 @@ export function ReportsLiveDemo() {
       rest={{ x: 86, y: 90 }}
       fallback={<ReportsMock />}
       script={script}
+      animated={animated}
     >
       <AppMockShell
         path={view === "overview" ? "/reports" : "/reports/revenue"}

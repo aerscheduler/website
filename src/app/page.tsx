@@ -220,7 +220,7 @@ export default function HomePage() {
             </div>
           </Reveal>
           <Reveal delay={120} className="flex min-w-0 justify-center">
-            <SchedulingLiveDemo />
+            <SchedulingLiveDemo animated={false} />
           </Reveal>
         </div>
       </section>
@@ -230,7 +230,7 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-28">
           <div className="grid items-center gap-12 lg:grid-cols-[1.2fr_0.9fr] lg:gap-14">
             <Reveal delay={120} className="order-2 flex min-w-0 justify-center lg:order-1">
-              <BillingLiveDemo />
+              <BillingLiveDemo animated={false} />
             </Reveal>
             <Reveal className="order-1 lg:order-2">
               <p className="text-sm font-semibold text-primary">Billing</p>
@@ -331,7 +331,7 @@ export default function HomePage() {
             </div>
           </Reveal>
           <Reveal delay={120} className="flex min-w-0 justify-center">
-            <TrainingLiveDemo />
+            <TrainingLiveDemo animated={false} />
           </Reveal>
         </div>
       </section>
@@ -344,7 +344,7 @@ export default function HomePage() {
       >
         <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1.2fr_0.9fr] lg:gap-14 lg:py-28">
           <Reveal delay={120} className="order-2 flex min-w-0 justify-center lg:order-1">
-            <MaintenanceLiveDemo />
+            <MaintenanceLiveDemo animated={false} />
           </Reveal>
           <Reveal className="order-1 lg:order-2">
             <p className="text-sm font-semibold text-primary">Maintenance</p>
@@ -431,7 +431,7 @@ export default function HomePage() {
             </div>
           </Reveal>
           <Reveal delay={120} className="flex min-w-0 justify-center">
-            <ReportsLiveDemo />
+            <ReportsLiveDemo animated={false} />
           </Reveal>
         </div>
       </section>
@@ -441,7 +441,7 @@ export default function HomePage() {
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:gap-16 lg:py-28">
           <Reveal delay={120} className="order-2 flex min-w-0 justify-center lg:order-1">
             <div className="animate-float w-full min-w-0">
-              <MobileLiveDemo />
+              <MobileLiveDemo animated={false} />
             </div>
           </Reveal>
           <Reveal className="order-1 lg:order-2">

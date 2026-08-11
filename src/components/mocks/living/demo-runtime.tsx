@@ -222,12 +222,15 @@ export function LivingBoard({
   fallback,
   script,
   children,
+  animated = true,
 }: {
   label: string;
   rest?: { x: number; y: number };
   fallback: ReactNode;
   script: (api: DemoController) => Promise<void>;
   children: ReactNode;
+  /** When false, render the mock at rest with no cursor or script loop. */
+  animated?: boolean;
 }) {
   const reduced = usePrefersReducedMotion();
   const { ref, inView } = useInView<HTMLDivElement>({
@@ -235,15 +238,20 @@ export function LivingBoard({
     rootMargin: "0px 0px -10% 0px",
   });
   const stageRef = useRef<HTMLDivElement | null>(null);
+  const play = animated && !reduced;
   const cursor = useDemoPlayer({
     stageRef,
-    inView: inView && !reduced,
+    inView: play && inView,
     label,
     rest,
     script,
   });
 
   if (reduced) return <>{fallback}</>;
+
+  if (!animated) {
+    return <div className="relative w-full min-w-0">{children}</div>;
+  }
 
   return (
     <div ref={ref} className="relative w-full min-w-0">

@@ -139,7 +139,11 @@ function findLesson(demo: string): Lesson | undefined {
   return undefined;
 }
 
-export function TrainingLiveDemo() {
+export function TrainingLiveDemo({
+  animated = true,
+}: {
+  animated?: boolean;
+} = {}) {
   const [stage, setStage] = useState(0);
   const [selected, setSelected] = useState("lesson-f4");
   const [recorded, setRecorded] = useState(false);
@@ -260,7 +264,12 @@ export function TrainingLiveDemo() {
   }, []);
 
   return (
-    <LivingBoard label="Alex · CFI" fallback={<TrainingMock />} script={script}>
+    <LivingBoard
+      label="Alex · CFI"
+      fallback={<TrainingMock />}
+      script={script}
+      animated={animated}
+    >
       <AppMockShell
         path="/training/enrollments/218"
         activeNav={3}

@@ -46,7 +46,11 @@ const MENU = [
   { id: "cancel", label: "Cancel MX block", tone: "text-[#c4142f]" },
 ] as const;
 
-export function MobileLiveDemo() {
+export function MobileLiveDemo({
+  animated = true,
+}: {
+  animated?: boolean;
+} = {}) {
   const [selected, setSelected] = useState<string | null>(null);
   const [pillActive, setPillActive] = useState<string | null>(null);
   const [sheet, setSheet] = useState<Sheet>(null);
@@ -223,6 +227,7 @@ export function MobileLiveDemo() {
       rest={{ x: 52, y: 90 }}
       fallback={<PhoneMock />}
       script={script}
+      animated={animated}
     >
       <div className="relative mx-auto w-[250px] sm:w-[268px]">
         <PhoneChrome>
