@@ -1,0 +1,13 @@
+export { SelfBookingLiveDemo } from "@/components/mocks/living/self-booking-live-demo";
+export { FleetLiveDemo } from "@/components/mocks/living/fleet-live-demo";
+export { PeopleLiveDemo } from "@/components/mocks/living/people-live-demo";
+export { BillingLiveDemo } from "@/components/mocks/living/billing-live-demo";
+export { MembershipsLiveDemo } from "@/components/mocks/living/memberships-live-demo";
+export { ComplianceLiveDemo } from "@/components/mocks/living/compliance-live-demo";
+export { InstructionLiveDemo } from "@/components/mocks/living/instruction-live-demo";
+export { TrainingLiveDemo } from "@/components/mocks/living/training-live-demo";
+export { MaintenanceLiveDemo } from "@/components/mocks/living/maintenance-live-demo";
+export { ReportsLiveDemo } from "@/components/mocks/living/reports-live-demo";
+export { IntegrationsLiveDemo } from "@/components/mocks/living/integrations-live-demo";
+export { MobileLiveDemo } from "@/components/mocks/living/mobile-live-demo";
+export { SchedulingLiveDemo } from "@/components/mocks/living/scheduling-live-demo";

@@ -98,6 +98,7 @@ export function MockHeader({
       {action && (
         <button
           type="button"
+          data-demo="action"
           onClick={onAction}
           className="rounded-full bg-primary px-3 py-1 text-[11px] font-semibold text-white transition-all duration-150 hover:bg-primary/90 active:scale-95"
         >

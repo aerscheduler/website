@@ -1,22 +1,22 @@
 import Link from "next/link";
 import { Check, ChevronRight } from "lucide-react";
 import { Button } from "@/components/button";
-import { PhoneMock } from "@/components/phone-mock";
 import { StoreBadges } from "@/components/store-badges";
 import {
-  ScheduleMock,
-  BillingMock,
-  MembershipsMock,
-  FleetMock,
-  PeopleMock,
-  ComplianceMock,
-  InstructionMock,
-  MaintenanceMock,
-  SelfBookingMock,
-  ReportsMock,
-  IntegrationsMock,
-  TrainingMock,
-} from "@/components/mocks";
+  SchedulingLiveDemo,
+  BillingLiveDemo,
+  MembershipsLiveDemo,
+  FleetLiveDemo,
+  PeopleLiveDemo,
+  ComplianceLiveDemo,
+  InstructionLiveDemo,
+  MaintenanceLiveDemo,
+  SelfBookingLiveDemo,
+  ReportsLiveDemo,
+  IntegrationsLiveDemo,
+  TrainingLiveDemo,
+  MobileLiveDemo,
+} from "@/components/mocks/living";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import {
   FEATURES,
@@ -193,37 +193,37 @@ export function FeaturePage({ feature }: { feature: Feature }) {
 function FeatureVisual({ slug }: { slug: FeatureSlug }) {
   switch (slug) {
     case "scheduling":
-      return <ScheduleMock />;
+      return <SchedulingLiveDemo />;
     case "self-booking":
-      return <SelfBookingMock />;
+      return <SelfBookingLiveDemo />;
     case "fleet":
-      return <FleetMock />;
+      return <FleetLiveDemo />;
     case "people-roles":
-      return <PeopleMock />;
+      return <PeopleLiveDemo />;
     case "compliance":
-      return <ComplianceMock />;
+      return <ComplianceLiveDemo />;
     case "instruction":
-      return <InstructionMock />;
+      return <InstructionLiveDemo />;
     case "training":
-      return <TrainingMock />;
+      return <TrainingLiveDemo />;
     case "billing":
-      return <BillingMock />;
+      return <BillingLiveDemo />;
     case "memberships":
-      return <MembershipsMock />;
+      return <MembershipsLiveDemo />;
     case "maintenance":
-      return <MaintenanceMock />;
+      return <MaintenanceLiveDemo />;
     case "reports":
-      return <ReportsMock />;
+      return <ReportsLiveDemo />;
     case "integrations":
-      return <IntegrationsMock />;
+      return <IntegrationsLiveDemo />;
     case "mobile":
       return (
         <div className="flex flex-col items-center gap-6">
-          <PhoneMock />
+          <MobileLiveDemo />
           <StoreBadges />
         </div>
       );
     default:
-      return <ScheduleMock />;
+      return <SchedulingLiveDemo />;
   }
 }

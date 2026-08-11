@@ -257,9 +257,8 @@ function Block({
         "absolute top-2 flex h-10 items-center gap-1 overflow-hidden rounded-md px-2 text-left text-[10px] font-medium text-white/95 shadow-sm",
         "transition-all duration-300 ease-[cubic-bezier(0.33,1,0.68,1)]",
         "hover:z-10 hover:brightness-110 hover:shadow-md active:scale-[0.98]",
-        selected && "z-10 scale-[1.03] ring-2 ring-white/90",
-        status === "active" && "ring-1 ring-white/70",
-        status === "upcoming" && "border border-dashed border-white/45"
+        selected && "z-10 scale-[1.03] shadow-md brightness-110",
+        status === "active" && "brightness-105"
       )}
     >
       {status === "flown" && <span className="shrink-0 opacity-90">✓</span>}

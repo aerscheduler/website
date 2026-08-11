@@ -21,7 +21,7 @@ const INCLUDED = [
   "Unlimited instructors, students, and renters",
   "Aircraft, simulator, and classroom scheduling",
   "Invoices and online payments",
-  "Maintenance squawks and reminders",
+  "Maintenance squawks and AVIATES inspections",
   "Native iOS app + web",
   "Proration when fleet size changes",
 ];

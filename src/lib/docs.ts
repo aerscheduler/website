@@ -383,6 +383,10 @@ export const DOC_SECTIONS: DocSection[] = [
             a: "No. You get a time-limited offer to accept. Decline or expiry can move the offer to the next eligible member.",
           },
           {
+            q: "Can I accept or decline from the iPhone notification?",
+            a: "Yes. Offer pushes include Accept, Decline, and View. Pull down the banner or open Notification Center to use them. Turn on Offers and standby under push notification settings.",
+          },
+          {
             q: "Where do I set days and types I want, not just one booking?",
             a: "On the web, open You → Profile → Standby. On iOS, open Settings → Standby. You can also reach it from Schedule → Offers → Manage standby. If your school requires checkouts, the aircraft list is limited to what you are approved on.",
           },

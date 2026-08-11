@@ -14,15 +14,15 @@ import {
   MoonStar,
 } from "lucide-react";
 import { Button } from "@/components/button";
-import { ProductMock } from "@/components/product-mock";
 import { ScheduleHeroDemo } from "@/components/mocks/schedule-hero-demo";
-import { PhoneMock } from "@/components/phone-mock";
 import {
-  BillingMock,
-  TrainingMock,
-  MaintenanceMock,
-  ReportsMock,
-} from "@/components/mocks";
+  BillingLiveDemo,
+  TrainingLiveDemo,
+  MaintenanceLiveDemo,
+  ReportsLiveDemo,
+  MobileLiveDemo,
+  SchedulingLiveDemo,
+} from "@/components/mocks/living";
 import { StoreBadges } from "@/components/store-badges";
 import { HeroAtmosphere } from "@/components/hero-atmosphere";
 import { Reveal, RevealGroup } from "@/components/reveal";
@@ -220,7 +220,7 @@ export default function HomePage() {
             </div>
           </Reveal>
           <Reveal delay={120} className="flex min-w-0 justify-center">
-            <ProductMock />
+            <SchedulingLiveDemo />
           </Reveal>
         </div>
       </section>
@@ -230,7 +230,7 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-28">
           <div className="grid items-center gap-12 lg:grid-cols-[1.2fr_0.9fr] lg:gap-14">
             <Reveal delay={120} className="order-2 flex min-w-0 justify-center lg:order-1">
-              <BillingMock />
+              <BillingLiveDemo />
             </Reveal>
             <Reveal className="order-1 lg:order-2">
               <p className="text-sm font-semibold text-primary">Billing</p>
@@ -331,75 +331,118 @@ export default function HomePage() {
             </div>
           </Reveal>
           <Reveal delay={120} className="flex min-w-0 justify-center">
-            <TrainingMock />
+            <TrainingLiveDemo />
           </Reveal>
         </div>
       </section>
 
-      {/* Maintenance + Reporting twin spotlights */}
-      <section className="border-t border-border bg-[#fafbfc]">
-        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-28">
-          <Reveal className="max-w-2xl">
-            <h2 className="text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
-              Keep the fleet airworthy. See the numbers.
+      {/* Maintenance spotlight */}
+      <section
+        id="maintenance"
+        aria-labelledby="home-maintenance-heading"
+        className="border-t border-border bg-[#fafbfc]"
+      >
+        <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1.2fr_0.9fr] lg:gap-14 lg:py-28">
+          <Reveal delay={120} className="order-2 flex min-w-0 justify-center lg:order-1">
+            <MaintenanceLiveDemo />
+          </Reveal>
+          <Reveal className="order-1 lg:order-2">
+            <p className="text-sm font-semibold text-primary">Maintenance</p>
+            <h2
+              id="home-maintenance-heading"
+              className="mt-3 text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl"
+            >
+              Squawks and AVIATES inspections on every tail.
             </h2>
             <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-              Maintenance and reporting sit on the same data as the schedule.
-              Grounded tails leave the board, and every figure opens the report
-              behind it.
+              Log defects at the aircraft, track annuals and 100-hours by Hobbs
+              or calendar date, and ground a tail so it cannot be booked. Same
+              data as the schedule — grounded aircraft leave the board.
             </p>
-          </Reveal>
-
-          <div className="mt-14 grid gap-16 lg:grid-cols-2 lg:gap-12">
-            <Reveal>
-              <div className="flex min-w-0 justify-center">
-                <MaintenanceMock />
-              </div>
-              <p className="mt-8 text-sm font-semibold text-primary">Maintenance</p>
-              <h3 className="mt-2 text-2xl font-semibold tracking-tight text-brand-surface">
-                Squawks next to the schedule.
-              </h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                Log issues at the aircraft, track inspections by hours or date,
-                and ground a tail so it cannot be booked.
-              </p>
-              <Button href="/features/maintenance" variant="secondary" className="mt-6">
+            <ul className="mt-6 space-y-3">
+              {[
+                "Open and resolved squawks with optional grounding",
+                "AVIATES inspections: annual, 100-hour, ELT, transponder, and more",
+                "Hour- and date-based countdowns that move with close-out",
+                "Sign off overdue items and return the aircraft to service",
+                "Grounded status visible across scheduling and self-booking",
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-2.5 text-sm text-foreground">
+                  <Check className="mt-0.5 size-4 shrink-0 text-primary" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Button href="/features/maintenance">
                 Explore maintenance
                 <ChevronRight className="size-4 opacity-80" />
               </Button>
-            </Reveal>
+              <Button href="/docs/maintenance/how-maintenance-tracking-works" variant="secondary">
+                How maintenance works
+              </Button>
+            </div>
+          </Reveal>
+        </div>
+      </section>
 
-            <Reveal delay={100}>
-              <div className="flex min-w-0 justify-center">
-                <ReportsMock />
-              </div>
-              <p className="mt-8 text-sm font-semibold text-primary">Reporting</p>
-              <h3 className="mt-2 text-2xl font-semibold tracking-tight text-brand-surface">
-                The numbers behind the schedule.
-              </h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                Revenue, hours, instruction, and utilization. Save a view, pin
-                it to a dashboard, export it.
-              </p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Button href="/features/reports" variant="secondary">
-                  Explore reporting
-                  <ChevronRight className="size-4 opacity-80" />
-                </Button>
-                <Button href="/resources/flight-school-reports" variant="ghost">
-                  Reporting guide
-                </Button>
-              </div>
-            </Reveal>
-          </div>
+      {/* Reporting spotlight */}
+      <section
+        id="reporting"
+        aria-labelledby="home-reporting-heading"
+        className="border-t border-border bg-white"
+      >
+        <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[0.9fr_1.2fr] lg:gap-14 lg:py-28">
+          <Reveal>
+            <p className="text-sm font-semibold text-primary">Reporting</p>
+            <h2
+              id="home-reporting-heading"
+              className="mt-3 text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl"
+            >
+              Filter any report. Save it. Schedule it. Pin it.
+            </h2>
+            <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
+              Revenue, hours, instruction, and utilization on the same data as
+              the schedule. Every figure on your dashboard opens the report
+              behind it — same numbers, always.
+            </p>
+            <ul className="mt-6 space-y-3">
+              {[
+                "Filter, group, and re-order any report the way you think about it",
+                "Save a view for next month — Dual on N8830M, overdue invoices, and more",
+                "Email a saved view to your team daily, weekly, or monthly",
+                "Build your own Overview dashboard; each tile can pin its own date range",
+                "Export any report to CSV",
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-2.5 text-sm text-foreground">
+                  <Check className="mt-0.5 size-4 shrink-0 text-primary" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Button href="/features/reports">
+                Explore reporting
+                <ChevronRight className="size-4 opacity-80" />
+              </Button>
+              <Button href="/resources/flight-school-reports" variant="secondary">
+                Reporting guide
+              </Button>
+            </div>
+          </Reveal>
+          <Reveal delay={120} className="flex min-w-0 justify-center">
+            <ReportsLiveDemo />
+          </Reveal>
         </div>
       </section>
 
       {/* Mobile spotlight */}
-      <section className="border-t border-border bg-white">
+      <section className="border-t border-border bg-[#fafbfc]">
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:gap-16 lg:py-28">
           <Reveal delay={120} className="order-2 flex min-w-0 justify-center lg:order-1">
-            <PhoneMock className="animate-float" />
+            <div className="animate-float w-full min-w-0">
+              <MobileLiveDemo />
+            </div>
           </Reveal>
           <Reveal className="order-1 lg:order-2">
             <p className="text-sm font-semibold text-primary">Native mobile</p>
@@ -438,7 +481,7 @@ export default function HomePage() {
       </section>
 
       {/* Clubs side door: demoted from a full spotlight */}
-      <section className="border-t border-border bg-[#fafbfc]">
+      <section className="border-t border-border bg-white">
         <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
           <Reveal>
             <Link

@@ -1,112 +1,150 @@
 "use client";
 
 import { useState } from "react";
-import { AppMockShell, MockFloat, MockHeader, MockPill } from "@/components/mocks/shell";
+import {
+  AppMockShell,
+  MockFloat,
+  MockHeader,
+  MockPill,
+} from "@/components/mocks/shell";
 import { cn } from "@/lib/cn";
 
 /**
- * The dashboard as it actually ships.
- *
- * Two details are the whole point of the product and so are the two things this
- * mock must not smooth away: each tile states **its own window** (that is what
- * lets "this week" sit beside ", year to date"), and one tile is **pinned** to a
- * range of its own while the rest follow the board's selector. A mock showing
- * four identical cards over one date range would be a picture of the old
- * Overview we replaced.
+ * Static fallback for Reports. Must show the three product beats the living
+ * demo sells: filters on a report, a saved/scheduled view, and a dashboard
+ * you customise (pinned tile + its own window).
  */
 
-const RANGES = ["Last 30 days", "Year to date"] as const;
-
-/** Values per board range; the pinned tile ignores the selector on purpose. */
 const TILES = [
-  { label: "Billed", values: ["$86,015", "$742,180"], delta: "+8%", window: null },
-  { label: "Collected", values: ["$59,716", "$688,402"], delta: "+5%", window: null },
-  { label: "Flown", values: ["255.9 h", "2,914 h"], delta: "+13%", window: null },
+  { label: "Billed", value: "$86,015", delta: "+8%", window: "Jul 2–Jul 31" },
+  { label: "Collected", value: "$59,716", delta: "+5%", window: "Jul 2–Jul 31" },
+  { label: "Flown", value: "255.9 h", delta: "+13%", window: "Jul 2–Jul 31" },
   {
     label: "Revenue this week",
-    values: ["$17,370", "$17,370"],
+    value: "$17,370",
     delta: "+9%",
     window: "Jul 24–Jul 31",
+    pinned: true,
   },
 ] as const;
 
-const FLEET = [
-  { tail: "N8830M", pct: 100 },
-  { tail: "N4417W", pct: 88 },
-  { tail: "N2201Q", pct: 53 },
-  { tail: "N5589T", pct: 29 },
-  { tail: "N6614D", pct: 20 },
-];
+const CHIPS = ["Aircraft is N8830M", "Hours ≥ 1.0"] as const;
 
-const WINDOWS = ["Jul 2–Jul 31", "Jan 1–Jul 31"] as const;
+const ROWS = [
+  { who: "N8830M · Dual", hours: "1.4", billed: "$231.00" },
+  { who: "N8830M · Dual", hours: "1.2", billed: "$198.00" },
+  { who: "N8830M · Rental", hours: "2.0", billed: "$330.00" },
+] as const;
 
 export function ReportsMock() {
-  const [range, setRange] = useState(0);
+  const [view, setView] = useState<"overview" | "report">("overview");
   const [selected, setSelected] = useState(3);
 
   return (
     <AppMockShell
-      path="/reports"
+      path={view === "overview" ? "/reports" : "/reports/revenue"}
       activeNav={0}
-      float={<MockFloat label="Revenue by aircraft" value="N8830M" meta="$26,149 billed" />}
+      float={
+        <MockFloat
+          label={view === "overview" ? "Your dashboard" : "Saved view"}
+          value={view === "overview" ? "4 tiles" : "Dual · N8830M"}
+          meta={
+            view === "overview"
+              ? "Every figure opens its report"
+              : "Weekly email · Mon 7am MT"
+          }
+        />
+      }
     >
-      <MockHeader eyebrow="Insights" title="Overview" action="Customise" />
+      <MockHeader
+        eyebrow="Insights"
+        title={view === "overview" ? "Overview" : "Revenue by aircraft"}
+        action={view === "overview" ? "Customise" : undefined}
+      />
 
       <div className="flex items-center gap-1.5 border-b border-border px-4 py-2">
-        {RANGES.map((label, i) => (
-          <MockPill key={label} active={range === i} onClick={() => setRange(i)}>
-            {label}
-          </MockPill>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-2 gap-2.5 p-4">
-        {TILES.map((tile, i) => (
-          <button
-            key={tile.label}
-            type="button"
-            onClick={() => setSelected(i)}
-            className={cn(
-              "rounded-xl border bg-[#fafbfc] p-3 text-left transition-all duration-150 active:scale-[0.98]",
-              selected === i
-                ? "border-primary/40 bg-primary/[0.04] shadow-sm"
-                : "border-border hover:border-primary/20 hover:bg-white"
-            )}
-          >
-            <p className="truncate text-[9px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-              {tile.label}
-            </p>
-            {/* Never dropped: with mixed ranges the number means nothing without it. */}
-            <p className="mt-0.5 truncate text-[9px] text-muted-foreground">
-              {tile.window ?? WINDOWS[range]}
-              {tile.window && <span className="opacity-70"> · pinned</span>}
-            </p>
-            <p className="mt-1 text-lg font-semibold tabular-nums text-brand-surface">
-              {tile.values[range]}
-            </p>
-            <p className="text-[10px] font-semibold text-success">{tile.delta}</p>
-          </button>
-        ))}
-      </div>
-
-      <div className="border-t border-border px-4 py-3">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-          Billed by aircraft
-        </p>
-        <div className="mt-2.5 space-y-1.5">
-          {FLEET.map((row) => (
-            <div key={row.tail} className="flex items-center gap-2">
-              <span className="w-14 shrink-0 text-[10px] tabular-nums text-muted-foreground">
-                {row.tail}
-              </span>
-              <span
-                className="h-2 rounded-sm bg-primary/80 transition-all duration-300"
-                style={{ width: `${row.pct}%` }}
-              />
-            </div>
-          ))}
+        <MockPill active={view === "overview"} onClick={() => setView("overview")}>
+          Overview
+        </MockPill>
+        <MockPill active={view === "report"} onClick={() => setView("report")}>
+          Revenue
+        </MockPill>
+        <div className="ml-auto">
+          <MockPill active>Last 30 days</MockPill>
         </div>
       </div>
+
+      {view === "overview" ? (
+        <div className="grid grid-cols-2 gap-2.5 p-4">
+          {TILES.map((tile, i) => (
+            <button
+              key={tile.label}
+              type="button"
+              onClick={() => setSelected(i)}
+              className={cn(
+                "rounded-xl border bg-[#fafbfc] p-3 text-left transition-all duration-150",
+                selected === i
+                  ? "border-primary/40 bg-primary/[0.04] shadow-sm"
+                  : "border-border hover:border-primary/20"
+              )}
+            >
+              <p className="truncate text-[9px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                {tile.label}
+              </p>
+              <p className="mt-0.5 truncate text-[9px] text-muted-foreground">
+                {tile.window}
+                {"pinned" in tile && tile.pinned && (
+                  <span className="opacity-70"> · pinned</span>
+                )}
+              </p>
+              <p className="mt-1 text-lg font-semibold tabular-nums text-brand-surface">
+                {tile.value}
+              </p>
+              <p className="text-[10px] font-semibold text-success">{tile.delta}</p>
+            </button>
+          ))}
+        </div>
+      ) : (
+        <div className="flex min-h-[220px] flex-col">
+          <div className="flex flex-wrap items-center gap-1.5 border-b border-border px-4 py-2">
+            <span className="rounded-full border border-primary/40 bg-primary/[0.08] px-2.5 py-1 text-[10px] font-semibold text-primary">
+              Filters · 2
+            </span>
+            <span className="rounded-full border border-border bg-white px-2.5 py-1 text-[10px] font-semibold text-foreground">
+              Dual · N8830M · scheduled
+            </span>
+            {CHIPS.map((c) => (
+              <span
+                key={c}
+                className="rounded-full bg-muted px-2 py-1 text-[9px] font-medium text-foreground"
+              >
+                {c}
+              </span>
+            ))}
+          </div>
+          <div className="grid grid-cols-[1fr_52px_72px] gap-2 px-4 py-1.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+            <span>Line</span>
+            <span className="text-right">Hours</span>
+            <span className="text-right">Billed</span>
+          </div>
+          <div className="divide-y divide-border">
+            {ROWS.map((r) => (
+              <div
+                key={r.who + r.hours}
+                className="grid grid-cols-[1fr_52px_72px] gap-2 px-4 py-2 text-[11px]"
+              >
+                <span className="truncate font-medium text-foreground">{r.who}</span>
+                <span className="text-right tabular-nums text-muted-foreground">
+                  {r.hours}
+                </span>
+                <span className="text-right font-semibold tabular-nums text-foreground">
+                  {r.billed}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </AppMockShell>
   );
 }

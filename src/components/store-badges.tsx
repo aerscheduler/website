@@ -1,9 +1,9 @@
-import Image from "next/image";
 import { APP_STORE_URL } from "@/lib/site";
 import { cn } from "@/lib/cn";
 
 /**
  * Official App Store badge (same asset as the previous marketing site).
+ * Plain <img> because next/image's optimizer rejects SVGs by default.
  *
  * TODO(android): the Google Play badge lives just below, commented out. The
  * /brand/google-play-badge.png asset is intentionally still in the repo so
@@ -19,7 +19,8 @@ export function StoreBadges({ className }: { className?: string }) {
         className="inline-block transition-opacity hover:opacity-90"
         aria-label="Download on the App Store"
       >
-        <Image
+        {/* eslint-disable-next-line @next/next/no-img-element -- SVG badge; optimizer blocks SVGs */}
+        <img
           src="/brand/app-store-badge.svg"
           alt="Download on the App Store"
           width={140}
@@ -35,7 +36,7 @@ export function StoreBadges({ className }: { className?: string }) {
         className="inline-block transition-opacity hover:opacity-90"
         aria-label="Get it on Google Play"
       >
-        <Image
+        <img
           src="/brand/google-play-badge.png"
           alt="Get it on Google Play"
           width={150}

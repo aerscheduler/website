@@ -76,7 +76,7 @@ export function TrainingMock() {
         ))}
       </div>
 
-      <div className="divide-y divide-border">
+      <div className="flex min-h-[196px] flex-col divide-y divide-border">
         {STAGES[stage].lessons.map((l) => (
           <div key={l.name} className="flex items-center justify-between gap-3 px-4 py-2.5">
             <div className="min-w-0">

@@ -1293,7 +1293,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
       '[data-doc-shot="add-credit-dialog"] [role="combobox"]',
       '[role="option"]:has-text("Night flight training")',
       // Addressed by an attribute that is merely PRESENT, because a fill step splits on
-      // its first "=" and any [attr=", value"] selector would be cut in half by its own
+      // its first "=" and any [attr="value"] selector would be cut in half by its own
       // quotes. Hours is the only number input on screen, the date the only one with a
       // max. The date is deliberately old: prior training is the case this dialog is for.
       "fill:input[step]=18.4",

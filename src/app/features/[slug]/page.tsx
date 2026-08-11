@@ -34,17 +34,17 @@ const FEATURE_SEO: Record<
       "Roles, invites, and roster tools for owners, instructors, students, renters, and dispatchers.",
   },
   compliance: {
-    title: "Pilot Currency & Go/No-Go Compliance",
+    title: "Pilot Currency & Compliance",
     description:
       "Block bookings when aircraft or members are not current. Medical, BFR, and grounding checks on the board.",
   },
   instruction: {
-    title: "Flight Instruction Rates & Ratings",
+    title: "Flight Instruction Rates, Pairing & Availability",
     description:
-      "Configure ratings, dual rates, and instructor availability for private, instrument, and commercial training.",
+      "Set dual and ground rates, pair CFIs with students, and publish weekly availability that booking respects. Syllabus and training records live on a separate page.",
   },
   training: {
-    // Commercial intent ("software", ", tracking"), so it does not compete with
+    // Commercial intent ("software", "tracking"), so it does not compete with
     // /resources/flight-training-records, which owns the informational query
     // "what training records does a flight school have to keep".
     title: "Part 141 & Part 61 Syllabus and Training Records Software",
@@ -57,7 +57,7 @@ const FEATURE_SEO: Record<
       "Turn closed-out flights into invoices, take cards online with Stripe, and keep accounts receivable current.",
   },
   memberships: {
-    // Commercial intent ("software", ", billing"), so it does not compete with
+    // Commercial intent ("software", "billing"), so it does not compete with
     // /resources/flying-club-dues-and-fees, which owns the informational query
     // "how do flying clubs structure dues and initiation fees".
     title: "Flying Club Membership & Dues Billing Software",
@@ -67,7 +67,7 @@ const FEATURE_SEO: Record<
   maintenance: {
     title: "Aircraft Maintenance Squawk Tracking",
     description:
-      "Log squawks, ground aircraft on the schedule, and track airworthiness reminders for your fleet.",
+      "Log squawks, ground aircraft on the schedule, and track AVIATES inspections for your fleet.",
   },
   mobile: {
     title: "Flight School iOS App",
@@ -75,7 +75,7 @@ const FEATURE_SEO: Record<
       "The native AerScheduler app for booking, invoices, documents, and squawks. The same operation as the web desk.",
   },
   reports: {
-    // Deliberately commercial-intent ("reporting software", ", dashboards") so it
+    // Deliberately commercial-intent ("reporting software", "dashboards") so it
     // doesn't compete with /resources/flight-school-reports, which owns the
     // informational query "what reports does a flight school need".
     title: "Flight School Reporting Software & Dashboards",

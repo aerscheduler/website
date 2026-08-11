@@ -14,7 +14,7 @@ import { SITE_NAME, SITE_URL } from "@/lib/site";
  * One statically-generated reference page per API area.
  *
  * Separate pages rather than one long scroll: each area is a distinct thing
- * somebody searches for ("flight school billing API", ", aircraft maintenance
+ * somebody searches for ("flight school billing API", "aircraft maintenance
  * API"), each gets its own title, description, and canonical URL, and a page
  * about eight endpoints ranks better than a section of a page about a hundred
  * and forty.

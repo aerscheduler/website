@@ -128,14 +128,14 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
   },
   compliance: {
     slug: "compliance",
-    title: "Go / No-Go",
-    navLabel: "Go / No-Go",
-    eyebrow: "Compliance",
+    title: "Compliance",
+    navLabel: "Compliance",
+    eyebrow: "Safety",
     headline: "Who and what can’t fly today, at a glance.",
     summary:
       "Medicals, BFRs, checkouts, documents, and grounded assets on one board so dispatch doesn’t release a flight that shouldn’t go.",
     bullets: [
-      "Org Go/No-Go board for grounded aircraft and grounded members",
+      "Org compliance board for grounded aircraft and grounded members",
       "Currency types (medical, BFR, checkout, and custom) with renewals",
       "Member document vault with expiry awareness",
       "Personal currencies for students, renters, and instructors",
@@ -148,19 +148,20 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
     slug: "instruction",
     title: "Instruction",
     navLabel: "Instruction",
-    //Was "Training", which now belongs to the feature that actually is training. This one is
-    //rates, ratings and who may teach whom; two cards both labelled Training sitting next to
-    //each other in "Related features" told a visitor nothing.
-    eyebrow: "Rates & ratings",
-    headline: "Ratings, rates, availability, and CFI↔student pairing.",
+    // Was "Training", which now belongs to the feature that actually is training.
+    // This page is the commercial/ops half: rates, who may teach whom, and the
+    // weekly availability that booking respects — not the syllabus or grades.
+    eyebrow: "Rates & pairing",
+    headline: "Who can teach whom, at what rate, and when they’re free.",
     summary:
-      "Define instruction types and hourly rates, assign instructors and students, and let availability drive what shows as bookable.",
+      "Instruction types set the dual and ground rates on every invoice. Pairing decides which CFI a student can book with. Weekly availability is what the desk and self-booking actually offer. The syllabus and lesson grades live under Training.",
     bullets: [
-      "Organization instruction types with default instructor rates",
-      "Assign and unassign instructors and students",
-      "Instructor weekly availability that booking respects",
-      "Dual, ground, and solo reservations wired to ratings",
-      "Onboarding paths for flight schools and solo CFIs",
+      "Instruction types with default dual and ground rates",
+      "Per-instructor rate overrides when a CFI bills differently",
+      "Assign students to instructors — booking only offers valid pairs",
+      "Weekly availability that self-booking and the desk both respect",
+      "Dual, ground, and solo reservations priced from the same rates",
+      "Clear split from Training: rates & pairing here, syllabus & records there",
     ],
     personas: ["Owners", "Admins", "Instructors", "Students"],
     related: ["training", "scheduling", "people-roles", "billing"],
@@ -242,13 +243,13 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
     title: "Maintenance & Squawks",
     navLabel: "Maintenance & Squawks",
     eyebrow: "Airworthiness",
-    headline: "Squawks next to the schedule. Ground the tail when it matters.",
+    headline: "Squawks next to the schedule. Inspections that ground when they lapse.",
     summary:
-      "Log issues at the aircraft, triage them with the tech, and keep grounded airplanes off the bookable board.",
+      "Track AVIATES inspections and squawks on each tail, triage with the tech, and keep grounded airplanes off the bookable board.",
     bullets: [
       "Log, triage, and resolve squawks, optionally grounding the aircraft",
-      "Hour- and date-based maintenance reminders",
-      "Open vs resolved views for techs and dispatch",
+      "AVIATES inspections — annual, 100-hour, ELT, and the rest — on hour and date intervals",
+      "Sign off overdue items and return the aircraft to service",
       "Grounded status visible across scheduling",
       "Log issues from the native app on the ramp",
     ],
@@ -262,13 +263,13 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
     eyebrow: "iOS",
     headline: "Built for the ramp, not a shrunk-down desktop.",
     summary:
-      "A native iOS app for booking, invoices, documents, and squawks. The same operation as the web desk, in your pocket.",
+      "A native iOS app with a real Home — next booking, open squawks, unpaid invoices, and AVIATES inspections — the same operation as the web desk.",
     bullets: [
       "A real native app, not a mobile website",
+      "Home shows what's next: flights, maintenance, squawks, and dues",
       "Book and manage lessons from anywhere",
       "Pay invoices and keep documents current",
-      "Log squawks and check the day on the go",
-      "Same org data as app.aerscheduler.com",
+      "Log squawks and check inspections on the go",
     ],
     personas: ["Students", "Renters", "Instructors", "Everyone"],
     related: ["self-booking", "scheduling", "billing", "maintenance"],
@@ -321,18 +322,14 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
 
 export const FEATURE_GROUPS: FeatureGroup[] = [
   {
+    // People and compliance sit with Schedule: currencies and roles gate a
+    // booking, which is a front-desk concern (a syllabus gates a certificate).
     title: "Schedule",
-    items: ["scheduling", "self-booking", "fleet"],
+    items: ["scheduling", "self-booking", "fleet", "people-roles", "compliance"],
   },
   {
     title: "Train",
     items: ["training", "instruction"],
-  },
-  {
-    // Compliance sits here rather than under Train: currency and medicals gate a BOOKING,
-    // which is a front-desk concern, where a syllabus gates a certificate.
-    title: "Run the school",
-    items: ["people-roles", "compliance"],
   },
   {
     title: "Money & MX",

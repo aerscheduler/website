@@ -17,7 +17,7 @@ import { FEATURE_GROUPS, FEATURES, featureHref } from "@/lib/features";
 import { INTEGRATION_LINKS } from "@/lib/integrations";
 import { NAV_RESOURCE_GROUPS } from "@/lib/resources";
 import { DEVELOPER_LINKS } from "@/lib/developers";
-import { APP_URL, DEMO_URL } from "@/lib/site";
+import { APP_URL, DEMO_URL, LOGIN_URL } from "@/lib/site";
 import { useAppAuthStatus } from "@/lib/use-app-auth-status";
 import { cn } from "@/lib/cn";
 
@@ -41,10 +41,9 @@ const RIGHT_NAV = [
 /**
  * Desktop nav shows from this breakpoint up. Below it, the hamburger.
  *
- * Was `md` (768px). Features + Integrations + Resources + Pricing + Live demo +
- * Docs already fill a mid-width bar, and Login / Get started / App used to shove
- * them into each other. With those gone the links still need room for the mega
- * triggers' labels. `lg` (1024px) is where they stop colliding.
+ * Was `md` (768px). Features + Integrations + Resources + Pricing + Login +
+ * Live demo + Docs already fill a mid-width bar. `lg` (1024px) is where they
+ * stop colliding.
  */
 const NAV_DESKTOP = "lg:flex";
 const NAV_MOBILE_ONLY = "lg:hidden";
@@ -454,10 +453,15 @@ export function SiteHeader() {
               <ChevronRight className="size-4 opacity-80" />
             </Button>
           ) : (
-            <Button href={DEMO_URL} variant="primary">
-              Live demo
-              <ChevronRight className="size-4 opacity-80" />
-            </Button>
+            <>
+              <Button href={LOGIN_URL} variant="secondary">
+                Login
+              </Button>
+              <Button href={DEMO_URL} variant="primary">
+                Live demo
+                <ChevronRight className="size-4 opacity-80" />
+              </Button>
+            </>
           )}
         </div>
 
@@ -608,10 +612,15 @@ export function SiteHeader() {
                 <ChevronRight className="size-4 opacity-80" />
               </Button>
             ) : (
-              <Button href={DEMO_URL} variant="primary" className="w-full">
-                Live demo
-                <ChevronRight className="size-4 opacity-80" />
-              </Button>
+              <>
+                <Button href={LOGIN_URL} variant="secondary" className="w-full">
+                  Login
+                </Button>
+                <Button href={DEMO_URL} variant="primary" className="w-full">
+                  Live demo
+                  <ChevronRight className="size-4 opacity-80" />
+                </Button>
+              </>
             )}
           </div>
         </div>

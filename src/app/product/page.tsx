@@ -122,7 +122,7 @@ export default function ProductPage() {
             <Capability
               icon={<Wrench className="size-5" />}
               title="Maintenance"
-              body="Squawks and reminders sit next to the schedule. Grounded aircraft don’t show as bookable."
+              body="Squawks and AVIATES inspections sit next to the schedule. Grounded aircraft don’t show as bookable."
             />
             <Capability
               icon={<CalendarDays className="size-5" />}

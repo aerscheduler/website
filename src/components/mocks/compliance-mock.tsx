@@ -13,7 +13,7 @@ export function ComplianceMock() {
       activeNav={4}
       float={<MockFloat label="Blocked today" value="3" meta="1 aircraft · 2 members" />}
     >
-      <MockHeader eyebrow="Safety" title="Go / No-Go" />
+      <MockHeader eyebrow="Safety" title="Compliance" />
       <div className="grid flex-1 gap-3 p-4 sm:grid-cols-2">
         <Panel
           title="Grounded aircraft"
