@@ -3722,6 +3722,114 @@
         ]
       }
     },
+    "/orgUsers/{orgUserId}/ledger": {
+      "get": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Get a member's ledger",
+        "description": "Account balance and append-only ledger entries for one member. **Self or admin.** Read-only in L1: money-in and flight charges land in later phases. `ledgerEnabled` tells you whether the org is in ledger billing mode; the balance is still returned when mode is off (usually 0).",
+        "responses": {
+          "200": {
+            "description": "Balance plus a page of entries.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/MemberLedger"
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "pagination"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Not in your organization, or not allowed to view another member's ledger.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getOrgUserLedger",
+        "parameters": [
+          {
+            "name": "orgUserId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The membership id."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows of entries to return, 1–1000. Defaults to 1000."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Entries to skip, for paging. Defaults to 0."
+          }
+        ]
+      }
+    },
     "/orgUsers/{orgUserId}/users": {
       "get": {
         "tags": [
@@ -23781,6 +23889,125 @@
           },
           "reservation": {
             "$ref": "#/components/schemas/Reservation"
+          }
+        },
+        "additionalProperties": true
+      },
+      "LedgerEntry": {
+        "type": "object",
+        "description": "One append-only money movement on a member's account. Corrections are reversing entries, never edits.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the entry was posted."
+          },
+          "amountCents": {
+            "type": "integer",
+            "description": "Signed cents. Credits positive; charges negative."
+          },
+          "type": {
+            "type": "string",
+            "description": "topup | cash | check | other | adjustment | flight_charge | item_charge | fee | refund | reversal"
+          },
+          "memo": {
+            "description": "Optional note.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "orgUserId": {
+            "type": "integer",
+            "description": "Member this entry belongs to."
+          },
+          "organizationId": {
+            "type": "integer",
+            "description": "Organization id."
+          },
+          "createdByOrgUserId": {
+            "description": "Who posted it, when applicable.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "invoiceId": {
+            "description": "Linked Stripe invoice when money moved through Stripe.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "reservationId": {
+            "description": "Linked reservation for flight charges.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "reversesId": {
+            "description": "Set on reversals: the entry this one reverses.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "items": {
+            "type": "array",
+            "description": "Optional line items.",
+            "items": {
+              "$ref": "#/components/schemas/LedgerEntryItem"
+            }
+          }
+        },
+        "additionalProperties": true
+      },
+      "LedgerEntryItem": {
+        "type": "object",
+        "description": "One line on a ledger entry.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Line id."
+          },
+          "name": {
+            "type": "string",
+            "description": "What it is for."
+          },
+          "qty": {
+            "type": "integer",
+            "description": "Quantity."
+          },
+          "unitPrice": {
+            "type": "integer",
+            "description": "Unit price in cents (signed; qty × unitPrice rolls up to the entry amount)."
+          }
+        },
+        "additionalProperties": true
+      },
+      "MemberLedger": {
+        "type": "object",
+        "description": "A member's account balance and recent ledger entries. Present whether or not the org has ledger mode enabled (balance is 0 with an empty list when unused).",
+        "properties": {
+          "balanceCents": {
+            "type": "integer",
+            "description": "Cached account balance in cents. Positive = credit; negative = amount owed."
+          },
+          "ledgerEnabled": {
+            "type": "boolean",
+            "description": "Whether this organization is in ledger billing mode."
+          },
+          "entries": {
+            "type": "array",
+            "description": "Newest-first page of entries.",
+            "items": {
+              "$ref": "#/components/schemas/LedgerEntry"
+            }
           }
         },
         "additionalProperties": true
