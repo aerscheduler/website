@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/button";
 import { ProductMock } from "@/components/product-mock";
+import { ScheduleHeroDemo } from "@/components/mocks/schedule-hero-demo";
 import { PhoneMock } from "@/components/phone-mock";
 import {
   BillingMock,
@@ -83,7 +84,7 @@ export default function HomePage() {
           </div>
 
           <div className="animate-fade-up-delay-2 flex min-w-0 justify-center">
-            <ProductMock />
+            <ScheduleHeroDemo />
           </div>
         </div>
       </section>
