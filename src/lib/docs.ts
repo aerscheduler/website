@@ -593,14 +593,12 @@ export const DOC_SECTIONS: DocSection[] = [
         seoQuery: "charge flight to prepaid account balance AerScheduler",
         faqs: [
           {
-            question: "Why is there no invoice after I closed out a member flight?",
-            answer:
-              "If Settings → Billing is set to Account ledger, member flights post to the account balance. Look for Charged to account ledger on the booking, or a Flight row on the member's Billing tab.",
+            q: "Why is there no invoice after I closed out a member flight?",
+            a: "If Settings → Billing is set to Account ledger, member flights post to the account balance. Look for Charged to account ledger on the booking, or a Flight row on the member's Billing tab.",
           },
           {
-            question: "Do guest flights go on the ledger too?",
-            answer:
-              "No. Guests always get a pay-this-visit invoice, even when the school uses Account ledger for members.",
+            q: "Do guest flights go on the ledger too?",
+            a: "No. Guests always get a pay-this-visit invoice, even when the school uses Account ledger for members.",
           },
         ],
       },
@@ -614,14 +612,12 @@ export const DOC_SECTIONS: DocSection[] = [
         seoQuery: "flight school member account ledger receipt reassign charge",
         faqs: [
           {
-            question: "Can I edit a ledger charge that was posted wrong?",
-            answer:
-              "No. Reverse it (or reassign a flight charge) so both the mistake and the fix stay on the account. There is no edit-in-place.",
+            q: "Can I edit a ledger charge that was posted wrong?",
+            a: "No. Reverse it (or reassign a flight charge) so both the mistake and the fix stay on the account. There is no edit-in-place.",
           },
           {
-            question: "Who can reassign a flight charge?",
-            answer:
-              "Owners and admins only, from People → the member → Billing, on a live Flight row that has not already been reversed.",
+            q: "Who can reassign a flight charge?",
+            a: "Owners and admins only, from People → the member → Billing, on a live Flight row that has not already been reversed.",
           },
         ],
       },
@@ -635,14 +631,12 @@ export const DOC_SECTIONS: DocSection[] = [
         seoQuery: "flight school accounts receivable ledger balances who owes",
         faqs: [
           {
-            question: "Why do I still see an Invoices tab in ledger mode?",
-            answer:
-              "Guests always get pay-this-visit invoices, and leftover invoices from before you switched still need a home. Member flights post to the Accounts tab.",
+            q: "Why do I still see an Invoices tab in ledger mode?",
+            a: "Guests always get pay-this-visit invoices, and leftover invoices from before you switched still need a home. Member flights post to the Accounts tab.",
           },
           {
-            question: "Where is aging, like 30 60 90 days?",
-            answer:
-              "Operations Billing shows days owing on each row. The Accounts receivable report under Reports groups those balances (or unpaid invoices, in invoice mode) into age buckets and exports.",
+            q: "Where is aging, like 30 60 90 days?",
+            a: "Operations Billing shows days owing on each row. The Accounts receivable report under Reports groups those balances (or unpaid invoices, in invoice mode) into age buckets and exports.",
           },
         ],
         related: [
