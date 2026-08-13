@@ -1,5 +1,5 @@
 <Summary>
-The 18 built-in reports, the category each sits in, the window it opens on, and the grouping it opens with. Use it
+The 19 built-in reports, the category each sits in, the window it opens on, and the grouping it opens with. Use it
 to pick the right report the first time.
 </Summary>
 
@@ -29,6 +29,7 @@ Owners and admins only. No dispatcher and no technician sees this heading at all
 | Items sold | Last 30 days | Item |
 | Memberships and dues | Last 30 days | Ungrouped |
 | Tax collected | Last 30 days | Rate |
+| Accounts receivable | Last 30 days | Age |
 
 Worth knowing:
 
@@ -39,6 +40,9 @@ Worth knowing:
 - On **Memberships and dues**, the "Annualised" column is a run rate, not money received. It normalises every
   cadence to a year (monthly times 12, quarterly times 4), and only active memberships contribute. It will not
   match Billed or Collected, and it is not supposed to.
+- **Accounts receivable** is a snapshot as of the end of the range (the start date is unused). In ledger mode it
+  lists members with a negative balance; otherwise it rolls unpaid invoices up by customer. See
+  [Review account balances and who owes](/docs/billing/review-account-balances-and-who-owes).
 
 ## Operations
 
@@ -131,7 +135,7 @@ Worth knowing:
 
 ## Reports that open already grouped
 
-Five, and no others:
+Six, and no others:
 
 | Report | Opens grouped by |
 |---|---|
@@ -140,6 +144,7 @@ Five, and no others:
 | Items sold | Item |
 | Tax collected | Rate |
 | Cancellations &amp; no-shows | Reason |
+| Accounts receivable | Age |
 
 Everything else opens ungrouped. See [Group a report](/docs/reports/group-a-report).
 

@@ -1,35 +1,48 @@
 <Summary>
-<Where app="web">Aircraft → the tail's ⋯ menu → Approve renters</Where>, then flip the
-switch beside each person. Each switch saves the moment you touch it. The approval is your
-record that somebody is checked out on that tail.
+<Where app="web">Aircraft → the tail's ⋯ menu → Approve members</Where>, or open the
+person under People and flip the switches on <Where app="web">Compliance → Approved
+aircraft</Where>. Each switch saves the moment you touch it. Students and renters both
+appear. This is not people groups.
 </Summary>
 
 <Roles>Owners, Admins</Roles>
 
-## Check somebody out
+## Check somebody out from the aircraft
 
 <Steps>
   <Step n={1} title="Open Aircraft">
-    Or open the tail's own record. **Approve renters** is on both.
+    Or open the tail's own record. **Approve members** is on both.
   </Step>
-  <Step n={2} title="Open the ⋯ menu on the tail and choose Approve renters">
-    A sheet lists the people who can be approved on this aircraft.
+  <Step n={2} title="Open the ⋯ menu on the tail and choose Approve members">
+    A sheet lists every student and renter. Instructors are not on this list because they
+    are never held to it.
   </Step>
   <Step n={3} title="Flip the switch beside each person">
     There is no Save button. Each switch writes immediately and confirms with a toast.
   </Step>
 </Steps>
 
-<Callout type="warning">
-The sheet lists **renters only**. Somebody who holds the student role and not the renter
-role does not appear here at all. If the person you are looking for is missing, check their
-roles first from <Where app="web">People → ⋯ → Edit roles</Where>.
+## Check somebody out from their profile
+
+<Steps>
+  <Step n={1} title="Open People and the person">
+    Anyone with the student or renter role can be approved. Instructors can still have a
+    checkout recorded, it just does not restrict what they book.
+  </Step>
+  <Step n={2} title="Open Compliance">
+    The **Approved aircraft** card lists every tail and simulator.
+  </Step>
+  <Step n={3} title="Flip the switch beside each aircraft">
+    Same write as the aircraft sheet. Use this when you are already on the person's record
+    after a checkout flight.
+  </Step>
+</Steps>
+
+<Callout type="note">
+People groups (Settings → School → Groups) scope currency rules such as medicals and
+flight reviews. They do not grant or refuse a checkout. An empty Groups tab is normal
+and unrelated.
 </Callout>
-
-## Where the approval shows up
-
-On the member's record, under **Compliance → Approved aircraft**. That is the list to open
-when somebody asks what a given renter is checked out on.
 
 ## What the approval actually restricts
 
@@ -52,14 +65,10 @@ With the setting on:
   checked against the approved list just like an aircraft.
 
 <Callout type="note">
-Turning the rule on at a school that has never used it will stop your renters booking. Work
-through the fleet and approve people first, then switch it on.
+Turning the rule on at a school that has never used it will stop students and renters
+booking. Work through the fleet (or through people's profiles) and approve them first,
+then switch it on.
 </Callout>
-
-## The other way to turn it on
-
-The booking rules step on your dashboard asks "Check people out on an
-aircraft first", which sets the same switch. Either route is fine.
 
 ## If somebody cannot book a tail
 

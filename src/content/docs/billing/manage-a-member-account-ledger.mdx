@@ -1,0 +1,122 @@
+<Summary>
+Open the member on <Where app="web">People</Where>, then **Ledger** under Billing.
+That table shows balance, credits, charges, receipts, and (for admins) reassign.
+**Invoices** is leftover Stripe invoices and guest bills. Members see the same split
+on their own <Where app="web">Billing</Where> page.
+</Summary>
+
+<Roles>Owners, Admins, Students, Renters</Roles>
+
+Account ledger only appears when the school has chosen
+[Account ledger under How members pay](/docs/billing/choose-invoice-or-account-ledger).
+Otherwise you see invoices as usual.
+
+## What you see
+
+The ledger (on <Where app="web">People → Ledger</Where> and on your own
+<Where app="web">Billing → Ledger</Where> page) shows credit on account (positive) or amount
+owed (negative), then entries. Search and filter by type or date, the same way
+Operations Billing, Accounts tab, is the school-wide roster; click a row to land here.
+The table itself filters like any other list. Credits render in green. **Posted by** is who
+put the row on the ledger (an admin for desk credit, refund, and adjustment; the
+member for a card top-up; **System** when Stripe or a job posted it). Click a row
+to open the same right-hand panel reservations use. Those posts also appear under
+Audit logs → Ledger. Common types:
+
+| Label | Meaning |
+|---|---|
+| Top-up | Member paid by card to add funds |
+| Cash / Check / Other credit | Desk credit posted by an admin |
+| Adjustment | Admin plus or minus with a memo |
+| Flight | Close-out charge for a booking |
+| Fee | Join fee, dues, or enrollment fee |
+| Charge | Desk custom charge (when posted as a ledger item) |
+| Refund | Money returned from a prepaid balance |
+| Reversal | Undoes an earlier entry (never an edit of the original) |
+
+Nothing on the ledger is edited in place. Corrections are new rows that reverse or replace
+what went wrong.
+
+## Add funds (member)
+
+On their own Billing page, or when looking at themselves on People, the member clicks
+**Add funds**, picks an amount, and pays by card. The balance rises by the credit they
+asked for. Home and Billing show the live balance as soon as the charge lands. If the school set a
+[card fee on top-ups](/docs/billing/set-a-card-fee-on-account-top-ups), the card is charged
+a little more than that credit.
+
+## Add credit, adjustment, refund (admin)
+
+On someone else's ledger, admins get:
+
+- **Add credit** for cash, check, or other money received at the desk (memo required).
+- **Adjustment** for a signed plus or minus that is not a flight and not a top-up.
+- **Refund** when the balance is positive. See [Refund](#refund).
+
+Owners and admins only. Members cannot credit or adjust themselves.
+
+## Refund
+
+Refund pays the member back from a positive balance, down to $0.00, not below.
+
+Pick a method, then an amount. You are not unwinding a whole top-up row.
+
+- **Check / cash:** you write the check or hand them cash. AerScheduler only
+  debits the ledger.
+- **Original card:** pick which past card charge the money should ride back on.
+  Stripe already knows that card. You can only return what is still unused on
+  **that charge**, even if the account balance is higher. The amount field
+  refuses anything over that remainder. To return more, pick another charge and
+  refund again, or use check/cash for the full balance.
+
+If they added funds twice (for example $25 then $50), those are two charges.
+Refunding the $25 charge cannot send the other $50 home.
+
+### Card fees on a refund
+
+A top-up memo like "includes $6.00 card fee on charge" means the member paid
+$56 to receive $50 of credit. The $6 never sat on the ledger. A refund can
+return at most the $50 credit. The $6 surcharge stays on the original charge.
+
+Stripe also keeps its own processing fee on that payment. Neither the member
+nor the school gets that back from this dialog.
+
+See [Card fee on account top-ups](/docs/billing/set-a-card-fee-on-account-top-ups).
+
+## Receipts
+
+Live **Flight**, **Fee**, and **Charge** rows offer **Receipt**. That opens the same
+right-hand panel as an invoice or ledger entry: line items, the member, the school, and
+the booking when there is one, with Print on the panel.
+
+You cannot open a receipt for a top-up, a reversal row, or a charge that has already been
+reversed. Use the live charge (or the new charge after a reassign) instead.
+
+## Reassign a flight charge
+
+Admins only. On a live **Flight** row that has not been reversed, click **Reassign**, pick
+another active member, and confirm.
+
+AerScheduler reverses the original charge and posts the same amount on the new member.
+Both rows keep a memo. The booking's payer stake moves with the money, so close-out does
+not try to bill the first person again.
+
+Reassign refuses:
+
+- Yourself as the target
+- A member who already has a live charge on that same booking
+- Archived or deleted members
+- Rows that are not flight charges (fees and desk charges stay where they are)
+
+## Where members look
+
+| Screen | Who |
+|---|---|
+| <Where app="web">People → person → Ledger</Where> | Admins managing that member (same searchable table, plus desk credit / refund / reassign). Invoices is leftover Stripe bills. |
+| <Where app="web">Billing → Ledger</Where> under the personal section | The member themselves (balance, searchable history, Add funds, receipts; no Reassign) |
+| iOS app Account / ledger | Balance, history, Add funds, receipts |
+
+## Guests
+
+Walk-ins are not on this ledger. Guest visits stay on pay-this-visit invoices. Promote
+someone to a member under People if they should hold a balance going forward.

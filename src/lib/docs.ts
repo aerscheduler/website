@@ -137,12 +137,26 @@ export const DOC_SECTIONS: DocSection[] = [
       },
       {
         slug: "approve-a-member-on-an-aircraft",
-        title: "Check a renter out on an aircraft",
+        title: "Check someone out on an aircraft",
         description:
-          "Approving somebody on a tail is how you record a checkout. With the approved-resources rule on, it is also what lets them book it.",
+          "Approve a student or renter from the aircraft or from their profile. With the approved-resources rule on, that checkout is also what lets them book it.",
         kind: "task",
         audience: ["Owners", "Admins"],
-        seoQuery: "aircraft checkout approval renter flight school",
+        seoQuery: "how to approve a student or renter on an aircraft flight school",
+        faqs: [
+          {
+            q: "Approve members only lists renters. Where are the students?",
+            a: "The sheet lists students and renters. If someone is missing, they do not have either role yet. Grant one from People → their ⋯ menu → Edit roles. Instructors are left off on purpose, they are never held to the approved list.",
+          },
+          {
+            q: "Can I approve someone from their profile?",
+            a: "Yes. Open People → the person → Compliance. The Approved aircraft card has a switch per tail. That is the same checkout as Aircraft → Approve members.",
+          },
+          {
+            q: "Is this people groups?",
+            a: "No. Groups (Settings → School → Groups) scope currency rules such as medicals and flight reviews. Checkouts are per person, per tail.",
+          },
+        ],
       },
       {
         slug: "ground-archive-or-remove-a-member",
@@ -552,6 +566,92 @@ export const DOC_SECTIONS: DocSection[] = [
         seoQuery: "how to accept card payments at a flight school with Stripe",
       },
       {
+        slug: "choose-invoice-or-account-ledger",
+        title: "Choose invoice or account ledger",
+        description:
+          "Bill members with a new invoice for each booking, or with a prepaid account balance. Guests always get a pay-this-visit invoice.",
+        kind: "task",
+        audience: ["Owners"],
+        seoQuery: "flight school account ledger vs invoice billing",
+      },
+      {
+        slug: "set-a-card-fee-on-account-top-ups",
+        title: "Set a card fee on account top-ups",
+        description:
+          "Optionally recover card processing when members add funds to a ledger balance. Cash and check at the desk stay dollar-for-dollar.",
+        kind: "task",
+        audience: ["Owners"],
+        seoQuery: "card surcharge on flight school account top up",
+      },
+      {
+        slug: "charge-a-flight-to-the-account-ledger",
+        title: "Charge a flight to the account ledger",
+        description:
+          "When the school uses Account ledger, close-out posts a balance charge for members instead of a Stripe invoice. Guests still get a pay-this-visit invoice.",
+        kind: "task",
+        audience: ["Owners", "Admins", "Dispatchers", "Instructors", "Students", "Renters"],
+        seoQuery: "charge flight to prepaid account balance AerScheduler",
+        faqs: [
+          {
+            question: "Why is there no invoice after I closed out a member flight?",
+            answer:
+              "If Settings → Billing is set to Account ledger, member flights post to the account balance. Look for Charged to account ledger on the booking, or a Flight row on the member's Billing tab.",
+          },
+          {
+            question: "Do guest flights go on the ledger too?",
+            answer:
+              "No. Guests always get a pay-this-visit invoice, even when the school uses Account ledger for members.",
+          },
+        ],
+      },
+      {
+        slug: "manage-a-member-account-ledger",
+        title: "Manage a member's account ledger",
+        description:
+          "Read the balance, add funds or desk credit, print a receipt, refund prepaid money, and reassign a flight charge to another member.",
+        kind: "task",
+        audience: ["Owners", "Admins", "Students", "Renters"],
+        seoQuery: "flight school member account ledger receipt reassign charge",
+        faqs: [
+          {
+            question: "Can I edit a ledger charge that was posted wrong?",
+            answer:
+              "No. Reverse it (or reassign a flight charge) so both the mistake and the fix stay on the account. There is no edit-in-place.",
+          },
+          {
+            question: "Who can reassign a flight charge?",
+            answer:
+              "Owners and admins only, from People → the member → Billing, on a live Flight row that has not already been reversed.",
+          },
+        ],
+      },
+      {
+        slug: "review-account-balances-and-who-owes",
+        title: "Review account balances and who owes",
+        description:
+          "On Account ledger, Operations Billing lists every member's balance. Filter who owes, open a ledger, and use Reports for aging.",
+        kind: "task",
+        audience: ["Owners", "Admins"],
+        seoQuery: "flight school accounts receivable ledger balances who owes",
+        faqs: [
+          {
+            question: "Why do I still see an Invoices tab in ledger mode?",
+            answer:
+              "Guests always get pay-this-visit invoices, and leftover invoices from before you switched still need a home. Member flights post to the Accounts tab.",
+          },
+          {
+            question: "Where is aging, like 30 60 90 days?",
+            answer:
+              "Operations Billing shows days owing on each row. The Accounts receivable report under Reports groups those balances (or unpaid invoices, in invoice mode) into age buckets and exports.",
+          },
+        ],
+        related: [
+          "/docs/billing/manage-a-member-account-ledger",
+          "/docs/billing/choose-invoice-or-account-ledger",
+          "/docs/reports/run-a-report",
+        ],
+      },
+      {
         slug: "set-aircraft-and-instruction-rates",
         title: "Set your aircraft and instruction rates",
         description:
@@ -564,7 +664,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "close-out-a-flight-and-bill-it",
         title: "Close out a flight so it invoices",
         description:
-          "Ramp out, ramp in, then every pilot confirms with their PIN. The invoice is raised the moment the last person signs off, and not before.",
+          "Ramp out, ramp in, then every pilot confirms with their PIN. The bill posts when the last person signs off: a Stripe invoice, or a ledger charge when Account ledger is on.",
         kind: "task",
         audience: ["Owners", "Admins", "Dispatchers", "Instructors", "Students", "Renters"],
         seoQuery: "how to close out a flight and create the invoice",
@@ -1056,7 +1156,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "how-reporting-works",
         title: "How reporting works in AerScheduler",
         description:
-          "One Reports page holds 18 built-in reports, your own Overview dashboard, and the emails that go out on a schedule. Four ideas explain the rest: report, category, saved view, and date basis.",
+          "One Reports page holds 19 built-in reports, your own Overview dashboard, and the emails that go out on a schedule. Four ideas explain the rest: report, category, saved view, and date basis.",
         kind: "overview",
         audience: ["Owners", "Admins", "Dispatchers", "Technicians"],
         seoQuery: "AerScheduler reports and analytics",
@@ -1155,7 +1255,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "report-catalog",
         title: "Every report, and what it counts",
         description:
-          "The 18 built-in reports, the category each sits in, the date its range applies to, and the window it opens on. Use it to pick the right report the first time.",
+          "The 19 built-in reports, the category each sits in, the date its range applies to, and the window it opens on. Use it to pick the right report the first time.",
         kind: "reference",
         audience: ["Owners", "Admins", "Dispatchers", "Technicians"],
         seoQuery: "list of flight school reports AerScheduler",

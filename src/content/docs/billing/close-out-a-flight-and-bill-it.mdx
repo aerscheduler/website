@@ -81,18 +81,30 @@ is the single most common reason a school cannot find an invoice.
 Guests never enter a PIN. A guest or discovery booking is closed out and billed in one
 step instead: see [Bill a discovery or guest flight](/docs/billing/bill-a-discovery-or-guest-flight).
 
-## The invoice appears
+## The invoice (or ledger charge) appears
 
-When the last person confirms, all of this happens at once:
+What happens when the last person confirms depends on
+[How members pay](/docs/billing/choose-invoice-or-account-ledger).
+
+**Invoice each booking** (the default):
 
 - One invoice per payer is created in Stripe and in AerScheduler.
 - Each payer gets an "Invoice #N" email and a push notification with a pay link.
-- The invoice appears on <Where app="web">Billing</Where> and on the payer's own Invoices
+- The invoice appears on <Where app="web">Billing</Where> and on the payer's own Billing
   page.
 - If the payer has autopay on, it is charged to their default card straight away and lands
   as Paid.
 
-The Close-out section then shows the line items and the total.
+**Account ledger:**
+
+- One ledger charge per paying member is posted instead of a Stripe invoice.
+- The Close-out section says **Charged to account ledger**.
+- See [Charge a flight to the account ledger](/docs/billing/charge-a-flight-to-the-account-ledger).
+
+Guests always take the invoice path, even when the school uses Account ledger for members.
+
+The Close-out section then shows the line items and the total (invoice mode) or the ledger
+summary (ledger mode).
 
 <Screenshot id="close-out-invoice-summary" />
 

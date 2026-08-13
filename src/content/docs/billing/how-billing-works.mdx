@@ -1,7 +1,8 @@
 <Summary>
 A flight is priced when its close-out finishes. AerScheduler takes the hours off the
 aircraft's meter, adds the instruction time, splits the total between the people on the
-booking, and raises one Stripe invoice per payer.
+booking, then either raises one Stripe invoice per payer or posts one charge per payer to
+their account ledger, depending on How members pay.
 </Summary>
 
 ## From booking to paid invoice
@@ -21,13 +22,14 @@ CFI was teaching. See [Close out a flight so it invoices](/docs/billing/close-ou
 The invoice does not exist until the last assigned pilot has signed off. This is the most
 common answer to "where is my invoice?".
 </Step>
-<Step n={4} title="The invoices are raised">
-One per payer, in Stripe and in AerScheduler. Each payer gets an email and a push
-notification with a pay link.
+<Step n={4} title="The bill is posted">
+With Invoice each booking, one Stripe invoice per payer. With Account ledger, one balance
+charge per paying member (guests still get an invoice). See
+[Choose invoice or account ledger](/docs/billing/choose-invoice-or-account-ledger).
 </Step>
-<Step n={5} title="The member pays">
-By card in the app, or automatically if they have saved a card and turned on autopay. An
-admin can also mark it paid after cash or a check.
+<Step n={5} title="The member pays (invoice mode) or draws the balance (ledger mode)">
+Invoices: by card in the app, autopay, or marked paid after cash or a check. Ledger:
+members add funds ahead of time, or the balance goes negative until they top up.
 </Step>
 </Steps>
 
@@ -87,7 +89,7 @@ Four things, and nothing bills until all four are done.
 | Setting | Where | Who |
 |---|---|---|
 | Stripe payouts connected | <Where app="web">Settings → Billing</Where>, Payouts card | Organization owner only |
-| Billing enabled | <Where app="web">Settings → Billing</Where> | Organization owner only |
+| Billing enabled | Same card, under Payouts. Stays off until payouts are connected. | Organization owner only |
 | A rate on each aircraft | <Where app="web">Aircraft</Where> → edit the aircraft | Owner or admin |
 | An instruction rate | <Where app="web">Settings → Billing</Where> or <Where app="web">Settings → Instruction rates</Where> | Owner for the default, admin for a rating |
 
@@ -104,20 +106,22 @@ then [Set your aircraft and instruction rates](/docs/billing/set-aircraft-and-in
 
 Worth knowing before you plan around it.
 
-- **No refunds.** There is no refund action anywhere in AerScheduler. Refunds are done in
-  your own Stripe dashboard, and they are not reflected back here: the invoice stays Paid
-  and stays in your revenue figures.
+- **Stripe invoice refunds** are done in your Stripe dashboard. AerScheduler does not void
+  a paid invoice to undo a card payment.
 - **A paid invoice cannot be voided.** Voiding is for an invoice that should never have
   been raised, not for undoing a payment.
 - **An invoice cannot be edited once raised.** You can mark it paid or void it, nothing
   else.
-- **No credit notes or account credits.**
+- **On Account ledger**, prepaid refunds, desk credits, and adjustments live on the
+  member's ledger (see
+  [Manage a member's account ledger](/docs/billing/manage-a-member-account-ledger)). There
+  are still no Stripe credit notes for invoice-mode flights.
 - **No per-instructor rates.** Every CFI teaching a given rating bills the same hourly
   figure.
-- **You cannot invoice a guest from the web console.** The New invoice dialog only picks a
-  member; a guest invoice is raised from Billing → New invoice with Guest recipient on, or from the app's Generate Invoice screen. If a close-out's
-  invoice never appeared, **Create invoice** on the booking is the fix, on either surface.
-  See [Why a flight was not invoiced](/docs/billing/why-a-flight-was-not-invoiced).
+- **Manual New invoice** still raises a Stripe invoice (member or guest recipient). Member
+  flight close-out in ledger mode uses the account ledger instead. If a close-out bill
+  never appeared, **Create invoice** / **Post to ledger** on the booking is the admin
+  fix. See [Why a flight was not invoiced](/docs/billing/why-a-flight-was-not-invoiced).
 
 ## Where to go next
 
@@ -125,11 +129,11 @@ Worth knowing before you plan around it.
 <DocCard href="/docs/billing/turn-on-invoicing-and-card-payments" title="Turn on invoicing and card payments">
 Connect Stripe, switch billing on, and set the fees every invoice is built from.
 </DocCard>
-<DocCard href="/docs/billing/set-aircraft-and-instruction-rates" title="Set your aircraft and instruction rates">
-Hourly rate, wet or dry, and whether the invoice measures Hobbs or tach.
+<DocCard href="/docs/billing/choose-invoice-or-account-ledger" title="Choose invoice or account ledger">
+Bill each booking, or use a prepaid member balance. Guests always get a visit invoice.
 </DocCard>
 <DocCard href="/docs/billing/close-out-a-flight-and-bill-it" title="Close out a flight so it invoices">
-Ramp out, ramp in, confirm with a PIN, and the invoice is raised.
+Ramp out, ramp in, confirm with a PIN, and the bill is posted.
 </DocCard>
 <DocCard href="/docs/billing/who-can-do-what-in-billing" title="Who can see and do what in billing">
 Every billing action by role, including the owner-only ones.

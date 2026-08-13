@@ -1,0 +1,63 @@
+<Summary>
+With ledger mode on, open <Where app="web">Settings → Billing</Where> and use
+**Card fee on account top-ups** to add an optional percent and/or flat fee when members
+add funds by card. Desk cash and check credit stay dollar-for-dollar. Only the
+organization owner can save it.
+</Summary>
+
+<Roles>Owners</Roles>
+
+## What it is for
+
+When a member adds funds by card, Stripe charges a processing fee. This setting lets the
+school recover that cost on the **card payment**, not by raising aircraft rates.
+
+- The member chooses how much **credit** they want on account (for example $100).
+- If you set a fee, they **pay** a little more (for example $103.20) and still receive
+  **$100.00** credited.
+- Cash or check recorded at the desk never uses this surcharge.
+
+It is your school's fee. It is not AerScheduler's Connect application fee, and it is not
+the invoice **Service fee** used in invoice mode.
+
+## Set the fee
+
+<Steps>
+<Step n={1} title="Turn on Account ledger under How members pay">
+The card fee card only appears when ledger mode is on. See
+[Choose invoice or account ledger](/docs/billing/choose-invoice-or-account-ledger).
+</Step>
+<Step n={2} title="Enter a Percent and/or Plus flat (USD)">
+Percent uses the same units as the invoice service fee (2.9 means 2.9%). Flat is dollars
+and cents (0.30 means thirty cents). Blank or 0.0 / 0.00 means no surcharge.
+</Step>
+<Step n={3} title="Click Save card fee">
+Only the organization owner can save. An admin can read the fields but the save is refused.
+</Step>
+</Steps>
+
+<Screenshot id="ledger-topup-card-fee" />
+
+The example line under the fields shows what a $100 credit would cost with your numbers.
+
+## What members see
+
+On Add funds, if a fee is set, the screen shows **Pay $X → $Y credited** before they
+confirm. After a short Undo window, the card is charged the higher amount and the ledger
+credits only the amount they asked for.
+
+## Refunds
+
+Refunding a card top-up returns the **credit**, not the surcharge. If they paid
+$56 for $50 on account, a full refund sends $50 back to that card. The $6 card
+fee stays charged. Stripe also keeps its processing fee on the original
+payment.
+
+Check or cash refunds never touch Stripe, so they cannot return a card fee
+either. See [Refund](/docs/billing/manage-a-member-account-ledger#refund).
+
+## Limits and notes
+
+- Percent cannot be more than 100. Flat cannot be more than $100.00 per top-up.
+- Clearing both fields (or saving zeros) turns the surcharge off again.
+- ACH top-ups are not part of this setting yet.

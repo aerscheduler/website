@@ -1,0 +1,64 @@
+<Summary>
+With <Where app="web">Settings → Billing</Where> set to **Account ledger**, closing out a
+member flight posts a charge to that member's balance instead of raising a Stripe
+invoice. Guests still get a pay-this-visit invoice.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers, Instructors, Students, Renters</Roles>
+
+This page is only for schools on **Account ledger**. If your school still invoices each
+booking, use [Close out a flight so it invoices](/docs/billing/close-out-a-flight-and-bill-it).
+
+## What changes on close-out
+
+Ramp out, ramp in, Who pays what, and PIN confirmations work the same way. What changes is
+the last step:
+
+| Mode | After the last PIN |
+|---|---|
+| Invoice each booking | One Stripe invoice per payer |
+| Account ledger | One ledger charge per paying member (draws their balance) |
+
+The Close-out section then says **Charged to account ledger** instead of showing an
+invoice summary. On a split booking you get one charge per payer, same split rules as
+invoice mode.
+
+Guests and discovery flights never go on the ledger. They still use
+[Bill a discovery or guest flight](/docs/billing/bill-a-discovery-or-guest-flight).
+
+## Post a charge that did not mint itself
+
+Usually the charge posts the moment the last person confirms. If something failed (a rate
+missing, a temporary error), the booking can sit at **Reviewed** with no charge yet.
+
+Admins and owners see **Post to ledger** on that booking. It runs the same billing path
+as automatic close-out. Dispatchers do not get this button.
+
+Retrying after a successful charge does nothing. Reversing or moving money later is done
+from the member's account ledger, not by posting again.
+
+## After the charge
+
+- The member's balance drops by the flight amount (it can go negative).
+- The charge appears on <Where app="web">People → that person → Ledger</Where> and on
+  their own <Where app="web">Billing → Ledger</Where> page.
+- **Receipt** on that ledger row opens the right-hand panel with the line items. There is
+  no Stripe PDF for a ledger flight charge.
+- Meter corrections and rate overrides lock once the charge is live, same idea as after
+  an invoice.
+
+If the wrong person was charged, an admin **Reassigns** the flight charge on that person's
+ledger. See
+[Manage a member's account ledger](/docs/billing/manage-a-member-account-ledger#reassign-a-flight-charge).
+
+## Unbilled on the Billing page
+
+<Where app="web">Billing</Where> still lists past reservations with nothing billed yet.
+In ledger mode, a flight that already has a live ledger charge is not "unbilled", even
+though it has no Stripe invoice.
+
+## Join fees, dues, and enrollment
+
+Membership join fees, recurring dues, and course enrollment fees also post to the ledger
+when Account ledger is on. They show as **Fee** rows on the member's ledger, with a
+receipt the same way as a flight.

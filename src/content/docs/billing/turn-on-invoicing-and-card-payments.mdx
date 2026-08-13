@@ -1,7 +1,8 @@
 <Summary>
 Go to <Where app="web">Settings → Billing</Where>. Connect payouts with Stripe in the
-Payouts card, then turn on **Billing enabled**, set a default instructor rate, and click
-**Save changes**. Only the organization owner can do any of it.
+Payouts card, then turn on **Billing enabled** at the top (it saves immediately). Set a
+default instructor rate in **Rates and fees** and click **Save changes**. Only the
+organization owner can do any of it.
 </Summary>
 
 <Roles>Owners</Roles>
@@ -21,7 +22,8 @@ Payouts card, then turn on **Billing enabled**, set a default instructor rate, a
 
 <Steps>
 <Step n={1} title="Open Settings and choose Billing">
-The Billing tab holds two cards: **Billing settings** and **Payouts**.
+The Billing tab starts with **Payouts** and **Billing enabled** on the same card, then
+**How members pay** and **Rates and fees**.
 </Step>
 <Step n={2} title="Click Connect payouts">
 In the Payouts card. The badge next to it reads **Not connected** until this is done.
@@ -47,14 +49,17 @@ The Payouts badge should now read **Connected**, and the button becomes **Manage
 
 <Steps>
 <Step n={1} title="Switch on Billing enabled">
-In the Billing settings card. This is the master switch.
+On the Payouts card, after the badge reads **Connected**. It stays off and disabled until
+payouts are connected. It saves as soon as you flip it.
 </Step>
 <Step n={2} title="Set the Default instructor rate">
-The hourly figure charged for instruction when the booking has no rating at all. A booking
-that carries a rating is priced from that rating's own rate instead. It starts at $0.00.
+In **Rates and fees**. The hourly figure charged for instruction when the booking has no
+rating at all. A booking that carries a rating is priced from that rating's own rate
+instead. It starts at $0.00.
 </Step>
 <Step n={3} title="Click Save changes">
-Nothing on this card takes effect until you do.
+On the Rates and fees card. Rates, service fees, overnight rules, and grounding wait on
+this button. Billing enabled and How members pay do not: those save on their own.
 </Step>
 </Steps>
 
@@ -118,7 +123,7 @@ where. See
 ## Check it worked
 
 1. The Payouts badge reads **Connected**.
-2. **Billing enabled** is on and saved.
+2. **Billing enabled** is on.
 3. Every aircraft has a rate.
 4. Close out a real flight. When the last pilot confirms with their PIN, the booking shows
    its line items and total, and the payer gets an invoice email.

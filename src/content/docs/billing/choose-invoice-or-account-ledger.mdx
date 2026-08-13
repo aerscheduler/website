@@ -1,0 +1,62 @@
+<Summary>
+On <Where app="web">Settings → Billing</Where>, under **How members pay**, choose
+**Invoice each booking** (the default) or **Account ledger**. Only the organization
+owner can change it. Guests always get a pay-this-visit invoice either way.
+</Summary>
+
+<Roles>Owners</Roles>
+
+## What the choice means
+
+AerScheduler can bill members in two ways. Pick one for the school; you can switch later.
+
+| Mode | What members see |
+|---|---|
+| **Invoice each booking** | A new invoice for each billable visit or fee: flights, sims, ground lessons, manual invoices, and similar. They pay that invoice by card or at the desk. |
+| **Account ledger** | A running account balance. Members add funds (or the desk credits cash/check). Member flights, fees, and similar charges draw the balance down. |
+
+Guests are never on the ledger. A discovery or guest visit still gets a normal pay-this-visit invoice.
+
+## Choose a mode
+
+<Steps>
+<Step n={1} title="Open Settings and choose Billing">
+</Step>
+<Step n={2} title="Turn on Billing enabled">
+On the Payouts card, after Stripe is connected. The toggle stays off until payouts are
+connected. It saves as soon as you flip it.
+</Step>
+<Step n={3} title="Under How members pay, pick Invoice each booking or Account ledger">
+The cards explain the difference. Switching after setup asks you to confirm once.
+</Step>
+</Steps>
+
+<Screenshot id="ledger-mode-card" />
+
+**Billing enabled** is what actually starts charging. Stripe still has to be connected
+for card charges. See
+[Turn on invoicing and card payments](/docs/billing/turn-on-invoicing-and-card-payments).
+
+## Switching later
+
+- **To ledger:** existing unpaid invoices stay as they are. New member flights and fees
+  post to the account balance. See
+  [Charge a flight to the account ledger](/docs/billing/charge-a-flight-to-the-account-ledger).
+- **Back to invoices:** existing ledger balances stay on the account until you refund or
+  adjust them. They are not deleted. New member billing raises Stripe invoices again.
+
+Only the organization owner can change this. Other roles can read the setting.
+
+## Day to day on the ledger
+
+The school-wide call list is
+[Review account balances and who owes](/docs/billing/review-account-balances-and-who-owes)
+on Operations Billing (Accounts tab). Work one person from
+[Manage a member's account ledger](/docs/billing/manage-a-member-account-ledger): Add funds,
+desk credit, receipts, refunds, and reassigning a flight charge.
+
+## Card fees on top-ups
+
+If you use the ledger, you can optionally recover card processing cost when members add
+funds. That is separate from this choice. See
+[Set a card fee on account top-ups](/docs/billing/set-a-card-fee-on-account-top-ups).

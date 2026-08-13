@@ -577,8 +577,28 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/settings?tab=billing",
     alt: "Settings, Billing",
     dataState:
-      "Signed in as the owner. Billing enabled on, default instructor rate set, service fee 3 percent with a custom label, overnight minimum 2.0, grounding threshold 3.",
+      "Signed in as the owner. Billing enabled on. Rates and fees card: default instructor rate set, service fee 3 percent with a custom label, overnight minimum 2.0, grounding threshold 3.",
     crop: '[data-doc-shot="billing-settings-card"]',
+  },
+  {
+    id: "ledger-mode-card",
+    screen: "Settings, Billing, How members pay",
+    route: "/settings?tab=billing",
+    alt: "How members pay: Invoice each booking or Account ledger",
+    caption: "Pick invoice-per-booking or an account ledger. Guests always get a pay-this-visit invoice.",
+    dataState:
+      "Signed in as the owner. Billing enabled on. Invoice each booking or Account ledger selected. Crop to the How members pay card.",
+    crop: '[data-doc-shot="ledger-mode-card"]',
+  },
+  {
+    id: "ledger-topup-card-fee",
+    screen: "Settings, Billing, Card fee on account top-ups",
+    route: "/settings?tab=billing",
+    alt: "Card fee on account top-ups settings",
+    caption: "Optional percent and flat fee when members add funds by card.",
+    dataState:
+      "Signed in as the owner with Account ledger selected so the card fee card is visible. Percent and flat left blank (placeholders 0.0 / 0.00). Crop to that card.",
+    crop: '[data-doc-shot="ledger-topup-card-fee"]',
   },
   {
     id: "billing-payouts-connected",
@@ -946,7 +966,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/aircraft/{groundedAircraftId}",
     alt: "Aircraft detail header, grounded",
     dataState:
-      "An aircraft grounded by hand with a typed reason such as \"Prop strike\", viewed as an admin so the red banner sits above Edit, Approve renters and Return to service.",
+      "An aircraft grounded by hand with a typed reason such as \"Prop strike\", viewed as an admin so the red banner sits above Edit, Approve members and Return to service.",
     crop: '[data-doc-shot="aircraft-grounded-banner"]',
   },
   {

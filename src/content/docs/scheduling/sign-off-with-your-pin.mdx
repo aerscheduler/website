@@ -60,10 +60,16 @@ A maintenance booking carries nobody, so it needs no sign-off and completes on i
 
 ## What happens when the last person signs
 
-The close-out completes and the invoice is generated automatically. On a booking split
-between several people, that is one invoice each, not one invoice with shares inside it.
+The close-out completes and the invoice (or ledger charge, when How members pay is Account
+ledger) is generated automatically. On a booking split between several people, that is one
+bill each, not one bill with shares inside it.
 
-The badge walks on to **Billed**, and then to **Paid** once it is settled.
+**Billed** ticks only once that charge exists. If the meters did not move, the total is
+under 50 cents and nothing is posted: Review is ticked and Billed stays grey until you
+correct the times and post the charge.
+
+The badge then walks on to **Paid** once an invoice is settled. A ledger charge is already
+the money, so there is no separate paid badge.
 
 ## You can only sign off once
 

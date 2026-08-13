@@ -2220,6 +2220,290 @@
         "operationId": "cancelOrganizationDeletion"
       }
     },
+    "/organizations/ledger/accounts": {
+      "get": {
+        "tags": [
+          "Organizations"
+        ],
+        "summary": "List member account balances",
+        "description": "School-wide ledger roster for the Operations Billing desk. **Admin only.** Current members only (not archived, not API keys). `summary` is org-wide and ignores `q` / `status`. Default sort is most owing first (`balanceCents` ascending).",
+        "responses": {
+          "200": {
+            "description": "Paged accounts plus org-wide totals.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/LedgerAccount"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    },
+                    "summary": {
+                      "$ref": "#/components/schemas/LedgerAccountSummary"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "pagination",
+                    "summary"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not an administrator.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listOrganizationLedgerAccounts",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Free-text filter. Matches the fields a person would search on."
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "owing,credit"
+            },
+            "description": "Comma-separated balance buckets: `owing` (negative), `credit` (positive), `zero`."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1,1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row , `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
+      }
+    },
+    "/organizations/ledger": {
+      "get": {
+        "tags": [
+          "Organizations"
+        ],
+        "summary": "Get ledger billing mode",
+        "description": "Whether this organization is in ledger billing mode. When on, members live on an account balance; money-in and refunds are separate from per-flight invoices. Default off. Any member may read.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/OrganizationLedgerSettings"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getOrganizationLedgerSettings"
+      },
+      "patch": {
+        "tags": [
+          "Organizations"
+        ],
+        "summary": "Set ledger billing mode",
+        "description": "Turns ledger mode on or off and/or sets the optional card surcharge on member top-ups (percent and/or flat cents). **Owner only.** Desk cash/check credit is never surcharged. AerScheduler's legacy 0.5% Connect application fee is separate and only applies to legacy-plan orgs.",
+        "responses": {
+          "200": {
+            "description": "Updated settings.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/OrganizationLedgerSettings"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Body failed validation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Only the organization owner can change this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "updateOrganizationLedgerSettings",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Ledger settings patch. Send any subset.",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "topUpCardFeePercent": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "topUpCardFeeFlatCents": {
+                    "type": "integer",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/organizations/{orgId}": {
       "get": {
         "tags": [
@@ -3728,7 +4012,7 @@
           "Members"
         ],
         "summary": "Get a member's ledger",
-        "description": "Account balance and append-only ledger entries for one member. **Self or admin.** Read-only in L1: money-in and flight charges land in later phases. `ledgerEnabled` tells you whether the org is in ledger billing mode; the balance is still returned when mode is off (usually 0).",
+        "description": "Account balance and append-only ledger entries for one member. **Self or admin.** When ledger mode is on, money-in and refunds are separate write routes under this path. `ledgerEnabled` tells you whether the org is in ledger billing mode; the balance is still returned when mode is off (usually 0).",
         "responses": {
           "200": {
             "description": "Balance plus a page of entries.",
@@ -3805,6 +4089,45 @@
             "description": "The membership id."
           },
           {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Free-text filter. Matches the fields a person would search on."
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Start of the window, ISO 8601. Include an offset or `Z`."
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "End of the window, ISO 8601."
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "topup,flight_charge"
+            },
+            "description": "Comma-separated ledger entry types to include (`topup`, `cash`, `check`, `other`, `adjustment`, `flight_charge`, `item_charge`, `fee`, `refund`, `reversal`)."
+          },
+          {
             "name": "limit",
             "in": "query",
             "required": false,
@@ -3826,8 +4149,800 @@
               "default": 0
             },
             "description": "Entries to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "createdAt",
+                "amountCents",
+                "type",
+                "id"
+              ]
+            },
+            "description": "Order entries by `createdAt`, `amountCents`, `type`, or `id`. Defaults to `createdAt`."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            },
+            "description": "`asc` or `desc`. Defaults to `desc`."
           }
         ]
+      }
+    },
+    "/orgUsers/{orgUserId}/ledger/topups": {
+      "post": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Start a ledger card top-up",
+        "description": "Creates a PaymentIntent on the school's connected Stripe account to credit this member's ledger. **Self or admin.** Requires ledger mode. Minimum $1. Pass `paymentMethodId` to confirm immediately with a saved card (native clients); otherwise return the client secret for Stripe.js.",
+        "responses": {
+          "201": {
+            "description": "PaymentIntent created (and confirmed when paymentMethodId was sent).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/LedgerTopUpIntent"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Ledger off, amount too small, or Stripe rejected the charge.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "createOrgUserLedgerTopUp",
+        "parameters": [
+          {
+            "name": "orgUserId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The membership id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Top-up amount.",
+                "properties": {
+                  "amountCents": {
+                    "type": "integer",
+                    "description": "Amount in cents. Minimum 100.",
+                    "minimum": 100
+                  },
+                  "paymentMethodId": {
+                    "type": "string",
+                    "description": "Optional saved Stripe payment method to confirm off-session."
+                  },
+                  "idempotencyKey": {
+                    "type": "string",
+                    "description": "Optional Stripe idempotency key."
+                  }
+                },
+                "required": [
+                  "amountCents"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orgUsers/{orgUserId}/ledger/topups/confirm": {
+      "post": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Confirm a ledger card top-up",
+        "description": "After Stripe.js confirms the PaymentIntent, post the credit immediately so Home and Billing do not wait on `payment_intent.succeeded`. **Self or admin.** Idempotent with the webhook via the PaymentIntent id.",
+        "responses": {
+          "200": {
+            "description": "Credit posted (or already posted) and current balance.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/LedgerTopUpConfirm"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Ledger off, PI not succeeded, or not this member's top-up.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "confirmOrgUserLedgerTopUp",
+        "parameters": [
+          {
+            "name": "orgUserId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The membership id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Confirmed PaymentIntent.",
+                "properties": {
+                  "paymentIntentId": {
+                    "type": "string",
+                    "description": "Stripe PaymentIntent id from the top-up create response."
+                  }
+                },
+                "required": [
+                  "paymentIntentId"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orgUsers/{orgUserId}/ledger/entries": {
+      "post": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Post an admin ledger credit or adjustment",
+        "description": "Desk money-in without Stripe: `cash`, `check`, or `other` (positive cents), or `adjustment` (signed). **Admin only.** Memo required. Ledger mode must be on.",
+        "responses": {
+          "201": {
+            "description": "Posted entry and new balance.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "balanceCents": {
+                          "type": "integer"
+                        },
+                        "entry": {
+                          "$ref": "#/components/schemas/LedgerEntry"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Not an admin, ledger off, or validation failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "createOrgUserLedgerEntry",
+        "parameters": [
+          {
+            "name": "orgUserId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The membership id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Credit or adjustment.",
+                "properties": {
+                  "amountCents": {
+                    "type": "integer",
+                    "description": "Positive for credits; signed for adjustments."
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "cash",
+                      "check",
+                      "other",
+                      "adjustment"
+                    ]
+                  },
+                  "memo": {
+                    "type": "string",
+                    "description": "Required note (check #, reason, …)."
+                  }
+                },
+                "required": [
+                  "amountCents",
+                  "type",
+                  "memo"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orgUsers/{orgUserId}/ledger/entries/{entryId}/receipt": {
+      "get": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Get a ledger charge receipt",
+        "description": "Receipt for a `flight_charge`, `item_charge`, or `fee` entry: line items, member, org, and optional reservation summary. **Self or admin.** Replaces Stripe PDF in ledger mode.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/LedgerReceipt"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Not a charge entry, or not allowed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entry not found for this member.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getOrgUserLedgerReceipt",
+        "parameters": [
+          {
+            "name": "orgUserId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The membership id."
+          },
+          {
+            "name": "entryId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Ledger entry id."
+          }
+        ]
+      }
+    },
+    "/orgUsers/{orgUserId}/ledger/entries/{entryId}/reassign": {
+      "post": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Reassign a flight charge",
+        "description": "Moves a `flight_charge` to another member by reversing the original and posting a new charge (never UPDATE). **Admin only.** Updates the reservation payer stake link.",
+        "responses": {
+          "201": {
+            "description": "Reversal on the original member and new charge on the target.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "reversal": {
+                          "$ref": "#/components/schemas/LedgerEntry"
+                        },
+                        "entry": {
+                          "$ref": "#/components/schemas/LedgerEntry"
+                        },
+                        "fromBalanceCents": {
+                          "type": "integer"
+                        },
+                        "toBalanceCents": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Not an admin, not a flight charge, already reversed, or validation failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entry not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "reassignOrgUserLedgerFlightCharge",
+        "parameters": [
+          {
+            "name": "orgUserId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Current member who holds the charge."
+          },
+          {
+            "name": "entryId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Flight charge ledger entry id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Target member.",
+                "properties": {
+                  "toOrgUserId": {
+                    "type": "integer",
+                    "description": "Membership id that should own the charge."
+                  },
+                  "memo": {
+                    "type": "string",
+                    "description": "Optional note on the reversal / new charge."
+                  }
+                },
+                "required": [
+                  "toOrgUserId"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orgUsers/{orgUserId}/ledger/refundable": {
+      "get": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "List refundable top-ups",
+        "description": "Current balance plus card top-ups with remaining refundable cents. **Self or admin.** Used by the desk Refund UI.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/LedgerRefundable"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Not in your organization, or not allowed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getOrgUserLedgerRefundable",
+        "parameters": [
+          {
+            "name": "orgUserId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The membership id."
+          }
+        ]
+      }
+    },
+    "/orgUsers/{orgUserId}/ledger/refunds": {
+      "post": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Refund from a member ledger",
+        "description": "First-class refund. `method: stripe` refunds a top-up PaymentIntent then posts a `refund` entry; `check_cash` posts the ledger entry only (school pays out of band). **Admin only.** Capped by balance and, for Stripe, by that top-up's remaining refundable cents.",
+        "responses": {
+          "201": {
+            "description": "Refund posted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "balanceCents": {
+                          "type": "integer"
+                        },
+                        "entry": {
+                          "$ref": "#/components/schemas/LedgerEntry"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cap exceeded, Stripe rejected, ledger off, or validation failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "createOrgUserLedgerRefund",
+        "parameters": [
+          {
+            "name": "orgUserId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The membership id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Refund request.",
+                "properties": {
+                  "amountCents": {
+                    "type": "integer",
+                    "description": "Positive cents to remove from the account.",
+                    "minimum": 1
+                  },
+                  "method": {
+                    "type": "string",
+                    "enum": [
+                      "stripe",
+                      "check_cash"
+                    ]
+                  },
+                  "memo": {
+                    "type": "string",
+                    "description": "Required. Check # / reason."
+                  },
+                  "topupEntryId": {
+                    "type": "integer",
+                    "description": "Required for stripe; optional provenance for check_cash."
+                  },
+                  "idempotencyKey": {
+                    "type": "string",
+                    "description": "Optional Stripe idempotency key for stripe refunds."
+                  }
+                },
+                "required": [
+                  "amountCents",
+                  "method",
+                  "memo"
+                ]
+              }
+            }
+          }
+        }
       }
     },
     "/orgUsers/{orgUserId}/users": {
@@ -4180,7 +5295,7 @@
             "schema": {
               "type": "boolean"
             },
-            "description": "Set `true` for only the bookings that have no invoice yet."
+            "description": "Set `true` for only the bookings with no live Stripe invoice and no live ledger flight_charge."
           },
           {
             "name": "endedBefore",
@@ -12860,13 +13975,22 @@
             "description": "The resource id."
           },
           {
+            "name": "student",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Set `true` to include members holding the **student** role. Combines as OR with `renter`."
+          },
+          {
             "name": "renter",
             "in": "query",
             "required": false,
             "schema": {
               "type": "boolean"
             },
-            "description": "Set `true` to return only members holding the **renter** role."
+            "description": "Set `true` to include members holding the **renter** role. Combines as OR with `student`."
           },
           {
             "name": "limit",
@@ -23826,7 +24950,7 @@
       },
       "Invoice": {
         "type": "object",
-        "description": "A bill for a completed reservation.",
+        "description": "A bill for a completed reservation. In ledger mode, member close-outs and desk charges may return an invoice-shaped stub instead of a Stripe invoice row.",
         "properties": {
           "id": {
             "type": "integer",
@@ -23889,13 +25013,24 @@
           },
           "reservation": {
             "$ref": "#/components/schemas/Reservation"
+          },
+          "isLedgerCharge": {
+            "type": "boolean",
+            "description": "True when this payload is a ledger charge stub (flight_charge / item_charge / fee), not a Stripe Invoice row. Clients must not call retrieveInvoice on these ids."
+          },
+          "ledgerEntryId": {
+            "description": "Ledger entry id when `isLedgerCharge` is true. Same as `id` on the stub.",
+            "type": [
+              "integer",
+              "null"
+            ]
           }
         },
         "additionalProperties": true
       },
       "LedgerEntry": {
         "type": "object",
-        "description": "One append-only money movement on a member's account. Corrections are reversing entries, never edits.",
+        "description": "One append-only money movement on a member's account. Corrections are reversing entries, never edits. Partial top-up refunds link via `refundsTopupId`.",
         "properties": {
           "id": {
             "type": "integer",
@@ -23936,6 +25071,27 @@
               "null"
             ]
           },
+          "createdBy": {
+            "description": "The member who posted this entry, when a person did (desk credit, refund, close-out).",
+            "properties": {
+              "orgUserId": {
+                "type": "integer",
+                "description": "Poster org-user id."
+              },
+              "name": {
+                "description": "Poster display name.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": true,
+            "type": [
+              "object",
+              "null"
+            ]
+          },
           "invoiceId": {
             "description": "Linked Stripe invoice when money moved through Stripe.",
             "type": [
@@ -23952,6 +25108,34 @@
           },
           "reversesId": {
             "description": "Set on reversals: the entry this one reverses.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "stripePaymentIntentId": {
+            "description": "Stripe PaymentIntent id on card top-ups.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "refundMethod": {
+            "description": "stripe | check_cash on refund entries.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "stripeRefundId": {
+            "description": "Stripe Refund id when money returned to the card.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "refundsTopupId": {
+            "description": "Top-up this refund draws down (partial refunds).",
             "type": [
               "integer",
               "null"
@@ -24007,6 +25191,335 @@
             "description": "Newest-first page of entries.",
             "items": {
               "$ref": "#/components/schemas/LedgerEntry"
+            }
+          }
+        },
+        "additionalProperties": true
+      },
+      "LedgerReceipt": {
+        "type": "object",
+        "description": "Printable receipt for a ledger charge (flight / item / fee). Replaces Stripe PDF when the org is in ledger mode.",
+        "properties": {
+          "entry": {
+            "$ref": "#/components/schemas/LedgerEntry"
+          },
+          "member": {
+            "type": "object",
+            "properties": {
+              "orgUserId": {
+                "type": "integer",
+                "description": "Membership id."
+              },
+              "name": {
+                "description": "Member display name.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "email": {
+                "description": "Member email.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "orgUserId"
+            ]
+          },
+          "organization": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "Organization id."
+              },
+              "name": {
+                "type": "string",
+                "description": "School name."
+              }
+            },
+            "required": [
+              "id",
+              "name"
+            ]
+          },
+          "reservation": {
+            "description": "Linked booking when this is a flight charge.",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "Reservation id."
+              },
+              "start": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Booking start."
+              },
+              "end": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Booking end."
+              },
+              "type": {
+                "description": "Reservation type.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "resourceLabel": {
+                "description": "Aircraft tail or simulator name.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "start",
+              "end"
+            ],
+            "type": [
+              "object",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": true
+      },
+      "LedgerAccount": {
+        "type": "object",
+        "description": "One member on the school-wide ledger roster. Positive balanceCents is credit on account; negative is amount owed.",
+        "properties": {
+          "orgUserId": {
+            "type": "integer",
+            "description": "Membership id."
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name."
+          },
+          "email": {
+            "description": "Member email.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "balanceCents": {
+            "type": "integer",
+            "description": "Cached account balance in cents. Positive = credit; negative = amount owed."
+          },
+          "lastActivityAt": {
+            "format": "date-time",
+            "description": "When the latest ledger entry was posted.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "owingSince": {
+            "format": "date-time",
+            "description": "When the running balance last crossed into negative and has stayed there. Null when they do not owe.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "daysOwing": {
+            "description": "Whole days from owingSince to now. Null when they do not owe.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": true
+      },
+      "LedgerAccountSummary": {
+        "type": "object",
+        "description": "Org-wide ledger totals for the current (non-archived) roster. Not scoped to the list filter.",
+        "properties": {
+          "receivableCents": {
+            "type": "integer",
+            "description": "Sum of amounts owed (absolute value of negative balances)."
+          },
+          "creditOnAccountCents": {
+            "type": "integer",
+            "description": "Sum of positive balances."
+          },
+          "owingCount": {
+            "type": "integer",
+            "description": "Members with a negative balance."
+          },
+          "creditCount": {
+            "type": "integer",
+            "description": "Members with a positive balance."
+          },
+          "zeroCount": {
+            "type": "integer",
+            "description": "Members at zero."
+          },
+          "memberCount": {
+            "type": "integer",
+            "description": "Current members on the roster."
+          }
+        },
+        "additionalProperties": true
+      },
+      "OrganizationLedgerSettings": {
+        "type": "object",
+        "description": "Org-wide ledger billing mode and optional card surcharge on member top-ups. Independent of Stripe Connect billing settings. Default off / no surcharge.",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "When true, members use an account balance (top-ups, desk credit, refunds). Member flight and custom charges post to the ledger."
+          },
+          "topUpCardFeePercent": {
+            "description": "Card surcharge on top-ups, hundredths of a percent (290 = 2.9%). Null or 0 = no percent. Does not apply to desk cash/check credit. Same units as invoice serviceFeePercent.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "topUpCardFeeFlatCents": {
+            "description": "Flat cents added on each card top-up (30 = $0.30). Null or 0 = none. Stacks with the percent.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": true
+      },
+      "LedgerTopUpIntent": {
+        "type": "object",
+        "description": "Client secrets for a ledger card top-up PaymentIntent on the org's connected Stripe account.",
+        "properties": {
+          "clientSecret": {
+            "type": "string",
+            "description": "PaymentIntent client secret for Stripe.js / Payment Element."
+          },
+          "paymentIntentId": {
+            "type": "string",
+            "description": "PaymentIntent id."
+          },
+          "orgStripeAccountId": {
+            "type": "string",
+            "description": "Connected account the Intent lives on."
+          },
+          "customerId": {
+            "type": "string",
+            "description": "Stripe customer id on that connected account."
+          },
+          "ephemeralKey": {
+            "description": "Ephemeral key for native Payment Sheet. Null when already confirmed.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "confirmed": {
+            "type": "boolean",
+            "description": "True when the server confirmed with a saved paymentMethodId."
+          },
+          "creditCents": {
+            "type": "integer",
+            "description": "Amount credited to the member ledger."
+          },
+          "feeCents": {
+            "type": "integer",
+            "description": "Org card surcharge included in the charge (0 when none)."
+          },
+          "chargeCents": {
+            "type": "integer",
+            "description": "Total charged to the card = creditCents + feeCents."
+          },
+          "balanceCents": {
+            "type": "integer",
+            "description": "Current ledger balance after a saved-card confirm. Omitted when the Intent still needs Stripe.js."
+          }
+        },
+        "additionalProperties": true
+      },
+      "LedgerTopUpConfirm": {
+        "type": "object",
+        "description": "Ledger balance after Stripe.js confirmed a card top-up PaymentIntent.",
+        "properties": {
+          "credited": {
+            "type": "boolean",
+            "description": "True when this call posted the credit. False when it was already posted."
+          },
+          "balanceCents": {
+            "type": "integer",
+            "description": "Current ledger balance in cents."
+          }
+        },
+        "additionalProperties": true
+      },
+      "LedgerRefundableTopup": {
+        "type": "object",
+        "description": "A card top-up that still has refundable remainder for the desk Refund UI.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Ledger entry id of the top-up."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the top-up posted."
+          },
+          "amountCents": {
+            "type": "integer",
+            "description": "Original top-up amount in cents."
+          },
+          "refundedCents": {
+            "type": "integer",
+            "description": "Already refunded against this top-up."
+          },
+          "refundableCents": {
+            "type": "integer",
+            "description": "amountCents − refundedCents."
+          },
+          "stripePaymentIntentId": {
+            "description": "PaymentIntent to refund via Stripe when present.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "memo": {
+            "description": "Top-up memo.",
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": true
+      },
+      "LedgerRefundable": {
+        "type": "object",
+        "description": "Balance plus refundable top-ups for the desk Refund flow.",
+        "properties": {
+          "balanceCents": {
+            "type": "integer",
+            "description": "Current account balance in cents."
+          },
+          "ledgerEnabled": {
+            "type": "boolean",
+            "description": "Whether ledger mode is on."
+          },
+          "topups": {
+            "type": "array",
+            "description": "Newest-first card top-ups with remaining refundable cents.",
+            "items": {
+              "$ref": "#/components/schemas/LedgerRefundableTopup"
             }
           }
         },
@@ -24891,7 +26404,16 @@
               "squawk",
               "resource",
               "orgUser",
-              "joinRequest"
+              "joinRequest",
+              "document",
+              "inspection",
+              "enrollment",
+              "membership",
+              "organization",
+              "apiKey",
+              "standbyInterest",
+              "slotOffer",
+              "ledgerEntry"
             ]
           },
           "entityId": {
