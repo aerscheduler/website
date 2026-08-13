@@ -14,9 +14,10 @@ import path from "node:path";
  * test organisation, drives each route, and writes `public/docs/<id>.png`.
  *
  * A route may carry a `{placeholder}` for a record id: `{reservationId}`,
- * `{rampedReservationId}`, `{invoiceId}`, `{aircraftId}`, `{groundedAircraftId}`
- * or `{personId}`. The script resolves each once per run against whatever the
- * org actually holds, because a hardcoded id pins the manifest to one database.
+ * `{rampedReservationId}`, `{invoiceId}`, `{aircraftId}`, `{groundedAircraftId}`,
+ * `{personId}` or `{ledgerPersonId}`. The script resolves each once per run against
+ * whatever the org actually holds, because a hardcoded id pins the manifest to one
+ * database.
  *
  * Until a file lands, `<Screenshot>` renders a labelled frame rather than a
  * broken image, so an article is publishable before its pictures exist and no
@@ -536,11 +537,11 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   },
   {
     id: "leave-organization-card",
-    screen: "Profile, Leave this school",
-    route: "/me/profile",
+    screen: "Profile, Security, Leave this school",
+    route: "/me/profile?tab=security",
     alt: "Leave this school card",
     dataState:
-      "Signed in as a member who is not the sole owner, so the Leave this school card is visible at the foot of Profile & account.",
+      "DOCS_EMAIL=test-admin@aerscheduler.com, a member who is not the sole owner. The card lives on the Security tab of Profile & account, not the Profile tab.",
     crop: '[data-doc-shot="leave-organization-card"]',
   },
 
@@ -599,6 +600,58 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     dataState:
       "Signed in as the owner with Account ledger selected so the card fee card is visible. Percent and flat left blank (placeholders 0.0 / 0.00). Crop to that card.",
     crop: '[data-doc-shot="ledger-topup-card-fee"]',
+  },
+  {
+    id: "ledger-late-fees",
+    screen: "Settings, Billing, Late fees",
+    route: "/settings?tab=billing",
+    alt: "Late fees on an overdue account balance",
+    caption: "A percent of what is owed, plus an optional flat amount, once per member per month.",
+    dataState:
+      "DOCS_EMAIL=test-owner@aerscheduler.com with Account ledger selected, so the Late fees card is visible. Grace period left at the 30 day default.",
+    crop: '[data-doc-shot="ledger-late-fees"]',
+  },
+  {
+    id: "ledger-accounts-table",
+    screen: "Billing, Accounts",
+    route: "/billing?pane=accounts",
+    alt: "Billing, Accounts tab: every member's running balance",
+    caption: "Who owes and who has prepaid. Amber is owed, green is credit on account.",
+    dataState:
+      "DOCS_EMAIL=test-owner@aerscheduler.com, Account ledger on. At least one member in credit and one owing, so both colours appear and Days owing is populated on the amber row.",
+    crop: '[data-doc-shot="ledger-accounts-table"]',
+  },
+  {
+    id: "person-ledger",
+    screen: "People, person, Ledger",
+    route: "/people/{ledgerPersonId}?tab=ledger",
+    alt: "A member's account ledger",
+    caption: "Balance, entries, and the desk actions an admin gets on someone else's ledger.",
+    dataState:
+      "DOCS_EMAIL=test-owner@aerscheduler.com looking at another member with a non-zero balance and several entries of different types (a top-up, a flight charge, an adjustment), so the type column and the green credit rows are both worth reading.",
+    crop: '[data-doc-shot="person-ledger"]',
+  },
+  {
+    id: "ledger-add-credit-dialog",
+    screen: "Add credit dialog",
+    route: "/people/{ledgerPersonId}?tab=ledger",
+    alt: "Add credit dialog",
+    caption: "Desk credit for cash, check, or other money taken at the counter. The memo is required.",
+    dataState:
+      "DOCS_EMAIL=test-owner@aerscheduler.com on another member's ledger. The dialog opens blank, so the steps below type the amount and the memo.",
+    crop: '[data-doc-shot="ledger-add-credit-dialog"]',
+    open: ['button:has-text("Add credit")'],
+  },
+  {
+    id: "ledger-adjustment-dialog",
+    screen: "Adjustment dialog",
+    route: "/people/{ledgerPersonId}?tab=ledger",
+    alt: "Ledger adjustment dialog",
+    caption: "A signed plus or minus that is not a flight and not a top-up.",
+    dataState:
+      "DOCS_EMAIL=test-owner@aerscheduler.com on another member's ledger. The dialog opens blank.",
+    crop: '[data-doc-shot="ledger-adjustment-dialog"]',
+    open: ['button:has-text("Adjustment")'],
   },
   {
     id: "billing-payouts-connected",

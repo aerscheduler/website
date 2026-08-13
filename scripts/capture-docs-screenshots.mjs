@@ -452,14 +452,20 @@ async function resolvePlaceholders(page) {
   const from = new Date(today.getTime() - 90 * 864e5).toISOString();
   const to = new Date(today.getTime() + 90 * 864e5).toISOString();
 
-  const [reservations, invoices, resources, people, squawks, enrollments] = await Promise.all([
-    get(`/api/reservations?startDate=${encodeURIComponent(from)}&endDate=${encodeURIComponent(to)}`),
-    get("/api/invoices"),
-    get("/api/resources"),
-    get("/api/orgUsers"),
-    get("/api/maintenance/squawks?open=true"),
-    get("/api/training/enrollments"),
-  ]);
+  const [reservations, invoices, resources, people, squawks, enrollments, ledgerAccounts] =
+    await Promise.all([
+      get(
+        `/api/reservations?startDate=${encodeURIComponent(from)}&endDate=${encodeURIComponent(to)}`
+      ),
+      get("/api/invoices"),
+      get("/api/resources"),
+      get("/api/orgUsers"),
+      get("/api/maintenance/squawks?open=true"),
+      get("/api/training/enrollments"),
+      // Ledger-mode only, and admin only. Answers 403 or 404 in an invoice-mode org,
+      // which `get` turns into an empty list rather than a throw.
+      get("/api/organizations/ledger/accounts?pageSize=200"),
+    ]);
 
   const planes = resources.filter((r) => r?.type?.plane);
   const live = (r) => (r?.invoices ?? []).filter((i) => !i?.voidedAt).length;
@@ -620,6 +626,23 @@ async function resolvePlaceholders(page) {
     aircraftId: planes.find((p) => !p?.type?.plane?.grounded)?.id ?? planes[0]?.id,
     groundedAircraftId: planes.find((p) => p?.type?.plane?.grounded)?.id,
     personId: people.find((p) => p?.id)?.id,
+    // Somebody whose ledger is worth photographing. `personId` is just the first
+    // member on the roster, and on a roster this size that is reliably an account
+    // with no entries at all: an empty table under an article about reading one.
+    // A prepaid account is preferred over an owing one. Both are worth documenting,
+    // but the owing accounts in this org are the ones the end-to-end suites bill
+    // against, so their memos read `E2E-SMOKE-invoice-void-after-pay` and the picture
+    // published on the marketing site is of our test litter. Largest balance breaks
+    // the tie.
+    ledgerPersonId:
+      [...ledgerAccounts]
+        .filter((a) => a?.orgUserId && a.balanceCents !== 0)
+        .sort(
+          (a, b) =>
+            (a.balanceCents > 0 ? 0 : 1) - (b.balanceCents > 0 ? 0 : 1) ||
+            Math.abs(b.balanceCents) - Math.abs(a.balanceCents)
+        )[0]?.orgUserId ??
+      people.find((p) => p?.id)?.id,
     /* Each step of the close-out pipeline, so a spec can ask for the one booking
        whose panel actually shows the button or the notice it is a picture of. */
     // Notes preferred: this one is also the detail panel's own shot, and a panel with

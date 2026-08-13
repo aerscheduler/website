@@ -117,7 +117,7 @@ export default function ProductPage() {
             <Capability
               icon={<CreditCard className="size-5" />}
               title="Billing"
-              body="Flights become invoices. Cards on file for renters. Collect payment without a separate billing tool."
+              body="Flights become invoices or ledger charges. Cards on file for renters. Collect payment without a separate billing tool."
             />
             <Capability
               icon={<Wrench className="size-5" />}

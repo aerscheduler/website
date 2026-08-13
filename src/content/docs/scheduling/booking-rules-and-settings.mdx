@@ -229,6 +229,19 @@ book themselves. **$0** means any negative balance is refused.
 If both a minimum credit and a maximum owing would refuse the same booking, they see the
 minimum-credit message (the tighter prepaid rule).
 
+## Account ledger dispatch gates
+
+Same two fields, checked at **ramp-out** instead of at book. Leave both blank and
+dispatch does not re-check the self-book floors (a member who booked when they were
+current can still go). Set them when you want a second look the morning of the flight.
+
+Owners, admins, and dispatchers ramping out still skip them. Maintenance reservations
+are not checked. On a dual, the billed student or renter is checked even if the
+instructor is the one ramping out.
+
+The refusal says "start this flight" instead of "book", and still tells them to add
+funds or ask the desk.
+
 ## How far ahead anyone can book
 
 Nobody can book more than **365 days** ahead, whatever their role and whatever their
@@ -265,5 +278,8 @@ What your members see when one of these rules catches them.
 </DocCard>
 <DocCard href="/docs/billing/charge-a-minimum-for-overnight-trips" title="Charge a minimum for overnight trips">
 The overnight minimum from the billing side.
+</DocCard>
+<DocCard href="/docs/billing/manage-a-member-account-ledger" title="Manage a member account ledger">
+Auto-refill, late fees, statements, and desk credit.
 </DocCard>
 </CardGrid>

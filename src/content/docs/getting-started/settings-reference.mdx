@@ -63,12 +63,17 @@ School-wide booking behaviour. Most switches are off by default.
 | Late-cancel fee | Optional fee (Stripe) so a member can still cancel inside the lock by agreeing to pay. Staff cancels never charge |
 | Max upcoming bookings | Caps how many future bookings one student or renter may hold, including every date in a repeating series |
 | Max reservation length | Caps how long a single booking may run |
+| Minimum credit to self-book | Account ledger only. Block self-book unless the billed member's balance is at least this (staff still override) |
+| Maximum owing to self-book | Account ledger only. Block self-book once they owe more than this |
+| Minimum credit to dispatch | Account ledger only. Checked at ramp-out, not at book. Leave blank to skip |
+| Maximum owing to dispatch | Account ledger only. Block ramp-out once they owe more than this |
 
 Currency checks at book (medical, flight review, checkouts) are always enforced when you
 configure currencies under Compliance. They are not a toggle on this tab.
 
 See [Booking rules and settings](/docs/scheduling/booking-rules-and-settings) for the full
-story.
+story, including
+[account ledger book and dispatch gates](/docs/scheduling/booking-rules-and-settings#account-ledger-booking-gates).
 
 ## School → Groups
 
@@ -109,16 +114,21 @@ and be refused on save.
 
 | Setting | What it changes | Default |
 |---|---|---|
-| Stripe Connect (payouts) | Connects your own Stripe account, so close-outs become invoices payable by card or ACH, with payouts to your bank | Not connected |
+| Stripe Connect (payouts) | Connects your own Stripe account, so close-outs become invoices or card top-ups, with payouts to your bank | Not connected |
+| Billing enabled | Turns charging on. Stays off until payouts are connected. Saves as soon as you flip it | Off |
+| How members pay | **Invoice each booking** (Stripe invoice per visit) or **Account ledger** (running member balance). Guests always get a visit invoice. Owner only; saves on confirm | Invoice each booking |
+| Card fee on account top-ups | Optional percent and/or flat when members Add funds by card (ledger mode only). Cash/check at the desk stay dollar-for-dollar | Off |
+| Late fees | Optional percent of amount owing and/or flat fee, plus grace days, posted once a month on ledger balances that stay negative (ledger mode only) | Off |
 | Default instructor rate | The hourly instruction rate used when a rating has none of its own | $0 |
-| Service fee percent and label | An optional percentage added to invoices, with the label the payer sees | No fee, labelled "Service Fee" |
+| Service fee percent and label | An optional percentage added to each payer's bill, with the label the payer sees | No fee, labelled "Service Fee" |
 | Overnight minimum | Least billable time per night an aircraft is kept away. Out Friday, back Sunday is two nights. A booking back the same day is never affected | Blank, so nothing extra is charged |
-| Ground members with unpaid invoices | Grounds a member automatically once they reach this many unpaid invoices | Off |
+| Ground members with unpaid invoices | Grounds a member automatically once they reach this many unpaid invoices (invoice mode) | Off |
 | Dispatchers can manually generate invoices | Lets a dispatcher raise a one-off invoice outside a reservation, from the app | Off |
 | Instructors can manually generate invoices | The same for instructors, independently of the dispatcher grant | Off |
 
-See [Turn on invoicing and card payments](/docs/billing/turn-on-invoicing-and-card-payments)
-and [Who can do what in billing](/docs/billing/who-can-do-what-in-billing).
+See [Turn on invoicing and card payments](/docs/billing/turn-on-invoicing-and-card-payments),
+[Choose invoice or account ledger](/docs/billing/choose-invoice-or-account-ledger), and
+[Who can do what in billing](/docs/billing/who-can-do-what-in-billing).
 
 ## Billing → Memberships
 

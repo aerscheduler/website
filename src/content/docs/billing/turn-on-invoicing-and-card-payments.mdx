@@ -120,20 +120,35 @@ surfaces, both owner-only, and they say who may bill outside a reservation rathe
 where. See
 [Letting dispatchers or instructors create invoices](/docs/billing/create-a-manual-invoice).
 
+## Pick How members pay
+
+Still on <Where app="web">Settings → Billing</Where>, under **How members pay**:
+
+- **Invoice each booking** (default): each member visit raises a Stripe invoice.
+- **Account ledger**: member flights post to a running balance; members Add funds by card
+  or the desk credits cash/check. Guests still get a visit invoice.
+
+Only the owner can switch it. Full walkthrough:
+[Choose invoice or account ledger](/docs/billing/choose-invoice-or-account-ledger).
+
 ## Check it worked
 
 1. The Payouts badge reads **Connected**.
 2. **Billing enabled** is on.
 3. Every aircraft has a rate.
 4. Close out a real flight. When the last pilot confirms with their PIN, the booking shows
-   its line items and total, and the payer gets an invoice email.
+   its line items and total. Invoice mode: the payer gets an invoice email. Account ledger:
+   the Close-out section says **Charged to account ledger**.
 
-If a flight closes out and no invoice appears, work through
+If a flight closes out and no bill appears, work through
 [Why a flight was not invoiced](/docs/billing/why-a-flight-was-not-invoiced).
 
 ## Related
 
 <CardGrid>
+<DocCard href="/docs/billing/choose-invoice-or-account-ledger" title="Choose invoice or account ledger">
+Bill each booking, or use a member account balance.
+</DocCard>
 <DocCard href="/docs/billing/set-aircraft-and-instruction-rates" title="Set your aircraft and instruction rates">
 The rate, the wet or dry basis, and whether the invoice measures Hobbs or tach.
 </DocCard>

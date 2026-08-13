@@ -54,7 +54,7 @@ const FEATURE_SEO: Record<
   billing: {
     title: "Flight School Billing & Invoicing Software",
     description:
-      "Turn closed-out flights into invoices, take cards online with Stripe, and keep accounts receivable current.",
+      "Turn closed-out flights into Stripe invoices or an account ledger, take cards online, auto-refill balances, and keep accounts receivable current.",
   },
   memberships: {
     // Commercial intent ("software", "billing"), so it does not compete with

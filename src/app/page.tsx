@@ -157,7 +157,7 @@ export default function HomePage() {
               href="/features/billing"
               icon={<CreditCard className="size-5" />}
               title="Billing"
-              body="Flights draft invoices. Cards on file when you are ready."
+              body="Invoices or an account ledger. Cards on file when you are ready."
             />
             <TeaserCard
               href="/features/training"
@@ -235,19 +235,20 @@ export default function HomePage() {
             <Reveal className="order-1 lg:order-2">
               <p className="text-sm font-semibold text-primary">Billing</p>
               <h2 className="mt-3 text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
-                Ramp-in drafts the invoice.
+                Close-out posts the bill.
               </h2>
               <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-                Close out a flight and the line items write themselves. Collect
-                with saved cards. No separate billing tool taped onto the
-                schedule.
+                Close out a flight and the line items write themselves. Bill each
+                visit with a Stripe invoice, or put members on an account ledger
+                with Add funds and auto-refill. No separate billing tool taped onto
+                the schedule.
               </p>
               <ul className="mt-6 space-y-3">
                 {[
-                  "Auto-drafted invoices from Hobbs and tach close-out",
-                  "Aircraft and instruction rates on the same invoice",
-                  "Saved cards and autopay for members",
-                  "AR dashboard: outstanding, paid, and void",
+                  "Invoice each booking, or Account ledger for a running balance",
+                  "Auto-drafted bills from Hobbs and tach close-out",
+                  "Saved cards, autopay, and optional auto-refill",
+                  "AR: unpaid invoices, or who owes on Accounts",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-2.5 text-sm text-foreground">
                     <Check className="mt-0.5 size-4 shrink-0 text-primary" />

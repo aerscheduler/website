@@ -2,80 +2,115 @@
 A flight is priced when its close-out finishes. AerScheduler takes the hours off the
 aircraft's meter, adds the instruction time, splits the total between the people on the
 booking, then either raises one Stripe invoice per payer or posts one charge per payer to
-their account ledger, depending on How members pay.
+their account ledger. That choice is school-wide under How members pay. Guests always get
+a pay-this-visit invoice.
 </Summary>
 
-## From booking to paid invoice
+## Two ways members pay
 
-Every flight invoice follows the same path.
+On <Where app="web">Settings → Billing</Where>, under **How members pay**, the owner
+picks one mode for the whole school:
+
+| Mode | After a member flight | How members settle |
+|---|---|---|
+| **Invoice each booking** (default) | One Stripe invoice per payer | Pay that invoice by card, autopay, or mark paid for cash/check |
+| **Account ledger** | One balance charge per paying member | Add funds (card or desk cash/check). The balance may go negative |
+
+Guests and discovery flights are never on the ledger. They always get a pay-this-visit
+invoice, even when members use an account balance. See
+[Choose invoice or account ledger](/docs/billing/choose-invoice-or-account-ledger).
+
+## From booking to paid
+
+Every billable flight follows the same path. Only step 4 and 5 change with the mode.
 
 <Steps>
 <Step n={1} title="The flight is booked">
-Nothing is priced yet. The booking just decides which aircraft and which people are
-involved, and both of those feed the invoice later.
+Nothing is priced yet. The booking decides which aircraft and which people are involved,
+and both feed the bill later. On Account ledger, self-book can also be refused for low
+credit or too much owing. See
+[Booking rules and settings](/docs/scheduling/booking-rules-and-settings#account-ledger-booking-gates).
 </Step>
 <Step n={2} title="Ramp out, then ramp in">
 The pilot records Hobbs and tach at the start and at the end, plus instruction time if a
-CFI was teaching. See [Close out a flight so it invoices](/docs/billing/close-out-a-flight-and-bill-it).
+CFI was teaching. On Account ledger, optional dispatch gates can refuse ramp-out the same
+way booking gates refuse a book. See
+[Close out a flight so it invoices](/docs/billing/close-out-a-flight-and-bill-it).
 </Step>
 <Step n={3} title="Every pilot confirms with their PIN">
-The invoice does not exist until the last assigned pilot has signed off. This is the most
-common answer to "where is my invoice?".
+Nothing is billed until the last assigned pilot has signed off. This is the most common
+answer to "where is my invoice?" or "why is there no ledger charge?".
 </Step>
 <Step n={4} title="The bill is posted">
-With Invoice each booking, one Stripe invoice per payer. With Account ledger, one balance
-charge per paying member (guests still get an invoice). See
-[Choose invoice or account ledger](/docs/billing/choose-invoice-or-account-ledger).
+Invoice mode: one Stripe invoice per payer. Account ledger: one balance charge per paying
+member (guests still get an invoice). See
+[Charge a flight to the account ledger](/docs/billing/charge-a-flight-to-the-account-ledger).
 </Step>
-<Step n={5} title="The member pays (invoice mode) or draws the balance (ledger mode)">
-Invoices: by card in the app, autopay, or marked paid after cash or a check. Ledger:
-members add funds ahead of time, or the balance goes negative until they top up.
+<Step n={5} title="The member settles">
+Invoices: pay by card in the app, autopay, or mark paid after cash or a check. Ledger:
+members add funds ahead of time (or run a negative balance until they top up). Auto-refill
+can charge the default card on a schedule.
 </Step>
 </Steps>
 
 The Billing page in the web console updates live when an invoice is created, paid, voided,
-or refunded, so you do not need to refresh to see the new status.
-
+or refunded, and when a ledger balance changes, so you do not need to refresh.
 
 ## What AerScheduler prices, and what it does not
 
-It prices four things:
+It prices four things (the same numbers in both modes):
 
 | Charge | Where the number comes from |
 |---|---|
 | Aircraft or simulator time | Hobbs in minus Hobbs out, or tach in minus tach out, times the aircraft's hourly rate |
 | Instruction | The instruction time entered at ramp-in, times the rating's rate or the school's default instructor rate |
 | Overnight minimum | A floor under the aircraft time when the booking is away overnight |
-| Service fee | An optional percentage of the invoice that your school adds, with a label you choose |
+| Service fee | An optional percentage of the bill that your school adds, with a label you choose |
 
 It does not price anything else. There is no fuel line item, even on a dry rate, so a
 school on dry rates bills fuel separately on a [manual invoice](/docs/billing/create-a-manual-invoice).
 Rooms have no rate and are never charged for time, and maintenance bookings are never
-invoiced at all.
+billed at all.
 
-## One invoice per payer
+## One bill per payer
 
-A booking with one payer produces one invoice. A booking with several produces one each,
-priced at that person's own rate, with a memo naming the others on the flight and line
-text quoting that person's own hours. How the cost divides is set once per booking type
-in [Cost splitting](/docs/billing/set-up-cost-splitting).
+A booking with one payer produces one invoice or one ledger charge. A booking with several
+produces one each, priced at that person's own rate, with a memo naming the others on the
+flight and line text quoting that person's own hours. How the cost divides is set once per
+booking type in [Cost splitting](/docs/billing/set-up-cost-splitting).
 
 <Callout type="warning">
-The service fee is charged per invoice, not per flight. A booking split three ways
-collects the fee three times, once on each person's invoice.
+The service fee is charged per payer, not once per flight. A booking split three ways
+collects the fee three times, once on each person's invoice or ledger charge.
 </Callout>
 
-## Where invoices show up
+## Where the money shows up
+
+### Invoice each booking
 
 | Screen | Who sees it |
 |---|---|
-| <Where app="web">Billing</Where> | Owners and admins. Every invoice in the organization, plus revenue, outstanding and unbilled totals. |
-| <Where app="web">Invoices</Where> under the personal section | Every member, for their own invoices only. |
+| <Where app="web">Billing</Where> | Owners and admins. Every invoice, plus revenue, outstanding and unbilled totals. |
+| <Where app="web">Billing</Where> under You | Every member, for their own invoices only. |
 | The close-out section on the booking | Staff, and anyone rostered on that flight. |
 | <Where app="web">Dashboard</Where> | Staff see recent invoices, admins also see the outstanding total. |
-| <Where app="web">Reports → Financial</Where> | Admins only. Revenue, payments received, items sold, memberships and dues. |
+| <Where app="web">Reports → Financial</Where> | Admins. Revenue, payments received, items sold, memberships and dues. Accounts receivable ages unpaid invoices. |
 
 <Screenshot id="billing-invoice-list" />
+
+### Account ledger
+
+| Screen | Who sees it |
+|---|---|
+| <Where app="web">Billing → Accounts</Where> | Owners and admins. Every member's balance, who owes, who has credit. |
+| <Where app="web">Billing → Invoices</Where> (ops) | Guests and leftover Stripe invoices from before you switched. |
+| <Where app="web">People → person → Ledger</Where> | Admins managing that member (desk credit, refund, reassign). |
+| <Where app="web">Billing</Where> under You | The member: balance, history, Add funds, Statement, receipts. |
+| <Where app="web">Profile → Payment methods</Where> | Saved cards plus Auto-refill when ledger mode is on. |
+| <Where app="web">Reports → Accounts receivable</Where> | Admins. Ages negative balances by school calendar days. |
+
+See [Review account balances and who owes](/docs/billing/review-account-balances-and-who-owes)
+and [Manage a member's account ledger](/docs/billing/manage-a-member-account-ledger).
 
 On a split booking, the summary on the booking itself shows one person's share, labelled
 "(one of N shares for this booking)". It is not the flight's whole bill.
@@ -84,23 +119,49 @@ On a split booking, the summary on the booking itself shows one person's share, 
 
 ## What you have to set up first
 
-Four things, and nothing bills until all four are done.
+Four things, and nothing bills until all four are done. How members pay is a fifth choice
+you make once Stripe is live.
 
 | Setting | Where | Who |
 |---|---|---|
 | Stripe payouts connected | <Where app="web">Settings → Billing</Where>, Payouts card | Organization owner only |
 | Billing enabled | Same card, under Payouts. Stays off until payouts are connected. | Organization owner only |
+| How members pay | Same page: Invoice each booking or Account ledger | Organization owner only |
 | A rate on each aircraft | <Where app="web">Aircraft</Where> → edit the aircraft | Owner or admin |
 | An instruction rate | <Where app="web">Settings → Billing</Where> or <Where app="web">Settings → Instruction rates</Where> | Owner for the default, admin for a rating |
 
 <Callout type="warning">
-Invoicing needs both Billing enabled and a Stripe account that Stripe reports as enabled.
-With Stripe connected but Billing enabled switched off, close-outs complete normally and
-no invoice ever appears, with nothing on screen to say why.
+Billing needs both **Billing enabled** and a Stripe account that Stripe reports as
+enabled. With Stripe connected but Billing enabled switched off, close-outs complete
+normally and no invoice or ledger charge ever appears, with nothing on screen to say why.
 </Callout>
 
 Start with [Turn on invoicing and card payments](/docs/billing/turn-on-invoicing-and-card-payments),
-then [Set your aircraft and instruction rates](/docs/billing/set-aircraft-and-instruction-rates).
+then [Set your aircraft and instruction rates](/docs/billing/set-aircraft-and-instruction-rates),
+then pick [invoice or account ledger](/docs/billing/choose-invoice-or-account-ledger).
+
+## On Account ledger, these also matter
+
+Once How members pay is Account ledger:
+
+- **Card fee on top-ups** — optional percent and/or flat when members Add funds by card.
+  Desk cash and check stay dollar-for-dollar. See
+  [Set a card fee on account top-ups](/docs/billing/set-a-card-fee-on-account-top-ups).
+- **Auto-refill** — member (or admin) turns on charging the default card on a schedule:
+  under a balance floor, pay what they owe, or a fixed amount. Runs in the school's time
+  zone after about 4am local. See
+  [Manage a member's account ledger](/docs/billing/manage-a-member-account-ledger#auto-refill).
+- **Late fees** — owner sets percent and/or flat plus grace days. Posts once per member
+  per calendar month (school time zone) after they stay owing past grace. Reminder and
+  receipt emails go with it. See
+  [Late fees](/docs/billing/manage-a-member-account-ledger#late-fees).
+- **Book and dispatch balance gates** — minimum credit and/or maximum owing at self-book
+  and optionally again at ramp-out. Staff still override. See
+  [Booking rules](/docs/scheduling/booking-rules-and-settings#account-ledger-booking-gates).
+- **Statements** — opening, period activity, closing for a school-local date range; print
+  or email. Not a Stripe invoice and not QuickBooks.
+
+Invoice-mode schools ignore those ledger-only settings.
 
 ## What billing cannot do
 
@@ -115,22 +176,28 @@ Worth knowing before you plan around it.
 - **On Account ledger**, prepaid refunds, desk credits, and adjustments live on the
   member's ledger (see
   [Manage a member's account ledger](/docs/billing/manage-a-member-account-ledger)). There
-  are still no Stripe credit notes for invoice-mode flights.
+  are still no Stripe credit notes for invoice-mode flights. Ledger rows are never edited
+  in place: reverse or reassign instead.
 - **No per-instructor rates.** Every CFI teaching a given rating bills the same hourly
   figure.
 - **Manual New invoice** still raises a Stripe invoice (member or guest recipient). Member
   flight close-out in ledger mode uses the account ledger instead. If a close-out bill
   never appeared, **Create invoice** / **Post to ledger** on the booking is the admin
   fix. See [Why a flight was not invoiced](/docs/billing/why-a-flight-was-not-invoiced).
+- **QuickBooks** syncs paid Stripe invoices as Sales Receipts. Ledger top-ups and balance
+  charges are not Sales Receipts today.
 
 ## Where to go next
 
 <CardGrid>
 <DocCard href="/docs/billing/turn-on-invoicing-and-card-payments" title="Turn on invoicing and card payments">
-Connect Stripe, switch billing on, and set the fees every invoice is built from.
+Connect Stripe, switch billing on, and set the fees every bill is built from.
 </DocCard>
 <DocCard href="/docs/billing/choose-invoice-or-account-ledger" title="Choose invoice or account ledger">
-Bill each booking, or use a prepaid member balance. Guests always get a visit invoice.
+Bill each booking, or use a member account balance. Guests always get a visit invoice.
+</DocCard>
+<DocCard href="/docs/billing/manage-a-member-account-ledger" title="Manage a member's account ledger">
+Add funds, auto-refill, late fees, statements, receipts, refunds, and reassign.
 </DocCard>
 <DocCard href="/docs/billing/close-out-a-flight-and-bill-it" title="Close out a flight so it invoices">
 Ramp out, ramp in, confirm with a PIN, and the bill is posted.

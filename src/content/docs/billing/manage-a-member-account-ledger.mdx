@@ -13,6 +13,8 @@ Otherwise you see invoices as usual.
 
 ## What you see
 
+<Screenshot id="person-ledger" />
+
 The ledger (on <Where app="web">People → Ledger</Where> and on your own
 <Where app="web">Billing → Ledger</Where> page) shows credit on account (positive) or amount
 owed (negative), then entries. Search and filter by type or date, the same way
@@ -29,7 +31,7 @@ Audit logs → Ledger. Common types:
 | Cash / Check / Other credit | Desk credit posted by an admin |
 | Adjustment | Admin plus or minus with a memo |
 | Flight | Close-out charge for a booking |
-| Fee | Join fee, dues, or enrollment fee |
+| Fee | Join fee, dues, enrollment fee, or a monthly late fee |
 | Charge | Desk custom charge (when posted as a ledger item) |
 | Refund | Money returned from a prepaid balance |
 | Reversal | Undoes an earlier entry (never an edit of the original) |
@@ -52,6 +54,10 @@ On someone else's ledger, admins get:
 - **Add credit** for cash, check, or other money received at the desk (memo required).
 - **Adjustment** for a signed plus or minus that is not a flight and not a top-up.
 - **Refund** when the balance is positive. See [Refund](#refund).
+
+<Screenshot id="ledger-add-credit-dialog" />
+
+<Screenshot id="ledger-adjustment-dialog" />
 
 Owners and admins only. Members cannot credit or adjust themselves.
 
@@ -83,11 +89,51 @@ nor the school gets that back from this dialog.
 
 See [Card fee on account top-ups](/docs/billing/set-a-card-fee-on-account-top-ups).
 
+## Auto-refill
+
+On <Where app="web">Billing → Payment methods</Where> (and on People → Ledger for
+admins), a member can turn on auto-refill. It charges the **default saved card** and
+credits the ledger, the same path as Add funds.
+
+Three modes:
+
+- **When balance drops under a floor.** If the balance is below $X, charge $Y.
+- **Pay whatever I owe.** Charge the amount owing, if it is at least $1.
+- **Charge a fixed amount.** Charge $Y on the cadence even at zero.
+
+Cadence is every day, or once a month on day 1–28. The job runs in the school's time
+zone, after 4am local, so a downtime catch-up still fires that day. It tries once, then
+retries two days later, twice. After three failures it pauses and emails the member.
+A successful charge also emails the new balance. Both success and pause land as an
+in-app notification. The ledger row memo is **Auto-refill** (not a generic card top-up).
+The card is not deleted. Turn it back on after updating the card.
+
+Auto-refill needs ledger mode and a default card. It is not ACH; that is a later slice.
+
+## Late fees
+
+Owners set these under <Where app="web">Settings → Billing</Where> when the school is
+on an account ledger. A whole percent of the amount owing, plus an optional flat
+amount, posts once per member per calendar month (school time zone) after they have
+stayed owing past the grace period, counted in school calendar days (default 30 days;
+0 means the first eligible morning). The memo is
+`Late fee YYYY-MM`, so a second sweep in the same month is a no-op.
+
+<Screenshot id="ledger-late-fees" />
+
+Invoice-mode schools ignore these fields. The fee is a ledger `Fee` row, not a Stripe
+invoice. Open **Receipt** on that row for the line item.
+
+When grace is longer than 7 days, the member gets a reminder email and in-app notice
+about a week before the fee would post (`Late fee reminder YYYY-MM`, once). When the
+fee posts they get another email with the amount and new balance, plus an in-app
+"Late fee posted" notice. Add funds from Billing to avoid the next month.
+
 ## Statements
 
 **Statement** on the ledger (your Billing page, or an admin looking at People → Ledger)
-opens a date range: opening balance (everything before the start), each entry in the
-period with a running total, and closing.
+opens a date range in the **school's time zone** (not your laptop's): opening balance
+(everything before the start), each entry in the period with a running total, and closing.
 
 Print uses the same isolated print view as a receipt. **Email statement** sends it to the
 member's email with a link back to Billing. This is not a Stripe invoice and does not
@@ -127,6 +173,7 @@ Reassign refuses:
 |---|---|
 | <Where app="web">People → person → Ledger</Where> | Admins managing that member (same searchable table, plus desk credit / refund / reassign). Invoices is leftover Stripe bills. |
 | <Where app="web">Billing → Ledger</Where> under the personal section | The member themselves (balance, searchable history, Add funds, receipts; no Reassign) |
+| <Where app="web">Billing → Payment methods</Where> | Auto-refill and saved cards |
 | iOS app Account / ledger | Balance, history, Add funds, receipts |
 
 ## Guests

@@ -486,7 +486,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "booking-rules-and-settings",
         title: "Booking rules: the settings that change how booking works",
         description:
-          "Flying day, multi-day trips, payment-method gate, cancel/edit lock, late-cancel fee, max upcoming bookings, and max reservation length. What each does and where it lives.",
+          "Flying day, multi-day trips, payment-method gate, cancel/edit lock, late-cancel fee, max upcoming bookings, max reservation length, and account-ledger book/dispatch gates. What each does and where it lives.",
         kind: "reference",
         audience: ["Owners", "Admins"],
         seoQuery: "flight school booking rules and settings",
@@ -535,23 +535,37 @@ export const DOC_SECTIONS: DocSection[] = [
     navLabel: "Billing",
     blurb: "Price a flight, split it between the people on it, and get paid.",
     intro:
-      "Rates, invoices, split billing, memberships and dues, and the Stripe and QuickBooks connections. What a booking costs and who pays it.",
+      "Rates, invoices or an account ledger, split billing, memberships and dues, and the Stripe and QuickBooks connections. What a booking costs and who pays it.",
     icon: "CreditCard",
     articles: [
       {
         slug: "how-billing-works",
         title: "How billing works in AerScheduler",
         description:
-          "The path a flight takes from booking to paid invoice, the four things you have to set before any of it runs, and where the money shows up afterwards.",
+          "Invoice each booking or Account ledger: the path from booking to bill, what you set up first, where money shows up, and ledger-only tools like auto-refill and late fees.",
         kind: "overview",
         audience: ["Owners", "Admins", "Dispatchers", "Instructors", "Students", "Renters"],
         seoQuery: "how does flight school billing work in AerScheduler",
+        faqs: [
+          {
+            q: "Do we have to use invoices?",
+            a: "No. Under Settings → Billing → How members pay, the owner can switch the school to Account ledger. Member flights then post to a balance instead of a Stripe invoice. Guests still get a pay-this-visit invoice.",
+          },
+          {
+            q: "Can some members use invoices and others use a ledger?",
+            a: "No. How members pay is school-wide. Guests are the exception: they always get a visit invoice even when members are on the ledger.",
+          },
+          {
+            q: "Where do members add money on Account ledger?",
+            a: "Billing under You (Add funds), or Profile → Payment methods. Admins can also desk-credit cash or check from People → the member → Ledger.",
+          },
+        ],
       },
       {
         slug: "who-can-do-what-in-billing",
         title: "Who can see and do what in billing",
         description:
-          "Every billing action by role, including the two places being an admin is not enough and you need the organization owner.",
+          "Every billing action by role, including invoices, the account ledger, auto-refill, and the places being an admin is not enough.",
         kind: "reference",
         audience: ["Owners", "Admins", "Dispatchers", "Instructors", "Students", "Renters", "Technicians"],
         seoQuery: "flight school billing permissions by role",
@@ -560,7 +574,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "turn-on-invoicing-and-card-payments",
         title: "Turn on invoicing and card payments",
         description:
-          "Connect Stripe so the school can take card payments, switch billing on, and set the rates and fees that every invoice is built from.",
+          "Connect Stripe so the school can take card payments, switch billing on, pick invoice or account ledger, and set the rates and fees every bill is built from.",
         kind: "task",
         audience: ["Owners"],
         seoQuery: "how to accept card payments at a flight school with Stripe",
@@ -569,7 +583,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "choose-invoice-or-account-ledger",
         title: "Choose invoice or account ledger",
         description:
-          "Bill members with a new invoice for each booking, or with a prepaid account balance. Guests always get a pay-this-visit invoice.",
+          "Bill members with a new invoice for each booking, or with a prepaid account balance (auto-refill, late fees, book/dispatch gates). Guests always get a pay-this-visit invoice.",
         kind: "task",
         audience: ["Owners"],
         seoQuery: "flight school account ledger vs invoice billing",
@@ -606,10 +620,10 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "manage-a-member-account-ledger",
         title: "Manage a member's account ledger",
         description:
-          "Read the balance, add funds or desk credit, print a receipt, refund prepaid money, and reassign a flight charge to another member.",
+          "Read the balance, add funds or desk credit, set auto-refill, late fees, statements, print a receipt, refund prepaid money, and reassign a flight charge.",
         kind: "task",
         audience: ["Owners", "Admins", "Students", "Renters"],
-        seoQuery: "flight school member account ledger receipt reassign charge",
+        seoQuery: "flight school member account ledger receipt reassign charge auto-refill",
         faqs: [
           {
             q: "Can I edit a ledger charge that was posted wrong?",
@@ -618,6 +632,14 @@ export const DOC_SECTIONS: DocSection[] = [
           {
             q: "Who can reassign a flight charge?",
             a: "Owners and admins only, from People → the member → Billing, on a live Flight row that has not already been reversed.",
+          },
+          {
+            q: "What does auto-refill do?",
+            a: "It charges the member's default card on a schedule to add credit: when the balance drops under a floor, to pay what they owe, or a fixed amount. Three failed charges pause it and email the member; a successful charge emails the new balance. The card is not deleted.",
+          },
+          {
+            q: "Do members get a late-fee email?",
+            a: "Yes. A reminder about a week before grace (when grace is longer than 7 days), then a receipt email and in-app notice when the monthly fee posts. Open Receipt on the Fee row.",
           },
         ],
       },
@@ -775,7 +797,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "billing-troubleshooting",
         title: "Billing troubleshooting and FAQ",
         description:
-          "The billing behavior that surprises people most, with the reason for each and what to do about it.",
+          "The billing behavior that surprises people most, including invoice vs ledger quirks, with the reason for each and what to do about it.",
         kind: "troubleshooting",
         audience: ["Owners", "Admins", "Dispatchers", "Instructors", "Students", "Renters"],
         seoQuery: "AerScheduler billing problems invoice wrong amount",

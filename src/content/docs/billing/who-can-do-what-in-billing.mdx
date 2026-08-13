@@ -1,16 +1,16 @@
 <Summary>
 Billing is an owner and admin area. Two things need the organization owner specifically:
 saving <Where app="web">Settings → Billing</Where>, and connecting Stripe or QuickBooks.
-Everyone else sees only their own invoices, or the invoice for a flight they were on.
+Everyone else sees only their own invoices or ledger, or the bill for a flight they were on.
 </Summary>
 
 ## The short version
 
 - **Owner**: everything, including the two owner-only areas below.
-- **Admin**: everything else in billing. Every invoice, every report, all the rules.
+- **Admin**: everything else in billing. Every invoice, every ledger, every report, all the rules.
 - **Dispatcher**: can close a flight out and fill in who pays what. Cannot open Billing.
 - **Instructor**: the same, plus billing a guest flight they instructed.
-- **Student and renter**: their own invoices and their own cards.
+- **Student and renter**: their own invoices or ledger, cards, and auto-refill.
 - **Technician**: no money at all.
 
 <Callout type="warning">
@@ -28,6 +28,7 @@ save is refused, the owner has to make the change.
 | Connect or manage Stripe payouts | Yes | No | No | No | No | No |
 | Connect or configure QuickBooks Online | Yes | No | No | No | No | No |
 | Open Billing and see every invoice | Yes | Yes | No | No | No | No |
+| Open Accounts (ledger balances who owes) | Yes | Yes | No | No | No | No |
 | See financial reports | Yes | Yes | No | No | No | No |
 | Create a manual invoice | Yes | Yes | Only if switched on | Only if switched on | No | No |
 | Mark an invoice paid | Yes | Yes | No | No | No | No |
@@ -43,18 +44,24 @@ save is refused, the owner has to make the change.
 | Confirm a review with a PIN | Own sign-off | Own sign-off | Own sign-off | Own sign-off | Own sign-off | No |
 | See and pay their own invoices | Yes | Yes | Yes | Yes | Yes | Yes |
 | See their own account ledger, Add funds, and receipts | Yes | Yes | Yes | Yes | Yes | Yes |
+| Download or email their own ledger statement | Yes | Yes | Yes | Yes | Yes | Yes |
+| Turn on auto-refill on their own account | Yes | Yes | Yes | Yes | Yes | Yes |
 | Add credit, adjust, or refund a member ledger | Yes | Yes | No | No | No | No |
 | Reassign a flight charge to another member | Yes | Yes | No | No | No | No |
+| Email a member's ledger statement | Yes | Yes | No | No | No | No |
 | Save a card and use autopay | Yes | Yes | Yes | Yes | Yes | Yes |
 | Switch How members pay (invoice vs ledger) | Yes | No | No | No | No | No |
+| Set late fees and card fee on top-ups | Yes | No | No | No | No | No |
+| Set book / dispatch balance gates | Yes | Yes | No | No | No | No |
 
 ## Owner
 
-The owner is an admin plus four things nobody else can do:
+The owner is an admin plus things nobody else can do:
 
 - Turn **Billing enabled** on or off, and switch How members pay (invoice vs ledger).
 - Save the Rates and fees card: default instructor rate, service fee and its label,
   overnight minimum, and the grounding threshold.
+- Set late fees and the card fee on account top-ups (ledger mode).
 - Connect, manage and reconnect the Stripe payout account.
 - Connect, configure, backfill and disconnect QuickBooks Online, and retry a single
   invoice's sync.
@@ -67,15 +74,17 @@ charge from the member's Billing tab.
 
 ## Admin
 
-An admin runs day to day billing: the whole Billing page, manual invoices, mark paid,
-void, payment reminders, every financial report, cost-splitting rules, membership plans
-and every member's dues and money. An admin also gets **Override payment** and **Create
-invoice** on a reservation, both on the booking's panel in the console and on the app.
+An admin runs day to day billing: the whole Billing page (Invoices and Accounts), manual
+invoices, mark paid, void, payment reminders, every financial report, cost-splitting
+rules, membership plans and every member's dues and money. An admin also gets **Override
+payment** and **Create invoice** / **Post to ledger** on a reservation, both on the
+booking's panel in the console and on the app. Book and dispatch balance gates live under
+Booking preferences and are owner or admin to save.
 
 What an admin cannot do is turn Billing enabled on or off, switch How members pay, save
-Rates and fees, connect Stripe or QuickBooks,
+Rates and fees (including late fees and top-up card fee), connect Stripe or QuickBooks,
 or change a Stripe invoice's amount once it exists. On Account ledger they can manage the
-member ledger (credit, adjust, refund, reassign) from People.
+member ledger (credit, adjust, refund, reassign, statements) from People.
 
 ## Dispatcher
 
@@ -124,10 +133,13 @@ report, or mark anything paid.
 
 Identical for billing purposes. Both can:
 
-- See their own invoices, and their outstanding balance on their home page.
+- See their own invoices (invoice mode), or their own ledger balance, Add funds, receipts,
+  and statements (Account ledger). See
+  [Manage a member's account ledger](/docs/billing/manage-a-member-account-ledger).
 - Pay their own invoices by card, save cards, set a default, and turn on autopay. See
   [Pay your invoice and set up autopay](/docs/billing/pay-an-invoice-and-save-a-card).
-- Confirm a review with their PIN, which is what triggers the invoice.
+- On Account ledger, turn on **Auto-refill** on their own account (needs a default card).
+- Confirm a review with their PIN, which is what triggers the bill.
 - Fill in Who pays what on a booking they are assigned to.
 - Read their own membership on their profile.
 

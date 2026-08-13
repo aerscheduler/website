@@ -127,6 +127,23 @@ The Outstanding card on their Invoices page does not.
 
 The Invoices page is the figure they actually owe. Tell members to trust that one.
 
+On Account ledger, trust the balance on Billing under You (or People → Ledger). That is
+the running account, not an unpaid-invoice total.
+
+## There is no Stripe invoice after a member flight
+
+If **How members pay** is Account ledger, that is expected. Look for **Charged to account
+ledger** on the booking, or a Flight row on the member's ledger. Guests still get a Stripe
+invoice. See
+[Charge a flight to the account ledger](/docs/billing/charge-a-flight-to-the-account-ledger).
+
+## Auto-refill paused or never charged
+
+Auto-refill needs Account ledger, a **default** saved card, and the member to leave it on.
+Three failed charges pause it and email the member; the card is not deleted. They turn it
+back on from Payment methods or Billing under You. See
+[Manage a member's account ledger](/docs/billing/manage-a-member-account-ledger#auto-refill).
+
 ## Nothing bills in the demo
 
 In the public demo, closing out a flight produces a realistic-looking paid invoice without
@@ -147,21 +164,27 @@ Worth knowing before you plan a process around one of them.
 
 | | |
 |---|---|
-| Refund a payment | Refunds are done in your own Stripe dashboard, and are not read back here. The invoice stays Paid. |
-| Issue a credit note or hold an account credit | There is no credit or prepaid balance. |
-| Edit an invoice after it is raised | The only actions are mark paid and void. |
+| Refund a card payment on a Stripe invoice | Refunds are done in your own Stripe dashboard, and are not read back here. The invoice stays Paid. |
+| Refund prepaid ledger credit via Stripe alone | Use **Refund** on the member's ledger (owners and admins). That reverses prepaid balance in AerScheduler. |
+| Issue a Stripe credit note | Invoice mode has no credit-note workflow. Account ledger holds prepaid credit as a balance instead. |
+| Edit an invoice after it is raised | The only actions are mark paid and void. Ledger rows are never edited in place either; post a reversing row. |
 | Calculate sales tax | Add it as a line item if you need it. |
-| Bill fuel on a dry rate | There is no fuel line. Invoice fuel separately. |
+| Bill fuel on a dry rate | There is no fuel line. Invoice fuel separately (or post a desk charge on the ledger). |
 | Set a rate for one instructor | Rates are per rating, plus the organization default. Every instructor on a rating bills the same figure. |
 | Exempt one aircraft from the overnight minimum | There is nowhere to set a per-aircraft figure, so the organization's applies to every tail. |
 | Let a member join, change tier or cancel a membership | Every membership change is an admin action. |
+| Put guests on the account ledger | Guests always get a pay-this-visit invoice. |
+| Sync ledger top-ups to QuickBooks | QuickBooks syncs paid Stripe invoices as Sales Receipts. Ledger balance activity is not that sync. |
 | Invoice a guest from the web console | Turn on Guest recipient in Billing → New invoice and enter a name and email. |
 
 ## Related
 
 <CardGrid>
 <DocCard href="/docs/billing/how-billing-works" title="How billing works">
-The path from booking to paid invoice, start to finish.
+Invoice each booking or Account ledger, start to finish.
+</DocCard>
+<DocCard href="/docs/billing/manage-a-member-account-ledger" title="Manage a member's account ledger">
+Auto-refill, late fees, statements, and desk tools.
 </DocCard>
 <DocCard href="/docs/billing/who-can-do-what-in-billing" title="Who can do what in billing">
 Including the two places an admin is not enough.

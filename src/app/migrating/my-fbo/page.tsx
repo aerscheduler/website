@@ -48,7 +48,7 @@ const MAP = [
   ["Online scheduling", "Lane dispatch, week views, student self-booking"],
   ["Aircraft & instructors", "Fleet, rates, grounding, instructor availability"],
   ["Members & students", "Roster, invite codes, roles, documents"],
-  ["Invoicing & balances", "Flight → invoice, cards on file, online payments"],
+  ["Invoicing & balances", "Flight → invoice or ledger, cards on file, online payments"],
   ["Web-only access", "Web console plus a native iOS app"],
 ];
 

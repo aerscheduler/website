@@ -37,7 +37,7 @@ const FEATURES = [
   },
   {
     title: "Money",
-    items: ["Flight → invoice", "Cards on file", "Instruction rates", "Online payments"],
+    items: ["Flight → invoice or ledger", "Cards on file", "Instruction rates", "Online payments"],
   },
 ];
 

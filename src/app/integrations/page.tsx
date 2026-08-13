@@ -34,9 +34,9 @@ const INTEGRATIONS: {
   {
     name: "Stripe",
     status: "available",
-    blurb: "Cards on file, invoices, and online payments for your school.",
+    blurb: "Cards on file, invoices, ledger top-ups, and online payments.",
     detail:
-      "Accept cards and pay invoices through Stripe. Subscription billing for your school runs through Stripe too. No separate gateway to wire up.",
+      "Accept cards for invoices and account top-ups through Stripe. Subscription billing for your school runs through Stripe too. No separate gateway to wire up.",
     logo: "/integrations/stripe.svg",
     logoAlt: "Stripe logo",
   },
