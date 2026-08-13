@@ -200,6 +200,35 @@ Currency checks at book (medical, flight review, checkouts under Compliance) are
 from these rules and stay **always on**, as they always have been. Duals can still go when
 the currency allows flying with a current instructor who is current.
 
+## Account ledger booking gates
+
+These two fields only appear when the school is on
+[Account ledger](/docs/billing/choose-invoice-or-account-ledger). Invoice-each-booking
+schools never see them, and saved values do nothing if you switch back to invoices.
+
+Both apply only to **self-book**: a student or renter booking themselves. If they put
+another student or renter on a shared flight, that person's balance is checked too (close-out
+will charge them). Owners, admins, and dispatchers booking on someone's behalf skip them,
+and so does an instructor booking a dual. Same bypass as
+[Require payment method](#require-payment-method-before-self-book).
+
+### Minimum credit to self-book
+
+Leave blank to turn it off. A dollar amount means their account must already hold at least
+that much credit before they can book. **$0** is a real rule: they cannot book while
+owing.
+
+The refusal names the floor and the current balance, and tells them to add funds under
+Billing or ask the front desk.
+
+### Maximum owing to self-book
+
+Leave blank to turn it off. A dollar amount is the most they may already owe and still
+book themselves. **$0** means any negative balance is refused.
+
+If both a minimum credit and a maximum owing would refuse the same booking, they see the
+minimum-credit message (the tighter prepaid rule).
+
 ## How far ahead anyone can book
 
 Nobody can book more than **365 days** ahead, whatever their role and whatever their

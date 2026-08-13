@@ -4181,6 +4181,238 @@
         ]
       }
     },
+    "/orgUsers/{orgUserId}/ledger/statement": {
+      "get": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Get a member ledger statement",
+        "description": "Inclusive period statement: opening balance (sum of entries before `start`), period entries oldest-first with running balance, and closing. **Self or admin.** Period must be under two years and under 5000 entries.",
+        "responses": {
+          "200": {
+            "description": "Statement for the requested period.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/LedgerStatement"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid range, too many rows, or not allowed to view this ledger.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getOrgUserLedgerStatement",
+        "parameters": [
+          {
+            "name": "orgUserId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The membership id."
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Inclusive period start. ISO 8601 instant, or `YYYY-MM-DD` for the start of that UTC calendar day."
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Inclusive period end. ISO 8601 instant, or `YYYY-MM-DD` for the end of that UTC calendar day."
+          }
+        ]
+      }
+    },
+    "/orgUsers/{orgUserId}/ledger/statement/email": {
+      "post": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Email a member ledger statement",
+        "description": "Sends the same period statement to the member's email. **Self or admin.** Not a Stripe invoice and not synced to QuickBooks.",
+        "responses": {
+          "200": {
+            "description": "Email queued.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "sent": {
+                          "type": "boolean"
+                        },
+                        "to": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "sent",
+                        "to"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid range, no email, or not allowed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The statement email could not be sent.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "emailOrgUserLedgerStatement",
+        "parameters": [
+          {
+            "name": "orgUserId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The membership id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Statement period.",
+                "properties": {
+                  "start": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Inclusive period start. ISO 8601 instant, or `YYYY-MM-DD` for the start of that UTC calendar day."
+                  },
+                  "end": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Inclusive period end. ISO 8601 instant, or `YYYY-MM-DD` for the end of that UTC calendar day."
+                  },
+                  "periodLabel": {
+                    "type": "string",
+                    "description": "Optional `YYYY-MM-DD to YYYY-MM-DD` printed in the email. Send the calendar days the member picked so the subject is not a UTC slice of local midnights."
+                  }
+                },
+                "required": [
+                  "start",
+                  "end"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
     "/orgUsers/{orgUserId}/ledger/topups": {
       "post": {
         "tags": [
@@ -25192,6 +25424,77 @@
             "items": {
               "$ref": "#/components/schemas/LedgerEntry"
             }
+          }
+        },
+        "additionalProperties": true
+      },
+      "LedgerStatement": {
+        "type": "object",
+        "description": "Inclusive period statement for one member. Opening is the sum of entries strictly before `start`. Closing is opening plus the period sum.",
+        "properties": {
+          "start": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Inclusive period start."
+          },
+          "end": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Inclusive period end."
+          },
+          "openingCents": {
+            "type": "integer",
+            "description": "Balance immediately before the period."
+          },
+          "closingCents": {
+            "type": "integer",
+            "description": "Balance at the end of the period."
+          },
+          "periodSumCents": {
+            "type": "integer",
+            "description": "Sum of period entry amounts."
+          },
+          "entries": {
+            "type": "array",
+            "description": "Oldest-first period entries, each with running balance.",
+            "items": {
+              "$ref": "#/components/schemas/LedgerStatementEntry"
+            }
+          }
+        },
+        "additionalProperties": true
+      },
+      "LedgerStatementEntry": {
+        "type": "object",
+        "description": "One statement line with running balance after the entry.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Ledger entry id."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the entry was posted."
+          },
+          "amountCents": {
+            "type": "integer",
+            "description": "Signed cents. Credits positive; charges negative."
+          },
+          "type": {
+            "type": "string",
+            "description": "Ledger entry type."
+          },
+          "memo": {
+            "description": "Optional note.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "runningBalanceCents": {
+            "type": "integer",
+            "description": "Balance after this entry, starting from the period opening."
           }
         },
         "additionalProperties": true
