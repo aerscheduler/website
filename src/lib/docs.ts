@@ -231,10 +231,20 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "post-an-announcement",
         title: "Post an announcement",
         description:
-          "Owners and admins post a school notice from Operations → Announcements. Members see it on home and can be notified by push.",
+          "Owners and admins post a school notice from Operations → Announcements. Members see it on Home until they tap Got it, then find it again on the announcements page.",
         kind: "task",
-        audience: ["Owners", "Admins"],
+        audience: ["Owners", "Admins", "Instructors", "Students", "Renters"],
         seoQuery: "post flight school announcement AerScheduler",
+        faqs: [
+          {
+            q: "How do I hide an announcement from Home?",
+            a: "Tap Got it on the notice. It leaves Home for you only. The school still has it on Operations → Announcements, and in the app under Announcements, until an admin deletes it or it expires.",
+          },
+          {
+            q: "Does Got it delete the announcement for everyone?",
+            a: "No. Got it is only for you. Other members still see it on Home until they mark it themselves. Deleting from the board removes it for the whole school.",
+          },
+        ],
       },
       {
         slug: "delete-your-school",

@@ -17419,6 +17419,96 @@
         ]
       }
     },
+    "/announcements/{id}/seen": {
+      "post": {
+        "tags": [
+          "Announcements"
+        ],
+        "summary": "Mark an announcement as seen",
+        "description": "Hides the notice from your Home. It stays on the announcements page. Idempotent.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Announcement"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "That announcement is not in your organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "markAnnouncementSeen",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The announcement id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "No fields required.",
+                "properties": {}
+              }
+            }
+          }
+        }
+      }
+    },
     "/notifications": {
       "get": {
         "tags": [
@@ -26536,6 +26626,14 @@
             "items": {
               "type": "string"
             }
+          },
+          "seenAt": {
+            "format": "date-time",
+            "description": "When the signed-in member marked this notice as seen (Got it). Null if they have not. Seen notices leave Home and stay on the announcements page.",
+            "type": [
+              "string",
+              "null"
+            ]
           }
         },
         "additionalProperties": true

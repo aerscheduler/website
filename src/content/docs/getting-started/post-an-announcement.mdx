@@ -1,7 +1,7 @@
 <Summary>
 <Where app="web">Operations → Announcements → New announcement</Where>. Enter a title and a
-message, optionally set an expiry, and post. Members see it on the board and on home; those
-with the iOS app can get a push.
+message, optionally set an expiry, and post. Members see it on Home until they tap Got it.
+After that it stays on the announcements page. Those with the iOS app can get a push.
 </Summary>
 
 <Roles>Owners, Admins</Roles>
@@ -30,6 +30,19 @@ new checklist, or a reminder about paperwork.
     installed get an alert.
   </Step>
 </Steps>
+
+## Hide it from Home
+
+<Roles>Everyone</Roles>
+
+Members tap **Got it** on a notice on Home, in the console or the iOS app. That hides it
+from Home for them only. It stays on Operations → Announcements (and under Announcements
+in the app) until an admin deletes it or it expires.
+
+<Callout type="note">
+Got it is not a delete. Other people still see the notice on Home until they mark it
+themselves. If the school never takes the notice down, this is how it leaves Home.
+</Callout>
 
 ## Edit or delete
 
