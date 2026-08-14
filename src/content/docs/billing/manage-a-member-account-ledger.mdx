@@ -104,11 +104,22 @@ Three modes:
 Cadence is every day, or once a month on day 1–28. The job runs in the school's time
 zone, after 4am local, so a downtime catch-up still fires that day. It tries once, then
 retries two days later, twice. After three failures it pauses and emails the member.
-A successful charge also emails the new balance. Both success and pause land as an
-in-app notification. The ledger row memo is **Auto-refill** (not a generic card top-up).
-The card is not deleted. Turn it back on after updating the card.
+A successful charge also emails the new balance, **and the amount charged to the card**,
+which is larger than the credit when the school adds a card fee on top-ups. Both success
+and pause land as an in-app notification. The ledger row memo is **Auto-refill** (not a
+generic card top-up). The card is not deleted. Turn it back on after updating the card.
 
-Auto-refill needs ledger mode and a default card. It is not ACH; that is a later slice.
+**On a monthly cadence the first charge waits for the date you picked.** Set it up on the
+20th and choose the 1st, and nothing happens until the 1st. After that, if the job misses
+the date it catches up as soon as it can.
+
+Auto-refill needs ledger mode, a school that has connected card payments, and a default
+card. If any of those is missing, the switch refuses to turn on and says which one, rather
+than saving and failing quietly later. It is not ACH; that is a later slice.
+
+If auto-refill pauses, the reason says whose problem it is. "The saved card was declined"
+means the card. "This school has not finished setting up card payments" and "card payments
+were unavailable" are not about the member's card at all and need nothing from them.
 
 ## Late fees
 
