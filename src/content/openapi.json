@@ -2053,6 +2053,32 @@
                   },
                   "showInDirectory": {
                     "type": "boolean"
+                  },
+                  "bookingPolicy": {
+                    "type": "object",
+                    "description": "Org-wide booking rules. Send only the keys you are changing; `null` clears a rule. The four balance gates apply only when the organization is in **ledger** billing mode.",
+                    "properties": {
+                      "minimumBalanceCents": {
+                        "type": "integer",
+                        "nullable": true,
+                        "description": "Credit a student or renter needs to self-book. Null = off. 0 = cannot book while owing. Owners, admins and dispatchers booking on someone's behalf skip it."
+                      },
+                      "balanceMaximumCents": {
+                        "type": "integer",
+                        "nullable": true,
+                        "description": "Most a member may owe and still self-book. Null = off. 0 = any negative balance is refused."
+                      },
+                      "dispatchMinimumBalanceCents": {
+                        "type": "integer",
+                        "nullable": true,
+                        "description": "Same floor, checked at ramp-out instead of at book. Null = off, and the self-book floor is NOT re-applied. Only owners and admins override this one; dispatchers do not."
+                      },
+                      "dispatchBalanceMaximumCents": {
+                        "type": "integer",
+                        "nullable": true,
+                        "description": "Most a member may owe and still ramp out. Null = off."
+                      }
+                    }
                   }
                 }
               }
@@ -2419,7 +2445,7 @@
           "Organizations"
         ],
         "summary": "Set ledger billing mode",
-        "description": "Turns ledger mode on or off and/or sets the optional card surcharge on member top-ups (percent and/or flat cents). **Owner only.** Desk cash/check credit is never surcharged. AerScheduler's legacy 0.5% Connect application fee is separate and only applies to legacy-plan orgs.",
+        "description": "Turns ledger mode on or off, sets the optional card surcharge on member top-ups, and/or sets late fees on negative balances. **Owner only.** Desk cash/check credit is never surcharged. Late fees post once per member per calendar month after the grace period.",
         "responses": {
           "200": {
             "description": "Updated settings.",
@@ -2496,6 +2522,20 @@
                   "topUpCardFeeFlatCents": {
                     "type": "integer",
                     "nullable": true
+                  },
+                  "lateFeePercent": {
+                    "type": "integer",
+                    "nullable": true,
+                    "description": "Whole percent of the amount owing. 0 or null = off."
+                  },
+                  "lateFeeFlatCents": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "lateFeeGraceDays": {
+                    "type": "integer",
+                    "nullable": true,
+                    "description": "Days owing before a late fee posts. Null = 30. 0 = first eligible sweep."
                   }
                 }
               }
@@ -4036,16 +4076,6 @@
               }
             }
           },
-          "400": {
-            "description": "Not in your organization, or not allowed to view another member's ledger.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
           "401": {
             "description": "No token, an expired token, or a malformed one. Sign in again.",
             "content": {
@@ -4057,7 +4087,7 @@
             }
           },
           "403": {
-            "description": "Authenticated, but not allowed to do this.",
+            "description": "Not in your organization, or not allowed to view another member's ledger.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4205,7 +4235,7 @@
             }
           },
           "400": {
-            "description": "Invalid range, too many rows, or not allowed to view this ledger.",
+            "description": "Invalid range, or too many rows.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4225,7 +4255,7 @@
             }
           },
           "403": {
-            "description": "Authenticated, but not allowed to do this.",
+            "description": "Not allowed to view this member's ledger.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4264,7 +4294,7 @@
               "type": "string",
               "format": "date-time"
             },
-            "description": "Inclusive period start. ISO 8601 instant, or `YYYY-MM-DD` for the start of that UTC calendar day."
+            "description": "Inclusive period start. ISO 8601 instant, or `YYYY-MM-DD` for the start of that calendar day in the school's time zone (falls back to the viewer zone, then UTC)."
           },
           {
             "name": "end",
@@ -4274,7 +4304,7 @@
               "type": "string",
               "format": "date-time"
             },
-            "description": "Inclusive period end. ISO 8601 instant, or `YYYY-MM-DD` for the end of that UTC calendar day."
+            "description": "Inclusive period end. ISO 8601 instant, or `YYYY-MM-DD` for the end of that calendar day in the school's time zone (falls back to the viewer zone, then UTC)."
           }
         ]
       }
@@ -4318,7 +4348,7 @@
             }
           },
           "400": {
-            "description": "Invalid range, no email, or not allowed.",
+            "description": "Invalid range, or no email on file.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4338,7 +4368,7 @@
             }
           },
           "403": {
-            "description": "Authenticated, but not allowed to do this.",
+            "description": "Not allowed to email this member's statement.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4391,22 +4421,214 @@
                   "start": {
                     "type": "string",
                     "format": "date-time",
-                    "description": "Inclusive period start. ISO 8601 instant, or `YYYY-MM-DD` for the start of that UTC calendar day."
+                    "description": "Inclusive period start. ISO 8601 instant, or `YYYY-MM-DD` for the start of that calendar day in the school's time zone (falls back to the viewer zone, then UTC)."
                   },
                   "end": {
                     "type": "string",
                     "format": "date-time",
-                    "description": "Inclusive period end. ISO 8601 instant, or `YYYY-MM-DD` for the end of that UTC calendar day."
+                    "description": "Inclusive period end. ISO 8601 instant, or `YYYY-MM-DD` for the end of that calendar day in the school's time zone (falls back to the viewer zone, then UTC)."
                   },
                   "periodLabel": {
                     "type": "string",
-                    "description": "Optional `YYYY-MM-DD to YYYY-MM-DD` printed in the email. Send the calendar days the member picked so the subject is not a UTC slice of local midnights."
+                    "description": "Optional `YYYY-MM-DD to YYYY-MM-DD` printed in the email. Send the calendar days the member picked so the subject matches the school's days, not a UTC slice of instants."
                   }
                 },
                 "required": [
                   "start",
                   "end"
                 ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orgUsers/{orgUserId}/ledger/auto-refill": {
+      "get": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Get ledger auto-refill",
+        "description": "The member's auto-refill (Auto Pay) settings. Missing row returns defaults with `enabled: false`. **Self or admin.**",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/LedgerAutoRefill"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getOrgUserLedgerAutoRefill",
+        "parameters": [
+          {
+            "name": "orgUserId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The membership id."
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Update ledger auto-refill",
+        "description": "Create or update auto-refill. Charges the default saved card on the cadence when ledger mode is on. **Self or admin.** Three modes: `under_threshold`, `pay_balance`, `fixed_amount`. Cadence `daily` or `monthly` (day 1–28). The hourly cron runs in the organization's time zone after `runHourLocal` (default 4).",
+        "responses": {
+          "200": {
+            "description": "Saved settings.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/LedgerAutoRefill"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed or ledger mode is off.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "updateOrgUserLedgerAutoRefill",
+        "parameters": [
+          {
+            "name": "orgUserId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The membership id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Auto-refill patch. Send any subset.",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "mode": {
+                    "type": "string",
+                    "enum": [
+                      "under_threshold",
+                      "pay_balance",
+                      "fixed_amount"
+                    ]
+                  },
+                  "thresholdCents": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "chargeCents": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "cadence": {
+                    "type": "string",
+                    "enum": [
+                      "daily",
+                      "monthly"
+                    ]
+                  },
+                  "monthlyDay": {
+                    "type": "integer",
+                    "nullable": true
+                  },
+                  "runHourLocal": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 23
+                  }
+                }
               }
             }
           }
@@ -4994,16 +5216,6 @@
               }
             }
           },
-          "400": {
-            "description": "Not in your organization, or not allowed.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
           "401": {
             "description": "No token, an expired token, or a malformed one. Sign in again.",
             "content": {
@@ -5015,7 +5227,7 @@
             }
           },
           "403": {
-            "description": "Authenticated, but not allowed to do this.",
+            "description": "Not in your organization, or not allowed.",
             "content": {
               "application/json": {
                 "schema": {
@@ -16055,6 +16267,15 @@
             "description": "Filter on paid state."
           },
           {
+            "name": "voided",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Filter on voided state. `paid=false` on its own still includes voided invoices, which nobody owes; pass `voided=false` for outstanding."
+          },
+          {
             "name": "limit",
             "in": "query",
             "required": false,
@@ -16215,6 +16436,15 @@
               "type": "string"
             },
             "description": "Free-text filter. Matches the fields a person would search on."
+          },
+          {
+            "name": "voided",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Filter on voided state. `outstanding` already excludes voided invoices; this narrows `revenue` too."
           }
         ]
       }
@@ -16587,6 +16817,15 @@
               "type": "boolean"
             },
             "description": "Filter on paid state."
+          },
+          {
+            "name": "voided",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Filter on voided state. `paid=false` on its own still includes voided invoices, which nobody owes; pass `voided=false` for outstanding."
           },
           {
             "name": "limit",
@@ -25693,6 +25932,124 @@
             "description": "Flat cents added on each card top-up (30 = $0.30). Null or 0 = none. Stacks with the percent.",
             "type": [
               "integer",
+              "null"
+            ]
+          },
+          "lateFeePercent": {
+            "description": "Whole percent of the amount owing (5 = 5%). Null or 0 = no percent. Ledger mode only.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "lateFeeFlatCents": {
+            "description": "Flat cents added on each monthly late-fee post. Null or 0 = none.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "lateFeeGraceDays": {
+            "description": "Days a balance may stay negative before a late fee posts. Null = 30 when a percent or flat is set. 0 = fee on the first eligible sweep after they go owing.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": true
+      },
+      "LedgerAutoRefill": {
+        "type": "object",
+        "description": "Per-member auto-refill (ledger Auto Pay). Charges the default saved card on a cadence. Ledger mode only.",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "When true, the hourly cron may charge this member."
+          },
+          "mode": {
+            "type": "string",
+            "description": "under_threshold (balance < threshold, charge chargeCents), pay_balance (charge abs owing), or fixed_amount (charge chargeCents even at zero).",
+            "enum": [
+              "under_threshold",
+              "pay_balance",
+              "fixed_amount"
+            ]
+          },
+          "thresholdCents": {
+            "description": "under_threshold: fire when balance is below this. 0 = fire once owing.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "chargeCents": {
+            "description": "under_threshold and fixed_amount: ledger credit to charge (before card surcharge). Minimum 100.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "cadence": {
+            "type": "string",
+            "description": "daily or monthly.",
+            "enum": [
+              "daily",
+              "monthly"
+            ]
+          },
+          "monthlyDay": {
+            "description": "1–28 when cadence is monthly.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "runHourLocal": {
+            "type": "integer",
+            "description": "Hour 0–23 in the organization time zone. First attempt waits until this hour. Default 4."
+          },
+          "lastAttemptAt": {
+            "format": "date-time",
+            "description": "Last charge attempt.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "lastSuccessAt": {
+            "format": "date-time",
+            "description": "Last successful charge. Used for period idempotency.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "consecutiveFailures": {
+            "type": "integer",
+            "description": "Failed attempts in the current period."
+          },
+          "nextEligibleAt": {
+            "format": "date-time",
+            "description": "Earliest retry after a failure.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "pausedReason": {
+            "description": "Why enabled is false after a pause.",
+            "enum": [
+              "declined_card",
+              "needs_authentication",
+              "no_payment_method",
+              "org_not_connected",
+              "stripe_unavailable",
+              "disabled_by_member",
+              "disabled_by_admin"
+            ],
+            "type": [
+              "string",
               "null"
             ]
           }
