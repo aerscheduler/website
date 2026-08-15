@@ -144,6 +144,14 @@ export const PRICING_FAQS = [
     a: "Yes. The native iOS app is included with every plan. Same price, no mobile surcharge.",
   },
   {
+    q: "What is on the Enterprise plan?",
+    a: "Enterprise adds the AerScheduler REST API (your own API keys), custom integrations we build for you, live training for your team, and dedicated support. Single sign-on is coming. It is priced per account rather than per aircraft, so get in touch and we will quote it.",
+  },
+  {
+    q: "Can I use the API on the standard plan?",
+    a: "No. API keys are an Enterprise feature. Everything else, scheduling, billing, maintenance, training records, reports, the iOS app, is included in the standard per-aircraft price.",
+  },
+  {
     q: "What about Google Calendar or QuickBooks?",
     a: "Google Calendar sync, Stripe payments, and QuickBooks Online are available today. Paid invoices sync to QuickBooks as Sales Receipts. See Integrations and the QuickBooks integration guide for details.",
   },

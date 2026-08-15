@@ -75,6 +75,37 @@ export const SITE_TAGLINE = "The command deck for your flight school.";
 export const SITE_URL = "https://www.aerscheduler.com";
 export const SUPPORT_EMAIL = "support@aerscheduler.com";
 
+/**
+ * Enterprise. The one plan with no number on it.
+ *
+ * Standard is self-serve and priced per aircraft; Enterprise is quoted per account,
+ * so every Enterprise CTA on this site is a conversation rather than a checkout. The
+ * flag that turns it on lives on the organization row in the database and is set by
+ * hand when an account signs, there is no signup URL to point at, deliberately.
+ *
+ * Keep this list in step with the console's `web/src/lib/enterprise.ts`, which shows
+ * the same four (plus SSO) to a school that lands on the API-keys screen without it.
+ */
+export const ENTERPRISE_FEATURES: { title: string; body: string; soon?: boolean }[] = [
+  {
+    title: "The AerScheduler API",
+    body: "Issue API keys and drive your schedule, fleet, and billing from your own software. Available on Enterprise only.",
+  },
+  {
+    title: "Custom integrations",
+    body: "We build the connection into the systems you already run, instead of handing you a spec.",
+  },
+  {
+    title: "Training for your team",
+    body: "Live onboarding for your instructors, dispatchers, and office staff, not a help article.",
+  },
+  {
+    title: "Dedicated support",
+    body: "A named contact and a direct channel, not a shared inbox and a queue position.",
+  },
+  { title: "Single sign-on", body: "SAML and SCIM provisioning.", soon: true },
+];
+
 /** Longer default meta description for SEO. */
 export const SITE_DESCRIPTION =
   "Flight school management software for scheduling, billing, training records, maintenance, and reporting. Native iOS app. Self-serve from $20/mo per aircraft.";

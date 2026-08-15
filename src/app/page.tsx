@@ -532,6 +532,7 @@ export default function HomePage() {
                   "Unlimited instructors, students, and renters",
                   "Web console + native iOS app included",
                   "Prorated when you add or remove a tail",
+                  "Enterprise plan for API access, integrations, and dedicated support",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-2.5 text-sm text-foreground">
                     <Check className="mt-0.5 size-4 shrink-0 text-primary" />
@@ -562,7 +563,7 @@ export default function HomePage() {
                   <ChevronRight className="size-4 opacity-80" />
                 </Button>
                 <Button href="/pricing" variant="ghost" className="mt-2 w-full">
-                  See full pricing
+                  See full pricing & Enterprise
                 </Button>
               </div>
             </Reveal>
