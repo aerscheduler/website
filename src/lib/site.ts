@@ -47,10 +47,24 @@ export const signupUrl = (source?: CampaignSource) =>
   source ? `${SIGNUP_URL}?src=${source}` : SIGNUP_URL;
 
 /**
+ * The published version of the legal documents, matching the "Last updated" date
+ * rendered on /privacy and /terms-and-conditions.
+ *
+ * Duplicated in web/src/lib/legal.ts and in the Flutter app, because the three
+ * surfaces share no package. Change all of them in the same commit as the wording,
+ * and see the note in web/src/lib/legal.ts about the 30 day notice obligation.
+ */
+export const TERMS_VERSION = "2026-08-15";
+
+/**
  * Full-page Google OAuth via the API (no popup). Lands on APP_URL after Google
  * signs the user in: swapping APP_URL is all it takes to retarget console→app.
+ *
+ * Carries the Terms version because this flow CREATES an account when the Google
+ * address is new, which makes any page linking here a point of acceptance: it
+ * needs the sign-in-wrap notice next to the button.
  */
-export const GOOGLE_SIGNIN_URL = `${API_URL}/auth/google/start?return_to=${encodeURIComponent(APP_URL)}`;
+export const GOOGLE_SIGNIN_URL = `${API_URL}/auth/google/start?return_to=${encodeURIComponent(APP_URL)}&terms_version=${TERMS_VERSION}`;
 
 export const APP_STORE_URL =
   "https://apps.apple.com/us/app/aerscheduler/id6444074155";

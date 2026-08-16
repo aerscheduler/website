@@ -455,3 +455,55 @@ body {
   color: var(--foreground);
   font-weight: 600;
 }
+
+/*
+ * Tables in the legal pages (the subprocessor list and the CCPA category
+ * disclosure). Both are wide and both are read on phones, so the table scrolls
+ * inside its own container rather than forcing the page body sideways.
+ */
+.legal-table-scroll {
+  margin-top: 1.25rem;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+}
+
+.legal-prose table {
+  width: 100%;
+  min-width: 34rem;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.legal-prose thead {
+  background: var(--muted);
+}
+
+.legal-prose th {
+  padding: 0.7rem 0.9rem;
+  color: var(--foreground);
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.legal-prose td {
+  padding: 0.7rem 0.9rem;
+  vertical-align: top;
+}
+
+.legal-prose tbody tr + tr {
+  border-top: 1px solid var(--border);
+}
+
+/*
+ * The last column is the answer in both tables (YES / NO, or the hosting
+ * country), so it is weighted and kept on one line. Without the nowrap,
+ * "United States" breaks across two lines in every row and the table reads
+ * as though the wrapped word were a second value.
+ */
+.legal-prose td:last-child {
+  color: var(--foreground);
+  font-weight: 500;
+  white-space: nowrap;
+}

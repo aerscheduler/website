@@ -20,7 +20,7 @@ export default function TermsAndConditionsPage() {
   return (
     <LegalDocument
       title="Terms and Conditions"
-      updated="September 29, 2023"
+      updated="August 15, 2026"
       html={html}
     />
   );

@@ -20,6 +20,19 @@
  * Undecided is treated as "no". Nothing third-party loads, so a visitor who ignores the
  * banner is never tracked. That does cost some measured traffic, which is the deliberate
  * trade.
+ *
+ * ## Global Privacy Control
+ *
+ * A browser sending GPC is making a legally recognised opt-out request under the CPRA and
+ * the Colorado and Connecticut acts, which require it to be honoured without asking the
+ * visitor to do anything else. So GPC is read as a standing "denied" and, unlike the
+ * banner default, it is not merely the absence of consent: the banner does not appear at
+ * all, because putting an Accept button in front of someone who has already opted out is
+ * the dark pattern the rule exists to stop.
+ *
+ * An explicit Accept still wins. Someone who deliberately clicks Accept on this site has
+ * made a more specific choice than their browser-wide default, and the regulations allow
+ * that, so the cookie is checked first.
  */
 
 import { readCookie, writeSharedCookie } from "./cookies";
@@ -31,9 +44,23 @@ const CONSENT_DAYS = 365;
 
 export type ConsentState = "granted" | "denied" | "unset";
 
+/**
+ * True when the browser is sending Global Privacy Control.
+ *
+ * `navigator.globalPrivacyControl` is the standard surface. Guarded for SSR, where there
+ * is no navigator at all, and typed locally because it is not yet in the DOM lib.
+ */
+export function hasGlobalPrivacyControl(): boolean {
+  if (typeof navigator === "undefined") return false;
+  return (navigator as Navigator & { globalPrivacyControl?: boolean }).globalPrivacyControl === true;
+}
+
 export function readConsent(): ConsentState {
   const raw = readCookie(CONSENT_COOKIE);
-  return raw === "granted" || raw === "denied" ? raw : "unset";
+  if (raw === "granted" || raw === "denied") return raw;
+  // No stored decision: a GPC signal is one, and it is a "no".
+  if (hasGlobalPrivacyControl()) return "denied";
+  return "unset";
 }
 
 export function hasConsent(): boolean {
