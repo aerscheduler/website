@@ -10363,6 +10363,18 @@
                     "type": "integer",
                     "description": "Tenths of an hour."
                   },
+                  "requiresSignoff": {
+                    "type": "boolean",
+                    "description": "Must an instructor sign this lesson before it counts? Defaults true."
+                  },
+                  "requiresNotes": {
+                    "type": "boolean",
+                    "description": "Must the instructor write something before signing? Defaults false."
+                  },
+                  "isStageCheck": {
+                    "type": "boolean",
+                    "description": "Is this the stage's §141.37 stage check? Signing one requires the `checkInstructor` designation for this course, and the signer must not be the student's own instructor. Defaults false."
+                  },
                   "credits": {
                     "type": "array",
                     "description": "Which requirements this lesson credits.",
@@ -24298,9 +24310,10 @@
             "type": "boolean",
             "description": "Whether the organization opts into the public directory."
           },
-          "isEnterprise": {
-            "type": "boolean",
-            "description": "Whether the organization is on the Enterprise plan. Enterprise is what makes this API available at all."
+          "plan": {
+            "type": "string",
+            "description": "Which plan the organization is on: `standard` or `enterprise`. Enterprise is what makes this API available at all.",
+            "example": "enterprise"
           },
           "scheduledDeletionAt": {
             "format": "date-time",
