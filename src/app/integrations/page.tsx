@@ -9,12 +9,12 @@ import { signupUrl } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Flight School Software Integrations",
   description:
-    "AerScheduler integrates with Stripe, Google Calendar, Apple Calendar / Outlook (ICS), QuickBooks Online, and US SMS alerts. Connect the tools your flight school already uses, on every plan.",
+    "AerScheduler integrates with Stripe, Google Calendar, Apple Calendar, Outlook, and QuickBooks Online. Connect the tools your flight school already uses, on every plan.",
   alternates: { canonical: "/integrations" },
   openGraph: {
     title: "Flight School Software Integrations",
     description:
-      "Stripe, Google Calendar, Apple Calendar / Outlook, QuickBooks Online, and US SMS, available now on every plan.",
+      "Stripe, Google Calendar, Apple Calendar, Outlook, and QuickBooks Online, available now on every plan.",
     url: "/integrations",
   },
 };
@@ -50,13 +50,22 @@ const INTEGRATIONS: {
     logoAlt: "Google Calendar logo",
   },
   {
-    name: "Apple Calendar & Outlook",
+    name: "Apple Calendar",
     status: "available",
     blurb: "Subscribe with a private ICS link.",
     detail:
-      "Create a personal subscription URL from Profile → Calendar. Paste it into Apple Calendar, Outlook, or any app that supports calendar subscriptions. Regenerate the link anytime.",
-    logo: "/integrations/google-calendar.svg",
-    logoAlt: "Calendar subscription",
+      "Create a personal subscription URL from Profile → Calendar, then add it to Apple Calendar on your Mac, iPhone, or iPad. Flights refresh on their own, and you can regenerate the link anytime.",
+    logo: "/integrations/apple-calendar.svg",
+    logoAlt: "Apple Calendar logo",
+  },
+  {
+    name: "Outlook",
+    status: "available",
+    blurb: "Subscribe with a private ICS link.",
+    detail:
+      "Use the same personal subscription URL from Profile → Calendar in Outlook on the web or desktop. Your reservations land beside the rest of your calendar, no export needed.",
+    logo: "/integrations/outlook.svg",
+    logoAlt: "Microsoft Outlook logo",
   },
   {
     name: "QuickBooks",
@@ -68,17 +77,6 @@ const INTEGRATIONS: {
     logoAlt: "QuickBooks logo",
     learnMoreHref: "/resources/quickbooks-integration",
     learnMoreLabel: "How QuickBooks sync works",
-  },
-  {
-    name: "SMS (Telnyx)",
-    status: "available",
-    blurb: "Transactional texts for bookings, invoices, and offers.",
-    detail:
-      "Members opt in with a verified US mobile number and choose the same alert categories as email and push. Included in your plan for US numbers only; reply STOP to opt out.",
-    logo: "/integrations/stripe.svg",
-    logoAlt: "SMS notifications",
-    learnMoreHref: "/docs/getting-started/notifications-and-emails",
-    learnMoreLabel: "How notification SMS works",
   },
 ];
 
@@ -93,9 +91,9 @@ export default function IntegrationsPage() {
             Flight school software integrations
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-            Stripe payments, Google Calendar, Apple Calendar / Outlook subscriptions,
-            QuickBooks Online, and US SMS alerts are live today, in the same self-serve
-            product, not as an enterprise add-on.
+            Stripe payments, Google Calendar, Apple Calendar and Outlook subscriptions,
+            and QuickBooks Online are live today, in the same self-serve product, not
+            as an enterprise add-on.
           </p>
         </div>
       </section>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="61px" height="61px">
+  <rect x="4" y="5" width="40" height="38" rx="7" fill="#fff"/>
+  <rect x="4" y="5" width="40" height="38" rx="7" fill="none" stroke="#d8d8dd" stroke-width="1.5"/>
+  <text x="24" y="17.5" fill="#ff3b30" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="700" letter-spacing="0.5" text-anchor="middle">JUL</text>
+  <text x="24" y="38" fill="#1c1c1e" font-family="Helvetica, Arial, sans-serif" font-size="20" font-weight="300" text-anchor="middle">17</text>
+</svg>

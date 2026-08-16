@@ -6,7 +6,7 @@ Connect Google Calendar for a live push of your flights, or subscribe with a pri
 
 ## Google Calendar
 
-Google pushes each of your reservations into your **primary** Google Calendar when a booking is created, updated, or cancelled. Connecting also backfills your next 90 days of upcoming flights.
+Google pushes each of your reservations into a Google Calendar you choose when a booking is created, updated, or cancelled. Connecting also backfills your next 90 days of upcoming flights.
 
 <Steps>
   <Step n="1" title="Open your calendar settings">
@@ -16,10 +16,17 @@ Google pushes each of your reservations into your **primary** Google Calendar wh
   <Step n="2" title="Connect Google">
     Tap <strong>Connect Google Calendar</strong>, choose the Google account, and allow calendar access. You should see a Connected badge when it works.
   </Step>
-  <Step n="3" title="Disconnect later if you need to">
-    Use <strong>Disconnect</strong> on the same screen. AerScheduler stops writing new events. Events already on your calendar stay until you delete them in Google.
+  <Step n="3" title="Pick which calendar to write to">
+    Use the <strong>Calendar</strong> picker that appears once you are connected. It lists every Google calendar you can write to, so flights can go on a dedicated "Flying" calendar instead of your default one. Switching moves your upcoming flights off the old calendar and onto the new one.
+  </Step>
+  <Step n="4" title="Disconnect later if you need to">
+    Use <strong>Disconnect</strong> on the same screen. AerScheduler stops writing new events and gives up its access to your Google account. Events already on your calendar stay until you delete them in Google.
   </Step>
 </Steps>
+
+<Callout type="note">
+  Connected before the calendar picker existed? The picker asks you to reconnect first. Tap <strong>Reconnect Google Calendar</strong> and accept the extra permission that lets AerScheduler read your list of calendars. Until you do, flights keep going to your default calendar.
+</Callout>
 
 <Callout type="note">
   Flutter web cannot connect Google Calendar. Use the web console, or the iOS or Android app.
