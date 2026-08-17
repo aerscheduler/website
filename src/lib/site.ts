@@ -54,7 +54,7 @@ export const signupUrl = (source?: CampaignSource) =>
  * surfaces share no package. Change all of them in the same commit as the wording,
  * and see the note in web/src/lib/legal.ts about the 30 day notice obligation.
  */
-export const TERMS_VERSION = "2026-08-15";
+export const TERMS_VERSION = "2026-08-17";
 
 /**
  * Full-page Google OAuth via the API (no popup). Lands on APP_URL after Google
