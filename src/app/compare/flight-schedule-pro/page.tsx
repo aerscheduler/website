@@ -37,16 +37,6 @@ const ROWS: [string, string, string][] = [
     "Quoted per school",
   ],
   [
-    "Training records",
-    "Included. Syllabi, graded lessons, endorsements, Part 61 and 141.",
-    "Available",
-  ],
-  [
-    "Hour requirements",
-    "Tracked against §61 minimums, not just a lesson checklist. Newest part of the product.",
-    "Lessons are ticked off",
-  ],
-  [
     "Several people on one flight",
     "Built in. Split the cost per head, by logged time, or in set shares. One invoice each.",
     "Not published",
@@ -58,7 +48,7 @@ const ROWS: [string, string, string][] = [
   ],
   [
     "Mobile",
-    "Native iOS app, including offline lesson grading.",
+    "Native iOS app. Book, dispatch and close out from the ramp.",
     "iOS app",
   ],
   [
@@ -103,10 +93,11 @@ export default function CompareFspPage() {
             AerScheduler vs Flight Schedule Pro
           </h1>
           <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-            Both schedule aircraft, bill for flights, and hold training records.
-            The differences that matter are how you buy it, how fast you start,
-            and what the training record can tell you once the lessons are
-            signed.
+            Flight Schedule Pro is sold through a demo and quoted per school.
+            AerScheduler publishes one price, ${PRICE_PER_AIRCRAFT} per aircraft
+            with every user included, and you can sign up and dispatch the same
+            day. Scheduling, billing and maintenance are one system rather than
+            three that have to agree with each other.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -171,10 +162,10 @@ export default function CompareFspPage() {
           What the difference looks like
         </h2>
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
-          {/* Lead with the parts that are running in real schools every day.
-              The training module is the newest thing we have built and no
-              school has put a full course through it yet, so it is described
-              in the table and linked from there, not sold as the headline. */}
+          {/* Everything here is in daily use in real schools. Training is off
+              this page entirely: it is the newest thing we have built, and
+              arguing about it against an established competitor is a fight
+              worth declining on a page we pay to send buyers to. */}
           <div className="rounded-xl border border-border p-6">
             <p className="text-sm font-semibold text-foreground">
               The flight closes itself out into an invoice
