@@ -1,114 +1,121 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { Check, ChevronRight } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/button";
 import { PRICE_PER_AIRCRAFT, SIGNUP_URL, SITE_NAME, TRIAL_DAYS } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "AerScheduler vs Flight Circle",
-  description: `Compare ${SITE_NAME} and Flight Circle for flight schools: training records, Part 61 and Part 141 syllabi, per-aircraft pricing, and how each handles the hours a certificate actually turns on.`,
+  description: `Compare ${SITE_NAME} and Flight Circle for flight schools: self-serve setup, $${PRICE_PER_AIRCRAFT}/mo per aircraft with unlimited users, dispatch that closes out into an invoice, and a native app.`,
   alternates: { canonical: "/compare/flight-circle" },
   openGraph: {
     title: "AerScheduler vs Flight Circle",
     description:
-      "Both run a training module. The difference is whether the software tracks the hours §61.109 asks for, or only the lessons.",
+      "Self-serve setup, per-aircraft pricing, and the whole day in one system.",
     url: "/compare/flight-circle",
   },
 };
 
+/**
+ * Rows are ordered so the operational side comes first.
+ *
+ * An earlier version of this page led with training records and spent most of
+ * its length there, which meant arguing on the ground Flight Circle is
+ * strongest on, using the newest module we have built. Training is still on the
+ * page because schools ask, but it is one row among many rather than the thesis.
+ *
+ * Third-column claims have to be defensible from their own public pages.
+ * "Not published" means we could not confirm it, not that it is missing.
+ */
 const ROWS: [string, string, string][] = [
   [
     "Getting started",
-    "Self-serve signup. Book in minutes.",
+    "Self-serve signup. On the schedule the same day.",
     "Account setup with the vendor",
   ],
   [
-    "Pricing model",
-    `$${PRICE_PER_AIRCRAFT}/mo per aircraft. Sims & rooms free. Unlimited users.`,
+    "Pricing",
+    `$${PRICE_PER_AIRCRAFT}/mo per aircraft. Unlimited users. Simulators and classrooms free.`,
     "Quoted per school",
   ],
   [
-    "Custom syllabi",
-    "Stages, lessons, graded tasks, your own grading scale",
-    "Yes, with a lesson content builder",
+    "Dispatch board",
+    "Lane views across aircraft, simulators and rooms, with conflict-aware booking and a live front-desk view.",
+    "Scheduling calendar",
   ],
   [
-    "Hour requirements",
-    "Tracked as a ledger. One night cross-country credits four requirements at once",
-    "Lessons are ticked off; hour minimums are not modelled",
+    "Closing out a flight",
+    "Ramp in with Hobbs, tach and fuel, and the invoice drafts from the rates on the tail.",
+    "Available",
   ],
   [
-    "Simulator & transfer caps",
-    "Appendix B and §141.77 ceilings applied, with the clipped amount shown",
-    "Not modelled",
+    "Several people on one flight",
+    "Built in. Split per head, by logged time, or in set shares. One invoice each.",
+    "Not published",
   ],
   [
-    "Editing a published syllabus",
-    "Refused. Revising forks a version; enrolled students keep theirs",
-    "Editable in place",
+    "Multi-day trips",
+    "One reservation across nights, with a per-night minimum set per tail.",
+    "Not published",
   ],
   [
-    "Correcting a signed lesson",
-    "A correction supersedes it and reverses what it credited. Both stay readable",
-    "Records can be edited",
+    "Maintenance",
+    "Squawks, inspections with server-computed due dates, and grounding that blocks the board.",
+    "Available",
   ],
   [
-    "Where grading happens",
-    "Inside the flight close-out, alongside the invoice",
-    "A separate training screen",
+    "Mobile",
+    "Native iOS app for the whole team, including offline lesson grading.",
+    "Mobile access",
   ],
   [
-    "Offline grading",
-    "Yes, on iOS. Grades queue at the aircraft and sync later",
-    "Not offered",
+    "Integrations",
+    "Stripe, Google Calendar, QuickBooks Online, plus a public REST API.",
+    "Available",
   ],
   [
-    "Training permissions",
-    "Configure, enroll/graduate, check instructor (per course), auditor",
-    "Configure, enroll/graduate, check instructor, auditor",
-  ],
-  [
-    "Course fees",
-    "Set a fee per course, billed through your ordinary invoices",
-    "Fee item attached at enrollment",
-  ],
-  [
-    "Lesson content (video, reading, quizzes)",
-    "Not built. We link out to Sporty's, King or Gleim",
-    "Built in, via their content builder",
-  ],
-  [
-    "Best fit",
-    "Schools that want the record to answer whether a student is legal to test",
-    "Schools that want courseware and the record in one tool",
+    "Training records",
+    "Syllabi, graded lessons, endorsements, Part 61 and 141, tracked against §61 hour minimums.",
+    "Mature training module with a lesson content builder",
   ],
 ];
 
+const REASONS = [
+  "You want to be dispatching this week, without a sales call",
+  `Predictable cost: $${PRICE_PER_AIRCRAFT} per aircraft, every user included, sims and rooms free`,
+  "The schedule, the invoice and the maintenance record should be one system",
+  "Your instructors and renters will actually open the app on the ramp",
+];
+
 /**
- * The four claims this page rests on, kept beside the table so the copy and the reasoning
- * cannot drift apart.
- *
- * Every one of these is checkable by an operator during a trial rather than a slogan: the
- * whole point of a comparison page is that a reader can call the bluff, and the fastest way
- * to lose a Part 141 school is a claim their own POI can disprove.
+ * Proof points, deliberately drawn from what schools run every day rather than
+ * from the newest module.
  */
 const PROOFS = [
   {
-    title: "Ask either product how many hours of night the student has",
-    body: "Ours answers, and says where each tenth came from. §61.109 asks for 40 hours total, 20 dual, 10 solo, 3 night, 3 instrument and a list of specific flights. We store each as a requirement and every signed lesson deposits into it. A lesson list cannot answer the question, which is why finishing the syllabus and being ready to test are not the same day.",
+    title: "The day ends with the invoices already drafted",
+    body: "Ramp out, fly, ramp in with Hobbs, tach and fuel. The rates are already on the tail, so the invoice is drafted before the aircraft is tied down. Nobody spends the evening reconciling the schedule against the billing.",
+    href: "/features/billing",
+    label: "Billing",
   },
   {
-    title: "Ask what happens to eighteen transfer hours when the rule allows ten",
-    body: "§141.77 caps what a school may credit from previous training. We credit ten, keep the eighteen on the record, and say on screen that eight were above the cap. Dropping them silently is how a student finds out at a checkride.",
+    title: "One reservation can hold several people, and several invoices",
+    body: "A ground-school class, two pilots sharing a cross-country, a checkride with an examiner. Split the cost per head, by logged time, or in shares you set, and everyone gets their own invoice.",
+    href: "/features/scheduling",
+    label: "Scheduling & Dispatch",
   },
   {
-    title: "Try to fix a typo in a published syllabus",
-    body: "Ours refuses, and explains that students are enrolled against exactly those lessons. Revising forks a new version and anyone mid-course keeps the one they started under. That refusal is the feature: under Part 141 the syllabus is a document you filed, not a page you edit.",
+    title: "Simulators and classrooms cost nothing to schedule",
+    body: `They are first-class resources on the board, bookable like any tail, and they never appear on your bill. You pay $${PRICE_PER_AIRCRAFT} per aircraft and nothing else, however many people you invite.`,
+    href: "/pricing",
+    label: "Pricing",
   },
   {
-    title: "Correct a lesson you already signed",
-    body: "Ours writes the correction beside the original, reverses everything the original credited, and keeps both readable forever. §141.101 asks for a record. A record where mistakes disappear is not one.",
+    title: "The tail goes out on Friday and comes back Sunday",
+    body: "Multi-day trips are one reservation across nights, with an overnight minimum you set per aircraft or school-wide, so a weekend rental does not need a manual invoice and a mental note.",
+    href: "/resources/overnight-and-multi-day-rentals",
+    label: "Multi-day rentals",
   },
 ];
 
@@ -117,7 +124,7 @@ export default function CompareFlightCirclePage() {
     <article className="border-b border-border">
       <div className="relative overflow-hidden border-b border-border">
         <div className="hero-mesh pointer-events-none absolute inset-0 opacity-50" aria-hidden />
-        <div className="relative mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:py-20">
+        <div className="relative mx-auto max-w-3xl px-4 py-14 sm:px-6 lg:py-16">
           <Breadcrumbs
             items={[
               { name: "Resources", href: "/resources" },
@@ -128,15 +135,12 @@ export default function CompareFlightCirclePage() {
             AerScheduler vs Flight Circle
           </h1>
           <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-            Flight Circle is one of the few products that takes flight training
-            seriously, and the comparison is closer here than anywhere else on
-            this site. Both build syllabi, both enroll students against them,
-            both sign lessons. The difference is what the record can tell you
-            afterwards.
+            Flight Circle is a capable product with a well-developed training
+            module. The reason schools look at us instead is usually the rest of
+            the day: how fast you can start, what it costs as you grow, and
+            whether dispatch, billing and maintenance live in one place.
           </p>
 
-          {/* Paid traffic lands here from a switching ad and does not scroll a
-              thousand words to find a button. */}
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Button href={SIGNUP_URL} size="lg">
               Start free trial
@@ -153,8 +157,20 @@ export default function CompareFlightCirclePage() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6">
+      <div className="mx-auto max-w-4xl px-4 py-14 sm:px-6">
         <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">
+          Why schools move
+        </h2>
+        <ul className="mt-6 space-y-3">
+          {REASONS.map((reason) => (
+            <li key={reason} className="flex items-start gap-3">
+              <Check className="mt-0.5 size-4 shrink-0 text-primary" />
+              <span className="text-sm leading-relaxed text-foreground">{reason}</span>
+            </li>
+          ))}
+        </ul>
+
+        <h2 className="mt-14 text-2xl font-semibold tracking-tight text-brand-surface">
           Side-by-side
         </h2>
         <div className="mt-8 overflow-hidden rounded-xl border border-border">
@@ -174,71 +190,81 @@ export default function CompareFlightCirclePage() {
             </div>
           ))}
         </div>
+        <p className="mt-3 text-xs text-muted-foreground">
+          Flight Circle is a trademark of its owner. Rows describe what each
+          product publishes; &ldquo;not published&rdquo; means we could not
+          confirm it, not that it is absent.
+        </p>
 
         <h2 className="mt-14 text-2xl font-semibold tracking-tight text-brand-surface">
-          Four questions to ask both products
+          What running the day looks like
         </h2>
-        <p className="mt-3 text-muted-foreground">
-          Not marketing claims. Things you can try during a trial.
-        </p>
-        <div className="mt-6 space-y-6">
+        <div className="mt-6 grid gap-4 sm:grid-cols-2">
           {PROOFS.map((p) => (
-            <div key={p.title} className="rounded-xl border border-border p-5">
-              <h3 className="font-medium text-foreground">{p.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{p.body}</p>
+            <div key={p.title} className="rounded-xl border border-border p-6">
+              <p className="text-sm font-semibold text-foreground">{p.title}</p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                {p.body}
+              </p>
+              <Link
+                href={p.href}
+                className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+              >
+                {p.label}
+              </Link>
             </div>
           ))}
         </div>
 
+        {/* Kept short and specific. A comparison with no losing rows is not
+            believed, and courseware is a real gap we have chosen not to fill. */}
         <h2 className="mt-14 text-2xl font-semibold tracking-tight text-brand-surface">
-          When AerScheduler is the better fit
-        </h2>
-        <ul className="mt-4 list-disc space-y-2 pl-5 text-muted-foreground">
-          <li>
-            You need the record to answer whether a student is legal to test, not just how
-            far through the lessons they are
-          </li>
-          <li>You are Part 141, or heading there, and want the immutability to already be in place</li>
-          <li>Your instructors debrief at the aircraft, where there is no signal</li>
-          <li>You want grading and invoicing to come out of the same close-out</li>
-          <li>You prefer per-aircraft pricing with unlimited seats and a self-serve start</li>
-        </ul>
-
-        <h2 className="mt-10 text-2xl font-semibold tracking-tight text-brand-surface">
           When Flight Circle may fit better
         </h2>
         <ul className="mt-4 list-disc space-y-2 pl-5 text-muted-foreground">
           <li>
-            You want ground-school content (video, reading and quizzes) inside the same tool.
-            We deliberately do not build courseware and link out to Sporty&apos;s, King or
-            Gleim instead
+            You want ground-school content, video, reading and quizzes, inside the
+            same tool. We deliberately do not build courseware and link out to
+            Sporty&apos;s, King or Gleim instead
           </li>
           <li>Your syllabus depends on their lesson content builder</li>
-          <li>You need a Flight Circle workflow or integration we do not cover yet</li>
+          <li>You need a workflow or integration we do not cover yet</li>
         </ul>
 
-        <div className="mt-12 rounded-2xl border border-border bg-[#fafbfc] p-8 text-center">
-          <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">
-            Try it against your own syllabus
-          </h2>
-          <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
-            Start from our Private, Instrument, Commercial or CFI template, enroll one
-            student, and sign a lesson. The hours post themselves. {TRIAL_DAYS} days, no
-            sales call.
+        <div className="mt-14 rounded-2xl border border-border bg-[#fafbfc] p-8 text-center">
+          <p className="text-lg font-semibold text-foreground">
+            Try {SITE_NAME} on your own fleet
           </p>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <Button href={SIGNUP_URL}>Start free</Button>
-            <Button href="/demo" variant="secondary">
+          <p className="mx-auto mt-2 max-w-xl text-sm text-muted-foreground">
+            Add a tail, put a flight on the board, ramp it in and watch the
+            invoice draft itself. {TRIAL_DAYS} days, no credit card, no sales
+            call.
+          </p>
+          <div className="mt-5 flex flex-wrap justify-center gap-3">
+            <Button href={SIGNUP_URL} size="lg">
+              Get started
+              <ChevronRight className="size-4 opacity-80" />
+            </Button>
+            <Button href="/demo" variant="secondary" size="lg">
               Try the live demo
             </Button>
-            <Link
-              href="/features/training"
-              className="inline-flex items-center gap-1 text-sm font-medium text-foreground hover:underline"
-            >
-              How training records work
-              <ChevronRight className="size-4" />
-            </Link>
           </div>
+          <p className="mt-4 text-xs text-muted-foreground">
+            <Link href="/pricing" className="text-primary hover:underline">
+              Pricing
+            </Link>
+            {" · "}
+            <Link href="/features" className="text-primary hover:underline">
+              Features
+            </Link>
+            {" · "}
+            <Link
+              href="/compare/flight-schedule-pro"
+              className="text-primary hover:underline"
+            >
+              vs Flight Schedule Pro
+            </Link>
+          </p>
         </div>
       </div>
     </article>
