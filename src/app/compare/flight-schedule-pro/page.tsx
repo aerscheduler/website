@@ -7,7 +7,7 @@ import { PRICE_PER_AIRCRAFT, SIGNUP_URL, SITE_NAME, TRIAL_DAYS } from "@/lib/sit
 
 export const metadata: Metadata = {
   title: "AerScheduler vs Flight Schedule Pro",
-  description: `Compare ${SITE_NAME} and Flight Schedule Pro for flight schools: self-serve setup, $${PRICE_PER_AIRCRAFT}/mo per aircraft with unlimited users, a native app, and training records that track hour requirements.`,
+  description: `Compare ${SITE_NAME} and Flight Schedule Pro for flight schools: self-serve setup, $${PRICE_PER_AIRCRAFT}/mo per aircraft with unlimited users, a native app, and flight close-out that drafts the invoice.`,
   alternates: { canonical: "/compare/flight-schedule-pro" },
   openGraph: {
     title: "AerScheduler vs Flight Schedule Pro",
@@ -43,7 +43,7 @@ const ROWS: [string, string, string][] = [
   ],
   [
     "Hour requirements",
-    "Tracked as a ledger. One night cross-country credits every requirement it satisfies at once.",
+    "Tracked against §61 minimums, not just a lesson checklist. Newest part of the product.",
     "Lessons are ticked off",
   ],
   [
@@ -78,7 +78,7 @@ const REASONS = [
   "You want to be running this week, without a sales call",
   `Predictable cost: $${PRICE_PER_AIRCRAFT} per aircraft, every user included`,
   "Your instructors will actually open the app on the ramp",
-  "You want to know whether a student is legal to test, not just which lessons are signed",
+  "You want the schedule, the invoice and the maintenance record to be one system",
 ];
 
 export default function CompareFspPage() {
@@ -171,21 +171,24 @@ export default function CompareFspPage() {
           What the difference looks like
         </h2>
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          {/* Lead with the parts that are running in real schools every day.
+              The training module is the newest thing we have built and no
+              school has put a full course through it yet, so it is described
+              in the table and linked from there, not sold as the headline. */}
           <div className="rounded-xl border border-border p-6">
             <p className="text-sm font-semibold text-foreground">
-              Hours as a ledger, not a checklist
+              The flight closes itself out into an invoice
             </p>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              A single night cross-country can satisfy several separate
-              requirements. AerScheduler credits all of them from one flight, so
-              &ldquo;is this student legal to test&rdquo; is a number, not an
-              afternoon with a spreadsheet.
+              Ramp in with Hobbs, tach and fuel, and the invoice drafts from the
+              rates already on the tail. No export, no second system, no evening
+              spent reconciling the day&apos;s flying against the schedule.
             </p>
             <Link
-              href="/features/training"
+              href="/features/billing"
               className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
             >
-              Training records
+              Billing
             </Link>
           </div>
           <div className="rounded-xl border border-border p-6">
