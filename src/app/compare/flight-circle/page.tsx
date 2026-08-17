@@ -22,8 +22,9 @@ export const metadata: Metadata = {
  *
  * An earlier version of this page led with training records and spent most of
  * its length there, which meant arguing on the ground Flight Circle is
- * strongest on, using the newest module we have built. Training is still on the
- * page because schools ask, but it is one row among many rather than the thesis.
+ * strongest on, using the newest module we have built. Training is off this
+ * page entirely now. It is compared on `/features/training` for anyone who goes
+ * looking, and this page competes where the product is proven in daily use.
  *
  * Third-column claims have to be defensible from their own public pages.
  * "Not published" means we could not confirm it, not that it is missing.
@@ -66,18 +67,13 @@ const ROWS: [string, string, string][] = [
   ],
   [
     "Mobile",
-    "Native iOS app for the whole team, including offline lesson grading.",
+    "Native iOS app for the whole team. Book, dispatch and close out from the ramp.",
     "Mobile access",
   ],
   [
     "Integrations",
     "Stripe, Google Calendar, QuickBooks Online, plus a public REST API.",
     "Available",
-  ],
-  [
-    "Training records",
-    "Syllabi, graded lessons, endorsements, Part 61 and 141, tracked against §61 hour minimums.",
-    "Mature training module with a lesson content builder",
   ],
 ];
 
@@ -135,10 +131,10 @@ export default function CompareFlightCirclePage() {
             AerScheduler vs Flight Circle
           </h1>
           <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-            Flight Circle is a capable product with a well-developed training
-            module. The reason schools look at us instead is usually the rest of
-            the day: how fast you can start, what it costs as you grow, and
-            whether dispatch, billing and maintenance live in one place.
+            Both products run a flight school&apos;s schedule. What schools tell
+            us decides it is the rest of the day: how quickly you can start, what
+            it costs as you add aircraft, and whether dispatch, billing and
+            maintenance live in one place or three.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -216,18 +212,22 @@ export default function CompareFlightCirclePage() {
           ))}
         </div>
 
-        {/* Kept short and specific. A comparison with no losing rows is not
-            believed, and courseware is a real gap we have chosen not to fill. */}
+        {/* Deliberately short and non-specific. A comparison page with no losing
+            rows is not believed, but these are scope limits rather than an
+            endorsement of anything the other product does well. */}
         <h2 className="mt-14 text-2xl font-semibold tracking-tight text-brand-surface">
-          When Flight Circle may fit better
+          When we may not be the right fit
         </h2>
         <ul className="mt-4 list-disc space-y-2 pl-5 text-muted-foreground">
           <li>
-            You want ground-school content, video, reading and quizzes, inside the
-            same tool. We deliberately do not build courseware and link out to
-            Sporty&apos;s, King or Gleim instead
+            You want ground-school courseware, video, reading and quizzes, inside
+            the same tool. We do not build it, and link out to Sporty&apos;s,
+            King or Gleim instead
           </li>
-          <li>Your syllabus depends on their lesson content builder</li>
+          <li>
+            You already run a large deployment elsewhere and moving it would cost
+            more than it saves
+          </li>
           <li>You need a workflow or integration we do not cover yet</li>
         </ul>
 
