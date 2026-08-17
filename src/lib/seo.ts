@@ -174,4 +174,15 @@ export const MYFBO_MIGRATION_FAQS = [
     q: "How much does AerScheduler cost?",
     a: `$${PRICE_PER_AIRCRAFT} per aircraft per month after a ${TRIAL_DAYS}-day free trial. Simulators and rooms are free. Unlimited users.`,
   },
+  // Absorbed from /resources/myfbo-alternative when that page was merged into
+  // the migration guide. These answer the "what should I replace it with"
+  // half of the search, which the migration steps alone did not.
+  {
+    q: "What should I look for in a MyFBO alternative?",
+    a: "Dispatch scheduling your front desk can run, pricing you can predict, billing that closes a flight into an invoice, a mobile app your instructors will actually open, and a way to start without waiting on a sales team.",
+  },
+  {
+    q: "Is AerScheduler a full MyFBO replacement?",
+    a: "It covers scheduling, fleet, people, billing, maintenance, training records and compliance, on web and a native iOS app. Run both systems in parallel for a week before you cut over, so dispatch and billing are proven on your own operation first.",
+  },
 ];

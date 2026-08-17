@@ -19,7 +19,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/integrations", priority: 0.85, changeFrequency: "monthly" },
     { path: "/login", priority: 0.85, changeFrequency: "monthly" },
     { path: "/resources", priority: 0.85, changeFrequency: "weekly" },
-    { path: "/resources/myfbo-alternative", priority: 0.85, changeFrequency: "monthly" },
     {
       path: "/resources/flight-school-scheduling-software",
       priority: 0.85,

@@ -27,11 +27,6 @@ export const metadata: Metadata = {
  */
 const GUIDES = [
   {
-    href: "/resources/myfbo-alternative",
-    title: "MyFBO alternative",
-    body: "What to look for when MyFBO shuts down, and how AerScheduler compares as a self-serve replacement.",
-  },
-  {
     href: "/resources/flight-school-scheduling-software",
     title: "Flight school scheduling software",
     body: "What modern flight school scheduling software should include: dispatch, self-booking, billing, and mobile.",
@@ -88,8 +83,8 @@ const GUIDES = [
   },
   {
     href: "/migrating/my-fbo",
-    title: "Migrating from MyFBO",
-    body: "Step-by-step playbook: back up your data, stand up AerScheduler, run in parallel, then cut over.",
+    title: "MyFBO alternative & migration",
+    body: "MyFBO is closing in August 2026. Back up your data, stand up AerScheduler, run in parallel, then cut over.",
   },
   {
     href: "/pricing",

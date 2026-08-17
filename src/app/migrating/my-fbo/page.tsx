@@ -9,14 +9,17 @@ import { faqJsonLd, MYFBO_MIGRATION_FAQS } from "@/lib/seo";
 import { PRICE_PER_AIRCRAFT, SIGNUP_URL, TRIAL_DAYS } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Migrating from MyFBO to AerScheduler",
+  // Absorbs the old /resources/myfbo-alternative page, which redirects here.
+  // The title has to carry both intents: people searching for a replacement and
+  // people searching for how to move.
+  title: "MyFBO Alternative & Migration Guide for Flight Schools",
   description:
-    "MyFBO is shutting down in August 2026. Back up your data and set up AerScheduler yourself in minutes. Self-serve migration guide for flight schools.",
+    "MyFBO is shutting down. AerScheduler is a self-serve alternative: scheduling, billing, maintenance and a native app. Back up your data and be running this week.",
   alternates: { canonical: "/migrating/my-fbo" },
   openGraph: {
-    title: "Migrating from MyFBO to AerScheduler",
+    title: "MyFBO Alternative & Migration Guide",
     description:
-      "Self-serve playbook for flight schools leaving MyFBO. No sales call required.",
+      "MyFBO is closing. Self-serve replacement for flight schools. No sales call required.",
     url: "/migrating/my-fbo",
   },
 };
@@ -65,28 +68,33 @@ export default function MigratingMyFboPage() {
               { name: "Migrating from MyFBO", href: "/migrating/my-fbo" },
             ]}
           />
-          <p className="mt-6 text-sm font-semibold text-primary">Switching guides</p>
+          <p className="mt-6 text-sm font-semibold text-primary">
+            MyFBO is closing
+          </p>
           <h1 className="mt-3 max-w-3xl text-4xl font-semibold tracking-tight text-brand-surface sm:text-5xl">
-            Migrating from MyFBO to AerScheduler
+            The self-serve MyFBO alternative
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-            MyFBO is shutting down in August 2026. Before you choose a next home,
-            secure your data. Then set up AerScheduler yourself. No demo queue,
-            no sales call.
+            MyFBO shuts down in August 2026. Two things matter now: get your data
+            out while the account still works, and get your school running
+            somewhere else. AerScheduler does the second part without a demo
+            queue or a sales call, and you can be dispatching this week.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button href={SIGNUP_URL} size="lg">
               Start free trial
               <ChevronRight className="size-4 opacity-80" />
             </Button>
+            <Button href="/demo" variant="secondary" size="lg">
+              See the live demo
+            </Button>
             <Button href="#playbook" variant="secondary" size="lg">
               Migration playbook
             </Button>
           </div>
           <p className="mt-4 text-sm text-muted-foreground">
-            Also looking at other platforms? This playbook works for any switch.
-            More guides coming under{" "}
-            <span className="font-medium text-foreground">/migrating</span>.
+            ${PRICE_PER_AIRCRAFT}/aircraft/mo · Unlimited users · Simulators and
+            classrooms free · {TRIAL_DAYS}-day trial · No credit card
           </p>
         </div>
       </section>

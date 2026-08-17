@@ -20,6 +20,15 @@ const nextConfig: NextConfig = {
         destination: "/integrations",
         permanent: true,
       },
+      // MyFBO had two pages competing for the same search: an "alternative"
+      // guide and a migration playbook. They split the ranking and the paid
+      // traffic. Merged into the migration page, which had the stronger content
+      // and every internal link, so the guide URL redirects into it.
+      {
+        source: "/resources/myfbo-alternative",
+        destination: "/migrating/my-fbo",
+        permanent: true,
+      },
       // Friendly aliases for sitelink-style URLs.
       {
         source: "/download",

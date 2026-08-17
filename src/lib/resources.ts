@@ -36,11 +36,6 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
     title: "Guides",
     items: [
       {
-        href: "/resources/myfbo-alternative",
-        label: "MyFBO alternative",
-        description: "What to look for when MyFBO shuts down.",
-      },
-      {
         href: "/resources/flight-school-scheduling-software",
         label: "Scheduling software",
         description: "What modern flight school software should include.",
@@ -52,8 +47,8 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
       },
       {
         href: "/migrating/my-fbo",
-        label: "Migrating from MyFBO",
-        description: "Self-serve playbook: backup, setup, cut over.",
+        label: "MyFBO alternative & migration",
+        description: "MyFBO is closing. Back up, stand up, cut over.",
       },
     ],
   },
@@ -176,10 +171,9 @@ export const NAV_RESOURCE_GROUPS: ResourceGroup[] = [
   {
     title: "Guides",
     items: linksByHref(
-      "/resources/myfbo-alternative",
+      "/migrating/my-fbo",
       "/resources/flight-school-scheduling-software",
-      "/resources/quickbooks-integration",
-      "/migrating/my-fbo"
+      "/resources/quickbooks-integration"
     ),
   },
   {
@@ -208,7 +202,6 @@ export const FOOTER_RESOURCE_LINKS: ResourceLink[] = [
     description: "Guides, comparisons, migrations, and documentation.",
   },
   ...linksByHref(
-    "/resources/myfbo-alternative",
     "/migrating/my-fbo",
     "/compare/flight-schedule-pro",
     "/compare/flight-circle"

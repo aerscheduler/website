@@ -26,7 +26,7 @@ const ROWS: [string, string, string][] = [
   [
     "Pricing model",
     `$${PRICE_PER_AIRCRAFT}/mo per aircraft. Sims & rooms free. Unlimited users.`,
-    "Quoted per school (varies)",
+    "Quoted per school",
   ],
   [
     "Custom syllabi",
@@ -134,10 +134,21 @@ export default function CompareFlightCirclePage() {
             both sign lessons. The difference is what the record can tell you
             afterwards.
           </p>
-          <p className="mt-3 text-sm text-muted-foreground">
-            Flight Circle is an established competitor with a capable training
-            module and content builder. Details below reflect their public
-            documentation; verify current capabilities on their site.
+
+          {/* Paid traffic lands here from a switching ad and does not scroll a
+              thousand words to find a button. */}
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <Button href={SIGNUP_URL} size="lg">
+              Start free trial
+              <ChevronRight className="size-4 opacity-80" />
+            </Button>
+            <Button href="/demo" variant="secondary" size="lg">
+              See the live demo
+            </Button>
+          </div>
+          <p className="mt-4 text-sm text-muted-foreground">
+            ${PRICE_PER_AIRCRAFT}/aircraft/mo · {TRIAL_DAYS}-day trial · No credit
+            card · No sales call
           </p>
         </div>
       </div>
@@ -217,6 +228,9 @@ export default function CompareFlightCirclePage() {
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
             <Button href={SIGNUP_URL}>Start free</Button>
+            <Button href="/demo" variant="secondary">
+              Try the live demo
+            </Button>
             <Link
               href="/features/training"
               className="inline-flex items-center gap-1 text-sm font-medium text-foreground hover:underline"
