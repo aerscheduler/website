@@ -500,6 +500,43 @@ for (const block of competitorBlocks) {
   });
 }
 
+// FAQs live in a separate COMPETITOR_FAQS record keyed by slug (a `[` literal, so
+// the entry-block split above does not pick it up). Indexed as their own records,
+// the same way page-level FAQs are, because "how much does X cost" is exactly what
+// somebody types into site search.
+const faqsSection = competitorsSource.slice(
+  competitorsSource.indexOf("export const COMPETITOR_FAQS")
+);
+for (const slug of competitorSlugs) {
+  const start = faqsSection.search(new RegExp(`\\n\\s{2}"?${slug}"?:\\s*\\[`));
+  if (start < 0) continue;
+  const end = faqsSection.indexOf("\n  ],", start);
+  const block = faqsSection.slice(start, end < 0 ? undefined : end);
+  const pairs = [
+    ...block.matchAll(
+      /q:\s*(?:"((?:[^"\\]|\\.)*)"|`((?:[^`\\]|\\.)*)`)\s*,\s*\n?\s*a:\s*(?:"((?:[^"\\]|\\.)*)"|`((?:[^`\\]|\\.)*)`)/g
+    ),
+  ];
+  for (const [index, m] of pairs.entries()) {
+    const q = collapse(interpolate(m[1] ?? m[2] ?? ""));
+    const a = collapse(interpolate(m[3] ?? m[4] ?? ""));
+    if (!q) continue;
+    push({
+      id: `compare:${slug}#faq-${index}`,
+      type: "guide",
+      title: q,
+      href: `/compare/${slug}#faq`,
+      path: ["Guides", `vs ${slug}`],
+      body: a,
+    });
+  }
+  if (!pairs.length) {
+    errors.push(
+      `No FAQs parsed for competitor ${slug}. COMPETITOR_FAQS in src/lib/competitors.ts requires an entry for every slug, so either the format changed or the parser is blind.`
+    );
+  }
+}
+
 // The registry is the source of truth for what exists; this catches the parser
 // silently going blind if the file is reformatted, which would drop every
 // comparison page out of search without failing anything else.

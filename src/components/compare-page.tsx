@@ -11,12 +11,15 @@ import {
   SelfBookingLiveDemo,
   MembershipsLiveDemo,
 } from "@/components/mocks/living";
+import { JsonLd } from "@/components/json-ld";
 import {
   competitorHref,
   otherCompetitors,
+  COMPETITOR_FAQS,
   type Competitor,
   type CompetitorDemo,
 } from "@/lib/competitors";
+import { faqJsonLd } from "@/lib/seo";
 import { PRICE_PER_AIRCRAFT, SIGNUP_URL, SITE_NAME, TRIAL_DAYS } from "@/lib/site";
 
 /**
@@ -62,9 +65,13 @@ function CompetitorDemoVisual({ demo }: { demo: CompetitorDemo }) {
 
 export function ComparePage({ competitor }: { competitor: Competitor }) {
   const others = otherCompetitors(competitor.slug);
+  const faqs = COMPETITOR_FAQS[competitor.slug];
 
   return (
     <article className="border-b border-border">
+      {/* FAQPage only. `Breadcrumbs` already emits its own BreadcrumbList, and
+          adding breadcrumbJsonLd here would ship the page two of them. */}
+      <JsonLd data={faqJsonLd(faqs)} />
       {/* Hero. Paid traffic arrives here from a "thinking of switching" ad, so the
           offer and the CTA are above the fold rather than under a thousand words. */}
       <div className="relative overflow-hidden border-b border-border">
@@ -102,14 +109,13 @@ export function ComparePage({ competitor }: { competitor: Competitor }) {
         </div>
       </div>
 
-      {/* The running product, before the argument. This is the real interface,
-          not a screenshot, and it is interactive. */}
+      {/* An interactive preview of the interface, before the argument starts.
+          It is a mock, not the live app, so nothing here claims otherwise: the
+          link underneath sends anyone who wants the real thing to the sandbox. */}
       <section className="border-b border-border bg-[#fafbfc]">
         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:py-16">
           <div className="mx-auto max-w-2xl text-center">
-            <p className="text-sm font-semibold text-primary">
-              Not a screenshot
-            </p>
+            <p className="text-sm font-semibold text-primary">Product preview</p>
             <h2 className="mt-3 text-2xl font-semibold tracking-tight text-brand-surface sm:text-3xl">
               {competitor.demoTitle}
             </h2>
@@ -117,13 +123,18 @@ export function ComparePage({ competitor }: { competitor: Competitor }) {
               {competitor.demoBody}
             </p>
           </div>
-          <div className="mt-10 flex min-w-0 justify-center">
+          {/* `AppMockShell` is `w-full max-w-[720px]`, so dropping it straight
+              into this 1280px container left it hard against the left edge:
+              `justify-center` centres a flex child, and the child was full
+              width. Constraining the wrapper to the shell's own max width and
+              centring the wrapper is what actually puts it in the middle. */}
+          <div className="mx-auto mt-10 w-full min-w-0 max-w-[720px]">
             <CompetitorDemoVisual demo={competitor.demo} />
           </div>
           <p className="mt-8 text-center text-sm text-muted-foreground">
-            Prefer to drive it yourself?{" "}
+            Want to drive the real thing?{" "}
             <Link href="/demo" className="text-primary hover:underline">
-              Open the full sandbox
+              Open the live sandbox
             </Link>
             , no signup required.
           </p>
@@ -206,6 +217,23 @@ export function ComparePage({ competitor }: { competitor: Competitor }) {
             <li key={item}>{item}</li>
           ))}
         </ul>
+
+        {/* Answers the question people actually typed, and emits FAQPage
+            structured data. These pages already out-rank everything else on the
+            site, so the marginal SEO is worth more here than anywhere. */}
+        <h2 id="faq" className="mt-14 text-2xl font-semibold tracking-tight text-brand-surface">
+          Common questions
+        </h2>
+        <dl className="mt-4 divide-y divide-border">
+          {faqs.map((faq) => (
+            <div key={faq.q} className="py-5">
+              <dt className="font-semibold text-foreground">{faq.q}</dt>
+              <dd className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                {faq.a}
+              </dd>
+            </div>
+          ))}
+        </dl>
 
         <div className="mt-14 rounded-2xl border border-border bg-[#fafbfc] p-8 text-center">
           <p className="text-lg font-semibold text-foreground">

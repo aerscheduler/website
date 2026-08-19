@@ -740,3 +740,150 @@ export const getCompetitor = (slug: string): Competitor | undefined =>
  */
 export const otherCompetitors = (slug: CompetitorSlug, limit = 3): Competitor[] =>
   COMPETITOR_LIST.filter((c) => c.slug !== slug).slice(0, limit);
+
+/**
+ * Per-page FAQs, which do two jobs.
+ *
+ * They answer the question somebody actually typed (most competitor searches are
+ * really "what does it cost" and "can I switch without a sales call"), and they
+ * emit FAQPage structured data, which is how these pages earn extra surface in the
+ * results. The existing comparison pages are already the best-ranking pages on the
+ * site, so the marginal SEO here is worth more than anywhere else.
+ *
+ * `Record<CompetitorSlug, ...>` on purpose: a new competitor will not compile until
+ * it has FAQs, rather than quietly shipping a page without them.
+ *
+ * Same evidence rule as the comparison rows. Where a competitor does not publish a
+ * price, the answer says so rather than guessing at one.
+ */
+export const COMPETITOR_FAQS: Record<
+  CompetitorSlug,
+  { q: string; a: string }[]
+> = {
+  "flight-schedule-pro": [
+    {
+      q: "How much does AerScheduler cost compared to Flight Schedule Pro?",
+      a: `AerScheduler is $${PRICE_PER_AIRCRAFT} per aircraft per month with every user included, and simulators and classrooms are free. Flight Schedule Pro is quoted per school and does not publish a price, so there is no public figure to compare against.`,
+    },
+    {
+      q: "Can I switch from Flight Schedule Pro without a sales call?",
+      a: "Yes. Signup is self-serve, the trial is 14 days, and no credit card is required. You can add an aircraft and put a flight on the board the same afternoon.",
+    },
+    {
+      q: "Does AerScheduler have a mobile app?",
+      a: "Yes, a native iOS app for the whole team. Instructors, students and renters can book, and dispatchers can ramp a flight in and out from the ramp itself.",
+    },
+    {
+      q: "Can several people be billed for one flight?",
+      a: "Yes. Split the cost per head, by logged time, or in shares you set, and each person gets their own invoice. Useful for ground school, shared cross-countries and checkrides.",
+    },
+  ],
+  "flight-circle": [
+    {
+      q: "How is AerScheduler different from Flight Circle?",
+      a: "Both run a flight school's schedule. The differences schools tell us about are how quickly you can start, what it costs as you add aircraft, and whether dispatch, billing and maintenance are one system or three.",
+    },
+    {
+      q: `What does AerScheduler cost?`,
+      a: `$${PRICE_PER_AIRCRAFT} per aircraft per month. Every user is included, and simulators and classrooms never appear on the bill.`,
+    },
+    {
+      q: "Can I try it before talking to anyone?",
+      a: "Yes. There is a live demo you can open with no signup, and a 14-day trial that needs no credit card and no sales call.",
+    },
+    {
+      q: "Does it handle multi-day and overnight rentals?",
+      a: "Yes. A trip that spans nights is one reservation, with an overnight minimum you set per aircraft or school-wide, so a weekend rental does not need a manual invoice afterwards.",
+    },
+  ],
+  "schedule-pointe": [
+    {
+      q: "How much does Schedule Pointe cost?",
+      a: `Schedule Pointe does not publish pricing and asks you to arrange a custom demo. AerScheduler publishes one number: $${PRICE_PER_AIRCRAFT} per aircraft per month, every user included.`,
+    },
+    {
+      q: "Is AerScheduler built only for aviation?",
+      a: "Yes. Flight schools, flying clubs and aircraft rental operations, and nothing else. Schedule Pointe sells scheduling into aviation alongside several other industries from the same platform.",
+    },
+    {
+      q: "Does AerScheduler track inspection due dates?",
+      a: "Yes. Inspections carry server-computed due dates against both hours and calendar time, and an aircraft that comes due grounds itself on the dispatch board so nobody can book it.",
+    },
+    {
+      q: "Can I sign up without booking a demo?",
+      a: "Yes. Signup is self-serve and takes minutes. There is also a live demo you can open with no account at all.",
+    },
+  ],
+  flightlogger: [
+    {
+      q: "Does AerScheduler charge per student?",
+      a: `No. AerScheduler charges $${PRICE_PER_AIRCRAFT} per aircraft per month and nothing else. Students, instructors, renters, dispatchers and office staff are all included at no extra cost.`,
+    },
+    {
+      q: "How much does FlightLogger cost?",
+      a: "FlightLogger publishes a usage-based model rather than a price: a platform package plus active-student and operational-flight fees, quoted per school. No dollar figures are published, so none are quoted here.",
+    },
+    {
+      q: "What happens to my bill if the school grows?",
+      a: "Nothing, unless you add aircraft. Doubling your student intake does not change what you pay, which is the main practical difference between the two pricing models.",
+    },
+    {
+      q: "Is AerScheduler built for FAA or EASA training?",
+      a: "FAA. AerScheduler is built for Part 61 and Part 141 operations in the United States. If you train under EASA rules and need reporting built around them, FlightLogger is likely the better fit.",
+    },
+  ],
+  "talon-systems": [
+    {
+      q: "What is Talon ETA?",
+      a: "ETA is Talon Systems' web-based training management system for universities and flight training organizations, covering scheduling, records, billing and compliance. It is sold through a demo and configured to the organization.",
+    },
+    {
+      q: "Is AerScheduler a good fit for a small flight school?",
+      a: `Yes, that is who it is built for. Independent schools, flying clubs and rental operations. A school with six aircraft pays $${PRICE_PER_AIRCRAFT * 6} a month with every user included.`,
+    },
+    {
+      q: "How long does setup take?",
+      a: "An afternoon. There is no implementation project and no configuration engagement: you add your aircraft, invite your people and book a flight.",
+    },
+    {
+      q: "How much does Talon Systems cost?",
+      a: "Talon Systems does not publish pricing. Every call to action on their site is a demo request, so the figure is quoted per organization.",
+    },
+  ],
+  "airplane-manager": [
+    {
+      q: "Is Airplane Manager built for flight schools?",
+      a: "Airplane Manager describes itself as flight scheduling crafted for corporate jets, connecting pilots, passengers, owners and assistants. It is aimed at corporate flight departments rather than training operations.",
+    },
+    {
+      q: "Can students and renters book their own aircraft?",
+      a: "In AerScheduler, yes. Approved students and renters book their own aircraft and instructor within rules you set: who is approved on which tail, how far ahead they can book, and whether an instructor is required.",
+    },
+    {
+      q: "Does AerScheduler bill by Hobbs or tach time?",
+      a: "Either. Ramp in with Hobbs, tach and fuel and the invoice drafts from the rates already on the aircraft, so the flight is billed before the aircraft is tied down.",
+    },
+    {
+      q: "What does AerScheduler cost?",
+      a: `$${PRICE_PER_AIRCRAFT} per aircraft per month, with every student, instructor, renter and staff member included. Simulators and classrooms are free.`,
+    },
+  ],
+  bookourplane: [
+    {
+      q: "Is BookOurPlane really free?",
+      a: "Yes. BookOurPlane has offered free booking to flying clubs since 2004. Their own site states that payments, statistics and logbooks are features that might be offered for a fee in future, and are not included today.",
+    },
+    {
+      q: "Why would a club pay for AerScheduler instead?",
+      a: "For everything after the booking: invoicing the flight from Hobbs, collecting monthly dues automatically, and knowing an aircraft is not overdue an inspection before somebody takes it. If a shared calendar is all your club needs, free is the right price.",
+    },
+    {
+      q: "Can AerScheduler bill monthly club dues?",
+      a: "Yes. Membership tiers, joining fees and recurring dues bill automatically, with prorated first periods for mid-month joiners and a record of every period billed, waived or owed.",
+    },
+    {
+      q: "What does AerScheduler cost for a flying club?",
+      a: `$${PRICE_PER_AIRCRAFT} per aircraft per month with unlimited members. A club with three aircraft pays $${PRICE_PER_AIRCRAFT * 3} a month however many people are on the roster.`,
+    },
+  ],
+};
