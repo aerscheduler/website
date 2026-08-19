@@ -4,7 +4,13 @@ import { Suspense, useEffect, useRef } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { captureAttribution } from "@/lib/attribution";
 import { onConsentChange } from "@/lib/consent";
-import { startAnalytics, track, trackPageview } from "@/lib/analytics";
+import {
+  startAnalytics,
+  startConsentMode,
+  syncGoogleConsent,
+  track,
+  trackPageview,
+} from "@/lib/analytics";
 
 /**
  * Boots analytics and reports pageviews and dwell time.
@@ -38,11 +44,24 @@ function AnalyticsInner() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // Boot once, then again if they accept the banner later in the visit.
+  // Boot once, then again if they answer the banner later in the visit.
+  //
+  // `startConsentMode()` is unconditional and must run before anything reads consent:
+  // it installs the Google tag with all four v2 signals denied, so a visitor who never
+  // touches the banner still produces a cookieless conversion ping. `startAnalytics()`
+  // is the consent-gated half (PostHog and Meta).
+  //
+  // The listener fires in BOTH directions, so withdrawing consent pushes an update of
+  // denied rather than leaving the tag granted for the rest of the visit.
   useEffect(() => {
     captureAttribution();
+    startConsentMode();
+    syncGoogleConsent();
     startAnalytics();
-    return onConsentChange(() => startAnalytics());
+    return onConsentChange(() => {
+      syncGoogleConsent();
+      startAnalytics();
+    });
   }, []);
 
   const enteredAt = useRef<number>(Date.now());
