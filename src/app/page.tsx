@@ -91,10 +91,11 @@ export default function HomePage() {
             </div>
             {/* "No sales call" earns its place here: every established competitor
                 in this market is demo-led, so it is the fastest differentiator to
-                read. */}
+                read. The no-signup demo used to be spelled out here too, which
+                pushed the line to two rows and left one orphaned word; the
+                secondary CTA next to it already says the same thing. */}
             <p className="animate-fade-up-delay-3 mt-4 text-sm text-muted-foreground">
-              {TRIAL_DAYS}-day free trial · No credit card · No sales call · Or
-              explore the demo with no signup
+              {TRIAL_DAYS}-day free trial · No credit card · No sales call
             </p>
           </div>
 
