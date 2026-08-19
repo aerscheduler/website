@@ -68,7 +68,19 @@ export type Competitor = {
   seoTitle: string;
   seoDescription: string;
   ogDescription: string;
-  /** Hero paragraph. Leads on the difference, never on their strengths. */
+  /**
+   * The H1. Names the visitor's intent ("a modern alternative to X") rather than
+   * opening with a table, because somebody who typed a competitor's name has
+   * already decided they want software and is now deciding whether to move.
+   * The "AerScheduler vs X" phrasing survives as the eyebrow above it and in the
+   * title tag, so the comparison query is not given up to win the alternative one.
+   */
+  heroHeadline: string;
+  /**
+   * Hero paragraph. Sells the outcome and takes the switching risk off the table.
+   * The objection on these pages is never "is this different", it is "is this
+   * worth the disruption", so this paragraph has to answer the second one.
+   */
   intro: string;
   demo: CompetitorDemo;
   demoTitle: string;
@@ -118,11 +130,72 @@ const PROOF_MULTI_DAY: CompareProof = {
   label: "Multi-day rentals",
 };
 
+/**
+ * Realtime is genuinely deployed (POST /realtime/ticket authenticates in prod, and
+ * the server publishes on the schedule, notifications and billing channels), so
+ * this is a claim we can make. Written as the consequence rather than the
+ * mechanism: nobody buys software because it uses WebSockets.
+ */
+const PROOF_REALTIME: CompareProof = {
+  title: "The whole school sees the same schedule, immediately",
+  body: "A booking change reaches every browser and phone in the school as it happens, so the front desk, the instructor walking to the ramp and the student at home are never looking at three different versions of today.",
+  href: "/features/scheduling",
+  label: "Scheduling & Dispatch",
+};
+
 const PROOF_MAINTENANCE: CompareProof = {
   title: "An aircraft that is out of annual cannot be booked",
   body: "Inspections carry server-computed due dates against hours and calendar time. When one comes due the aircraft grounds itself on the board, so nobody dispatches a tail that should not fly.",
   href: "/features/maintenance",
   label: "Maintenance",
+};
+
+/**
+ * The switching offer, shared by every comparison page.
+ *
+ * This is the single biggest lever on these pages: the objection is not "is
+ * AerScheduler different", it is "is moving worth the disruption". Nothing here
+ * is a product feature, and the wording is careful about that.
+ *
+ * What each line is standing on, so nobody has to re-derive it:
+ *
+ * - **Moving data is a PERSON, not an importer.** There is no import pipeline in
+ *   the codebase and the copy must never imply one. Confirmed with Tony on
+ *   2026-08-19: no code for it, but the team will do it by hand when a school
+ *   asks. Written as "a person", deliberately, so nobody arrives expecting a
+ *   one-click migration from a competitor's export.
+ * - **Onboarding help is offered, never required.** Self-serve signup is the
+ *   whole advantage over the demo-led incumbents, so help is framed as available
+ *   rather than as a gate. "Never as a condition of signing up" earns its place.
+ * - **Running in parallel** needs nothing from us: two systems, no integration.
+ * - **CSV export** is real. The report engine serialises to CSV for ordinary
+ *   users (`server/src/routes/reports/engine.routes.ts`). Note it says reports,
+ *   not "all your data", because the public API is Enterprise-only.
+ *
+ * `{name}` is substituted with the competitor's own name by `compare-page.tsx`.
+ */
+export const SWITCH_OFFER = {
+  title: "Switching, without the project",
+  intro:
+    "The reason schools stay somewhere they have outgrown is rarely the software. It is the week they imagine losing to moving. Here is what actually happens.",
+  items: [
+    {
+      title: "A person moves your data, not an importer",
+      body: "Export what you can out of {name} and we get it into AerScheduler with you. Odd formats and missing fields become a conversation rather than a dead end, because a human is doing it.",
+    },
+    {
+      title: "We set the school up with you",
+      body: "Aircraft, rates, instructors, permissions and booking rules, configured with the team that builds the product. On a call if you want one, and never as a condition of signing up.",
+    },
+    {
+      title: "Keep both running until you are ready",
+      body: "Nothing forces a cutover date. Run {name} alongside AerScheduler and stop using it when the front desk stops opening it, which is usually the moment you know.",
+    },
+    {
+      title: "Nothing to sign, nothing locked in",
+      body: "14 days free and no card to start. Every report exports to CSV, so the answer to \"what if we change our mind\" is a download rather than a support ticket.",
+    },
+  ],
 };
 
 export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
@@ -138,7 +211,8 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
     seoDescription: `Compare AerScheduler and Flight Schedule Pro for flight schools: self-serve setup, $${PRICE_PER_AIRCRAFT}/mo per aircraft with unlimited users, a native app, and flight close-out that drafts the invoice.`,
     ogDescription:
       "Self-serve vs demo-led. Per-aircraft pricing, unlimited users. Native app included.",
-    intro: `Flight Schedule Pro is sold through a demo and quoted per school. AerScheduler publishes one price, $${PRICE_PER_AIRCRAFT} per aircraft with every user included, and you can sign up and dispatch the same day. Scheduling, billing and maintenance are one system rather than three that have to agree with each other.`,
+    heroHeadline: "The modern alternative to Flight Schedule Pro",
+    intro: "Flight Schedule Pro works, and your school has years of history inside it. That is exactly why moving feels like a project, and it is the part we take off you: we move your data with you, set the school up with you, and you keep Flight Schedule Pro running until your staff stop reaching for it. What is on the other side is one system for the schedule, the invoice and the maintenance record, and a price you can read on this page.",
     demo: "billing",
     demoTitle: "This is the part that usually lives in another system",
     demoBody:
@@ -184,7 +258,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
     ],
     disclaimer: `Flight Schedule Pro is a long-standing product and a trademark of its owner. Rows describe what each product publishes; "not published" means we could not confirm it, not that it is absent.`,
     proofsTitle: "What the difference looks like",
-    proofs: [PROOF_CLOSE_OUT, PROOF_SIMS_FREE],
+    proofs: [PROOF_REALTIME, PROOF_CLOSE_OUT, PROOF_SIMS_FREE],
     notFitTitle: "When we may not be the right fit",
     notFit: [
       "You already run a large deployment and moving it would cost more than it saves",
@@ -205,12 +279,12 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
     seoDescription: `Compare AerScheduler and Flight Circle for flight schools: self-serve setup, $${PRICE_PER_AIRCRAFT}/mo per aircraft with unlimited users, dispatch that closes out into an invoice, and a native app.`,
     ogDescription:
       "Self-serve setup, per-aircraft pricing, and the whole day in one system.",
-    intro:
-      "Both products run a flight school's schedule. What schools tell us decides it is the rest of the day: how quickly you can start, what it costs as you add aircraft, and whether dispatch, billing and maintenance live in one place or three.",
+    heroHeadline: "A modern alternative to Flight Circle",
+    intro: "Flight Circle already runs your schedule, so the question is not whether software helps. It is whether the rest of the day still costs you more admin than it should. AerScheduler puts dispatch, billing and maintenance in one place, updates every screen in the school the moment anything changes, and we move your data and set the school up with you. Keep both running in parallel for as long as it takes to trust it.",
     demo: "scheduling",
     demoTitle: "The board your front desk will live on",
     demoBody:
-      "Lanes for every aircraft, simulator and classroom, conflict-aware booking, and drag to reschedule. This is the real interface, not a screenshot.",
+      "Lanes for every aircraft, simulator and classroom, conflict-aware booking, and drag to reschedule. Have a click around.",
     reasons: [
       "You want to be dispatching this week, without a sales call",
       `Predictable cost: $${PRICE_PER_AIRCRAFT} per aircraft, every user included, sims and rooms free`,
@@ -262,7 +336,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
     ],
     disclaimer: disclaimerFor("Flight Circle"),
     proofsTitle: "What running the day looks like",
-    proofs: [PROOF_CLOSE_OUT, PROOF_SPLIT, PROOF_SIMS_FREE, PROOF_MULTI_DAY],
+    proofs: [PROOF_REALTIME, PROOF_CLOSE_OUT, PROOF_SPLIT, PROOF_SIMS_FREE, PROOF_MULTI_DAY],
     notFitTitle: "When we may not be the right fit",
     notFit: [
       "You want ground-school courseware, video, reading and quizzes, inside the same tool. We do not build it, and link out to Sporty's, King or Gleim instead",
@@ -288,7 +362,8 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
     seoDescription: `Compare AerScheduler and Schedule Pointe for flight schools and clubs: one published price at $${PRICE_PER_AIRCRAFT}/mo per aircraft, self-serve signup, and software built only for aviation.`,
     ogDescription:
       "Built for aviation only, with a published price and no demo call.",
-    intro: `Schedule Pointe sells scheduling into aviation alongside several other industries, and prices it through a custom demo. AerScheduler does one thing: it runs flight schools, clubs and rental operations. The price is on the website, $${PRICE_PER_AIRCRAFT} per aircraft with every user included, and you can be dispatching before anyone would have returned your call.`,
+    heroHeadline: "A modern alternative to Schedule Pointe",
+    intro: "Every screen in AerScheduler was drawn for a flight line rather than adapted from another industry, the price is published, and you can be dispatching this afternoon instead of waiting for a call back. If you are on Schedule Pointe today, we help you move what you can export and configure the school with you, and nothing forces a cutover date.",
     demo: "maintenance",
     demoTitle: "Maintenance that stops a dispatch, not just a report",
     demoBody:
@@ -349,7 +424,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
     ],
     disclaimer: disclaimerFor("Schedule Pointe"),
     proofsTitle: "What running the day looks like",
-    proofs: [PROOF_MAINTENANCE, PROOF_CLOSE_OUT, PROOF_SIMS_FREE, PROOF_SPLIT],
+    proofs: [PROOF_REALTIME, PROOF_MAINTENANCE, PROOF_CLOSE_OUT, PROOF_SIMS_FREE, PROOF_SPLIT],
     notFitTitle: "When we may not be the right fit",
     notFit: [
       "You run charter alongside training and need crew duty-time tracking, which we do not build",
@@ -375,8 +450,8 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
     seoDescription: `Compare AerScheduler and FlightLogger: a flat $${PRICE_PER_AIRCRAFT}/mo per aircraft with unlimited users, versus pricing that varies with how many students you train and how much you fly.`,
     ogDescription:
       "A fixed per-aircraft price versus a bill that moves with your student count.",
-    intro:
-      "The difference shows up on the invoice. FlightLogger publishes a usage-based model, a platform fee plus fees tied to active students and operational flights, quoted per school. AerScheduler charges for aircraft and nothing else. Train twice as many students next year and your bill is identical.",
+    heroHeadline: "A modern alternative to FlightLogger",
+    intro: "The clearest difference shows up when the school grows. FlightLogger prices on active students and operational flights, so a bigger intake costs more; AerScheduler charges for aircraft and nothing else, so it does not. Moving is not a project either. We help get your data across and set the school up with you, and you can run both systems until the change has stuck.",
     demo: "people",
     demoTitle: "Add the whole school. The bill does not move.",
     demoBody:
@@ -446,7 +521,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
     ],
     disclaimer: disclaimerFor("FlightLogger"),
     proofsTitle: "What a fixed price actually buys you",
-    proofs: [PROOF_SIMS_FREE, PROOF_CLOSE_OUT, PROOF_SPLIT, PROOF_MULTI_DAY],
+    proofs: [PROOF_REALTIME, PROOF_SIMS_FREE, PROOF_CLOSE_OUT, PROOF_SPLIT, PROOF_MULTI_DAY],
     notFitTitle: "When we may not be the right fit",
     notFit: [
       "You train under EASA rules and need reporting built around them. We are built for FAA Part 61 and Part 141 operations",
@@ -473,7 +548,8 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
     seoDescription: `Compare AerScheduler and Talon Systems ETA: a published price at $${PRICE_PER_AIRCRAFT}/mo per aircraft and same-day self-serve setup, versus an enterprise platform sold by demo and configured per organization.`,
     ogDescription:
       "Same-day setup and a published price, versus a configured enterprise rollout.",
-    intro: `Talon Systems builds ETA for university aviation programs and large academies, sold through a demo and configured to the organization. That is a real fit for an operation with a procurement process. If you are an independent school or club with a handful of aircraft, AerScheduler is the other end of the market: $${PRICE_PER_AIRCRAFT} per aircraft, published, and running the same afternoon you sign up.`,
+    heroHeadline: "A modern alternative to Talon Systems",
+    intro: "Talon builds ETA for university programs with a procurement process behind them, and for that kind of operation it is a real fit. If you run an independent school or club, you can have AerScheduler configured and dispatching this afternoon, at a price that is published rather than negotiated. Coming off ETA, we help move what you can export and set the school up with you.",
     demo: "reports",
     demoTitle: "The numbers, without asking anyone to build a report",
     demoBody:
@@ -539,7 +615,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
     ],
     disclaimer: disclaimerFor("Talon Systems"),
     proofsTitle: "What you get without an implementation project",
-    proofs: [PROOF_CLOSE_OUT, PROOF_MAINTENANCE, PROOF_SIMS_FREE, PROOF_SPLIT],
+    proofs: [PROOF_REALTIME, PROOF_CLOSE_OUT, PROOF_MAINTENANCE, PROOF_SIMS_FREE, PROOF_SPLIT],
     notFitTitle: "When we may not be the right fit",
     notFit: [
       "You are a university program with a procurement process and need a vendor who will answer an RFP",
@@ -569,8 +645,8 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
     seoDescription: `Airplane Manager is built for corporate flight departments. AerScheduler is built for flight schools, clubs and rental operations, at $${PRICE_PER_AIRCRAFT}/mo per aircraft with students, instructors and renters included.`,
     ogDescription:
       "Corporate jet scheduling versus software for a flight school or club.",
-    intro:
-      "These two products serve different operations. Airplane Manager describes itself as scheduling crafted for corporate jets, connecting pilots, passengers, owners and assistants. If that is your operation, it is aimed squarely at you. AerScheduler is for the other kind of flight line: students and renters who book themselves, instructors with availability, aircraft billed by the hour, and an invoice at the end of every flight.",
+    heroHeadline: "Flight school software, not corporate jet scheduling",
+    intro: "Airplane Manager is built for corporate flight departments and says so plainly. A flight school day looks nothing like that: students and renters booking themselves, instructors with availability and their own rates, aircraft billed by the hour, and an invoice at the end of every flight. AerScheduler is built for that day, and we help you move across and get set up rather than handing you a login and wishing you luck.",
     demo: "self-booking",
     demoTitle: "Students and renters book themselves",
     demoBody:
@@ -626,7 +702,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
     ],
     disclaimer: `Airplane Manager is a trademark of its owner and is built for a different kind of operation, which is the point of this page rather than a criticism. Rows describe what each product publishes; "not published" means we could not confirm it, not that it is absent.`,
     proofsTitle: "What a training operation needs that a jet schedule does not",
-    proofs: [PROOF_CLOSE_OUT, PROOF_SPLIT, PROOF_MAINTENANCE, PROOF_SIMS_FREE],
+    proofs: [PROOF_REALTIME, PROOF_CLOSE_OUT, PROOF_SPLIT, PROOF_MAINTENANCE, PROOF_SIMS_FREE],
     notFitTitle: "When we may not be the right fit",
     notFit: [
       "You run a corporate flight department and need passenger manifests, catering and trip requests. Airplane Manager is built for that and we are not",
@@ -653,8 +729,8 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
     seoDescription: `BookOurPlane is a free aircraft booking calendar for flying clubs. AerScheduler adds the money and the maintenance: invoicing, dues, inspection due dates and a native app, at $${PRICE_PER_AIRCRAFT}/mo per aircraft.`,
     ogDescription:
       "Free booking calendar versus running the money and the maintenance too.",
-    intro:
-      "Let us be straight about this one. BookOurPlane has been giving flying clubs a free booking calendar since 2004, and if a shared calendar is genuinely all your club needs, free is the right price and you should keep using it. The reason clubs move is everything that happens after the booking: billing the flight, collecting monthly dues, and knowing an aircraft is not overdue an inspection before somebody takes it.",
+    heroHeadline: "When your club outgrows a free booking calendar",
+    intro: "BookOurPlane has given flying clubs a free calendar since 2004, and if a calendar is genuinely all your club needs then keep it. Clubs move when the money starts costing somebody their evenings: billing the flight from Hobbs, chasing monthly dues, and knowing an aircraft is not overdue an inspection before a member takes it. We help move your roster and set the club up, and the first 14 days cost nothing.",
     demo: "memberships",
     demoTitle: "The part a booking calendar leaves to a spreadsheet",
     demoBody:
@@ -715,7 +791,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
     ],
     disclaimer: `BookOurPlane is a trademark of its owner and has served flying clubs for over twenty years at no charge. Rows describe what each product publishes, including what BookOurPlane itself states is not included; "not published" means we could not confirm it, not that it is absent.`,
     proofsTitle: "What you get for the twenty dollars",
-    proofs: [PROOF_CLOSE_OUT, PROOF_MAINTENANCE, PROOF_SPLIT, PROOF_MULTI_DAY],
+    proofs: [PROOF_REALTIME, PROOF_CLOSE_OUT, PROOF_MAINTENANCE, PROOF_SPLIT, PROOF_MULTI_DAY],
     notFitTitle: "When you should stay on BookOurPlane",
     notFit: [
       "Your club shares one or two aircraft, settles up informally, and a calendar is genuinely all you need. Free is hard to argue with",

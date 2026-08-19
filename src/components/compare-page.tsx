@@ -16,6 +16,7 @@ import {
   competitorHref,
   otherCompetitors,
   COMPETITOR_FAQS,
+  SWITCH_OFFER,
   type Competitor,
   type CompetitorDemo,
 } from "@/lib/competitors";
@@ -86,8 +87,11 @@ export function ComparePage({ competitor }: { competitor: Competitor }) {
               },
             ]}
           />
-          <h1 className="mt-6 text-4xl font-semibold tracking-tight text-brand-surface sm:text-5xl">
+          <p className="mt-6 text-sm font-semibold text-primary">
             {SITE_NAME} vs {competitor.name}
+          </p>
+          <h1 className="mt-2 text-4xl font-semibold tracking-tight text-brand-surface sm:text-5xl">
+            {competitor.heroHeadline}
           </h1>
           <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
             {competitor.intro}
@@ -108,6 +112,38 @@ export function ComparePage({ competitor }: { competitor: Competitor }) {
           </p>
         </div>
       </div>
+
+      {/* The switching offer, above everything except the hero. On a competitor
+          page this outranks the feature argument: somebody who searched a rival
+          by name already believes in the software, and is weighing disruption. */}
+      <section className="border-b border-border">
+        <div className="mx-auto max-w-4xl px-4 py-14 sm:px-6">
+          {/* No icon: it sat to the left of the heading and pushed the heading
+              text ~27px off the cards underneath, and no other section on this
+              page carries one. */}
+          <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">
+            {SWITCH_OFFER.title}
+          </h2>
+          <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
+            {SWITCH_OFFER.intro}
+          </p>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            {SWITCH_OFFER.items.map((item) => (
+              <div
+                key={item.title}
+                className="rounded-xl border border-border bg-[#fafbfc] p-6"
+              >
+                <p className="text-sm font-semibold text-foreground">
+                  {item.title.replace(/\{name\}/g, competitor.name)}
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {item.body.replace(/\{name\}/g, competitor.name)}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* An interactive preview of the interface, before the argument starts.
           It is a mock, not the live app, so nothing here claims otherwise: the
@@ -158,6 +194,28 @@ export function ComparePage({ competitor }: { competitor: Competitor }) {
         </ul>
 
         <h2 className="mt-14 text-2xl font-semibold tracking-tight text-brand-surface">
+          {competitor.proofsTitle}
+        </h2>
+        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          {competitor.proofs.map((proof) => (
+            <div key={proof.title} className="rounded-xl border border-border p-6">
+              <p className="text-sm font-semibold text-foreground">
+                {proof.title}
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                {proof.body}
+              </p>
+              <Link
+                href={proof.href}
+                className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
+              >
+                {proof.label}
+              </Link>
+            </div>
+          ))}
+        </div>
+
+        <h2 className="mt-14 text-2xl font-semibold tracking-tight text-brand-surface">
           Side-by-side
         </h2>
         {/* Scrolls inside itself on a narrow screen rather than pushing the page
@@ -184,28 +242,6 @@ export function ComparePage({ competitor }: { competitor: Competitor }) {
         <p className="mt-3 text-xs text-muted-foreground">
           {competitor.disclaimer}
         </p>
-
-        <h2 className="mt-14 text-2xl font-semibold tracking-tight text-brand-surface">
-          {competitor.proofsTitle}
-        </h2>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
-          {competitor.proofs.map((proof) => (
-            <div key={proof.title} className="rounded-xl border border-border p-6">
-              <p className="text-sm font-semibold text-foreground">
-                {proof.title}
-              </p>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                {proof.body}
-              </p>
-              <Link
-                href={proof.href}
-                className="mt-3 inline-block text-sm font-medium text-primary hover:underline"
-              >
-                {proof.label}
-              </Link>
-            </div>
-          ))}
-        </div>
 
         {/* Kept, and kept honest. A comparison page with no losing rows is not
             believed by anyone who has read one before. */}
