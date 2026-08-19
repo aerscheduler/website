@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { BookOpen, ChevronRight } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { COMPETITOR_LIST, competitorHref } from "@/lib/competitors";
 import { SITE_NAME } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -71,16 +72,14 @@ const GUIDES = [
     title: "QuickBooks Online integration",
     body: "How paid AerScheduler invoices sync to QuickBooks Online as Sales Receipts, without CSV exports.",
   },
-  {
-    href: "/compare/flight-schedule-pro",
-    title: "AerScheduler vs Flight Schedule Pro",
-    body: "A practical comparison of pricing model, self-serve setup, mobile apps, and who each product fits.",
-  },
-  {
-    href: "/compare/flight-circle",
-    title: "AerScheduler vs Flight Circle",
-    body: "The closest comparison on this site. Both build syllabi; the difference is whether the record tracks the hours a certificate turns on, or only the lessons.",
-  },
+  // Comparison pages come from `lib/competitors.ts` so adding a competitor lists
+  // it here automatically. The two hand-written entries this replaced both led on
+  // training records, which those pages deliberately no longer argue about.
+  ...COMPETITOR_LIST.map((competitor) => ({
+    href: competitorHref(competitor.slug),
+    title: `${SITE_NAME} vs ${competitor.name}`,
+    body: competitor.seoDescription,
+  })),
   {
     href: "/migrating/my-fbo",
     title: "MyFBO alternative & migration",

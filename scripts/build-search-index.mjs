@@ -413,8 +413,6 @@ const PAGE_META = {
   "/privacy": { group: "Pages", title: "Privacy policy" },
   "/terms-and-conditions": { group: "Pages", title: "Terms and conditions" },
   "/migrating/my-fbo": { group: "Guides", title: "MyFBO alternative & migration" },
-  "/compare/flight-schedule-pro": { group: "Guides", title: "vs Flight Schedule Pro" },
-  "/compare/flight-circle": { group: "Guides", title: "vs Flight Circle" },
   "/resources/flight-school-scheduling-software": { group: "Guides", title: "Scheduling software" },
   "/resources/quickbooks-integration": { group: "Guides", title: "QuickBooks integration" },
   "/resources/split-billing-shared-flights": { group: "Guides", title: "Split billing and shared flights" },
@@ -447,6 +445,89 @@ const interpolate = (text) =>
     .replace(/\$\{([A-Za-z_$][\w$]*)\}/g, (whole, name) => SUBSTITUTIONS[name] ?? " ")
     // Anything left is a call or a member expression we cannot resolve.
     .replace(/\$\{[^}]*\}/g, " ");
+
+/* ------------------------------------------------------------------ */
+/* Competitor comparison pages                                         */
+/* ------------------------------------------------------------------ */
+
+// These live behind /compare/[slug], so staticRoutes() below cannot see them and
+// PAGE_META does not cover them. They are expanded from the registry instead.
+//
+// Deliberately NOT readLiteral(): the COMPETITORS literal references shared
+// constants and a helper defined above it in the same module, so evaluating it in
+// isolation throws. Pulling the handful of fields search needs out of each entry
+// is uglier but it cannot silently half-evaluate.
+const competitorsSource = readFileSync(path.join(root, "src", "lib", "competitors.ts"), "utf8");
+
+/** Field value from one entry block. Handles "quoted" and `templated` alike. */
+function competitorField(block, name) {
+  const match = new RegExp(
+    `(?:^|\\n)\\s{4}${name}:\\s*(?:"((?:[^"\\\\]|\\\\.)*)"|\`((?:[^\`\\\\]|\\\\.)*)\`)`
+  ).exec(block);
+  if (!match) return "";
+  return collapse(interpolate(match[1] ?? match[2] ?? ""));
+}
+
+const competitorBlocks = competitorsSource
+  .split(/\n\s{2}(?:"[a-z0-9-]+"|[a-z][a-zA-Z0-9]*): \{\n/)
+  .slice(1);
+
+const competitorSlugs = [];
+for (const block of competitorBlocks) {
+  const slug = competitorField(block, "slug");
+  if (!slug) continue;
+  competitorSlugs.push(slug);
+  const name = competitorField(block, "name");
+  push({
+    id: `compare:${slug}`,
+    type: "guide",
+    title: competitorField(block, "navLabel") || `vs ${name}`,
+    href: `/compare/${slug}`,
+    path: ["Guides"],
+    description: competitorField(block, "seoDescription"),
+    // The words somebody actually types when they are shopping around.
+    keywords: `${name} alternative switch from ${name} ${name} comparison ${name} vs`,
+    body: truncate(
+      collapse(
+        [
+          competitorField(block, "intro"),
+          competitorField(block, "demoTitle"),
+          competitorField(block, "demoBody"),
+          competitorField(block, "proofsTitle"),
+        ].join(". ")
+      )
+    ),
+  });
+}
+
+// The registry is the source of truth for what exists; this catches the parser
+// silently going blind if the file is reformatted, which would drop every
+// comparison page out of search without failing anything else.
+const declaredSlugs = [
+  ...competitorsSource.matchAll(/^\s{2}\| "([a-z0-9-]+)"$|^export type CompetitorSlug =\s*\n\s{2}\| "([a-z0-9-]+)"$/gm),
+].map((m) => m[1] ?? m[2]);
+const unionSlugs = [
+  ...competitorsSource
+    .slice(
+      competitorsSource.indexOf("export type CompetitorSlug"),
+      competitorsSource.indexOf(";", competitorsSource.indexOf("export type CompetitorSlug"))
+    )
+    .matchAll(/"([a-z0-9-]+)"/g),
+].map((m) => m[1]);
+
+for (const slug of unionSlugs) {
+  if (!competitorSlugs.includes(slug)) {
+    errors.push(
+      `Competitor ${slug} is in the CompetitorSlug union in src/lib/competitors.ts but the search index builder did not find its entry. Either the entry is missing or the file was reformatted and scripts/build-search-index.mjs can no longer parse it.`
+    );
+  }
+}
+if (unionSlugs.length && competitorSlugs.length > unionSlugs.length) {
+  errors.push(
+    `The search index builder parsed ${competitorSlugs.length} competitor entries but the CompetitorSlug union declares ${unionSlugs.length}. The parser is picking up something that is not a competitor.`
+  );
+}
+
 
 /**
  * What can honestly be pulled out of a page component.

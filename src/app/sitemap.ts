@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { FEATURE_LIST } from "@/lib/features";
+import { COMPETITOR_LIST, competitorHref } from "@/lib/competitors";
 import { apiDocRoutes } from "@/lib/developers";
 import { docRoutes } from "@/lib/docs";
 import { SITE_URL } from "@/lib/site";
@@ -70,8 +71,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
       changeFrequency: "monthly",
     },
-    { path: "/compare/flight-schedule-pro", priority: 0.8, changeFrequency: "monthly" },
-    { path: "/compare/flight-circle", priority: 0.8, changeFrequency: "monthly" },
     { path: "/migrating/my-fbo", priority: 0.85, changeFrequency: "monthly" },
     { path: "/about", priority: 0.7, changeFrequency: "monthly" },
     { path: "/contact", priority: 0.8, changeFrequency: "monthly" },
@@ -84,6 +83,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: now,
     changeFrequency: route.changeFrequency,
     priority: route.priority,
+  }));
+
+  // Competitor comparison pages, generated from `lib/competitors.ts` rather than
+  // listed by hand for the same reason the docs are: a comparison page that ranks
+  // for a competitor's name is one of the few things this site ranks for at all,
+  // and leaving a new one out of the sitemap is silent.
+  const compareEntries: MetadataRoute.Sitemap = COMPETITOR_LIST.map((competitor) => ({
+    url: `${SITE_URL}${competitorHref(competitor.slug)}`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.8,
   }));
 
   const featureRoutes: MetadataRoute.Sitemap = FEATURE_LIST.filter(
@@ -120,5 +130,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: path === "/docs" ? 0.85 : path.split("/").length === 3 ? 0.75 : 0.65,
   }));
 
-  return [...staticEntries, ...featureRoutes, ...apiDocEntries, ...helpDocEntries];
+  return [
+    ...staticEntries,
+    ...featureRoutes,
+    ...compareEntries,
+    ...apiDocEntries,
+    ...helpDocEntries,
+  ];
 }

@@ -1,6 +1,7 @@
 
 // developers.ts imports only the ResourceLink *type* back from here, which is
 // erased at compile time, so this pair is not a runtime cycle.
+import { COMPETITOR_LIST, competitorHref } from "@/lib/competitors";
 import { DEVELOPER_LINKS } from "@/lib/developers";
 import { DOC_LINKS } from "@/lib/docs";
 
@@ -112,18 +113,19 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
     items: DEVELOPER_LINKS,
   },
   {
+    // Generated from `lib/competitors.ts` rather than listed by hand. These pages
+    // are where paid traffic lands, so a new one being absent from the nav and the
+    // resources index is the difference between it existing and it being found.
+    //
+    // The old hand-written Flight Circle blurb led on training records, which is
+    // the one argument that page deliberately does not make any more.
     title: "Compare",
     items: [
-      {
-        href: "/compare/flight-schedule-pro",
-        label: "vs Flight Schedule Pro",
-        description: "Self-serve, pricing, and mobile side-by-side.",
-      },
-      {
-        href: "/compare/flight-circle",
-        label: "vs Flight Circle",
-        description: "Training records: lessons ticked off, or hours that answer the checkride question.",
-      },
+      ...COMPETITOR_LIST.map((competitor) => ({
+        href: competitorHref(competitor.slug),
+        label: competitor.navLabel,
+        description: competitor.ogDescription,
+      })),
       {
         href: "/pricing",
         label: "Pricing",
