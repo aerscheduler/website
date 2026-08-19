@@ -57,15 +57,27 @@ export default function HomePage() {
 
         <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 pb-20 pt-16 sm:px-6 lg:grid-cols-[0.9fr_1.2fr] lg:gap-10 lg:pb-28 lg:pt-20">
           <div>
+            {/* The eyebrow does the category work the H1 deliberately does not.
+                Every paid click on the generic ad group lands here (that ad group
+                points at "/"), and somebody who just searched "flight school
+                management software" should not have to decode "command deck" to
+                learn what this is. It also keeps the exact phrase people search
+                in the first line of the page. */}
             <p className="animate-fade-up text-sm font-semibold tracking-tight text-primary">
-              AerScheduler
+              Flight school management software
             </p>
             <h1 className="animate-fade-up-delay-1 mt-3 max-w-xl text-[2.5rem] font-semibold leading-[1.08] tracking-tight text-brand-surface sm:text-5xl lg:text-[3.35rem]">
               The command deck for your flight school.
             </h1>
+            {/* Was a list of five modules, which answered "what is included" and
+                left "why this one" unanswered. Now: one system, live for everyone,
+                a published price, and how fast you can be running. Every clause is
+                a claim we can stand behind. */}
             <p className="animate-fade-up-delay-2 mt-5 max-w-lg text-lg leading-relaxed text-muted-foreground">
-              Scheduling, billing, training records, maintenance, and reporting
-              on one system, on the web and in a native iOS app.
+              The schedule, the invoice and the maintenance record in one system,
+              updating live for everyone at once. Set it up this afternoon for
+              ${PRICE_PER_AIRCRAFT} per aircraft, with every instructor, student
+              and renter included.
             </p>
             <div className="animate-fade-up-delay-3 mt-8 flex flex-wrap items-center gap-3">
               <Button href={SIGNUP_URL} size="lg">
@@ -77,9 +89,12 @@ export default function HomePage() {
                 See the live demo
               </Button>
             </div>
+            {/* "No sales call" earns its place here: every established competitor
+                in this market is demo-led, so it is the fastest differentiator to
+                read. */}
             <p className="animate-fade-up-delay-3 mt-4 text-sm text-muted-foreground">
-              {TRIAL_DAYS}-day free trial · No credit card · Or explore the demo with no
-              signup
+              {TRIAL_DAYS}-day free trial · No credit card · No sales call · Or
+              explore the demo with no signup
             </p>
           </div>
 
