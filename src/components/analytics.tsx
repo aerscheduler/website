@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useRef } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { captureAttribution } from "@/lib/attribution";
-import { onConsentChange } from "@/lib/consent";
+import { hasConsent, onConsentChange } from "@/lib/consent";
 import {
   startAnalytics,
   startConsentMode,
@@ -53,6 +53,18 @@ function AnalyticsInner() {
   //
   // The listener fires in BOTH directions, so withdrawing consent pushes an update of
   // denied rather than leaving the tag granted for the rest of the visit.
+  // The path a pageview has actually been RECORDED for, which is not the same as
+  // the path we tried to send one for. `track()` drops events outright when consent
+  // is absent (analytics.ts, "no consent: drop, never queue"), so a visitor who
+  // lands and only then accepts the banner had their landing pageview thrown away,
+  // and no route change ever comes along to send another. Their whole visit shows
+  // up as page_time and $pageleave against a page PostHog never saw them open.
+  //
+  // Found on 2026-08-20: both of the only two consenting paid visitors we have had
+  // were in exactly this state, so a funnel built on $pageview counted zero of them.
+  const recordedFor = useRef<string | null>(null);
+  const currentKey = useRef<string>("");
+
   useEffect(() => {
     captureAttribution();
     startConsentMode();
@@ -61,6 +73,15 @@ function AnalyticsInner() {
     return onConsentChange(() => {
       syncGoogleConsent();
       startAnalytics();
+      // Accepting the banner is the moment the dropped landing pageview becomes
+      // sendable. Only the current page is replayed, never a backlog: declining
+      // must still leave no trace, and re-sending everything they did while
+      // undecided would defeat the point of asking.
+      if (hasConsent() && recordedFor.current !== currentKey.current) {
+        recordedFor.current = currentKey.current;
+        const [path, search] = currentKey.current.split("?");
+        trackPageview(path, { search: search || undefined });
+      }
     });
   }, []);
 
@@ -78,7 +99,12 @@ function AnalyticsInner() {
 
     previousPath.current = pathname;
     enteredAt.current = now;
-    trackPageview(pathname, { search: searchParams.toString() || undefined });
+    const search = searchParams.toString();
+    currentKey.current = search ? `${pathname}?${search}` : pathname;
+    trackPageview(pathname, { search: search || undefined });
+    // Only claim it landed if it could have. Without consent `track()` dropped it,
+    // and the consent listener above is what will send it later.
+    if (hasConsent()) recordedFor.current = currentKey.current;
   }, [pathname, searchParams]);
 
   // The last page of the visit never gets a route change, so it needs its own exit hook.
