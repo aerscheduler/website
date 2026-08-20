@@ -100,6 +100,29 @@ export const DOC_SECTIONS: DocSection[] = [
         seoQuery: "flight school software user roles permissions",
       },
       {
+        slug: "permissions-and-grants",
+        title: "Give one person an extra permission",
+        description:
+          "Roles say what somebody is to your school. Permissions say what they may do. Give a bookkeeper the invoice list without making them an admin, or let one instructor bill their own ground time, from that person's record.",
+        kind: "task",
+        audience: ["Owners", "Admins"],
+        seoQuery: "flight school software give staff member permission without admin",
+        faqs: [
+          {
+            q: "Do I have to give everybody permissions now?",
+            a: "No. Every role already carries the permissions it has always had, so a school that never opens this screen behaves exactly as it did before. Permissions only ever add.",
+          },
+          {
+            q: "Can I use a permission to take something away?",
+            a: "No, they only widen. If somebody can do something because of a role they hold, the switch for it is shown on and locked. To take it away, remove the role in Edit roles.",
+          },
+          {
+            q: "Should a treasurer be a new role?",
+            a: "No. Give them See invoices and balances, See revenue reports and Raise an invoice, and leave them off admin. That is the whole point of permissions: a job title becomes a set of switches rather than a new kind of person.",
+          },
+        ],
+      },
+      {
         slug: "invite-people",
         title: "Invite people to your school",
         description:

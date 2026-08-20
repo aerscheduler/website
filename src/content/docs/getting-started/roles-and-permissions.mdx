@@ -4,6 +4,16 @@ are additive and there is no ladder, so a person can hold any combination or non
 them from <Where app="web">People → ⋯ → Edit roles</Where>.
 </Summary>
 
+## Roles are not the only thing that decides access
+
+A role says what somebody **is** to your school, and it carries data: the instructor row
+is what holds their students and their ratings. A **permission** says what somebody may
+**do**, and carries nothing.
+
+That split matters because it is what lets you give a bookkeeper the invoice list without
+making them an administrator. This page covers roles. For the other half, see [Give one
+person an extra permission](/docs/getting-started/permissions-and-grants).
+
 ## Roles hang off the school, not the person
 
 Your account (name, email, password, photo) is global. Your roles belong to your
@@ -32,8 +42,10 @@ Two words appear throughout the product and are worth learning:
 
 <Callout type="tip">
 Roles add up. A student who is also a renter can book everything a student can, plus
-rentals. If somebody is missing a button, the usual fix is one more role, not a different
-one.
+rentals. If somebody is missing a button, one more role is one answer, but it is usually
+the blunter one. See [Give one person an extra
+permission](/docs/getting-started/permissions-and-grants) before you make somebody an
+admin just to unlock a single screen.
 </Callout>
 
 ## Which pages each role can open
@@ -195,6 +207,11 @@ the **No role yet** filter on People.
     Access changes immediately, everywhere: console, phone app and API.
   </Step>
 </Steps>
+
+<Callout type="note">
+Removing a role removes everything that came with it. Anything given to that person
+individually on their **Permissions** tab stays, because it was never attached to the role.
+</Callout>
 
 Three refusals you may meet:
 

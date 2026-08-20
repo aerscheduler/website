@@ -1,0 +1,106 @@
+<Summary>
+Roles say what somebody **is** to your school. Permissions say what they may **do**. Give
+one person an extra permission from <Where app="web">People → the person → Permissions</Where>,
+without making them an admin.
+</Summary>
+
+## Why this exists
+
+Until now there was one lever. Somebody needed to see the invoice list, or build a
+syllabus, or close out flights, and the only way to allow it was to make them an
+administrator, which also let them hand out roles, refund cards and change your billing.
+
+Permissions split that up. A bookkeeper gets the invoice list and nothing else. A chief
+instructor gets the syllabus and not the money. The job title becomes a set of switches
+rather than a new kind of person.
+
+## Roles and permissions are different things
+
+A **role** is what somebody is. It carries data with it: an instructor row is what holds
+their students and their ratings, a renter row is what decides which seat they take on a
+booking. That is why you change roles in Edit roles and not here.
+
+A **permission** is what somebody may do. It carries nothing. Give it, take it back,
+nothing else about the person changes.
+
+<Callout type="note">
+Permissions only ever **add**. Nothing on this screen can take away something a role
+already gives. If a switch is on and locked, that is why, and the badge beside it names
+the role it comes from. To remove it, remove the role.
+</Callout>
+
+## Give somebody a permission
+
+<Steps>
+  <Step n={1} title="Open the person, then Permissions">
+    From <Where app="web">People</Where>, open the person and pick **Permissions** in the
+    left rail. Owners and admins only.
+  </Step>
+  <Step n={2} title="Read the description before you tick it">
+    Every permission says what it does and what it costs to hand over. "See revenue
+    reports" is the one worth reading twice: it shows that person what every instructor
+    earns and what every customer paid.
+  </Step>
+  <Step n={3} title="Turn it on">
+    Money permissions and **Assign roles** ask you to confirm. The rest take effect
+    immediately, everywhere: console, phone app and API.
+  </Step>
+</Steps>
+
+To take one back, turn the switch off. If it will not move, that permission comes from a
+role.
+
+## What each group covers
+
+| Group | What is in it |
+|---|---|
+| Financial | Invoices, member balances, revenue reports, pricing, memberships, billing setup |
+| Scheduling | Managing and cancelling other people's bookings, standby offers, the lock window |
+| Fleet | Aircraft, maintenance, squawks, grounding a tail, checkouts |
+| People | The roster, contact details, grounding a member, assigning roles |
+| Compliance | Member documents, currencies, member records |
+| Training | Syllabi, enrolments, the check-instructor designation, auditor access |
+| Organisation | School settings, API keys, announcements, the audit trail |
+
+## Three worth understanding before you give them
+
+**Assign roles.** Whoever holds this can make themselves or anybody else an
+administrator. It is the one permission that can be used to take the school over.
+
+**See revenue reports.** Revenue is broken down by instructor and by customer, so this
+shows a part-time bookkeeper what every CFI on staff earns and what every student paid.
+If they only need to chase unpaid invoices, give them **See invoices and balances**
+instead, which shows who owes money without showing what colleagues earn.
+
+**Billing setup.** Owner only, and deliberately not something an admin can be given. It
+connects your Stripe payout account and switches your billing model for every member.
+
+## Check instructor works differently
+
+The check-instructor designation applies to **one course**, because Part 141 §141.37
+designates a person for a specific approved course. Somebody cleared to give Instrument
+stage checks is not thereby cleared to give Commercial ones. Set it from
+<Where app="web">Training → Permissions</Where>, where you also pick the course.
+
+Every other permission applies to the whole school.
+
+## Seeing it from the phone
+
+An administrator can open somebody's record in the iOS app and read their permissions
+under **More → Permissions**. It is read-only there: handing over authority over money or
+the roster is a decision worth making at a desk, and the screen tells you where.
+
+## A treasurer, worked through
+
+Somebody comes in two days a week to chase unpaid invoices and reconcile payments. They
+do not need to see the schedule, and they must not be able to change anybody's roles.
+
+Give them: **See invoices and balances**, **Raise an invoice**, **Record payments**. Leave
+them off admin entirely, and leave **See revenue reports** off unless you want them to see
+what your instructors earn.
+
+<Callout type="warning">
+A permission is not a role, so it does not appear on the roster or in Edit roles. If you
+are wondering why somebody can do something you did not expect, their Permissions tab is
+where to look, not their roles.
+</Callout>
