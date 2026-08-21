@@ -412,6 +412,7 @@ const PAGE_META = {
   "/resources": { group: "Guides", title: "All guides" },
   "/privacy": { group: "Pages", title: "Privacy policy" },
   "/terms-and-conditions": { group: "Pages", title: "Terms and conditions" },
+  "/delete-account": { group: "Pages", title: "Delete your account" },
   "/migrating/my-fbo": { group: "Guides", title: "MyFBO alternative & migration" },
   "/resources/flight-school-scheduling-software": { group: "Guides", title: "Scheduling software" },
   "/resources/quickbooks-integration": { group: "Guides", title: "QuickBooks integration" },

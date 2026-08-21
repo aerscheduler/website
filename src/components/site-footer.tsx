@@ -84,6 +84,9 @@ export function SiteFooter() {
             <Link href="/terms-and-conditions" className="hover:text-foreground">
               Terms
             </Link>
+            <Link href="/delete-account" className="hover:text-foreground">
+              Delete account
+            </Link>
             <Link href="/contact" className="hover:text-foreground">
               Support
             </Link>

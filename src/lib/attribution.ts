@@ -170,7 +170,10 @@ export function captureAttribution(): Attribution | null {
     const src = clean(params.get("src") ?? params.get("ref"));
     const tagged = Object.fromEntries(
       PARAM_KEYS.map((k) => [k, clean(params.get(k))]).filter(([, v]) => v)
-    );
+    ) as Partial<Pick<Attribution, (typeof PARAM_KEYS)[number]>>;
+    if (tagged.gclid && !looksLikeGoogleClickId(tagged.gclid)) {
+      delete tagged.gclid;
+    }
 
     // An untagged visit from another site is still worth attributing, because that is how
     // organic search, forums and word of mouth show up. An untagged visit with no
@@ -213,6 +216,15 @@ function externalReferrer(): string | undefined {
 }
 
 /**
+ * Real Google click IDs are long mixed alphanumeric strings. Short numeric values
+ * like `1230859287` showed up overnight on 16 Aug and were counted as paid-search.
+ */
+export function looksLikeGoogleClickId(value: string | undefined): boolean {
+  if (!value) return false;
+  return value.length >= 20 && /[A-Za-z]/.test(value) && /\d/.test(value);
+}
+
+/**
  * The channel this visit belongs to, for reporting.
  *
  * Deliberately coarse: "paid-search", "paid-social", "organic", "referral", "direct".
@@ -220,7 +232,7 @@ function externalReferrer(): string | undefined {
  */
 export function channelOf(a: Attribution | null): string {
   if (!a) return "direct";
-  if (a.gclid) return "paid-search";
+  if (looksLikeGoogleClickId(a.gclid)) return "paid-search";
   if (a.fbclid) return "paid-social";
 
   const medium = a.utm_medium?.toLowerCase();
