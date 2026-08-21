@@ -22,16 +22,24 @@ location, come back, and the picker works. You only do this once per airport.
   <Step n={1} title="Open Aircraft and press Add aircraft">
     Admins and owners only. Everybody else can view the fleet but not change it.
   </Step>
-  <Step n={2} title="Enter the tail number">
+  <Step n={2} title="Start typing the tail number">
     This is what appears on the dispatch board, on invoices and in every report.
+
+    As you type, matches from the public US aircraft registry appear underneath. Pick
+    yours and the make, model, year, category, class, engine and seats fill themselves
+    in. Everything it fills stays editable.
+
+    Nothing appears for a registration outside the US, or for a very new one. That is
+    normal and not an error: carry on and type the fields yourself.
   </Step>
-  <Step n={3} title="Optionally pick a Type template">
-    Cessna 172, Cessna 152, Piper PA-28, Diamond DA40, Cirrus SR20, or Other. It prefills
-    make, model, category and class, fuel capacity and a suggested rate. Everything it
-    fills in stays editable.
+  <Step n={3} title="Check the category and class">
+    Category is what the aircraft is, airplane, rotorcraft, glider and so on. Class
+    narrows to the ones that belong to that category. See
+    [Categories, classes and meters](/docs/getting-started/aircraft-categories-and-meters).
   </Step>
-  <Step n={4} title="Fill in make, model, year, and category and class">
-    Single or multi-engine, land or sea.
+  <Step n={4} title="Fill in anything the lookup could not">
+    Make and model are required. Year, engine, fuel, gear and seats are optional and can
+    wait.
   </Step>
   <Step n={5} title="Enter the current Hobbs and the current tach">
     Type the readings exactly as they show on the meters, for example 1234.5. These are the
@@ -39,7 +47,7 @@ location, come back, and the picker works. You only do this once per airport.
     off the actual aircraft rather than off a spreadsheet.
   </Step>
   <Step n={6} title="Enter fuel capacity and its unit">
-    Gallons or liters.
+    Optional. Gallons or liters.
   </Step>
   <Step n={7} title="Set the hourly rate and the rate basis">
     **Wet** means the rate includes fuel. **Dry** means it does not.
@@ -80,9 +88,9 @@ More on what happens to those numbers at close-out in
 
 ## Editing an aircraft later
 
-Open the tail and press **Edit**. It is the same form, except **Type template** is fixed to
-**Other**, so a template cannot silently overwrite the real details of an aircraft you have
-already been flying.
+Open the tail and press **Edit**. It is the same form, filled in with what is already on
+record. The tail-number lookup still works if you need it, but nothing is overwritten
+unless you pick a match yourself.
 
 ## After the tail is in
 

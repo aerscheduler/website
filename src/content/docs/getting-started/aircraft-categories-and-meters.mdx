@@ -1,0 +1,93 @@
+<Summary>
+<Where app="web">Aircraft → Add aircraft</Where>, or **Edit** on a tail you already have.
+Category and class describe what the aircraft is. Meters describe what it has fitted, and
+that one decides whether its flights are invoiced automatically.
+</Summary>
+
+<Roles>Owners, Admins</Roles>
+
+## Category and class
+
+These are the same two words a certificate uses, and they are asked as two questions
+because that is how they work: a class belongs to exactly one category.
+
+Pick the category first. The class list then narrows to the ones that belong to it, so a
+helicopter can only be a rotorcraft class and never "multi-engine sea".
+
+| Category | Classes |
+|---|---|
+| Airplane | Single-engine land, multi-engine land, single-engine sea, multi-engine sea |
+| Rotorcraft | Helicopter, gyroplane |
+| Glider | None |
+| Lighter than air | Airship, balloon |
+| Powered lift | None |
+| Powered parachute | Land, sea |
+| Weight-shift control | Land, sea |
+
+A glider and a powered lift have no class rating at all, so the **Class** field switches
+itself off rather than asking you for something that does not exist.
+
+If you fly an amphibian, the lookup leaves the class empty on purpose. It can operate off
+land or water and only you know which it does here, so pick the one that matches how the
+school actually uses it.
+
+## Filling it in from the tail number
+
+Start typing the registration and matches from the public US aircraft registry appear
+under the field. Pick yours and the make, model, year, category, class, engine and seats
+fill in together.
+
+The registry is a convenience, never a gate. It covers US registrations only, so a
+non-US tail simply shows no matches: type the fields yourself and save exactly as normal.
+Nothing you enter is checked against it.
+
+## Meters
+
+**Meters** says which meters the aircraft actually has: Hobbs and tach, Hobbs only, tach
+only, or none.
+
+This is not a display preference. Billable hours are worked out as the difference between
+two meter readings at close-out, so it changes what happens to money:
+
+| Setting | What close-out bills |
+|---|---|
+| Hobbs and tach | Whichever meter **Bill by Hobbs time** selects |
+| Hobbs only | Hobbs |
+| Tach only | Tach |
+| None | Nothing. The flight is **not invoiced automatically** |
+
+<Callout kind="warning" title="None means you invoice by hand">
+A glider or a balloon has no meter to read, so there is no quantity to bill from. Those
+bookings still work in every other way: they appear on the board, they ramp out and ramp
+in, and they close out. They just do not produce an invoice on their own, so raise those
+yourself from <Where app="web">Billing</Where>.
+</Callout>
+
+Everything else stays the same. Setting **None** does not restrict who can book the
+aircraft, and it does not affect maintenance.
+
+## Engine, fuel, gear and seats
+
+All optional, and all there so you can find and judge an aircraft later rather than
+because anything is calculated from them.
+
+- **Engine** and **Fuel** describe the powerplant. Electric is a real option, and a glider
+  takes "None".
+- **Gear** is tricycle, tailwheel, skids, floats, amphibious or skis. Tailwheel is worth
+  filling in, because it is the sort of thing an instructor needs to know before a member
+  is signed off on the aircraft.
+- **Seats** is how many people the airframe holds.
+
+Leave any of them blank if you do not know. An empty field is more honest than a guess,
+and none of them stop the aircraft being booked.
+
+## After this
+
+<CardGrid>
+  <DocCard href="/docs/getting-started/add-an-aircraft" title="Add an aircraft">
+    The whole form, field by field.
+  </DocCard>
+  <DocCard href="/docs/billing/how-billing-works" title="How billing works">
+    What close-out does with the meter readings.
+  </DocCard>
+</CardGrid>

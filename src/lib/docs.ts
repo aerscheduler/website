@@ -150,6 +150,15 @@ export const DOC_SECTIONS: DocSection[] = [
         seoQuery: "add an aircraft to flight school scheduling software",
       },
       {
+        slug: "aircraft-categories-and-meters",
+        title: "Categories, classes and meters",
+        description:
+          "What each field on an aircraft means: category and class in the same words a certificate uses, and which meters the aircraft has. Meters decide whether its flights are invoiced automatically.",
+        kind: "reference",
+        audience: ["Owners", "Admins"],
+        seoQuery: "flight school software helicopter glider category class",
+      },
+      {
         slug: "add-a-simulator-or-classroom",
         title: "Add a simulator or a classroom",
         description:
