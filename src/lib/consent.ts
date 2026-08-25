@@ -15,11 +15,25 @@
  * open on the topic they were reading about. If that line ever needs to move, it moves in
  * one place: call `hasConsent()` at the top of `captureAttribution`.
  *
- * ## Until they answer
+ * ## Until they answer, and where we ask at all
  *
- * Undecided is treated as "no". Nothing third-party loads, so a visitor who ignores the
- * banner is never tracked. That does cost some measured traffic, which is the deliberate
- * trade.
+ * **In the EEA, the UK and Switzerland** undecided is treated as "no". Nothing
+ * third-party loads, so a visitor who ignores the banner is never tracked. That is what
+ * ePrivacy requires.
+ *
+ * **Everywhere else** analytics run by default and the banner does not block, because
+ * those regimes are opt-OUT (CPRA and the similar state acts) rather than opt-in.
+ * Withdrawal is still offered, GPC is still honoured, and an explicit Decline is still
+ * obeyed everywhere.
+ *
+ * This changed on 2026-08-25. Until then the blocking banner was shown to everyone, and
+ * the measured cost was severe: **72% of visitors are US and 9% EEA/UK**, yet the
+ * marketing site recorded only one to six sessions a day while Google Ads counted 83
+ * clicks over the same period. We were applying the strictest regime on earth to traffic
+ * it does not govern, and going blind on the traffic we pay for.
+ *
+ * An unknown country falls back to asking. Guessing wrong in the permissive direction is
+ * the expensive mistake, so it is the one we do not make.
  *
  * ## Global Privacy Control
  *
@@ -36,6 +50,7 @@
  */
 
 import { readCookie, writeSharedCookie } from "./cookies";
+import { getVisitorCountry, isConsentImpliedRegion } from "./geo";
 
 export const CONSENT_COOKIE = "aer_consent";
 
@@ -58,9 +73,30 @@ export function hasGlobalPrivacyControl(): boolean {
 export function readConsent(): ConsentState {
   const raw = readCookie(CONSENT_COOKIE);
   if (raw === "granted" || raw === "denied") return raw;
-  // No stored decision: a GPC signal is one, and it is a "no".
+  // No stored decision: a GPC signal is one, and it is a "no". Checked before region,
+  // because an explicit opt-out beats a regional default in every jurisdiction.
   if (hasGlobalPrivacyControl()) return "denied";
   return "unset";
+}
+
+/**
+ * Settle consent on first load and report whether the banner still has to block.
+ *
+ * Mirrors `bootstrapAnalyticsConsent()` in the console. Call it once, from the client.
+ *
+ * Writes the cookie in implied regions rather than only returning "granted", so the
+ * decision is durable, shared across `.aerscheduler.com`, and visible to the console on
+ * the very first request after the domain hop.
+ */
+export function bootstrapConsent(): { shouldPrompt: boolean } {
+  const existing = readConsent();
+  if (existing !== "unset") return { shouldPrompt: false };
+
+  if (isConsentImpliedRegion(getVisitorCountry())) {
+    setConsent("granted");
+    return { shouldPrompt: false };
+  }
+  return { shouldPrompt: true };
 }
 
 export function hasConsent(): boolean {

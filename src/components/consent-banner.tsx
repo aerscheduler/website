@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { readConsent, setConsent } from "@/lib/consent";
+import { bootstrapConsent, setConsent } from "@/lib/consent";
 
 /**
  * The cookie banner.
@@ -19,7 +19,10 @@ export function ConsentBanner() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (readConsent() === "unset") setVisible(true);
+    // Client-side only, so the banner never flashes at somebody who already decided or
+    // who is outside the opt-in regions. bootstrapConsent() writes "granted" in those
+    // regions, which notifies the analytics loader for us.
+    setVisible(bootstrapConsent().shouldPrompt);
   }, []);
 
   if (!visible) return null;
