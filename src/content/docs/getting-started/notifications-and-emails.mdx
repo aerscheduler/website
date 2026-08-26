@@ -1,8 +1,8 @@
 <Summary>
-Email, push, and SMS switches all live on <Where app="web">Notification settings</Where>,
+Email and push switches all live on <Where app="web">Notification settings</Where>,
 reached from the account menu at the foot of the left rail, and on
 <Where app="mobile">Settings → Notifications</Where> in the app. Channels are per school and
-save as you touch them. SMS needs a verified US mobile on your profile first.
+save as you touch them.
 </Summary>
 
 ## Two places, two different jobs
@@ -10,7 +10,7 @@ save as you touch them. SMS needs a verified US mobile on your profile first.
 | | Where | What it holds |
 |---|---|---|
 | **Notifications** (the bell) | Topbar in the console, the Inbox bubble in the app | Everything that has happened to you, with an unread count. Paged and searchable |
-| **Notification settings** | Account menu → Notification settings | Which of those things also reach you by email, push, or SMS |
+| **Notification settings** | Account menu → Notification settings | Which of those things also reach you by email or push |
 
 In the iOS app, tapping a notification takes you to the thing it is about.
 
@@ -18,7 +18,7 @@ In the web console, the bell and unread count update live when something new lan
 without refreshing the page.
 
 
-## Choose which emails, push, and SMS alerts you get
+## Choose which emails and push alerts you get
 
 <Steps>
   <Step n={1} title="Open the account menu at the foot of the left rail and choose Notification settings">
@@ -27,15 +27,9 @@ without refreshing the page.
   <Step n={2} title="Leave Email notifications and Push notifications on">
     Each channel has its own master switch at the top of its card. Everything below is a category.
   </Step>
-  <Step n={3} title="For SMS, verify a US mobile first">
-    SMS is available for **US mobile numbers only**. Add your mobile on Profile, send a
-    verification code, then turn on SMS notifications. Reply STOP on any AerScheduler text to
-    opt out; reply HELP for help. Message and data rates may apply. SMS is included in your
-    plan, not a separate add-on.
-  </Step>
-  <Step n={4} title="Turn off the categories you do not want">
+  <Step n={3} title="Turn off the categories you do not want">
     Each one saves immediately. There is no Save button. Channels are independent: turning
-    reservation email off does not turn reservation push or SMS off.
+    reservation email off does not turn reservation push off.
 
     <Screenshot id="me-notifications" />
   </Step>
@@ -60,8 +54,7 @@ is why two people at the same school see different pages.
 
 <Callout type="note">
 Every category starts **on**. A switch you have never touched behaves as on, so a quiet
-category means nothing is happening, not that it is off. SMS itself starts **off** until you
-verify and enable it.
+category means nothing is happening, not that it is off.
 </Callout>
 
 <Screenshot id="notification-preferences-maintenance" />
@@ -69,7 +62,7 @@ verify and enable it.
 ## Push delivery still needs the phone
 
 You can choose push categories from the console. The alerts themselves only land on a device
-with the AerScheduler iOS app signed in. Android users get email (and SMS, if enabled) instead.
+with the AerScheduler iOS app signed in. Android users get email instead.
 
 ## What the master switch does not stop
 

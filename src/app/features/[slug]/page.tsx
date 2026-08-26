@@ -85,7 +85,7 @@ const FEATURE_SEO: Record<
   integrations: {
     title: "Flight School Software Integrations",
     description:
-      "Stripe, Google Calendar, QuickBooks Online, and US SMS available now. Integrations on every plan.",
+      "Stripe, Google Calendar, and QuickBooks Online available now. Integrations on every plan.",
   },
 };
 

@@ -35,7 +35,7 @@ const PEOPLE: Person[] = [
       "Member since 2019 · Owner role",
       "Can manage fleet, people, and invoices",
       "Not grounded · currencies N/A for desk",
-      "Preferred contact · SMS",
+      "Preferred contact · Email",
     ],
   },
   {
