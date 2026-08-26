@@ -56,12 +56,31 @@ two meter readings at close-out, so it changes what happens to money:
 | Tach only | Tach |
 | None | Nothing. The flight is **not invoiced automatically** |
 
+Choosing **Glider** or **Lighter than air** sets Meters to **None** for you, because
+neither has an engine to meter. You can still change it if your aircraft is the exception,
+a self-launching motorglider being the usual one.
+
 <Callout kind="warning" title="None means you invoice by hand">
 A glider or a balloon has no meter to read, so there is no quantity to bill from. Those
-bookings still work in every other way: they appear on the board, they ramp out and ramp
-in, and they close out. They just do not produce an invoice on their own, so raise those
-yourself from <Where app="web">Billing</Where>.
+bookings work in every other way: they appear on the board, they dispatch, they ramp out
+and ramp in, and they close out. They just do not produce an invoice on their own, so
+raise those yourself from <Where app="web">Billing</Where>.
 </Callout>
+
+## Closing out an aircraft with no meters
+
+It ramps exactly like any other tail. What changes is that the ramp screens ask for
+nothing: there is no Hobbs box and no tach box, because there is no reading to take. Press
+**Ramp out** when it leaves and **Ramp in** when it is back, and the close-out records the
+time it departed and the time it returned. Those two times appear on the booking.
+
+On a dual flight you are still asked for the instruction time, and that half **is** billed
+at the instructor rate. So a glider lesson invoices the instruction and nothing for the
+airframe, and a solo produces no invoice at all.
+
+Because there is no rate to charge, the aircraft form hides **Rate**, **Rate basis** and
+**Bill by Hobbs time** once Meters is None. Nothing you typed there is lost. Switch Meters
+back and the figures come straight back with it.
 
 Everything else stays the same. Setting **None** does not restrict who can book the
 aircraft, and it does not affect maintenance.
