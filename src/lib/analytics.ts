@@ -50,6 +50,18 @@ const POSTHOG_KEY =
 const POSTHOG_HOST = process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "https://us.i.posthog.com";
 
 /**
+ * Whether this build should report to PostHog at all. See the same block in the
+ * console: `localhost:3000` contributed 399 pageviews to the marketing site's
+ * numbers in a 30-day window where the real site only had 305, so dev traffic
+ * was the majority of what the charts showed. Opt back in for local
+ * verification with `NEXT_PUBLIC_POSTHOG_DEV=1`.
+ */
+const IS_DEV = process.env.NODE_ENV === "development";
+const DEV_OPT_IN = process.env.NEXT_PUBLIC_POSTHOG_DEV === "1";
+const ANALYTICS_ENABLED = !IS_DEV || DEV_OPT_IN;
+const ENVIRONMENT = IS_DEV ? "development" : "production";
+
+/**
  * Ad platform ids. Unset until the accounts exist, and every call site degrades to a
  * no-op rather than throwing, because the site must not depend on an ad account being live.
  */
@@ -141,7 +153,7 @@ export function startAnalytics(): void {
 }
 
 function startPostHog(): void {
-  if (!POSTHOG_KEY) return;
+  if (!POSTHOG_KEY || !ANALYTICS_ENABLED) return;
 
   void import("posthog-js")
     .then(({ default: posthog }) => {
@@ -176,12 +188,21 @@ function initPostHog(posthog: PostHog): void {
     persistence: "cookie",
     autocapture: true,
     session_recording: { maskAllInputs: true },
+    // Crash reporting. Off by default in posthog-js. A marketing page that throws
+    // renders a blank screen and still reports a healthy pageview, so without this
+    // a broken landing page and a working one produce identical analytics.
+    capture_exceptions: true,
     // Consent is handled by our own banner; PostHog should just run once started.
     opt_out_capturing_by_default: false,
   });
 
   // Stamp the campaign onto every event and onto the person, so any chart in PostHog can
   // be split by campaign without repeating the property at each call site.
+  // Unconditional: an unattributed visitor is still a visitor, and tagging the
+  // environment only for attributed ones would leave dev traffic unlabelled in
+  // exactly the case it is hardest to spot.
+  posthog.register({ environment: ENVIRONMENT });
+
   const attribution = readAttribution();
   if (attribution) {
     posthog.register({
