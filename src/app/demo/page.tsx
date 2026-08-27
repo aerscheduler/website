@@ -9,6 +9,7 @@ import {
   ShieldCheck,
   RotateCcw,
 } from "lucide-react";
+import Link from "next/link";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/button";
 import { ProductMock } from "@/components/product-mock";
@@ -19,6 +20,7 @@ import {
   SITE_NAME,
   SITE_URL,
   TRIAL_DAYS,
+  BOOK_DEMO_PATH,
 } from "@/lib/site";
 
 const TITLE = "Live Demo: Try Flight School Software, No Signup";
@@ -147,6 +149,16 @@ export default function DemoPage() {
               Opens instantly · Nothing here is real · Resets itself, so poke around
               freely
             </p>
+            {/* The white-glove path. Most visitors want the sandbox, but a school
+                migrating off another platform wants a person, and this page is
+                where they arrive looking for one. */}
+            <p className="mt-3 text-sm text-muted-foreground">
+              Would rather be walked through it?{" "}
+              <Link href={BOOK_DEMO_PATH} className="font-semibold text-primary hover:underline">
+                Book a demo with a real person
+              </Link>
+              .
+            </p>
           </div>
 
           <div className="mt-12 flex min-w-0 justify-center lg:mt-0">
@@ -252,6 +264,12 @@ export default function DemoPage() {
             >
               Start {TRIAL_DAYS}-day free trial
             </Button>
+            <Link
+              href={BOOK_DEMO_PATH}
+              className="text-sm font-semibold text-white/75 underline-offset-4 hover:text-white hover:underline"
+            >
+              Book a demo instead
+            </Link>
           </div>
         </div>
       </section>

@@ -21,6 +21,7 @@ const COMPANY = [
   // which would otherwise leave a page sitting at 0.95 in the sitemap with
   // nothing pointing at it: the state search engines read as "abandoned".
   { href: "/demo", label: "Demo" },
+  { href: "/book-a-demo", label: "Book a demo" },
   { href: "/login", label: "Login" },
 ];
 

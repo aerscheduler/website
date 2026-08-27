@@ -52,6 +52,10 @@ export function Button({
       // Google and Meta so their bidding optimises for it, since the actual account
       // creation happens on a domain their tag isn't on.
       trackConversion("signup_started", shared);
+    } else if (href.includes("calendar.app.google")) {
+      // Leaving for Google's booking page. Checked BEFORE the demo branch because
+      // the booking CTA lives on /book-a-demo and would otherwise look like one.
+      trackConversion("demo_booked", shared);
     } else if (href.includes("/demo")) {
       trackConversion("demo_opened", shared);
     } else {

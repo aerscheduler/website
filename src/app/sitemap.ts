@@ -14,6 +14,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // High-intent: "flight school software demo / try / no signup" are shopping
     // searches. The page ranks and hands the click straight to the live sandbox.
     { path: "/demo", priority: 0.95, changeFrequency: "monthly" },
+    // "book a demo" is its own shopping search, and it is the one prospects
+    // migrating off another platform type. Ranks separately from /demo.
+    { path: "/book-a-demo", priority: 0.9, changeFrequency: "monthly" },
     { path: "/features", priority: 0.95, changeFrequency: "monthly" },
     { path: "/product", priority: 0.9, changeFrequency: "monthly" },
     { path: "/app", priority: 0.9, changeFrequency: "monthly" },

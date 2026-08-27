@@ -23,6 +23,27 @@ export const LOGIN_URL = `${APP_URL}/login`;
 export const DEMO_URL = `${APP_URL}/demo`;
 
 /**
+ * The sales calendar: a real person, on a call, at a time the visitor picks.
+ *
+ * Most of the site pushes self-serve, and most schools never need this. Migrations
+ * are the exception: someone leaving another platform is carrying years of aircraft,
+ * people, and money, and what they want before they move is a name and a promise that
+ * somebody will be there. That is what this link is for, so it sits BESIDE the live
+ * demo and the trial rather than in front of them.
+ *
+ * This is the short share link from Google Calendar appointment scheduling. It opens
+ * Google's own booking page. If we ever want the picker embedded in an iframe on
+ * /book-a-demo instead, that needs the LONG scheduling URL with `?gv=true`; the short
+ * link refuses to frame.
+ */
+export const SALES_CALENDAR_URL = "https://calendar.app.google/EXydLEGKos1bPbdW8";
+
+/** The marketing page that wraps the calendar in context. Every in-site CTA points
+ *  here, not straight at Google, so the click is measurable and the page can set
+ *  expectations about what the call actually is. */
+export const BOOK_DEMO_PATH = "/book-a-demo";
+
+/**
  * Campaign slugs a page can hand to the app.
  *
  * The app maps these to a setup-checklist ordering (`web/src/lib/onboarding-tracks.ts`),

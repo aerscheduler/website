@@ -406,6 +406,7 @@ const PAGE_META = {
   "/integrations": { group: "Features", title: "Integrations" },
   "/app": { group: "Pages", title: "iPhone app" },
   "/demo": { group: "Pages", title: "Live demo" },
+  "/book-a-demo": { group: "Pages", title: "Book a demo" },
   "/about": { group: "Pages", title: "About" },
   "/contact": { group: "Pages", title: "Contact" },
   "/login": { group: "Pages", title: "Log in" },

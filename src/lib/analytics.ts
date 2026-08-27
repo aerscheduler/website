@@ -78,6 +78,7 @@ const GOOGLE_CONVERSIONS: Record<ConversionName, string | undefined> = {
   activated: process.env.NEXT_PUBLIC_GADS_LABEL_ACTIVATED,
   subscribed: process.env.NEXT_PUBLIC_GADS_LABEL_SUBSCRIBED,
   demo_opened: process.env.NEXT_PUBLIC_GADS_LABEL_DEMO_OPENED,
+  demo_booked: process.env.NEXT_PUBLIC_GADS_LABEL_DEMO_BOOKED,
   contact_submitted: process.env.NEXT_PUBLIC_GADS_LABEL_CONTACT,
 };
 
@@ -88,6 +89,9 @@ const META_EVENTS: Record<ConversionName, string> = {
   activated: "Lead",
   subscribed: "Subscribe",
   demo_opened: "ViewContent",
+  // Schedule is Meta's own event for booking a time with a business, which is
+  // literally what this is. Optimises much better than another Lead.
+  demo_booked: "Schedule",
   contact_submitted: "Contact",
 };
 
@@ -104,6 +108,9 @@ export type ConversionName =
   | "activated"
   | "subscribed"
   | "demo_opened"
+  // A booked sales call. Rarer than demo_opened and far further down the funnel:
+  // migrations from another platform almost always start with one of these.
+  | "demo_booked"
   | "contact_submitted";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

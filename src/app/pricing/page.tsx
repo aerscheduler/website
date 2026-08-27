@@ -4,7 +4,13 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/button";
 import { JsonLd } from "@/components/json-ld";
 import { faqJsonLd, PRICING_FAQS } from "@/lib/seo";
-import { ENTERPRISE_FEATURES, PRICE_PER_AIRCRAFT, SIGNUP_URL, TRIAL_DAYS } from "@/lib/site";
+import {
+  BOOK_DEMO_PATH,
+  ENTERPRISE_FEATURES,
+  PRICE_PER_AIRCRAFT,
+  SIGNUP_URL,
+  TRIAL_DAYS,
+} from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Flight School Software Pricing",
@@ -180,7 +186,10 @@ export default function PricingPage() {
               For larger fleets and multi-location operations that need our API, their own
               integrations, and a person to call.
             </p>
-            <Button href="/contact" size="lg" variant="secondary" className="mt-6">
+            {/* Enterprise is quoted per account, so this CTA has always been a
+                conversation. It now opens a calendar instead of a form: a school
+                at this size wants a time and a name, not a reply tomorrow. */}
+            <Button href={BOOK_DEMO_PATH} size="lg" variant="secondary" className="mt-6">
               Contact sales
               <ChevronRight className="size-4 opacity-80" />
             </Button>

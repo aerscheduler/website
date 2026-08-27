@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Clock, Mail, MessageSquare, Plug, Sparkles } from "lucide-react";
+import { CalendarClock, Clock, Mail, MessageSquare, Plug, Sparkles } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { ContactForm } from "@/components/contact-form";
 import { JsonLd } from "@/components/json-ld";
 import { absoluteUrl, faqJsonLd } from "@/lib/seo";
-import { SIGNUP_URL, SITE_NAME, SITE_URL, SUPPORT_EMAIL, TRIAL_DAYS } from "@/lib/site";
+import {
+  BOOK_DEMO_PATH,
+  SIGNUP_URL,
+  SITE_NAME,
+  SITE_URL,
+  SUPPORT_EMAIL,
+  TRIAL_DAYS,
+} from "@/lib/site";
 
 const DESCRIPTION = `Contact ${SITE_NAME} about flight school scheduling software. Ask a product question, request an integration or feature, or get help migrating. We reply within one business day.`;
 
@@ -32,7 +39,7 @@ const CONTACT_FAQS = [
   },
   {
     q: "Do I need to talk to sales to try AerScheduler?",
-    a: `No. AerScheduler is self-serve. You can create an account, add aircraft, and book your first lesson without talking to anyone. The ${TRIAL_DAYS}-day trial doesn't require a card.`,
+    a: `No. AerScheduler is self-serve. You can create an account, add aircraft, and book your first lesson without talking to anyone. The ${TRIAL_DAYS}-day trial doesn't require a card. If you would rather be walked through it, or you're migrating from another platform, you can book a demo and talk to a real person.`,
   },
   {
     q: "Can I request an integration?",
@@ -44,7 +51,7 @@ const CONTACT_FAQS = [
   },
   {
     q: "I'm switching from another system. Can you help?",
-    a: "We can. Follow the migration guide first (most schools are self-serve from there), then write in with your exports if you get stuck on data.",
+    a: "We can. Follow the migration guide first (most schools are self-serve from there), then write in with your exports if you get stuck on data. Bigger moves are easier on a call: book a demo and bring the exports with you.",
   },
 ];
 
@@ -170,7 +177,27 @@ export default function ContactPage() {
                 </div>
               </div>
 
+              {/* A form is the wrong shape for "I'm moving my whole school over
+                  and I want to know who's helping me". That conversation gets a
+                  calendar, not a text box. */}
               <div className="mt-8 rounded-xl border border-border bg-[#fafbfc] p-5">
+                <h2 className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                  <CalendarClock className="size-4 shrink-0 text-primary" aria-hidden />
+                  Would rather talk?
+                </h2>
+                <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                  Book a 30-minute call and we&apos;ll walk your school through the
+                  product, or plan your migration together.
+                </p>
+                <Link
+                  href={BOOK_DEMO_PATH}
+                  className="mt-3 inline-block text-sm font-semibold text-primary hover:underline"
+                >
+                  Book a demo
+                </Link>
+              </div>
+
+              <div className="mt-4 rounded-xl border border-border bg-[#fafbfc] p-5">
                 <h2 className="text-sm font-semibold text-foreground">Don&apos;t wait on us</h2>
                 <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
                   You can start a {TRIAL_DAYS}-day trial and have your fleet on
@@ -214,6 +241,9 @@ export default function ContactPage() {
             </Link>
             <Link href="/migrating/my-fbo" className="font-medium text-primary hover:underline">
               Migration guide
+            </Link>
+            <Link href={BOOK_DEMO_PATH} className="font-medium text-primary hover:underline">
+              Book a demo
             </Link>
           </div>
         </div>
