@@ -23372,7 +23372,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "description": "The rule. Set exactly one of `remindDays`, `remindHours`, or `remindDate`, along with its matching `*Before` field. `remindHours` is an INTERVAL in hours (every 100), not a flag.",
+                "description": "The rule. Set `remindDays`, `remindHours`, or BOTH (\"every 100 hours or 12 months, whichever comes first\"), each with its matching `*Before` field; or set `remindDate` alone for a one-off that does not recur. `remindHours` is an INTERVAL in tenths of an hour (1000 = every 100.0), not a flag. On a combined interval whichever clock comes due first grounds and notifies, and signing off restarts both.",
                 "properties": {
                   "name": {
                     "type": "string"
@@ -25414,6 +25414,93 @@
           "urgency": {
             "type": "number",
             "description": "Sort key, ascending is most urgent first, comparable across all three kinds."
+          },
+          "combined": {
+            "type": "boolean",
+            "description": "Whether the template counts an hour clock AND a calendar clock, `whichever comes first`."
+          },
+          "also": {
+            "$ref": "#/components/schemas/MaintenanceDueSide",
+            "description": "On a combined interval, the clock that did NOT come first. The fields above always describe the one that did."
+          }
+        },
+        "additionalProperties": true
+      },
+      "MaintenanceDueSide": {
+        "type": "object",
+        "description": "One clock of a combined interval. Same figures as `MaintenanceDue`, for the side that is not the binding one.",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "description": "What this clock is counted in.",
+            "enum": [
+              "hours",
+              "days"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "description": "Which band this clock is in.",
+            "enum": [
+              "overdue",
+              "dueSoon",
+              "ok",
+              "resolved"
+            ]
+          },
+          "dueAt": {
+            "format": "date-time",
+            "description": "When this clock comes due. Null on the meter side.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "daysRemaining": {
+            "description": "Whole days until `dueAt`. Negative means overdue.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "basis": {
+            "description": "Which meter this clock counts.",
+            "enum": [
+              "tach",
+              "hobbs"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "dueAtHours": {
+            "description": "Meter reading this clock comes due at, in tenths of an hour.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "hoursRemaining": {
+            "description": "Tenths of an hour left. Negative means overdue.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "currentHours": {
+            "description": "What the meter reads now, in tenths of an hour.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "progress": {
+            "description": "0 is a fresh interval, 1 is due now, above 1 is overdue.",
+            "type": [
+              "number",
+              "null"
+            ]
           }
         },
         "additionalProperties": true
@@ -25507,7 +25594,7 @@
             "description": "Whether the aircraft is grounded when this comes due."
           },
           "remindDays": {
-            "description": "Interval in days, for date-based reminders.",
+            "description": "Interval in days, for calendar-based reminders. May be set alongside `remindHours` for `whichever comes first`.",
             "type": [
               "integer",
               "null"
@@ -25521,7 +25608,7 @@
             ]
           },
           "remindHours": {
-            "description": "Interval in hours, for meter-based reminders.",
+            "description": "Interval in hours, for meter-based reminders. May be set alongside `remindDays` for `whichever comes first`.",
             "example": 100,
             "type": [
               "integer",
@@ -25548,7 +25635,7 @@
           },
           "remindDate": {
             "format": "date-time",
-            "description": "A one-off due date.",
+            "description": "A one-off due date. Exclusive: a dated reminder does not also repeat.",
             "type": [
               "string",
               "null"
