@@ -14359,6 +14359,109 @@
         }
       }
     },
+    "/resources/{id}/grounding": {
+      "patch": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Ground an aircraft or return it to service",
+        "description": "Takes a tail off the line, or puts it back. Requires the **admin** or **technician** role.\n\nIts own endpoint rather than a field on `PATCH /resources/{id}`, which is admin-only: a technician signs maintenance off and has to be able to release the aircraft afterwards.\n\nGrounding requires a `reason`, which is shown wherever the aircraft appears. The reason you send is treated as a PERSON'S decision and is never cleared automatically. Holds the system applies itself (an inspection coming due, an open grounding squawk) are released on their own once nothing is outstanding; yours are not, and stay until someone sends `grounded: false` here.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Resource"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`grounded` missing, or grounding without a reason.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not an admin or technician, or the resource belongs to another organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "setResourceGrounding",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The resource id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Which way, and why.",
+                "properties": {
+                  "grounded": {
+                    "type": "boolean",
+                    "description": "`true` takes it off the line, `false` returns it to service."
+                  },
+                  "reason": {
+                    "type": "string",
+                    "maxLength": 60,
+                    "description": "Required when grounding. Ignored when returning to service."
+                  }
+                },
+                "required": [
+                  "grounded"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
     "/resources/{id}/approvedUsers": {
       "get": {
         "tags": [
@@ -16288,6 +16391,15 @@
             "description": "Filter on voided state. `paid=false` on its own still includes voided invoices, which nobody owes; pass `voided=false` for outstanding."
           },
           {
+            "name": "overdue",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Only invoices that are past due: unpaid, not voided, and carrying a `dueAt` in the past. An invoice with no due date is never overdue. Matches the `Overdue` status of the revenue report."
+          },
+          {
             "name": "limit",
             "in": "query",
             "required": false,
@@ -16838,6 +16950,15 @@
               "type": "boolean"
             },
             "description": "Filter on voided state. `paid=false` on its own still includes voided invoices, which nobody owes; pass `voided=false` for outstanding."
+          },
+          {
+            "name": "overdue",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Only invoices that are past due: unpaid, not voided, and carrying a `dueAt` in the past. An invoice with no due date is never overdue. Matches the `Overdue` status of the revenue report."
           },
           {
             "name": "limit",
