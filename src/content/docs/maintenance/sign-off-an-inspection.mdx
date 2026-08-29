@@ -36,9 +36,12 @@ inspection starts counting again immediately, from exactly those two numbers.
 
 ## Enter the meter reading from the day the work was done, not today
 
-This is the field that matters most, and it is the one that looks like a display value.
+This is the field that matters most. It is filled in from the aircraft, so the usual answer
+is to confirm the number rather than type it, and to change it when the work was done
+earlier at a lower reading.
 
-The **next** interval counts from the number you type. Sign off a 100-hour with today's
+An inspection counted in hours will not sign off without it. That is deliberate: the
+**next** interval counts from the number you type. Sign off a 100-hour with today's
 tach when the work was actually done six hours ago and the next 100-hour comes due six
 hours late. Permanently, on every cycle after that, with nothing on screen to say so.
 
@@ -94,9 +97,19 @@ a human decision. An admin has to click **Return to service** on the aircraft. S
 
 ## Notes, and the 500 character limit
 
-The console stops you at 500 characters. The app's sign-off sheet lets you keep typing past
-that, and then the save fails with "Couldn't sign that off." If you get that message and
-the aircraft and dates look fine, shorten the notes.
+Both the console and the app stop you at 500 characters, so you cannot type a note that
+will not save. Notes are a working record for the shop; the method of compliance on an
+Airworthiness Directive is the field an inspector reads, and it holds 2,000.
+
+## Signing off happens once
+
+An inspection that has already been signed off answers "That inspection has already been
+signed off" rather than recording the work twice. If two people sign the same inspection
+at the same moment, or a phone retries a request on a bad connection, exactly one record
+is kept.
+
+To correct a sign-off, add a new one. See
+[Track Airworthiness Directives](/docs/maintenance/track-airworthiness-directives).
 
 ## Where signed-off work goes
 
