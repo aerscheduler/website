@@ -886,6 +886,15 @@ export const DOC_SECTIONS: DocSection[] = [
         seoQuery: "aircraft inspection reminder started from the wrong hours",
       },
       {
+        slug: "track-airworthiness-directives",
+        title: "Track Airworthiness Directives and keep the compliance record",
+        description:
+          "Set an inspection's source to Airworthiness Directive and give it the AD number. Signing it off then keeps a permanent record of what was done, the time in service and who certified it, which is what 14 CFR 91.417 asks you to keep. The Compliance log is the history and the Airworthiness compliance report is the copy you hand an inspector.",
+        kind: "task",
+        audience: ["Owners", "Admins", "Technicians"],
+        seoQuery: "track airworthiness directive AD compliance for a flight school aircraft",
+      },
+      {
         slug: "sign-off-an-inspection",
         title: "Sign off a completed inspection",
         description:

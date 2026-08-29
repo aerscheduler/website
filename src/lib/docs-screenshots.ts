@@ -990,6 +990,40 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     crop: '[data-doc-shot="add-inspections-last-done"]',
   },
   {
+    id: "add-inspections-source",
+    screen: "Add inspections, Where this comes from",
+    route: "/maintenance",
+    alt: "Choosing an inspection's source",
+    dataState:
+      "The Add inspections dialog on the Recurring mode with a name and interval filled in, and the source set to Airworthiness Directive so the document number, revision and link fields are revealed.",
+    open: [
+      'button:has-text("Add inspections")',
+      'button:has-text("Recurring")',
+      '[data-testid="insp-source-type"]',
+      '[role="option"]:has-text("Airworthiness Directive")',
+    ],
+    crop: '[data-doc-shot="add-inspections-source"]',
+  },
+  {
+    id: "sign-off-compliance",
+    screen: "Sign off, compliance record",
+    route: "/maintenance?view=reminders",
+    alt: "The compliance record section of a sign-off",
+    dataState:
+      "An outstanding inspection whose template is an Airworthiness Directive, signed off by a technician whose profile carries a certificate number, so the compliance section is open by default with both meters and the certificate prefilled.",
+    open: ['[data-doc-shot="maintenance-all-inspections"] button:has-text("Sign off")'],
+    crop: '[data-doc-shot="sign-off-compliance"]',
+  },
+  {
+    id: "maintenance-compliance-log",
+    screen: "Maintenance, Compliance log",
+    route: "/maintenance?view=compliance",
+    alt: "The compliance log",
+    dataState:
+      "At least four signed-off inspections across two aircraft, including two Airworthiness Directives with document numbers and revisions and one signed by a mechanic carrying an IA certificate.",
+    crop: '[data-doc-shot="maintenance-compliance-log"]',
+  },
+  {
     id: "sign-off-inspection-modal",
     screen: "Sign off",
     route: "/maintenance?view=reminders",

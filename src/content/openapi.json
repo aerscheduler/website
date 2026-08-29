@@ -119,6 +119,10 @@
     {
       "name": "Realtime",
       "description": "WebSocket tickets for live console updates (schedule, notifications, billing)."
+    },
+    {
+      "name": "Widgets",
+      "description": "One compact read of what a member needs to see right now, sized for a home-screen widget or a wall display."
     }
   ],
   "paths": {
@@ -16017,7 +16021,7 @@
           "Maintenance"
         ],
         "summary": "Sign off a maintenance reminder",
-        "description": "Marks the work done, which starts the next interval if the template repeats. POST rather than PATCH for historical reasons.",
+        "description": "Marks the work done, which starts the next interval if the template repeats. POST rather than PATCH for historical reasons.\n\nSend `methodOfCompliance` and `mechanicName` to also write a permanent compliance record, which is what 14 CFR 91.417 asks for on an Airworthiness Directive. That record is append-only and cannot be edited or removed afterwards, and it snapshots the rule's number and revision as they stood at signature. Omit them and the reminder simply rolls forward as before, keeping no history.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -16093,17 +16097,395 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "description": "Completion detail.",
+                "description": "Completion detail. The compliance fields are optional together: supplying `methodOfCompliance` requires `mechanicName`.",
                 "properties": {
                   "completedAt": {
                     "type": "string",
-                    "format": "date-time"
+                    "format": "date-time",
+                    "description": "When the work was done."
+                  },
+                  "completedHours": {
+                    "type": "integer",
+                    "description": "Meter reading the next interval counts from, in tenths of an hour."
+                  },
+                  "notes": {
+                    "type": "string",
+                    "description": "Free-text note on the reminder itself."
+                  },
+                  "methodOfCompliance": {
+                    "type": "string",
+                    "description": "What was actually done. Writing this creates the permanent record."
+                  },
+                  "mechanicName": {
+                    "type": "string",
+                    "description": "Who certified the work. Required alongside `methodOfCompliance`."
+                  },
+                  "mechanicCertificateNumber": {
+                    "type": "string",
+                    "description": "Their FAA certificate number."
+                  },
+                  "mechanicCertificateType": {
+                    "type": "string",
+                    "description": "A&P, IA, or repair station."
+                  },
+                  "tachAtCompliance": {
+                    "type": "integer",
+                    "description": "Tach time in service at compliance, in tenths. Defaults to the aircraft's current reading."
+                  },
+                  "hobbsAtCompliance": {
+                    "type": "integer",
+                    "description": "Hobbs time in service at compliance, in tenths. Defaults to the aircraft's current reading."
+                  },
+                  "fileUrls": {
+                    "type": "array",
+                    "description": "Attached evidence object keys.",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "completedAt"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/mechanicCertificate": {
+      "patch": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Save your mechanic certificate",
+        "description": "Stores the caller's own FAA certificate on their membership at the active school, so signing an inspection off can prefill it rather than asking for six exact characters every time.\n\nScoped to the caller: there is no id in the path. Send an empty string to clear one entered wrongly. The certificate on a compliance record is snapshotted at signature and is not changed by editing this.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "updateMechanicCertificate",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The certificate.",
+                "properties": {
+                  "mechanicCertificateNumber": {
+                    "type": "string",
+                    "description": "The number as printed.",
+                    "example": "3421887"
+                  },
+                  "mechanicCertificateType": {
+                    "type": "string",
+                    "description": "A&P, IA, or repair station.",
+                    "example": "IA"
                   }
                 }
               }
             }
           }
         }
+      }
+    },
+    "/maintenance/compliance": {
+      "get": {
+        "tags": [
+          "Maintenance"
+        ],
+        "summary": "List compliance records",
+        "description": "Every inspection this school has signed off, newest first, kept for the life of the aircraft.\n\nThis is the airworthiness history an inspector asks for. Readable by any member for the same reason squawks are: it is information about an aircraft somebody is about to fly.",
+        "responses": {
+          "200": {
+            "description": "The compliance records.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/MaintenanceComplianceRecord"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listComplianceRecords",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Free-text over the rule name, document number, mechanic and method."
+          },
+          {
+            "name": "resourceId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Restrict to one or more aircraft. Comma-separated."
+          },
+          {
+            "name": "reminderId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Restrict to one inspection's history."
+          },
+          {
+            "name": "sourceType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Restrict to a kind of rule, for example `ad`."
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Only records complied with on or after this date."
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Only records complied with on or before this date."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1,1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row , `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
+      }
+    },
+    "/maintenance/compliance/{complianceRecordId}": {
+      "get": {
+        "tags": [
+          "Maintenance"
+        ],
+        "summary": "Get a compliance record",
+        "description": "One signed-off inspection, in full.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/MaintenanceComplianceRecord"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such record.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getComplianceRecord",
+        "parameters": [
+          {
+            "name": "complianceRecordId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The compliance record id."
+          }
+        ]
       }
     },
     "/invoices": {
@@ -20529,6 +20911,63 @@
             }
           }
         }
+      }
+    },
+    "/widgets/snapshot": {
+      "get": {
+        "tags": [
+          "Widgets"
+        ],
+        "summary": "Everything a home-screen widget renders",
+        "description": "One read that answers \"what does this person need to see right now\": their next flights, their expiring currencies, what they owe, the fleet's day, and, for staff, the maintenance queue.\n\nBuilt for the AerScheduler iOS widgets, which poll it on a timer, so it is deliberately one round trip and every list is capped at six rows (twelve for the fleet). It is the same set of facts the other endpoints serve, already reduced to what fits on a card, which is also what makes it a reasonable thing to poll from a dashboard or a wall display.\n\n**Any member may call it, and the shape depends on who they are.** `squawks` and `inspections` are OMITTED rather than zeroed for a caller who may not read maintenance, because zero open squawks and no permission to see them are different facts and a widget must not paint the second as the first. Check `canSeeMaintenance`. `training` is present only for a student with a live enrollment, and `instructor` only for an instructor.\n\n`fleet` is the whole organization's day, not just the caller's bookings, which is what makes an aircraft's `status` true.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/WidgetSnapshot"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getWidgetSnapshot"
       }
     },
     "/realtime/ticket": {
@@ -25761,6 +26200,163 @@
               "string",
               "null"
             ]
+          },
+          "sourceType": {
+            "description": "What kind of rule this is. `ad` is an Airworthiness Directive, binding under 14 CFR Part 39; `sb` is an advisory Service Bulletin.",
+            "enum": [
+              "ad",
+              "sb",
+              "manufacturer",
+              "shop",
+              "other"
+            ],
+            "example": "ad",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "sourceRef": {
+            "description": "The document number. Required when `sourceType` is `ad`.",
+            "example": "2015-19-07",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "sourceUrl": {
+            "description": "A link to the issuing authority's copy. Must be http or https.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "revision": {
+            "description": "The revision currently in force. The revision actually complied with is snapshotted onto each compliance record.",
+            "example": "2",
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": true
+      },
+      "MaintenanceComplianceRecord": {
+        "type": "object",
+        "description": "A signed-off inspection, kept permanently. Append-only: there is no endpoint that updates or deletes one, and the fields describing which rule was complied with are frozen at signature rather than read back through the template, so a superseded Airworthiness Directive cannot rewrite history. Written by signing off a reminder.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifier."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the record was written."
+          },
+          "sourceType": {
+            "description": "Copied from the template at signature.",
+            "enum": [
+              "ad",
+              "sb",
+              "manufacturer",
+              "shop",
+              "other"
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "sourceRef": {
+            "description": "The document number as it stood at signature.",
+            "example": "2015-19-07",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "revision": {
+            "description": "The revision as it stood at signature.",
+            "example": "2",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "templateName": {
+            "type": "string",
+            "description": "The rule's name at signature.",
+            "example": "AD 2015-19-07 Wing spar"
+          },
+          "complianceDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the work was completed."
+          },
+          "tachAtCompliance": {
+            "description": "Tach time in service at compliance, in tenths of an hour.",
+            "example": 11020,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "hobbsAtCompliance": {
+            "description": "Hobbs time in service at compliance, in tenths of an hour.",
+            "example": 11255,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "nextDueAt": {
+            "format": "date-time",
+            "description": "When the next action falls due, frozen at signature.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "nextDueAtHours": {
+            "description": "Meter reading the next action falls due at, in tenths of an hour.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "mechanicName": {
+            "type": "string",
+            "description": "Who certified the work. Stored as text, because an outside inspector has no account here.",
+            "example": "Dale Whitfield"
+          },
+          "mechanicCertificateNumber": {
+            "description": "Their FAA certificate number.",
+            "example": "3421887",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "mechanicCertificateType": {
+            "description": "A&P, IA, or repair station.",
+            "example": "IA",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "methodOfCompliance": {
+            "type": "string",
+            "description": "What was actually done, as required by 14 CFR 91.417."
+          },
+          "fileUrls": {
+            "type": "array",
+            "description": "Attached evidence, for example a photograph of the logbook entry.",
+            "items": {
+              "type": "string"
+            }
           }
         },
         "additionalProperties": true
@@ -27879,6 +28475,711 @@
               "anyChannelEnabled": {
                 "type": "boolean",
                 "description": "At least one delivery channel is enabled."
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "WidgetSnapshot": {
+        "type": "object",
+        "description": "Everything the AerScheduler iOS home-screen widgets render, assembled for one member of one organization.\n\nScoped to the caller throughout: `nextFlights`, `documents` and `account` are theirs, while `fleet` is the whole organization's day, which is what makes an aircraft's status true rather than only true of bookings the caller happens to be on.\n\n`squawks` and `inspections` are OMITTED, not zeroed, for a caller who may not read maintenance. Check `canSeeMaintenance` before concluding anything from their absence: zero open squawks and no permission to see them are different facts.",
+        "properties": {
+          "v": {
+            "type": "integer",
+            "description": "Payload version. Bumped only for a breaking reshape."
+          },
+          "generatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the server assembled this."
+          },
+          "signedIn": {
+            "type": "boolean",
+            "description": "Always true on a successful response. Present so a client rendering a cached body has the flag it branches on."
+          },
+          "orgId": {
+            "type": "integer",
+            "description": "The organization this describes."
+          },
+          "orgName": {
+            "description": "The school's name.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "personName": {
+            "description": "The caller's name.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "roles": {
+            "type": "array",
+            "description": "The roles the caller holds in this organization.",
+            "items": {
+              "type": "string",
+              "enum": [
+                "owner",
+                "admin",
+                "dispatcher",
+                "instructor",
+                "technician",
+                "student",
+                "renter"
+              ]
+            }
+          },
+          "canSeeMaintenance": {
+            "type": "boolean",
+            "description": "Whether the caller may read squawks and maintenance reminders. True for an administrator, a dispatcher or a technician."
+          },
+          "nextFlights": {
+            "type": "array",
+            "description": "What is on now and what is next, soonest first, at most six.",
+            "items": {
+              "type": "object",
+              "description": "One booking, as a widget row.",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "description": "The reservation."
+                },
+                "title": {
+                  "description": "What the booking is called.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "type": {
+                  "description": "ground, dual, instructor, solo, sim, maintenance. An open set: this is a free string on the reservation, not an enum.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "start": {
+                  "format": "date-time",
+                  "description": "Scheduled start.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "end": {
+                  "format": "date-time",
+                  "description": "Scheduled end.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "tail": {
+                  "description": "Tail number, when the booking is on an aircraft.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "makeModel": {
+                  "description": "Make and model, or Simulator / Classroom when the resource is one of those.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "instructorName": {
+                  "description": "Instructors on the booking, comma separated.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "studentName": {
+                  "description": "Students on the booking, comma separated.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "lessonTitle": {
+                  "description": "Always null today. Which syllabus lesson a booking is for is decided at close-out, so there is nothing to report before the flight.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "locationName": {
+                  "description": "Where it departs from.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "cancelled": {
+                  "type": "boolean",
+                  "description": "Always false here: cancelled bookings are left out of the snapshot entirely."
+                },
+                "rampStatus": {
+                  "type": "string",
+                  "description": "Derived from the ramp timestamps.",
+                  "enum": [
+                    "scheduled",
+                    "out",
+                    "overdue",
+                    "back"
+                  ]
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "documents": {
+            "type": "array",
+            "description": "Currencies that carry an expiry, soonest first, at most six.",
+            "items": {
+              "type": "object",
+              "description": "One currency and how long it has left.",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "description": "The currency."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "The currency type's name."
+                },
+                "expiresAt": {
+                  "format": "date-time",
+                  "description": "When it lapses.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "daysRemaining": {
+                  "description": "Whole days until it lapses, truncated toward zero. Negative once it has.",
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "state": {
+                  "type": "string",
+                  "description": "Computed from the date, not from whether a warning email has been sent.",
+                  "enum": [
+                    "good",
+                    "warning",
+                    "expired"
+                  ]
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "account": {
+            "type": "object",
+            "description": "What the caller owes, in whichever mode the organization runs.",
+            "properties": {
+              "mode": {
+                "type": "string",
+                "description": "`ledger` when the organization runs prepaid balances, `invoices` otherwise.",
+                "enum": [
+                  "ledger",
+                  "invoices"
+                ]
+              },
+              "balanceCents": {
+                "description": "Signed. Negative means the member owes the school. Null outside ledger mode, where a positive balance is not a concept.",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "autoRefillOn": {
+                "type": "boolean",
+                "description": "Automatic top-ups are configured and enabled. Ledger mode only."
+              },
+              "autoRefillPaused": {
+                "type": "boolean",
+                "description": "Automatic top-ups are suspended, typically after a declined card. Ledger mode only."
+              },
+              "unpaidCount": {
+                "type": "integer",
+                "description": "Invoices billed to this member that are neither paid nor voided."
+              },
+              "unpaidTotalCents": {
+                "type": "integer",
+                "description": "What those add up to."
+              },
+              "oldestUnpaidAt": {
+                "format": "date-time",
+                "description": "When the oldest of them was raised.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": true
+          },
+          "fleet": {
+            "type": "array",
+            "description": "The organization's aircraft with today's bookings against each, at most twelve.",
+            "items": {
+              "type": "object",
+              "description": "One aircraft, and what today looks like for it.",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "description": "The resource."
+                },
+                "tail": {
+                  "type": "string",
+                  "description": "Tail number."
+                },
+                "makeModel": {
+                  "description": "Make and model.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "grounded": {
+                  "type": "boolean",
+                  "description": "Whether the aircraft is off the line."
+                },
+                "groundedReason": {
+                  "description": "Free text from whoever grounded it. Shown verbatim, never parsed.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "hobbsDeci": {
+                  "description": "Hobbs, in tenths of an hour.",
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "tachDeci": {
+                  "description": "Tach, in tenths of an hour.",
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "dryRateCents": {
+                  "description": "Dry rate.",
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "wetRateCents": {
+                  "description": "Wet rate.",
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "status": {
+                  "type": "string",
+                  "description": "Resolved against the organization's whole day, not only the caller's bookings.",
+                  "enum": [
+                    "free",
+                    "booked",
+                    "out",
+                    "down"
+                  ]
+                },
+                "statusDetail": {
+                  "description": "Already humanised in the organization's time zone: `until 3pm`, `back 11:40am`, or the grounding reason.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "nextFreeStart": {
+                  "format": "date-time",
+                  "description": "Start of the next bookable window. Null while the aircraft is down.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "nextFreeEnd": {
+                  "format": "date-time",
+                  "description": "End of that window, or the end of the day when nothing follows. Read the day's end as `nothing else today`, not as `fully booked`.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "busy": {
+                  "type": "array",
+                  "description": "Today's blocks, for the availability strip. The organization's calendar day.",
+                  "items": {
+                    "type": "object",
+                    "description": "One block of time the aircraft is spoken for.",
+                    "properties": {
+                      "start": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Block start."
+                      },
+                      "end": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Block end."
+                      },
+                      "kind": {
+                        "type": "string",
+                        "description": "What is holding it.",
+                        "enum": [
+                          "booking",
+                          "maintenance"
+                        ]
+                      }
+                    },
+                    "additionalProperties": true
+                  }
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "training": {
+            "type": "object",
+            "description": "Where the caller stands on their course. Omitted unless they have a live enrollment.",
+            "properties": {
+              "courseName": {
+                "description": "The course.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "stageName": {
+                "description": "The first stage still holding an unfinished lesson. Null once every lesson is done.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "lessonsComplete": {
+                "type": "integer",
+                "description": "Distinct lessons passed, signed where the syllabus asks for it, and not superseded."
+              },
+              "lessonsTotal": {
+                "type": "integer",
+                "description": "Lessons in the enrolled version. Zero is a real state and must not render as either 0% or NaN."
+              },
+              "standings": {
+                "type": "array",
+                "description": "Standing against each requirement, in syllabus order, at most six.",
+                "items": {
+                  "type": "object",
+                  "description": "One requirement, and what the training ledger credits toward it.",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "description": "Stable machine key, e.g. `total_flight`, `solo_xc`."
+                    },
+                    "label": {
+                      "type": "string",
+                      "description": "What the requirement is called."
+                    },
+                    "requiredDeci": {
+                      "type": "integer",
+                      "description": "What the syllabus asks for, in tenths of an hour. Zero on a requirement written as a count of events rather than as hours."
+                    },
+                    "creditedDeci": {
+                      "type": "integer",
+                      "description": "What the ledger credits, in tenths of an hour, after any ceiling."
+                    },
+                    "met": {
+                      "type": "boolean",
+                      "description": "Whether the requirement is satisfied."
+                    }
+                  },
+                  "additionalProperties": true
+                }
+              }
+            },
+            "additionalProperties": true
+          },
+          "instructor": {
+            "type": "object",
+            "description": "The caller's teaching day. Omitted unless they hold the instructor role.",
+            "properties": {
+              "flights": {
+                "type": "array",
+                "description": "Today's bookings, soonest first, at most six.",
+                "items": {
+                  "type": "object",
+                  "description": "One booking, as a widget row.",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The reservation."
+                    },
+                    "title": {
+                      "description": "What the booking is called.",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "type": {
+                      "description": "ground, dual, instructor, solo, sim, maintenance. An open set: this is a free string on the reservation, not an enum.",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "start": {
+                      "format": "date-time",
+                      "description": "Scheduled start.",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "end": {
+                      "format": "date-time",
+                      "description": "Scheduled end.",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "tail": {
+                      "description": "Tail number, when the booking is on an aircraft.",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "makeModel": {
+                      "description": "Make and model, or Simulator / Classroom when the resource is one of those.",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "instructorName": {
+                      "description": "Instructors on the booking, comma separated.",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "studentName": {
+                      "description": "Students on the booking, comma separated.",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "lessonTitle": {
+                      "description": "Always null today. Which syllabus lesson a booking is for is decided at close-out, so there is nothing to report before the flight.",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "locationName": {
+                      "description": "Where it departs from.",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "cancelled": {
+                      "type": "boolean",
+                      "description": "Always false here: cancelled bookings are left out of the snapshot entirely."
+                    },
+                    "rampStatus": {
+                      "type": "string",
+                      "description": "Derived from the ramp timestamps.",
+                      "enum": [
+                        "scheduled",
+                        "out",
+                        "overdue",
+                        "back"
+                      ]
+                    }
+                  },
+                  "additionalProperties": true
+                }
+              },
+              "ungradedCount": {
+                "type": "integer",
+                "description": "Always zero. Answering it properly needs a per-booking curriculum lookup, which this endpoint will not do on a widget timer."
+              },
+              "oldestUngradedDays": {
+                "description": "Always null, for the same reason as `ungradedCount`.",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "notClosedOutCount": {
+                "type": "integer",
+                "description": "Bookings that have ended with nobody signed off on them."
+              }
+            },
+            "additionalProperties": true
+          },
+          "squawks": {
+            "type": "object",
+            "description": "Open squawks. OMITTED when `canSeeMaintenance` is false.",
+            "properties": {
+              "open": {
+                "type": "integer",
+                "description": "Open squawks across the fleet."
+              },
+              "grounding": {
+                "type": "integer",
+                "description": "How many of those take an aircraft off the line."
+              },
+              "items": {
+                "type": "array",
+                "description": "Most recently reported first, at most six.",
+                "items": {
+                  "type": "object",
+                  "description": "One open squawk.",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The squawk."
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "What was written on it."
+                    },
+                    "tail": {
+                      "description": "The aircraft it is against.",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "priority": {
+                      "type": "string",
+                      "description": "Flattened to the two a widget colours by. High and low arrive as `normal`.",
+                      "enum": [
+                        "grounding",
+                        "normal"
+                      ]
+                    },
+                    "reportedAt": {
+                      "format": "date-time",
+                      "description": "When it was reported, falling back to when the row was written.",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "lane": {
+                      "type": "string",
+                      "description": "Derived from the timestamps. A squawk has no assignee and no status column, so these are the only lanes the data supports.",
+                      "enum": [
+                        "new",
+                        "verified",
+                        "resolved"
+                      ]
+                    }
+                  },
+                  "additionalProperties": true
+                }
+              }
+            },
+            "additionalProperties": true
+          },
+          "inspections": {
+            "type": "object",
+            "description": "Inspections coming due or already past. OMITTED when `canSeeMaintenance` is false.",
+            "properties": {
+              "overdue": {
+                "type": "integer",
+                "description": "How many are past due."
+              },
+              "dueSoon": {
+                "type": "integer",
+                "description": "How many are inside their template's warning band."
+              },
+              "items": {
+                "type": "array",
+                "description": "Most urgent first, at most six.",
+                "items": {
+                  "type": "object",
+                  "description": "One inspection and its countdown.",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "The maintenance reminder."
+                    },
+                    "tail": {
+                      "description": "The aircraft it is against.",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "What the inspection is called."
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "The server's computed band.",
+                      "enum": [
+                        "overdue",
+                        "dueSoon",
+                        "ok",
+                        "resolved"
+                      ]
+                    },
+                    "hoursRemainingDeci": {
+                      "description": "Tenths of an hour left on the meter. Negative when overdue. Null on a calendar interval.",
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    },
+                    "daysRemaining": {
+                      "description": "Days until due. Negative when overdue. Null on an hour interval.",
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    },
+                    "dueAt": {
+                      "format": "date-time",
+                      "description": "When it comes due. Null on an hour interval, where nobody can know the date.",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "progress": {
+                      "description": "0 through the interval to 1 at due, above 1 when overdue.",
+                      "type": [
+                        "number",
+                        "null",
+                        "null"
+                      ]
+                    }
+                  },
+                  "additionalProperties": true
+                }
               }
             },
             "additionalProperties": true

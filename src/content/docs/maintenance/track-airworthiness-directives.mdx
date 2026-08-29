@@ -1,0 +1,143 @@
+<Summary>
+Set an inspection's **Where this comes from** to *Airworthiness Directive* and give it the
+AD number. From then on, signing it off keeps a permanent compliance record: what was done,
+the time in service, and who certified it. <Where app="web">Maintenance → Compliance log</Where>
+is the history, and the **Airworthiness compliance** report is the copy you hand an
+inspector.
+</Summary>
+
+<Roles>Owners, Admins, Technicians</Roles>
+
+## Why an AD is not just another reminder
+
+An Airworthiness Directive is binding under 14 CFR Part 39. It is federal law, not the
+manufacturer's advice, and flying out of compliance breaks 91.403(a). A Service Bulletin,
+by contrast, is advisory.
+
+That difference has a practical consequence: **91.417 asks you to keep a record**, per
+airframe, of the AD number and revision, what you did to comply, the time in service when
+you did it, and when the next action falls due. A reminder that has simply gone away does
+not satisfy that.
+
+<Callout type="note">
+Recurring ADs are usually written "every 100 hours or 12 months, whichever comes first".
+That is the **Whichever comes first** interval, so you do not need anything special to
+schedule one. What this page adds is saying which rule it is, and keeping the sign-off.
+</Callout>
+
+## Tell an inspection it is an AD
+
+<Steps>
+  <Step n={1} title="Open Maintenance and click Add inspections">
+    Choose **Recurring** for a repeating AD, or **One-off** for one with a single
+    compliance deadline.
+  </Step>
+  <Step n={2} title="Set the interval as usual">
+    For "every 100 hours or 12 months, whichever comes first", pick **Whichever comes
+    first** and fill in both clocks.
+  </Step>
+  <Step n={3} title="Open Where this comes from and choose Airworthiness Directive">
+    Three more fields appear. They stay hidden for an ordinary shop reminder, so an oil
+    change does not grow boxes it has no answers for.
+
+    <Screenshot id="add-inspections-source" />
+  </Step>
+  <Step n={4} title="Enter the document number">
+    The AD number as published, for example `2015-19-07`. This one is required: an AD
+    without its number cannot be found, filtered, or listed on the report an inspector
+    reads.
+  </Step>
+  <Step n={5} title="Add the revision and link if you have them">
+    The revision currently in force, and a link to the issuing authority's copy.
+  </Step>
+</Steps>
+
+An **AD** badge now appears on that inspection everywhere it is listed, so a regulation is
+distinguishable from a shop interval at a glance.
+
+## Sign it off, and keep the record
+
+When you sign an AD off, the sign-off form opens with **Keep a compliance record** already
+switched on.
+
+<Steps>
+  <Step n={1} title="Fill in what was done">
+    The method of compliance. This is the sentence an inspector actually reads, so write it
+    the way you would write it in the logbook: "Visual and dye-penetrant inspection of the
+    forward spar carry-through per paragraph (g)(1). No cracking found."
+  </Step>
+  <Step n={2} title="Check both meters">
+    Tach and Hobbs are both captured, whatever the inspection was counting, because 91.417
+    asks for time in service and not for whichever clock the schedule happened to use. They
+    are filled in from the aircraft, so usually you are confirming rather than typing.
+  </Step>
+  <Step n={3} title="Confirm who certified it">
+    Your name and certificate fill in from your profile. Change them if somebody else
+    signed: an outside IA has no account here, and the record has to say who actually
+    certified the work.
+
+    <Screenshot id="sign-off-compliance" />
+  </Step>
+</Steps>
+
+<Callout type="warning">
+A compliance record cannot be edited or deleted once it is signed, by anyone, including us.
+That is what makes it a record. If something is wrong, sign off a correcting entry: the log
+keeps both, in order.
+</Callout>
+
+## Set your certificate once
+
+<Where app="web">Profile → Mechanic certificate</Where> holds your FAA certificate number
+and type. Enter it once and it fills in every time you sign something off.
+
+This is worth two minutes. Six to eight exact characters, typed at every signature, is how
+a compliance log ends up full of blanks and typos, and a record with the wrong certificate
+number on it is no better than no record.
+
+The number on a record is a **copy taken at signature**, not a link to your account.
+Changing your profile later does not alter anything already signed, and it should not.
+
+## Read the history
+
+<Where app="web">Maintenance → Compliance log</Where> lists every inspection this school has
+signed off, newest first, with the aircraft, the rule, both meter readings and who
+certified it. Search it by AD number, aircraft, mechanic, or anything in the method text.
+
+<Screenshot id="maintenance-compliance-log" />
+
+Click any row for the full write-up.
+
+## Hand it to an inspector
+
+<Where app="web">Reports → Airworthiness compliance</Where> is the same information as a
+report: filter it to one aircraft, group it, add the method-of-compliance column, and
+export.
+
+<Callout type="note">
+The report covers the date range you choose, so it is a history of a **period**, not a
+complete AD status. A rule complied with before the window will not appear in it. Set the
+range wide enough to cover everything the inspector is asking about.
+</Callout>
+
+Technicians can open this report. It is filed under fleet reports rather than compliance
+reports for exactly that reason.
+
+## What this does not do yet
+
+Worth knowing before you rely on it:
+
+- **It does not tell you which ADs apply to your aircraft.** You add the ones that apply;
+  there is no catalogue that proposes them from your make, model and serial.
+- **Component ADs stay with the airframe.** An engine AD is tracked against the aircraft,
+  so it does not follow the engine through an overhaul swap.
+- **"Due at the next annual" cannot be expressed.** Use the interval the AD gives in hours
+  or months.
+- **A one-off AD takes a date, not an hours deadline.** For "comply within the next 50
+  hours", track it as a recurring hour interval and stop tracking it once done.
+
+## Related
+
+- [Sign off a completed inspection](/docs/maintenance/sign-off-an-inspection)
+- [Add the standard airworthiness inspections](/docs/maintenance/add-the-standard-airworthiness-inspections)
+- [How maintenance tracking works](/docs/maintenance/how-maintenance-tracking-works)
