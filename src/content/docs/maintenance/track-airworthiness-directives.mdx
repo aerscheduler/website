@@ -1,23 +1,33 @@
 <Summary>
 Set an inspection's **Where this comes from** to *Airworthiness Directive* and give it the
 AD number. From then on, signing it off keeps a permanent compliance record: what was done,
-the time in service, and who certified it. <Where app="web">Maintenance → Compliance log</Where>
-is the history, and the **Airworthiness compliance** report is the copy you hand an
-inspector.
+the meter readings, and who certified it. <Where app="web">Maintenance → Compliance log</Where>
+is the history, and the **Airworthiness compliance** report prints it.
 </Summary>
 
 <Roles>Owners, Admins, Technicians</Roles>
 
+<Callout type="important">
+Two things to be clear about before you rely on this.
+
+**AerScheduler records the ADs you enter.** It does not tell you which ADs apply to your
+aircraft. Get that list from your IA or an AD subscription, then track each one here.
+
+**This does not replace your logbook entry.** It is a tracking record. The maintenance record
+entry required by 14 CFR 43.9 and 43.11 is still yours to make, as usual.
+</Callout>
+
 ## Why an AD is not just another reminder
 
 An Airworthiness Directive is binding under 14 CFR Part 39. It is federal law, not the
-manufacturer's advice, and flying out of compliance breaks 91.403(a). A Service Bulletin,
-by contrast, is advisory.
+manufacturer's advice. 91.403(a) makes the owner or operator responsible for complying with
+it, and an aircraft out of compliance is not airworthy, so flying it violates 91.7(a). A
+Service Bulletin, by contrast, is the manufacturer's advice.
 
-That difference has a practical consequence: **91.417 asks you to keep a record**, per
-airframe, of the AD number and revision, what you did to comply, the time in service when
-you did it, and when the next action falls due. A reminder that has simply gone away does
-not satisfy that.
+That difference has a practical consequence. **91.417(a)(2)(v) asks you to keep the current
+status of every AD that applies to the aircraft**, and for each one: the method of compliance,
+the AD number and revision date, and, if it recurs, the time and date the next action falls
+due. A reminder that has simply gone away does not satisfy that.
 
 <Callout type="note">
 Recurring ADs are usually written "every 100 hours or 12 months, whichever comes first".
@@ -83,9 +93,12 @@ switched on.
     forward spar carry-through per paragraph (g)(1). No cracking found."
   </Step>
   <Step n={2} title="Check both meters">
-    Tach and Hobbs are both captured, whatever the inspection was counting, because 91.417
-    asks for time in service and not for whichever clock the schedule happened to use. They
-    are filled in from the aircraft, so usually you are confirming rather than typing.
+    Tach and Hobbs are both captured, whatever the inspection was counting, so the record
+    still reads correctly years later to somebody working off the other clock. They are
+    filled in from the aircraft, so usually you are confirming rather than typing.
+
+    Neither is **time in service** as 14 CFR 1.1 defines it, which is wheels-off to
+    touchdown. Record the airframe total time in your logbook entry as usual.
   </Step>
   <Step n={3} title="Confirm who certified it">
     Your name and certificate fill in from your profile. Change them if somebody else
@@ -151,12 +164,16 @@ range wide enough to cover everything the inspector is asking about.
 Technicians can open this report. It is filed under fleet reports rather than compliance
 reports for exactly that reason.
 
-## What this does not do yet
+## What this does not do
 
 Worth knowing before you rely on it:
 
 - **It does not tell you which ADs apply to your aircraft.** You add the ones that apply;
-  there is no catalogue that proposes them from your make, model and serial.
+  there is no catalogue that proposes them from your make, model and serial. This is the
+  difference between what AerScheduler does and what a dedicated AD subscription does, and
+  it is why the report below is a history of sign-offs rather than an AD status.
+- **The report covers what you have signed off here.** Anything complied with before you
+  started using AerScheduler, and anything you have not entered, is not in it.
 - **Component ADs stay with the airframe.** An engine AD is tracked against the aircraft,
   so it does not follow the engine through an overhaul swap.
 - **"Due at the next annual" cannot be expressed.** Use the interval the AD gives in hours
