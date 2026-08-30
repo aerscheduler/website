@@ -1,8 +1,8 @@
 <Summary>
 Nothing about Airworthiness Directives is on by default. <Where app="web">Settings → Airworthiness
-Directives</Where> has four choices: do nothing, track them here yourself, have us watch newly
-published ADs for ones naming your fleet, or tell us they are tracked somewhere else. The same
-page shows what we could actually match for each of your aeroplanes.
+Directives</Where> has four choices: do nothing, track them here yourself, tell us they are tracked
+somewhere else, and a fourth that is not built yet. The same page shows what we could actually
+match for each of your aeroplanes.
 </Summary>
 
 <Roles>Owners, Admins</Roles>
@@ -36,12 +36,17 @@ So it is off, and it stays off until somebody chooses otherwise.
     We still do not tell you which ADs apply. You add the ones your IA or your AD subscription
     identifies.
   </Step>
-  <Step n={3} title="Watch for new ones">
-    Everything above, plus we read newly published Airworthiness Directives and flag the ones
-    naming your make, model or serial number.
+  <Step n={3} title="Watch for new ones (not available yet)">
+    **This is not built.** The option is on the page so you can see where we are going, and it
+    cannot be selected.
 
-    Somebody at your school then decides, for each one, whether it applies to a given aeroplane.
-    That decision is recorded against your name and your certificate, and it is permanent.
+    When it exists, it will read newly published Airworthiness Directives and flag the ones
+    naming your make, model or serial number, and somebody at your school will decide for each
+    one whether it applies to a given aeroplane. That decision will be recorded against a name
+    and a certificate, and it will be permanent.
+
+    Until then, **nothing in AerScheduler watches for new Airworthiness Directives**. Whatever
+    you use today to find out that one has been issued, keep using it.
   </Step>
   <Step n={4} title="Somewhere else">
     Applicability is tracked in another system. Name it, and we propose nothing and watch
@@ -54,8 +59,12 @@ So it is off, and it stays off until somebody chooses otherwise.
 
 <Callout type="important">
 Whatever you choose, AerScheduler never decides that an Airworthiness Directive does **not**
-apply to your aircraft. That determination belongs to a certificated person, and it is the one
-thing software getting it wrong could actually hurt somebody over.
+apply to your aircraft, and today it does not tell you that one exists either. Finding the
+directives that apply to your fleet is still yours to do. What this product does is keep the
+record of what you complied with, and when.
+
+That determination belongs to a certificated person, and it is the one thing software getting
+it wrong could actually hurt somebody over.
 </Callout>
 
 ## What a serial number buys you
