@@ -1015,6 +1015,38 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     crop: '[data-doc-shot="sign-off-compliance"]',
   },
   {
+    id: "ad-tracking-modes",
+    screen: "Settings, Airworthiness Directives",
+    route: "/settings?tab=ad-tracking",
+    alt: "The four choices for how much AerScheduler does about Airworthiness Directives",
+    caption:
+      "Nothing here is on by default, and Watch for new ones is not available yet.",
+    dataState:
+      "The default state: mode off, so Not here is the pressed card. Capture as the OWNER (DOCS_EMAIL=test-owner@aerscheduler.com); this tab is owner and admin only and does not render for anybody else, which is the point of the who-can-change-this section in the article.",
+    crop: '[data-doc-shot="ad-tracking-modes"]',
+  },
+  {
+    id: "ad-readiness-panel",
+    screen: "Settings, What we could match",
+    route: "/settings?tab=ad-tracking",
+    alt: "Per aircraft, how precisely an Airworthiness Directive could be matched",
+    caption: "A serial number is the one thing that narrows a match from a model to an aeroplane.",
+    dataState:
+      "A fleet where the three buckets are all non-empty, so the counts read as a distribution rather than a single number: at least one aircraft with make, model and serial (matched by serial), one with make and model only, and one missing a model. Seeded by seed-test-org-maintenance-for-docs.mjs. Owner or admin only.",
+    crop: '[data-doc-shot="ad-readiness-panel"]',
+  },
+  {
+    id: "compliance-log-scope",
+    screen: "Maintenance, Compliance log with its caption",
+    route: "/maintenance?view=compliance",
+    alt: "The compliance log, under the sentence saying what it is not",
+    caption:
+      "The line above the table is the part that matters: this records the ADs you enter, and does not tell you which ADs apply.",
+    dataState:
+      "Same records as maintenance-compliance-log. This crop deliberately includes the caption above the table, which maintenance-compliance-log excludes: a school that believes this log IS its AD status is the one failure in this feature that could hurt somebody, and the sentence saying otherwise has to be in the picture.",
+    crop: '[data-doc-shot="compliance-log"]',
+  },
+  {
     id: "maintenance-compliance-log",
     screen: "Maintenance, Compliance log",
     route: "/maintenance?view=compliance",
