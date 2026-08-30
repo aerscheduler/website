@@ -1,0 +1,102 @@
+<Summary>
+Nothing about Airworthiness Directives is on by default. <Where app="web">Settings → Airworthiness
+Directives</Where> has four choices: do nothing, track them here yourself, have us watch newly
+published ADs for ones naming your fleet, or tell us they are tracked somewhere else. The same
+page shows what we could actually match for each of your aeroplanes.
+</Summary>
+
+<Roles>Owners, Admins</Roles>
+
+## Why this is a choice and not a feature
+
+Plenty of schools use AerScheduler for oil changes, annuals and the 100-hour, and have no
+interest in us being involved in Airworthiness Directives. Plenty of others already pay for
+ADlog, AVTRAK or a Tdata subscription and have a mechanic who owns the whole question.
+
+Turning a catalogue on for those schools would not be a helpful default. It would be several
+hundred candidate directives nobody asked for, attached to a subject where a flood of alerts
+teaches people to stop reading alerts.
+
+So it is off, and it stays off until somebody chooses otherwise.
+
+## The four choices
+
+<Steps>
+  <Step n={1} title="Not here">
+    We do nothing about ADs. Maintenance works exactly as it does now.
+
+    You can still set an inspection's **Where this comes from** to *Airworthiness Directive* if
+    you want the badge and the permanent compliance record. That is recordkeeping and it costs
+    nothing. Nothing is proposed, nothing is watched, nobody is notified.
+  </Step>
+  <Step n={2} title="I track them here">
+    You enter the ADs, we keep the records. The AD badge, the permanent compliance record, the
+    Compliance log and the Airworthiness compliance report.
+
+    We still do not tell you which ADs apply. You add the ones your IA or your AD subscription
+    identifies.
+  </Step>
+  <Step n={3} title="Watch for new ones">
+    Everything above, plus we read newly published Airworthiness Directives and flag the ones
+    naming your make, model or serial number.
+
+    Somebody at your school then decides, for each one, whether it applies to a given aeroplane.
+    That decision is recorded against your name and your certificate, and it is permanent.
+  </Step>
+  <Step n={4} title="Somewhere else">
+    Applicability is tracked in another system. Name it, and we propose nothing and watch
+    nothing.
+
+    The name is printed on any AD document we produce, so a reader knows where the authoritative
+    list lives rather than assuming it is ours.
+  </Step>
+</Steps>
+
+<Callout type="important">
+Whatever you choose, AerScheduler never decides that an Airworthiness Directive does **not**
+apply to your aircraft. That determination belongs to a certificated person, and it is the one
+thing software getting it wrong could actually hurt somebody over.
+</Callout>
+
+## What a serial number buys you
+
+An AD names the aircraft it applies to by make and model, and usually by a serial number range:
+*"Model PC-12/47E airplanes, manufacturer serial numbers 2001 through 2999"*. Two 172s parked
+next to each other are frequently not both affected.
+
+The same settings page shows, per aeroplane, how precisely we could match:
+
+- **By serial.** We can check the range an AD names and tell whether your aeroplane falls inside
+  it.
+- **By model only.** We can tell that an AD mentions your make and model, but not whether your
+  particular aircraft is in the affected range. You will be shown more candidates than actually
+  apply, and somebody has to read them.
+- **Not enough detail.** We do not know the make or model, so we cannot propose anything.
+
+Adding a serial number is the single thing that improves this. It is on the data plate, and it is
+on the aircraft's registration.
+
+<Callout type="note">
+A serial number is not required to turn anything on. Matching by model still works; it is just
+noisier. We would rather show you a longer list and say why than block the feature behind an
+afternoon of data entry.
+</Callout>
+
+## Who can change this
+
+Owners and admins. Not an office manager with the settings grant, and not a technician.
+
+Turning the catalogue on changes what every technician at the school is asked to review, which
+makes it a decision about how the school runs rather than a preference.
+
+## Changing your mind
+
+Switching modes never deletes anything. Compliance records are permanent regardless, so a school
+that turns the catalogue off keeps every record it has already signed, and a school that switches
+to *Somewhere else* keeps its history and simply stops being offered new candidates.
+
+## Related
+
+- [Track Airworthiness Directives](/docs/maintenance/track-airworthiness-directives)
+- [Sign off a completed inspection](/docs/maintenance/sign-off-an-inspection)
+- [How maintenance tracking works](/docs/maintenance/how-maintenance-tracking-works)

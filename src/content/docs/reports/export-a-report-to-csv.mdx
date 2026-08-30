@@ -1,6 +1,6 @@
 <Summary>
-Set the report up the way you want it, then click Export at the right of the toolbar. The CSV holds every matching
-row, not just the page on screen, and the numbers come out plain so a spreadsheet can add them up.
+Set the report up the way you want it, then click Export at the right of the toolbar and pick a format. CSV is for a
+spreadsheet; PDF is for the copy somebody hands over. Both hold every matching row, not just the page on screen.
 </Summary>
 
 <Roles>Owners, Admins, Dispatchers, Technicians</Roles>
@@ -12,8 +12,9 @@ row, not just the page on screen, and the numbers come out plain so a spreadshee
 Set the date range, add your filters, choose the grouping, pick the columns, and sort it. The export is a copy of
 what you have built, so anything you change afterwards is not in the file.
 </Step>
-<Step n={2} title="Click Export">
-It sits at the right of the toolbar, beside Saved views and Save as. The file downloads immediately.
+<Step n={2} title="Click Export and pick a format">
+It sits at the right of the toolbar, beside Saved views and Save as. Choose **CSV** for a spreadsheet or **PDF** for
+a copy you are handing to somebody. The file downloads immediately.
 </Step>
 </Steps>
 
@@ -43,7 +44,8 @@ turning them into punctuation.
 
 ## The file name and the school's clock
 
-Files are named after the report and the window, like `revenue_2026-01-01_2026-01-31.csv`.
+Files are named after the report and the window, like `revenue_2026-01-01_2026-01-31.csv` or
+`airworthiness_2026-01-01_2026-12-31.pdf`.
 
 Those dates are your school's dates, measured on the school's time zone, so the file name and the window on screen
 always agree. If nobody has set the school's time zone yet, see
@@ -56,12 +58,31 @@ Export is disabled when the report has zero matching rows. There is nothing to w
 Widen the date range or drop a filter, and it comes back. If the table reads "Nothing matched", that is the same
 condition stated in words.
 
-## CSV is the only format
+## Which format to pick
 
-There is no PDF and no XLSX export. If somebody needs a PDF, export the CSV and print it from a spreadsheet.
+**CSV** when the file is going into a spreadsheet. Every numeric column is written plain so it can be summed without
+cleaning up first, and there is a totals row at the bottom.
 
-There is also no export on the Overview dashboard and none on Audit Logs. To get a dashboard figure into a
-spreadsheet, click the tile to open the report behind it and export from there.
+**PDF** when the file is going to a person. It carries your school's name, the window it covers, the date it was
+produced, and the report's own footnote, because a printed page outlives the screen that made it and has to say what
+it is on its own. This is the one to use for an IA at an annual, a buyer's mechanic, an insurer, or an inspector.
+
+<Callout type="note">
+A PDF is a copy of what the report holds. It is not a substitute for the aircraft's maintenance records, and the
+Airworthiness compliance report in particular is evidence of the sign-offs recorded here rather than a complete
+statement of an aircraft's AD status. See
+[Track Airworthiness Directives](/docs/maintenance/track-airworthiness-directives).
+</Callout>
+
+There is no XLSX export. There is also no export on the Overview dashboard and none on Audit Logs. To get a dashboard
+figure into a spreadsheet, click the tile to open the report behind it and export from there.
+
+### A very wide report in PDF
+
+A page has a fixed width and a spreadsheet does not. If your chosen columns cannot be fitted legibly, the PDF turns
+sideways first, and if that is still not enough it drops columns from the right and names the ones it dropped on the
+page. It will not shrink a report until it is unreadable, and it will not quietly leave columns out without saying
+so. If you need every column, export the CSV.
 
 ## Opening the file in Excel
 

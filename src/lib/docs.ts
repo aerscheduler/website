@@ -886,10 +886,19 @@ export const DOC_SECTIONS: DocSection[] = [
         seoQuery: "aircraft inspection reminder started from the wrong hours",
       },
       {
+        slug: "choose-how-we-handle-airworthiness-directives",
+        title: "Choose how much AerScheduler does about Airworthiness Directives",
+        description:
+          "Four choices, and nothing is on by default. Do nothing about ADs, track them here yourself, have AerScheduler watch newly published ADs for ones naming your fleet, or say that applicability is tracked in another system such as ADlog or AVTRAK. Also explains what a serial number buys you and why we never decide that an AD does not apply.",
+        kind: "task",
+        audience: ["Owners", "Admins"],
+        seoQuery: "turn off airworthiness directive tracking flight school software",
+      },
+      {
         slug: "track-airworthiness-directives",
         title: "Track Airworthiness Directives and keep the compliance record",
         description:
-          "Set an inspection's source to Airworthiness Directive and give it the AD number. Signing it off then keeps a permanent record of what was done, the time in service and who certified it, which is what 14 CFR 91.417 asks you to keep. The Compliance log is the history and the Airworthiness compliance report is the copy you hand an inspector.",
+          "Set an inspection's source to Airworthiness Directive and give it the AD number and revision date. Signing it off then keeps a permanent record of what was done, the meter readings and who certified it. The Compliance log is the history and the Airworthiness compliance report prints it. AerScheduler records the ADs you enter; it does not tell you which ADs apply to your aircraft.",
         kind: "task",
         audience: ["Owners", "Admins", "Technicians"],
         seoQuery: "track airworthiness directive AD compliance for a flight school aircraft",
@@ -1242,9 +1251,9 @@ export const DOC_SECTIONS: DocSection[] = [
       },
       {
         slug: "export-a-report-to-csv",
-        title: "Export a report to CSV",
+        title: "Export a report to CSV or PDF",
         description:
-          "Set the report up the way you want it and click Export. The file holds every matching row, not just the page on screen, and the numbers come out plain so a spreadsheet can add them up.",
+          "Set the report up the way you want it and click Export. CSV is for a spreadsheet, PDF is for the copy somebody hands over. Both hold every matching row, not just the page on screen.",
         kind: "task",
         audience: ["Owners", "Admins", "Dispatchers", "Technicians"],
         seoQuery: "export flight school report to csv excel",
