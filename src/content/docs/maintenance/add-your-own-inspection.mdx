@@ -1,7 +1,7 @@
 <Summary>
-<Where app="web">Maintenance → Add inspections</Where>. Choose **Recurring** for anything
-that repeats on hours or on a set number of days, or **One-off** for a single date. Name
-it, set the interval and the warning lead, pick the tails, and click **Add**.
+<Where app="web">Maintenance → Add inspections</Where>. Choose **Recurring** for anything that
+repeats on flying hours, or on days, weeks or calendar months, or **One-off** for a single date.
+Name it, set the interval and the warning lead, pick the tails, and click **Add**.
 </Summary>
 
 <Roles>Owners, Admins, Technicians</Roles>
@@ -30,9 +30,12 @@ everything else your shop tracks.
     **On the calendar** is preselected. Switch to **On the meter** for anything counted in
     flying hours.
   </Step>
-  <Step n={4} title="Fill in Every and Warn me">
-    "Every 100" hours with "Warn me 10 hours out", or "Every 180" days with "Warn me 14
-    days out". The defaults are 100 and 10.
+  <Step n={4} title="Fill in Every, its unit, and Warn me">
+    On the calendar, pick **days**, **weeks** or **calendar months** beside the number. It
+    opens on "Every 12 calendar months, warn 30 days out", which is an annual. On the meter it
+    is "Every 100 hours, warn 10 hours out".
+
+    The warning lead is always in days on the calendar side, whichever unit the interval uses.
   </Step>
   <Step n={5} title="On the meter, pick the meter">
     **Count tach time** or **Count hobbs time**. Tach is the default, and it is what every
@@ -56,12 +59,39 @@ everything else your shop tracks.
 
 ## On the calendar or on the meter
 
-An inspection counted on the calendar recurs every so many days from the last sign-off, and
-it shows a due date. An inspection counted on the meter counts flying hours and shows a
-meter figure instead: "Due at 1250.0 tach, now 1237.6."
+An inspection counted on the calendar recurs from the last sign-off and shows a due date. An
+inspection counted on the meter counts flying hours and shows a meter figure instead: "Due at
+1250.0 tach, now 1237.6."
 
-They never convert into each other, so pick the one your shop actually works to. An oil
-change measured in hours should be on the meter even though people talk about it in months.
+They never convert into each other, so pick the one your shop actually works to. An oil change
+measured in hours should be on the meter even though people talk about it in months.
+
+## Days, weeks, or calendar months
+
+**Calendar months are not a number of days, and this is the setting most worth getting right.**
+
+A calendar month runs to the END of the month. 14 CFR 91.409(a) requires an annual "within the
+preceding 12 calendar months", so an annual signed on 15 February 2026 is good through 28
+February 2027, not through 15 February 2027. The transponder check (91.413), the static system
+(91.411) and the ELT (91.207(d)) are all written the same way, and so are a great many recurring
+Airworthiness Directives.
+
+If you set one of those as "365 days" it will come due up to a month early, depending on which
+day of which month the work was signed. That will not make you unairworthy, but it will take an
+aeroplane off your line while it is still perfectly legal to fly, every year, on every tail.
+
+- **Calendar months** for anything a regulation writes in months. Due date lands on the last day
+  of the month, and it is worked out on your school's time zone.
+- **Weeks** for a shop rhythm. A week is exactly seven days, so this is simply a tidier way to
+  say the same thing, and "every 2 weeks" reads back as weeks.
+- **Days** for anything genuinely counted in days, like the 30-day VOR check.
+
+<Callout type="tip">
+Already have an annual set to 365 days? Nothing was converted for you, because a 365-day
+interval might genuinely mean 365 days and converting one moves its due date LATER, which is
+not a change anybody should make on your behalf. Edit the inspection and switch its unit to
+calendar months when you are ready.
+</Callout>
 
 <Callout type="note">
 The progress bar under an inspection is how full the interval is, not how much time has
