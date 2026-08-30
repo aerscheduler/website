@@ -737,6 +737,9 @@ function fillPlaceholders(route, values) {
  * with its own text, a visible border, or a background that is not transparent.
  * Purely structural wrappers contribute nothing, which is the whole point.
  *
+ * The result is then padded on all four sides (see INNER and OUTER below). A crop cut flush
+ * to a card's border reads as a mistake; a little of the page around it reads as a decision.
+ *
  * Returns null when nothing qualifies, and the caller falls back to the plain
  * element screenshot rather than guessing.
  */
@@ -780,13 +783,35 @@ async function contentBox(page, el) {
     visit(root);
     if (!found) return null;
 
-    // Never grow beyond the element itself, and keep a little breathing room.
+    // TWO KINDS OF BREATHING ROOM, and only the first one used to exist.
+    //
+    // INNER is slack inside the element, for the case this function is really for: content
+    // that occupies a fraction of a wrapper reserving space for more. It is clamped to the
+    // element's own rect, because growing past it there would pull in a neighbour.
+    //
+    // OUTER is the margin AROUND the element, and it is why the early captures looked
+    // cramped. The old code had a `pad` of 8 that was clamped to `own` on every side, so on
+    // any card with a border (which is most of them) the painted bounds already reached the
+    // element edge and the padding resolved to nothing at all. Every image was cut flush to
+    // the border, which reads as a crop that went slightly wrong rather than a deliberate one.
+    //
+    // Clamped to the viewport rather than to the element, so a card at the very edge of the
+    // page still yields a valid clip instead of one Playwright refuses.
     const own = root.getBoundingClientRect();
-    const pad = 8;
-    const left = Math.max(own.left, bounds.left - pad);
-    const top = Math.max(own.top, bounds.top - pad);
-    const right = Math.min(own.right, bounds.right + pad);
-    const bottom = Math.min(own.bottom, bounds.bottom + pad);
+    const INNER = 8;
+    // 16 rather than something more generous on purpose. The console stacks cards with a 20px
+    // gap, so anything above 20 reaches into the neighbour and the image ends on a sliver of
+    // somebody else's rounded corner, which reads as a crop that slipped. 16 clears the gap and
+    // still gives the subject room to sit in.
+    const OUTER = 16;
+
+    const vw = document.documentElement.clientWidth;
+    const vh = document.documentElement.clientHeight;
+
+    const left = Math.max(0, Math.max(own.left, bounds.left - INNER) - OUTER);
+    const top = Math.max(0, Math.max(own.top, bounds.top - INNER) - OUTER);
+    const right = Math.min(vw, Math.min(own.right, bounds.right + INNER) + OUTER);
+    const bottom = Math.min(vh, Math.min(own.bottom, bounds.bottom + INNER) + OUTER);
     if (right - left < 40 || bottom - top < 40) return null;
 
     return {

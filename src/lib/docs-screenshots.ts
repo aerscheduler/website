@@ -1019,10 +1019,15 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "sign-off-compliance",
     screen: "Sign off, compliance record",
-    route: "/maintenance?view=reminders",
+    // FILTERED TO AN AD, and that is the whole spec. The compliance half only opens by default
+    // on an Airworthiness Directive; on an ordinary inspection the switch is off and the section
+    // is one collapsed row. This used to be a bare /maintenance?view=reminders and clicked the
+    // FIRST Sign off in the list, which is whatever is most overdue, so it captured a collapsed
+    // toggle instead of the fields the article is about. It was a green run and a wrong picture.
+    route: "/maintenance?view=reminders&q=2015-19-07",
     alt: "The compliance record section of a sign-off",
     dataState:
-      "An outstanding inspection whose template is an Airworthiness Directive, signed off by a technician whose profile carries a certificate number, so the compliance section is open by default with both meters and the certificate prefilled.",
+      "Capture as the TECHNICIAN (DOCS_EMAIL=test-technician@aerscheduler.com), whose profile carries certificate 3421887 (A&P), so the certificate and its kind arrive prefilled. As the default owner account both boxes are empty and the shot shows the \"no certificate on your profile yet\" hint instead, which is a true screen and the wrong illustration. Seeded by seed-test-org-maintenance-for-docs.mjs, which sets that certificate and creates the AD 2015-19-07 templates the query filters to.",
     open: ['[data-doc-shot="maintenance-all-inspections"] button:has-text("Sign off")'],
     crop: '[data-doc-shot="sign-off-compliance"]',
   },
