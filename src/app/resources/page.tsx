@@ -48,6 +48,21 @@ const GUIDES = [
     body: "What clubs charge to join and to stay, the tiers they settle on, and the five awkward cases (mid-month joiners, seasonal members, a comped month) that decide whether dues are a five-minute job.",
   },
   {
+    href: "/resources/airworthiness-directive-tracking",
+    title: "Airworthiness Directive tracking",
+    body: "Applicability, compliance and enforcement are three different jobs. Which of them a scheduling system can actually do, and where you still want ADlog or AVTRAK.",
+  },
+  {
+    href: "/resources/calendar-months-and-inspection-due-dates",
+    title: "Calendar months and inspection due dates",
+    body: "An annual signed on 15 February is good through 28 February the following year. What 12 calendar months means, which inspections use it, and what tracking them as 365 days costs.",
+  },
+  {
+    href: "/resources/aircraft-maintenance-records",
+    title: "Aircraft maintenance records",
+    body: "The two lists in 14 CFR 91.417 and their very different lifespans, which records go with the aeroplane when you sell it, and why a tracking system is not a logbook.",
+  },
+  {
     href: "/resources/flight-training-records",
     title: "Flight training records",
     body: "What a school has to keep: versioned syllabi, hours that move independently of lessons, records frozen at signing, and endorsements from AC 61-65K.",

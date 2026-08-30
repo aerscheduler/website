@@ -84,6 +84,33 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
     ],
   },
   {
+    // Airworthiness sits on its own rather than under Guides because the three pages answer
+    // three different people: an owner deciding what to buy, a mechanic checking a due date,
+    // and whoever has to hand records to an inspector. The pillar is the AD page and the other
+    // two link back to it, so the internal linking points somewhere rather than in a ring.
+    title: "Airworthiness",
+    items: [
+      {
+        href: "/resources/airworthiness-directive-tracking",
+        label: "Airworthiness Directive tracking",
+        description:
+          "Applicability, compliance and enforcement are three jobs. Which ones a scheduling system can actually do.",
+      },
+      {
+        href: "/resources/calendar-months-and-inspection-due-dates",
+        label: "Calendar months and due dates",
+        description:
+          "An annual signed on 15 February is good through 28 February the following year, not 365 days later.",
+      },
+      {
+        href: "/resources/aircraft-maintenance-records",
+        label: "Aircraft maintenance records",
+        description:
+          "The two lists in 14 CFR 91.417, what transfers at sale, and why a tracking system is not a logbook.",
+      },
+    ],
+  },
+  {
     // The pillar page sits first and the two topic guides link back to it, so
     // the internal linking points somewhere rather than in a ring.
     title: "Reporting",

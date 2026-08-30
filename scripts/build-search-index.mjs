@@ -424,6 +424,18 @@ const PAGE_META = {
   "/resources/flight-school-reports": { group: "Guides", title: "Flight school reports" },
   "/resources/aircraft-utilization-report": { group: "Guides", title: "Aircraft utilization" },
   "/resources/flight-school-revenue-reporting": { group: "Guides", title: "Revenue reporting" },
+  "/resources/airworthiness-directive-tracking": {
+    group: "Guides",
+    title: "Airworthiness Directive tracking",
+  },
+  "/resources/calendar-months-and-inspection-due-dates": {
+    group: "Guides",
+    title: "Calendar months and due dates",
+  },
+  "/resources/aircraft-maintenance-records": {
+    group: "Guides",
+    title: "Aircraft maintenance records",
+  },
 };
 
 /** Constants interpolated into page copy, so `${SITE_NAME}` does not reach the index. */

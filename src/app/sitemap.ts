@@ -37,6 +37,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // is the kind of omission nothing complains about: the page renders, the nav links to
     // it, and it simply is not submitted. A new guide belongs in FOUR places: its own
     // directory, the resources index, RESOURCE_GROUPS for the nav and footer, and here.
+    // Airworthiness cluster. The AD page is the pillar; the other two link back to it.
+    {
+      path: "/resources/airworthiness-directive-tracking",
+      priority: 0.85,
+      changeFrequency: "monthly",
+    },
+    {
+      path: "/resources/calendar-months-and-inspection-due-dates",
+      priority: 0.85,
+      changeFrequency: "monthly",
+    },
+    {
+      path: "/resources/aircraft-maintenance-records",
+      priority: 0.85,
+      changeFrequency: "monthly",
+    },
     {
       path: "/resources/split-billing-shared-flights",
       priority: 0.85,
