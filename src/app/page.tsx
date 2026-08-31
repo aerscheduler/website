@@ -26,6 +26,7 @@ import {
 } from "@/components/mocks/living";
 import { StoreBadges } from "@/components/store-badges";
 import { HeroAtmosphere } from "@/components/hero-atmosphere";
+import { SkyScrim } from "@/components/sky-scrim";
 import { Reveal, RevealGroup } from "@/components/reveal";
 import {
   PRICE_PER_AIRCRAFT,
@@ -143,12 +144,13 @@ export default function HomePage() {
       </section>
 
       {/* Five modules: the product spine.
-          Photograph rather than the grid-lines pattern it used to carry. This
-          is the one section on the home page that has to land the whole
-          argument at once, and a row of trainers in front of the hangars says
-          "this is your operation" faster than any heading can. Same treatment
-          as the statement bands on the feature pages, so the two read as one
-          site. */}
+          A photograph rather than the grid-lines pattern it used to carry, and
+          scrimmed by `SkyScrim` rather than a flat navy slab. The slab was the
+          problem: the hero above it changes colour with the visitor's local
+          time, so a rectangle of fixed brand paint underneath read as two
+          designs meeting rather than one page continuing. The scrim tints from
+          the same six phases off the same clock, so the sky above and the band
+          below are always the same weather. */}
       <section className="relative isolate overflow-hidden bg-brand-surface">
         <Image
           src="/photos/homepage-fleet.jpg"
@@ -158,14 +160,7 @@ export default function HomePage() {
           quality={60}
           className="object-cover"
         />
-        <div
-          className="absolute inset-0 bg-gradient-to-r from-brand-surface via-brand-surface/85 to-brand-surface/45"
-          aria-hidden
-        />
-        <div
-          className="absolute inset-0 bg-gradient-to-b from-brand-surface/60 via-transparent to-brand-surface/70"
-          aria-hidden
-        />
+        <SkyScrim />
         <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-24">
           <Reveal className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
             <div className="max-w-2xl">

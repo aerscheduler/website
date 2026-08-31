@@ -507,3 +507,105 @@ body {
   font-weight: 500;
   white-space: nowrap;
 }
+
+/* ---------------------------------------------------------------------------
+   Statement band sky
+
+   The dark counterpart to the hero sky above, for a band laid over a
+   photograph. Same six phases, same clock (see `usePhase`), authored for white
+   text on top and a photograph underneath.
+
+   Each one runs left to right: dense enough on the left to carry a heading at
+   4xl, thinning toward the right so the photograph is still a photograph. The
+   hue is what does the work. Midday is brand blue, dawn and dusk let warmth in
+   on the right the way the hero does, night closes down to almost solid.
+
+   No drift animation here, unlike the hero. A gradient sliding across a still
+   photograph reads as a rendering fault, not as weather.
+   ------------------------------------------------------------------------- */
+.band-sky {
+  opacity: 0;
+  transition: opacity var(--dur-slow) var(--ease-out);
+  will-change: opacity;
+}
+
+.band-sky--active { /* em-dash-ok: BEM modifier */
+  opacity: 1;
+}
+
+.band-sky--night { /* em-dash-ok: BEM modifier */
+  background: linear-gradient(
+    100deg,
+    rgba(8, 17, 33, 0.97) 0%,
+    rgba(12, 26, 48, 0.92) 34%,
+    rgba(16, 35, 63, 0.78) 62%,
+    rgba(20, 42, 74, 0.55) 100%
+  );
+}
+
+.band-sky--dawn { /* em-dash-ok: BEM modifier */
+  background: linear-gradient(
+    100deg,
+    rgba(18, 32, 60, 0.96) 0%,
+    rgba(38, 52, 92, 0.88) 34%,
+    rgba(92, 74, 96, 0.66) 66%,
+    rgba(168, 108, 88, 0.42) 100%
+  );
+}
+
+.band-sky--morning { /* em-dash-ok: BEM modifier */
+  background: linear-gradient(
+    100deg,
+    rgba(12, 28, 54, 0.96) 0%,
+    rgba(18, 44, 82, 0.88) 34%,
+    rgba(26, 62, 116, 0.66) 66%,
+    rgba(40, 88, 156, 0.4) 100%
+  );
+}
+
+.band-sky--midday { /* em-dash-ok: BEM modifier */
+  background: linear-gradient(
+    100deg,
+    rgba(11, 26, 50, 0.96) 0%,
+    rgba(17, 42, 80, 0.86) 34%,
+    rgba(28, 68, 126, 0.62) 66%,
+    rgba(46, 100, 172, 0.36) 100%
+  );
+}
+
+.band-sky--evening { /* em-dash-ok: BEM modifier */
+  background: linear-gradient(
+    100deg,
+    rgba(14, 28, 54, 0.96) 0%,
+    rgba(32, 48, 90, 0.88) 34%,
+    rgba(66, 70, 118, 0.66) 66%,
+    rgba(126, 96, 132, 0.4) 100%
+  );
+}
+
+.band-sky--dusk { /* em-dash-ok: BEM modifier */
+  background: linear-gradient(
+    100deg,
+    rgba(16, 26, 50, 0.97) 0%,
+    rgba(42, 44, 82, 0.9) 34%,
+    rgba(96, 70, 100, 0.68) 66%,
+    rgba(186, 110, 84, 0.44) 100%
+  );
+}
+
+/* The seam. Phase-independent, so it stays one layer instead of six. */
+.band-horizon {
+  background: linear-gradient(
+    to bottom,
+    rgba(16, 35, 63, 0.55) 0%,
+    transparent 22%,
+    transparent 62%,
+    rgba(10, 22, 42, 0.5) 100%
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .band-sky {
+    transition: none !important;
+  }
+}

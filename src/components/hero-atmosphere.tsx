@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { DEFAULT_PHASE, PHASES, phaseForHour, type Phase } from "@/lib/time-of-day";
+import { PHASES } from "@/lib/time-of-day";
+import { usePhase } from "@/lib/use-phase";
 
 /**
  * Six skies stacked on top of each other; the one matching the visitor's local
@@ -9,23 +9,11 @@ import { DEFAULT_PHASE, PHASES, phaseForHour, type Phase } from "@/lib/time-of-d
  * layers keeps every gradient hand-tuned: interpolating one gradient through
  * the day would drag the mid-points through muddy colours nobody chose.
  *
- * Renders `DEFAULT_PHASE` on the server and on the first client paint so the
- * markup matches, then swaps to the real phase in an effect. The swap animates,
- * which is why arriving at 21:00 gives you a hero that settles into dusk rather
- * than snapping.
+ * The clock lives in `usePhase` because the home page's statement band reads the
+ * same one. See `SkyScrim`, which is this component's dark twin.
  */
 export function HeroAtmosphere() {
-  const [phase, setPhase] = useState<Phase>(DEFAULT_PHASE);
-
-  useEffect(() => {
-    const apply = () => setPhase(phaseForHour(new Date().getHours()));
-    apply();
-
-    // A visitor who leaves the tab open across a boundary (or a laptop that
-    // wakes in a new timezone) should not be stuck in the old sky.
-    const timer = window.setInterval(apply, 60_000);
-    return () => window.clearInterval(timer);
-  }, []);
+  const phase = usePhase();
 
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
