@@ -107,109 +107,135 @@ body {
 }
 
 .sky--active { /* em-dash-ok: BEM modifier */
-  opacity: 0.9;
+  opacity: 1;
 }
+
+/* Every gradient below is anchored in the same four places, and the reason the
+   hero read as a white page with a corner glow is that three of them sat at
+   78%, 92% and 60% across: directly behind the product mock, which is an opaque
+   white card. The colour was being painted and then covered up.
+
+   So each phase now also carries a LEFT wash, low alpha, under the headline
+   where there is nothing on top of it. That is what makes the hero read as a
+   sky rather than as blank space with weather in one corner. Left alphas stay
+   under 0.22 because the headline on top is dark navy and has to keep its
+   contrast; the right-hand stops carry the saturation, where only the mock is.
+
+   The closing `ground` stop tints the very bottom so the hero hands off to the
+   white value strip below instead of just stopping. */
 
 .sky--night { /* em-dash-ok: BEM modifier */
   background:
-    radial-gradient(ellipse 70% 55% at 78% 18%, rgba(30, 58, 110, 0.5), transparent 58%),
-    radial-gradient(ellipse 55% 50% at 92% 55%, rgba(16, 35, 63, 0.45), transparent 52%),
-    radial-gradient(ellipse 40% 45% at 60% 88%, rgba(12, 24, 46, 0.3), transparent 55%),
+    radial-gradient(ellipse 70% 55% at 78% 18%, rgba(30, 58, 110, 0.62), transparent 58%),
+    radial-gradient(ellipse 55% 50% at 92% 55%, rgba(16, 35, 63, 0.52), transparent 52%),
+    radial-gradient(ellipse 40% 45% at 60% 88%, rgba(12, 24, 46, 0.32), transparent 55%),
+    radial-gradient(ellipse 62% 72% at 6% 76%, rgba(38, 76, 140, 0.18), transparent 62%),
     linear-gradient(
       118deg,
       transparent 32%,
-      rgba(25, 55, 99, 0.3) 46%,
-      rgba(16, 35, 63, 0.42) 56%,
-      rgba(38, 76, 140, 0.32) 64%,
-      rgba(10, 20, 38, 0.24) 76%,
+      rgba(25, 55, 99, 0.34) 46%,
+      rgba(16, 35, 63, 0.46) 56%,
+      rgba(38, 76, 140, 0.36) 64%,
+      rgba(10, 20, 38, 0.26) 76%,
       transparent 88%
-    );
+    ),
+    linear-gradient(to bottom, transparent 72%, rgba(16, 35, 63, 0.1) 100%);
   animation: sky-drift-a 26s ease-in-out infinite alternate;
 }
 
 .sky--dawn { /* em-dash-ok: BEM modifier */
   background:
-    radial-gradient(ellipse 70% 55% at 78% 18%, rgba(255, 176, 122, 0.42), transparent 58%),
-    radial-gradient(ellipse 55% 50% at 92% 55%, rgba(120, 150, 220, 0.4), transparent 52%),
-    radial-gradient(ellipse 40% 45% at 60% 88%, rgba(25, 103, 210, 0.24), transparent 55%),
+    radial-gradient(ellipse 70% 55% at 78% 18%, rgba(255, 176, 122, 0.54), transparent 58%),
+    radial-gradient(ellipse 55% 50% at 92% 55%, rgba(120, 150, 220, 0.46), transparent 52%),
+    radial-gradient(ellipse 40% 45% at 60% 88%, rgba(25, 103, 210, 0.26), transparent 55%),
+    radial-gradient(ellipse 62% 72% at 6% 76%, rgba(255, 198, 154, 0.17), transparent 62%),
     linear-gradient(
       118deg,
       transparent 32%,
-      rgba(255, 196, 150, 0.26) 46%,
-      rgba(148, 163, 224, 0.38) 56%,
-      rgba(90, 140, 220, 0.34) 64%,
-      rgba(30, 58, 110, 0.2) 76%,
+      rgba(255, 196, 150, 0.3) 46%,
+      rgba(148, 163, 224, 0.42) 56%,
+      rgba(90, 140, 220, 0.38) 64%,
+      rgba(30, 58, 110, 0.22) 76%,
       transparent 88%
-    );
+    ),
+    linear-gradient(to bottom, transparent 72%, rgba(120, 150, 220, 0.1) 100%);
   animation: sky-drift-b 21s ease-in-out infinite alternate;
 }
 
 .sky--morning { /* em-dash-ok: BEM modifier */
   background:
-    radial-gradient(ellipse 70% 55% at 78% 18%, rgba(125, 211, 252, 0.48), transparent 58%),
-    radial-gradient(ellipse 55% 50% at 92% 55%, rgba(56, 160, 235, 0.38), transparent 52%),
-    radial-gradient(ellipse 40% 45% at 60% 88%, rgba(25, 103, 210, 0.2), transparent 55%),
+    radial-gradient(ellipse 70% 55% at 78% 18%, rgba(125, 211, 252, 0.6), transparent 58%),
+    radial-gradient(ellipse 55% 50% at 92% 55%, rgba(56, 160, 235, 0.44), transparent 52%),
+    radial-gradient(ellipse 40% 45% at 60% 88%, rgba(25, 103, 210, 0.22), transparent 55%),
+    radial-gradient(ellipse 62% 72% at 6% 76%, rgba(186, 230, 253, 0.2), transparent 62%),
     linear-gradient(
       118deg,
       transparent 32%,
-      rgba(186, 230, 253, 0.3) 46%,
-      rgba(56, 189, 248, 0.4) 56%,
-      rgba(25, 103, 210, 0.32) 64%,
-      rgba(16, 35, 63, 0.16) 76%,
+      rgba(186, 230, 253, 0.34) 46%,
+      rgba(56, 189, 248, 0.44) 56%,
+      rgba(25, 103, 210, 0.36) 64%,
+      rgba(16, 35, 63, 0.18) 76%,
       transparent 88%
-    );
+    ),
+    linear-gradient(to bottom, transparent 72%, rgba(56, 160, 235, 0.1) 100%);
   animation: sky-drift-a 18s ease-in-out infinite alternate;
 }
 
 /* The original mesh, kept as the neutral midday state and the SSR default. */
 .sky--midday { /* em-dash-ok: BEM modifier */
   background:
-    radial-gradient(ellipse 70% 55% at 78% 18%, rgba(56, 189, 248, 0.45), transparent 58%),
-    radial-gradient(ellipse 55% 50% at 92% 55%, rgba(25, 103, 210, 0.38), transparent 52%),
-    radial-gradient(ellipse 40% 45% at 60% 88%, rgba(16, 35, 63, 0.22), transparent 55%),
+    radial-gradient(ellipse 70% 55% at 78% 18%, rgba(56, 189, 248, 0.58), transparent 58%),
+    radial-gradient(ellipse 55% 50% at 92% 55%, rgba(25, 103, 210, 0.44), transparent 52%),
+    radial-gradient(ellipse 40% 45% at 60% 88%, rgba(16, 35, 63, 0.24), transparent 55%),
+    radial-gradient(ellipse 62% 72% at 6% 76%, rgba(147, 213, 250, 0.2), transparent 62%),
     linear-gradient(
       118deg,
       transparent 32%,
-      rgba(14, 165, 233, 0.28) 46%,
-      rgba(25, 103, 210, 0.42) 56%,
-      rgba(56, 189, 248, 0.35) 64%,
-      rgba(16, 35, 63, 0.2) 76%,
+      rgba(14, 165, 233, 0.32) 46%,
+      rgba(25, 103, 210, 0.46) 56%,
+      rgba(56, 189, 248, 0.39) 64%,
+      rgba(16, 35, 63, 0.22) 76%,
       transparent 88%
-    );
+    ),
+    linear-gradient(to bottom, transparent 72%, rgba(25, 103, 210, 0.1) 100%);
   animation: sky-drift-b 18s ease-in-out infinite alternate;
 }
 
 .sky--evening { /* em-dash-ok: BEM modifier */
   background:
-    radial-gradient(ellipse 70% 55% at 78% 18%, rgba(255, 205, 140, 0.36), transparent 58%),
-    radial-gradient(ellipse 55% 50% at 92% 55%, rgba(56, 150, 225, 0.4), transparent 52%),
-    radial-gradient(ellipse 40% 45% at 60% 88%, rgba(25, 103, 210, 0.24), transparent 55%),
+    radial-gradient(ellipse 70% 55% at 78% 18%, rgba(255, 205, 140, 0.48), transparent 58%),
+    radial-gradient(ellipse 55% 50% at 92% 55%, rgba(56, 150, 225, 0.46), transparent 52%),
+    radial-gradient(ellipse 40% 45% at 60% 88%, rgba(25, 103, 210, 0.26), transparent 55%),
+    radial-gradient(ellipse 62% 72% at 6% 76%, rgba(255, 216, 168, 0.19), transparent 62%),
     linear-gradient(
       118deg,
       transparent 32%,
-      rgba(255, 216, 168, 0.24) 46%,
-      rgba(96, 170, 232, 0.4) 56%,
-      rgba(25, 103, 210, 0.34) 64%,
-      rgba(16, 35, 63, 0.2) 76%,
+      rgba(255, 216, 168, 0.28) 46%,
+      rgba(96, 170, 232, 0.44) 56%,
+      rgba(25, 103, 210, 0.38) 64%,
+      rgba(16, 35, 63, 0.22) 76%,
       transparent 88%
-    );
+    ),
+    linear-gradient(to bottom, transparent 72%, rgba(56, 150, 225, 0.1) 100%);
   animation: sky-drift-a 23s ease-in-out infinite alternate;
 }
 
 .sky--dusk { /* em-dash-ok: BEM modifier */
   background:
-    radial-gradient(ellipse 70% 55% at 78% 18%, rgba(255, 158, 128, 0.4), transparent 58%),
-    radial-gradient(ellipse 55% 50% at 92% 55%, rgba(88, 108, 190, 0.42), transparent 52%),
-    radial-gradient(ellipse 40% 45% at 60% 88%, rgba(16, 35, 63, 0.3), transparent 55%),
+    radial-gradient(ellipse 70% 55% at 78% 18%, rgba(255, 158, 128, 0.52), transparent 58%),
+    radial-gradient(ellipse 55% 50% at 92% 55%, rgba(88, 108, 190, 0.48), transparent 52%),
+    radial-gradient(ellipse 40% 45% at 60% 88%, rgba(16, 35, 63, 0.32), transparent 55%),
+    radial-gradient(ellipse 62% 72% at 6% 76%, rgba(255, 184, 156, 0.19), transparent 62%),
     linear-gradient(
       118deg,
       transparent 32%,
-      rgba(255, 180, 150, 0.24) 46%,
-      rgba(110, 130, 200, 0.4) 56%,
-      rgba(46, 88, 160, 0.34) 64%,
-      rgba(16, 35, 63, 0.24) 76%,
+      rgba(255, 180, 150, 0.28) 46%,
+      rgba(110, 130, 200, 0.44) 56%,
+      rgba(46, 88, 160, 0.38) 64%,
+      rgba(16, 35, 63, 0.26) 76%,
       transparent 88%
-    );
+    ),
+    linear-gradient(to bottom, transparent 72%, rgba(88, 108, 190, 0.1) 100%);
   animation: sky-drift-b 24s ease-in-out infinite alternate;
 }
 
