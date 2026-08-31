@@ -25424,6 +25424,15 @@
               "null"
             ]
           },
+          "serialNumber": {
+            "description": "The manufacturer's serial number from the data plate, which is what an Airworthiness Directive names its applicability by. Distinct from the registration: a tail number can be changed or reassigned, a serial number cannot.",
+            "example": "172S9142",
+            "maxLength": 40,
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "category": {
             "type": "string",
             "description": "What the aircraft is. Together with `aircraftClass` this replaces the four-value `categoryClass`, which could not describe a helicopter.",
