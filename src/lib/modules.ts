@@ -27,6 +27,27 @@ export type ModuleSlug =
   | "maintenance"
   | "reporting";
 
+/**
+ * The photograph behind a module's statement band.
+ *
+ * Photography earns its place on these pages for one reason: the pages are long,
+ * and a reader scrolling through five card grids in a row stops reading. A
+ * full-bleed image is a breath, and it is the only thing on the page that is not
+ * asking to be read.
+ *
+ * All of them are from Pexels, whose licence allows commercial use with no
+ * attribution required. They live in `public/photos` rather than being hotlinked
+ * so the pages do not depend on somebody else's CDN staying up, and every one is
+ * general aviation rather than an airliner, because a school owner can tell the
+ * difference in about a tenth of a second.
+ */
+export type ModulePhoto = {
+  /** Path under /public. */
+  src: string;
+  /** Describes the photograph, not the module. It is decorative but not hidden. */
+  alt: string;
+};
+
 export type ProductModule = {
   slug: ModuleSlug;
   /** Column heading in the mega-menu, and the section heading on /features. */
@@ -39,6 +60,14 @@ export type ProductModule = {
   supporting: FeatureSlug[];
   /** The matching help documentation section, for cross-links. */
   docsSection: string;
+  /** Shared by the hub and its supporting pages, so a module reads as one thing. */
+  photo: ModulePhoto;
+};
+
+/** For the three cross-cutting pages, which belong to no module. */
+export const DEFAULT_PHOTO: ModulePhoto = {
+  src: "/photos/billing-cessna.jpg",
+  alt: "A Cessna 172 parked on a mountain airstrip",
 };
 
 export const MODULES: ProductModule[] = [
@@ -49,6 +78,10 @@ export const MODULES: ProductModule[] = [
     hub: "scheduling",
     supporting: ["self-booking", "fleet", "compliance"],
     docsSection: "scheduling",
+    photo: {
+      src: "/photos/scheduling-ramp.jpg",
+      alt: "A single-engine aircraft parked on the ramp in front of the hangars",
+    },
   },
   {
     slug: "billing",
@@ -57,6 +90,10 @@ export const MODULES: ProductModule[] = [
     hub: "billing",
     supporting: ["memberships"],
     docsSection: "billing",
+    photo: {
+      src: "/photos/billing-cessna.jpg",
+      alt: "A Cessna 172 parked on a mountain airstrip",
+    },
   },
   {
     slug: "training",
@@ -65,6 +102,10 @@ export const MODULES: ProductModule[] = [
     hub: "training",
     supporting: ["instruction"],
     docsSection: "training",
+    photo: {
+      src: "/photos/training-preflight.jpg",
+      alt: "An instructor and a student talking beside a light aircraft in a hangar",
+    },
   },
   {
     slug: "maintenance",
@@ -73,6 +114,10 @@ export const MODULES: ProductModule[] = [
     hub: "maintenance",
     supporting: ["inspections"],
     docsSection: "maintenance",
+    photo: {
+      src: "/photos/maintenance-hangar.jpg",
+      alt: "An aircraft engine and propeller under work in a hangar",
+    },
   },
   {
     slug: "reporting",
@@ -81,6 +126,10 @@ export const MODULES: ProductModule[] = [
     hub: "reports",
     supporting: ["utilization"],
     docsSection: "reports",
+    photo: {
+      src: "/photos/reporting-panel.jpg",
+      alt: "A pilot at the controls with the instrument panel lit",
+    },
   },
 ];
 

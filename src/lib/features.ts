@@ -147,15 +147,15 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
     navLabel: "Instruction",
     // Was "Training", which now belongs to the feature that actually is training.
     // This page is the commercial/ops half: rates, who may teach whom, and the
-    // weekly availability that booking respects — not the syllabus or grades.
+    // weekly availability that booking respects, not the syllabus or grades.
     eyebrow: "Rates & pairing",
     headline: "Who can teach whom, at what rate, and when they’re free.",
     summary:
       "Instruction types set the dual and ground rates on every invoice. Pairing decides which CFI a student can book with. Weekly availability is what the desk and self-booking actually offer. The syllabus and lesson grades live under Training.",
     bullets: [
       "Instruction types with default dual and ground rates",
-      "Per-instructor rate overrides when a CFI bills differently",
-      "Assign students to instructors — booking only offers valid pairs",
+      "Override the price on a single booking when one flight bills differently",
+      "Assign students to instructors, so booking only offers valid pairs",
       "Weekly availability that self-booking and the desk both respect",
       "Dual, ground, and solo reservations priced from the same rates",
       "Clear split from Training: rates & pairing here, syllabus & records there",
@@ -247,7 +247,7 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
       "Track AVIATES inspections and squawks on each tail, triage with the tech, and keep grounded airplanes off the bookable board.",
     bullets: [
       "Log, triage, and resolve squawks, optionally grounding the aircraft",
-      "AVIATES inspections — annual, 100-hour, ELT, and the rest — on hour and date intervals",
+      "AVIATES inspections (annual, 100-hour, ELT and the rest) on hour and date intervals",
       "Sign off overdue items and return the aircraft to service",
       "Grounded status visible across scheduling",
       "Log issues from the native app on the ramp",
@@ -290,7 +290,7 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
     eyebrow: "iOS",
     headline: "Built for the ramp, not a shrunk-down desktop.",
     summary:
-      "A native iOS app with a real Home — next booking, open squawks, unpaid invoices, and AVIATES inspections — the same operation as the web desk.",
+      "A native iOS app with a real Home: next booking, open squawks, unpaid invoices and AVIATES inspections. The same operation as the web desk.",
     bullets: [
       "A real native app, not a mobile website",
       "Home shows what's next: flights, maintenance, squawks, and dues",

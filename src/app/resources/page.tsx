@@ -53,7 +53,7 @@ const GUIDE_CLUSTERS: {
       {
         href: "/migrating/my-fbo",
         title: "MyFBO alternative & migration",
-        body: "MyFBO is closing in August 2026. Back up your data, stand up AerScheduler, run in parallel, then cut over.",
+        body: "MyFBO shut down in August 2026. How schools got their data out, stood AerScheduler up, ran both in parallel, and cut over.",
       },
       {
         href: "/pricing",

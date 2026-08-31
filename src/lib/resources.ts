@@ -57,7 +57,7 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
       {
         href: "/migrating/my-fbo",
         label: "MyFBO alternative & migration",
-        description: "MyFBO is closing. Back up, stand up, cut over.",
+        description: "MyFBO has shut down. What the move involved, start to finish.",
       },
     ],
   },
@@ -227,12 +227,16 @@ export const NAV_RESOURCE_GROUPS: ResourceGroup[] = [
     items: POPULAR_DOC_LINKS,
   },
   {
+    // MyFBO came out of the nav on 2026-08-31: that platform has shut down and
+    // the migration is finished, so a permanent seat in the chrome was spending
+    // a site-wide internal link on a campaign that is over. The page itself is
+    // still live and still in the sitemap for anyone searching the name.
     title: "Switching",
     items: linksByHref(
-      "/migrating/my-fbo",
       "/compare/flight-schedule-pro",
       "/compare/flight-circle",
       "/compare/talon-systems",
+      "/compare/schedule-pointe",
       "/pricing"
     ),
   },
@@ -251,11 +255,11 @@ export const FOOTER_RESOURCE_LINKS: ResourceLink[] = [
   {
     href: "/resources",
     label: "All resources",
-    description: "Guides, comparisons, migrations, and documentation.",
+    description: "Guides, comparisons, and documentation.",
   },
   ...linksByHref(
-    "/migrating/my-fbo",
     "/compare/flight-schedule-pro",
-    "/compare/flight-circle"
+    "/compare/flight-circle",
+    "/resources/flight-school-scheduling-software"
   ),
 ];

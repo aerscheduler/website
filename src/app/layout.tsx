@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Instrument_Sans } from "next/font/google";
 import { Analytics } from "@/components/analytics";
 import { ConsentBanner } from "@/components/consent-banner";
-import { MigrationBanner } from "@/components/migration-banner";
 import { JsonLd } from "@/components/json-ld";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -117,7 +116,6 @@ export default function RootLayout({
         <JsonLd data={websiteJsonLd()} />
         <JsonLd data={softwareApplicationJsonLd()} />
         <JsonLd data={siteNavigationJsonLd()} />
-        <MigrationBanner />
         <SiteHeader />
         <main>{children}</main>
         <SiteFooter />

@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowRight, Check, ChevronRight, BookOpen } from "lucide-react";
+import Image from "next/image";
+import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/button";
 import { StoreBadges } from "@/components/store-badges";
 import { Reveal, RevealGroup } from "@/components/reveal";
@@ -27,7 +28,7 @@ import {
   type FeatureSlug,
 } from "@/lib/features";
 import { FEATURE_LANDING } from "@/lib/feature-landing";
-import { moduleOf, moduleFeatures, isModuleHub } from "@/lib/modules";
+import { moduleOf, moduleFeatures, isModuleHub, DEFAULT_PHOTO } from "@/lib/modules";
 import { allArticles } from "@/lib/docs";
 import { RESOURCE_LINKS } from "@/lib/resources";
 import { faqJsonLd } from "@/lib/seo";
@@ -61,35 +62,28 @@ const FEATURE_SOURCE: Partial<Record<FeatureSlug, CampaignSource>> = {
 };
 
 /**
- * One template for every feature page, module hub and supporting page alike.
+ * One template for every feature page.
  *
- * What it used to be: a hero, a grid of ticked boxes, and a footer CTA. That is a
- * specification sheet, and it is the wrong document. Somebody who searched
- * "flight school billing software" and landed here has already decided they want
- * the category; what they are weighing is whether their Tuesday gets better, and
- * a list of capabilities does not answer that.
+ * The first version of this leaned the other way and it was wrong. It carried
+ * outcomes, then a bulleted deep-dive per section, then the full capability
+ * list, then FAQs, then two separate grids of cards: three feature lists and six
+ * card grids on one page. Read end to end it was a wall, and a wall does not get
+ * read, so the argument it contained may as well not have been there.
  *
- * So the order of the page is the order of that decision:
+ * What is here now alternates on purpose. Text, then a photograph, then short
+ * cards, then a timeline, then a dark band, then two-column prose, then a plain
+ * list. No two adjacent sections are the same shape, and the caps on the content
+ * itself live in `lib/feature-landing.ts` where they can actually be enforced.
  *
- *   what changes for you   (outcomes, first, because it is the only question)
- *   what it looks like     (the running demo in the hero)
- *   how it actually works  (four steps, in operator vocabulary)
- *   the detail underneath  (deep sections, for the reader who is now convinced)
- *   what you get           (the capability list, demoted to reference)
- *   the honest answers     (FAQ, which also ships FAQPage structured data)
- *
- * Every block below `outcomes` is optional and renders only when the feature has
- * content for it in `lib/feature-landing.ts`, so a page is never padded with an
- * empty heading. There are four calls to action down the page rather than one at
- * the bottom, because the reader who is sold at "how it works" should not have to
- * scroll past the FAQ to act on it.
+ * The photograph is the one thing on the page not asking to be read. It is a
+ * breath between arguments, and it carries the module's single strongest claim
+ * so the scroller who reads nothing else reads that.
  */
 export function FeaturePage({ feature }: { feature: Feature }) {
   const landing = FEATURE_LANDING[feature.slug];
   const productModule = moduleOf(feature.slug);
   const isHub = isModuleHub(feature.slug);
-
-  const related = feature.related.map((slug) => FEATURES[slug]).filter(Boolean);
+  const photo = productModule?.photo ?? DEFAULT_PHOTO;
 
   //Resolved by href rather than duplicated on the feature, so a guide can be retitled in one
   //place. `filter(Boolean)` because a guide that has been removed should vanish from here
@@ -98,30 +92,29 @@ export function FeaturePage({ feature }: { feature: Feature }) {
     .map((href) => RESOURCE_LINKS.find((link) => link.href === href))
     .filter((link): link is (typeof RESOURCE_LINKS)[number] => link != null);
 
-  // Help articles, resolved against the docs registry the same way, so a
-  // renamed article cannot leave a stale title on a marketing page and a
-  // deleted one degrades to silence rather than a 404.
+  // Help articles, resolved the same way against the docs registry, so a renamed
+  // article cannot leave a stale title here and a deleted one degrades to
+  // silence rather than a 404.
   const docs = (landing?.docs ?? [])
     .map((href) => {
       const found = allArticles().find((entry) => entry.href === href);
-      if (!found) return null;
-      return {
-        href,
-        label: found.article.title,
-        description: found.article.description,
-      };
+      return found ? { href, label: found.article.title } : null;
     })
-    .filter((link): link is { href: string; label: string; description: string } =>
-      link != null
-    );
+    .filter((link): link is { href: string; label: string } => link != null);
 
-  // Siblings inside the same module, for the reader who landed deep from a
-  // search and has no idea the other four pages exist.
-  const siblings = productModule
-    ? moduleFeatures(productModule)
-        .filter((slug) => slug !== feature.slug)
-        .map((slug) => FEATURES[slug])
+  // Siblings in the same module, then anything else related, deduplicated and
+  // merged into ONE grid. They used to be two separate sections of four cards
+  // each, which is eight cards saying roughly "there are other pages".
+  const siblingSlugs = productModule
+    ? moduleFeatures(productModule).filter((slug) => slug !== feature.slug)
     : [];
+  const seen = new Set<FeatureSlug>([feature.slug, ...siblingSlugs]);
+  const alsoSlugs = feature.related.filter((slug) => {
+    if (seen.has(slug)) return false;
+    seen.add(slug);
+    return true;
+  });
+  const explore = [...siblingSlugs, ...alsoSlugs].slice(0, 4).map((slug) => FEATURES[slug]);
 
   const cta = signupUrl(FEATURE_SOURCE[feature.slug]);
   const faqs = landing?.faqs ?? [];
@@ -146,10 +139,6 @@ export function FeaturePage({ feature }: { feature: Feature }) {
               ]}
             />
 
-            {/* The eyebrow names the module rather than repeating the page
-                title. On a supporting page it is a link, so somebody who
-                arrived from a long-tail search can climb up to the hub instead
-                of bouncing back to the results. */}
             {productModule && !isHub ? (
               <Link
                 href={featureHref(productModule.hub)}
@@ -167,10 +156,7 @@ export function FeaturePage({ feature }: { feature: Feature }) {
             <h1 className="mt-3 max-w-2xl text-4xl font-semibold tracking-tight text-brand-surface sm:text-5xl">
               {landing?.h1 ?? feature.title}
             </h1>
-            <p className="mt-4 max-w-2xl text-xl font-medium leading-snug tracking-tight text-brand-surface/80">
-              {feature.headline}
-            </p>
-            <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground">
+            <p className="mt-4 max-w-xl text-lg leading-relaxed text-muted-foreground">
               {feature.summary}
             </p>
 
@@ -183,17 +169,9 @@ export function FeaturePage({ feature }: { feature: Feature }) {
                 See the live demo
               </Button>
             </div>
-
-            {/* The three objections a shopper raises before they read a word of
-                the page: what does it cost, do I have to talk to anyone, and
-                can I back out. Answering them in the hero is why the compare
-                pages convert, and it costs one line. */}
             <p className="mt-4 text-sm text-muted-foreground">
               ${PRICE_PER_AIRCRAFT}/aircraft/mo · {TRIAL_DAYS}-day trial · No credit
               card · No sales call
-            </p>
-            <p className="mt-3 text-sm text-muted-foreground">
-              Built for {feature.personas.join(" · ")}
             </p>
           </div>
 
@@ -204,18 +182,46 @@ export function FeaturePage({ feature }: { feature: Feature }) {
       </section>
 
       {/* ---------------------------------------------------------------- */}
-      {/* Proof strip                                                      */}
+      {/* Statement over a photograph                                      */}
       {/* ---------------------------------------------------------------- */}
-      {landing?.proof && landing.proof.length > 0 && (
-        <section className="border-b border-border bg-white">
-          <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
-            <RevealGroup className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      {landing && (
+        <section className="relative isolate overflow-hidden bg-brand-surface">
+          <Image
+            src={photo.src}
+            alt={photo.alt}
+            fill
+            sizes="100vw"
+            className="object-cover"
+            // Not `priority`: it sits below the fold on every page, and the hero
+            // demo above it is the thing that should win the network.
+          />
+          {/* Two layers rather than one flat tint: the gradient keeps the left
+              edge dark enough for text at any crop, while the right stays light
+              enough that the photograph is still a photograph. */}
+          <div
+            className="absolute inset-0 bg-gradient-to-r from-brand-surface via-brand-surface/75 to-brand-surface/25"
+            aria-hidden
+          />
+          {/* A second, vertical wash. Without it the statement sits on whatever
+              the photograph happens to be doing at that crop, and two of the
+              five have a bright sky exactly where the text lands. */}
+          <div
+            className="absolute inset-0 bg-gradient-to-b from-brand-surface/70 via-transparent to-brand-surface/40"
+            aria-hidden
+          />
+          <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-24">
+            <Reveal>
+              <p className="max-w-3xl text-balance text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl">
+                {landing.statement}
+              </p>
+            </Reveal>
+            <RevealGroup className="mt-12 grid max-w-4xl gap-8 border-t border-white/20 pt-8 sm:grid-cols-3">
               {landing.proof.map((item) => (
                 <div key={item.label}>
-                  <p className="text-2xl font-semibold tracking-tight text-brand-surface">
+                  <p className="text-2xl font-semibold tracking-tight text-white">
                     {item.value}
                   </p>
-                  <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                  <p className="mt-1.5 text-sm leading-snug text-white/65">
                     {item.label}
                   </p>
                 </div>
@@ -226,35 +232,29 @@ export function FeaturePage({ feature }: { feature: Feature }) {
       )}
 
       {/* ---------------------------------------------------------------- */}
-      {/* Outcomes. The reason the page exists.                            */}
+      {/* Outcomes. Three, short.                                          */}
       {/* ---------------------------------------------------------------- */}
-      {landing && landing.outcomes.length > 0 && (
-        <section className="bg-[#fafbfc]">
+      {landing && (
+        <section className="bg-white">
           <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-20">
-            <Reveal className="max-w-2xl">
-              <p className="text-sm font-semibold text-primary">
-                {landing.outcomesEyebrow ?? "What changes"}
-              </p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
+            <Reveal>
+              <h2 className="max-w-2xl text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
                 {landing.outcomesTitle}
               </h2>
-              {landing.outcomesIntro && (
-                <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-                  {landing.outcomesIntro}
-                </p>
-              )}
             </Reveal>
-
-            <RevealGroup className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {landing.outcomes.map((outcome) => (
-                <div
-                  key={outcome.title}
-                  className="rounded-2xl border border-border bg-white p-6 shadow-sm"
-                >
-                  <p className="font-semibold leading-snug text-foreground">
+            <RevealGroup className="mt-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+              {landing.outcomes.map((outcome, index) => (
+                <div key={outcome.title}>
+                  <span
+                    className="block text-sm font-semibold tabular-nums text-primary"
+                    aria-hidden
+                  >
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <p className="mt-3 text-lg font-semibold leading-snug text-brand-surface">
                     {outcome.title}
                   </p>
-                  <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">
+                  <p className="mt-2 leading-relaxed text-muted-foreground">
                     {outcome.body}
                   </p>
                 </div>
@@ -265,25 +265,35 @@ export function FeaturePage({ feature }: { feature: Feature }) {
       )}
 
       {/* ---------------------------------------------------------------- */}
-      {/* How it works                                                     */}
+      {/* How it works, as a timeline                                      */}
       {/* ---------------------------------------------------------------- */}
       {landing?.steps && landing.steps.length > 0 && (
-        <section className="border-t border-border bg-white">
+        <section className="border-t border-border bg-[#fafbfc]">
           <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-20">
-            <Reveal className="max-w-2xl">
+            <Reveal>
               <p className="text-sm font-semibold text-primary">How it works</p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
+              <h2 className="mt-3 text-2xl font-semibold tracking-tight text-brand-surface sm:text-3xl">
                 {landing.stepsTitle ?? "Start to finish"}
               </h2>
             </Reveal>
-            <RevealGroup className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <RevealGroup className="mt-10 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
               {landing.steps.map((step, index) => (
                 <div key={step.title} className="relative">
-                  <span className="inline-flex size-8 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
+                  {/* The rule joins the steps into a sequence instead of four
+                      unrelated cards. Hidden on the last one and on narrow
+                      screens, where the steps stack and the line would point
+                      sideways into nothing. */}
+                  {index < landing.steps!.length - 1 && (
+                    <span
+                      className="absolute left-9 right-0 top-4 hidden h-px bg-border lg:block"
+                      aria-hidden
+                    />
+                  )}
+                  <span className="relative inline-flex size-8 items-center justify-center rounded-full border border-border bg-white text-sm font-semibold text-primary">
                     {index + 1}
                   </span>
-                  <p className="mt-4 font-semibold text-foreground">{step.title}</p>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  <p className="mt-4 font-semibold text-brand-surface">{step.title}</p>
+                  <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
                     {step.body}
                   </p>
                 </div>
@@ -294,8 +304,44 @@ export function FeaturePage({ feature }: { feature: Feature }) {
       )}
 
       {/* ---------------------------------------------------------------- */}
-      {/* Mid-page CTA. The reader who is sold by "how it works" should not */}
-      {/* have to scroll past the FAQ to act on it.                        */}
+      {/* Spotlights. At most two, three points each.                      */}
+      {/* ---------------------------------------------------------------- */}
+      {landing?.sections && landing.sections.length > 0 && (
+        <section className="border-t border-border bg-white">
+          <div className="mx-auto max-w-7xl space-y-14 px-4 py-16 sm:px-6 lg:py-20">
+            {landing.sections.map((section) => (
+              <Reveal
+                key={section.title}
+                className="grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-start lg:gap-16"
+              >
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
+                    {section.eyebrow}
+                  </p>
+                  <h3 className="mt-3 text-2xl font-semibold tracking-tight text-brand-surface sm:text-3xl">
+                    {section.title}
+                  </h3>
+                </div>
+                <div>
+                  <p className="text-lg leading-relaxed text-muted-foreground">
+                    {section.body}
+                  </p>
+                  <ul className="mt-6 space-y-2.5 border-l-2 border-primary/25 pl-5">
+                    {section.points.map((point) => (
+                      <li key={point} className="text-sm leading-relaxed text-foreground">
+                        {point}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ---------------------------------------------------------------- */}
+      {/* Mid-page CTA                                                     */}
       {/* ---------------------------------------------------------------- */}
       {landing && (
         <section className="border-y border-border bg-brand-surface text-white">
@@ -307,11 +353,7 @@ export function FeaturePage({ feature }: { feature: Feature }) {
               <p className="mt-2 leading-relaxed text-white/65">{landing.ctaBody}</p>
             </div>
             <div className="flex shrink-0 flex-wrap gap-3">
-              <Button
-                href={cta}
-                size="lg"
-                className="bg-white text-brand-surface hover:bg-white/90"
-              >
+              <Button href={cta} size="lg" className="bg-white text-brand-surface hover:bg-white/90">
                 Start free trial
                 <ChevronRight className="size-4 opacity-80" />
               </Button>
@@ -328,184 +370,79 @@ export function FeaturePage({ feature }: { feature: Feature }) {
       )}
 
       {/* ---------------------------------------------------------------- */}
-      {/* Deep sections                                                    */}
+      {/* Capability list, as a plain list.                                */}
+      {/* It answers "is the thing I need in here", which is a checking     */}
+      {/* question. Bordered cards gave it the visual weight of an argument.*/}
       {/* ---------------------------------------------------------------- */}
-      {landing?.sections && landing.sections.length > 0 && (
-        <section className="bg-white">
-          <div className="mx-auto max-w-7xl space-y-16 px-4 py-16 sm:px-6 lg:space-y-20 lg:py-20">
-            {landing.sections.map((section) => (
-              <Reveal
-                key={section.title}
-                className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-14"
-              >
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
-                    {section.eyebrow}
-                  </p>
-                  <h3 className="mt-3 text-2xl font-semibold tracking-tight text-brand-surface">
-                    {section.title}
-                  </h3>
-                  <p className="mt-4 leading-relaxed text-muted-foreground">
-                    {section.body}
-                  </p>
-                </div>
-                <ul className="grid gap-3 self-center sm:grid-cols-2">
-                  {section.points.map((point) => (
-                    <li
-                      key={point}
-                      className="flex items-start gap-3 rounded-xl border border-border bg-[#fafbfc] p-4"
-                    >
-                      <Check className="mt-0.5 size-4 shrink-0 text-primary" />
-                      <span className="text-sm leading-relaxed text-foreground">
-                        {point}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </Reveal>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* ---------------------------------------------------------------- */}
-      {/* Capability list. Demoted to reference: it answers "is the thing I */}
-      {/* need in here", which is a checking question, not a buying one.    */}
-      {/* ---------------------------------------------------------------- */}
-      <section className="border-t border-border bg-[#fafbfc]">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-20">
-          <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">
-            {landing?.bulletsTitle ?? "Everything you get"}
+      <section className="bg-white">
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
+          <h2 className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+            {landing?.bulletsTitle ?? "Everything else in here"}
           </h2>
-          <ul className="mt-8 grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="mt-6 columns-1 gap-x-10 sm:columns-2 lg:columns-3">
             {feature.bullets.map((item) => (
-              <li key={item} className="flex items-start gap-2.5">
-                <Check className="mt-1 size-4 shrink-0 text-primary" />
-                <span className="text-sm leading-relaxed text-foreground">{item}</span>
+              <li
+                key={item}
+                className="mb-2.5 break-inside-avoid border-l border-border pl-4 text-sm leading-relaxed text-muted-foreground"
+              >
+                {item}
               </li>
             ))}
           </ul>
 
-          {siblings.length > 0 && productModule && (
-            <div className="mt-12 border-t border-border pt-8">
-              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                {isHub
-                  ? `More in ${productModule.title}`
-                  : `The rest of ${productModule.title}`}
-              </h3>
-              <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {siblings.map((sibling) => (
-                  <Link
-                    key={sibling.slug}
-                    href={featureHref(sibling.slug)}
-                    className="group rounded-xl border border-border bg-white p-5 transition-colors hover:border-primary/30"
-                  >
-                    <p className="font-semibold text-foreground group-hover:text-primary">
-                      {sibling.navLabel}
-                    </p>
-                    <p className="mt-1.5 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
-                      {sibling.summary}
-                    </p>
-                  </Link>
-                ))}
-              </div>
+          {(docs.length > 0 || guides.length > 0) && (
+            <div className="mt-10 flex flex-wrap items-center gap-2 border-t border-border pt-8">
+              <span className="mr-1 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                Read more
+              </span>
+              {guides.map((guide) => (
+                <Link
+                  key={guide.href}
+                  href={guide.href}
+                  className="rounded-full border border-border px-3 py-1.5 text-sm text-foreground transition-colors hover:border-primary/40 hover:text-primary"
+                >
+                  {guide.label}
+                </Link>
+              ))}
+              {docs.map((doc) => (
+                <Link
+                  key={doc.href}
+                  href={doc.href}
+                  className="rounded-full border border-border px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
+                >
+                  {doc.label}
+                </Link>
+              ))}
+              {productModule && (
+                <Link
+                  href={`/docs/${productModule.docsSection}`}
+                  className="inline-flex items-center gap-1 px-2 text-sm font-semibold text-primary hover:underline"
+                >
+                  All {productModule.title.toLowerCase()} docs
+                  <ChevronRight className="size-3.5" />
+                </Link>
+              )}
             </div>
           )}
         </div>
       </section>
 
       {/* ---------------------------------------------------------------- */}
-      {/* Go deeper: guides for the shopper, help docs for the evaluator    */}
-      {/* ---------------------------------------------------------------- */}
-      {(guides.length > 0 || docs.length > 0) && (
-        <section className="border-t border-border bg-white">
-          <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
-            {guides.length > 0 && (
-              <>
-                <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">
-                  Go deeper
-                </h2>
-                <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {guides.map((guide) => (
-                    <Link
-                      key={guide.href}
-                      href={guide.href}
-                      className="rounded-xl border border-border bg-[#fafbfc] p-5 transition-colors hover:border-primary/30 hover:bg-white"
-                    >
-                      <p className="font-semibold text-foreground">{guide.label}</p>
-                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                        {guide.description}
-                      </p>
-                      <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary">
-                        Read the guide
-                        <ChevronRight className="size-3.5" />
-                      </span>
-                    </Link>
-                  ))}
-                </div>
-              </>
-            )}
-
-            {/* The documentation is the strongest thing this site can show a
-                prospect who is genuinely evaluating: it is written to the real
-                screens and it does not sell. Linking it from the feature page
-                is the cheapest proof available that the feature exists. */}
-            {docs.length > 0 && (
-              <div className={guides.length > 0 ? "mt-14" : ""}>
-                <div className="flex flex-wrap items-baseline justify-between gap-3">
-                  <h2 className="inline-flex items-center gap-2 text-2xl font-semibold tracking-tight text-brand-surface">
-                    <BookOpen className="size-5 text-primary" aria-hidden />
-                    How it works, in the documentation
-                  </h2>
-                  {productModule && (
-                    <Link
-                      href={`/docs/${productModule.docsSection}`}
-                      className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
-                    >
-                      All {productModule.title.toLowerCase()} docs
-                      <ChevronRight className="size-3.5" />
-                    </Link>
-                  )}
-                </div>
-                <div className="mt-6 grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {docs.map((doc) => (
-                    <Link
-                      key={doc.href}
-                      href={doc.href}
-                      className="group flex items-start gap-2.5"
-                    >
-                      <ArrowRight className="mt-1 size-3.5 shrink-0 text-primary" aria-hidden />
-                      <span>
-                        <span className="block text-sm font-medium text-foreground group-hover:text-primary">
-                          {doc.label}
-                        </span>
-                        <span className="mt-0.5 block text-sm leading-relaxed text-muted-foreground">
-                          {doc.description}
-                        </span>
-                      </span>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </section>
-      )}
-
-      {/* ---------------------------------------------------------------- */}
-      {/* FAQ                                                              */}
+      {/* FAQ, two columns so five answers are not five screens            */}
       {/* ---------------------------------------------------------------- */}
       {faqs.length > 0 && (
         <section className="border-t border-border bg-[#fafbfc]">
-          <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:py-20">
-            <h2 id="faq" className="text-3xl font-semibold tracking-tight text-brand-surface">
+          <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-20">
+            <h2 id="faq" className="text-2xl font-semibold tracking-tight text-brand-surface sm:text-3xl">
               Common questions
             </h2>
-            <dl className="mt-8 divide-y divide-border">
+            <dl className="mt-8 grid gap-x-14 gap-y-8 lg:grid-cols-2">
               {faqs.map((faq) => (
-                <div key={faq.q} className="py-5">
-                  <dt className="font-semibold text-foreground">{faq.q}</dt>
-                  <dd className="mt-2 leading-relaxed text-muted-foreground">{faq.a}</dd>
+                <div key={faq.q}>
+                  <dt className="font-semibold text-brand-surface">{faq.q}</dt>
+                  <dd className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {faq.a}
+                  </dd>
                 </div>
               ))}
             </dl>
@@ -514,28 +451,25 @@ export function FeaturePage({ feature }: { feature: Feature }) {
       )}
 
       {/* ---------------------------------------------------------------- */}
-      {/* Related features                                                 */}
+      {/* Explore more. One grid, not two.                                 */}
       {/* ---------------------------------------------------------------- */}
-      {related.length > 0 && (
+      {explore.length > 0 && (
         <section className="border-t border-border bg-white">
-          <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
-            <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">
-              Works with
+          <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
+            <h2 className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+              {productModule ? `More in ${productModule.title}` : "Explore more"}
             </h2>
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {related.map((f) => (
+            <div className="mt-6 grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-4">
+              {explore.map((f) => (
                 <Link
                   key={f.slug}
                   href={featureHref(f.slug)}
-                  className="rounded-xl border border-border bg-[#fafbfc] p-5 transition-colors hover:border-primary/30 hover:bg-white"
+                  className="group flex items-baseline gap-2 border-t border-border pt-4"
                 >
-                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">
-                    {f.eyebrow}
-                  </p>
-                  <p className="mt-2 font-semibold text-foreground">{f.navLabel}</p>
-                  <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
-                    {f.summary}
-                  </p>
+                  <span className="font-semibold text-brand-surface group-hover:text-primary">
+                    {f.navLabel}
+                  </span>
+                  <ChevronRight className="size-3.5 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-primary" />
                 </Link>
               ))}
             </div>
@@ -557,11 +491,7 @@ export function FeaturePage({ feature }: { feature: Feature }) {
                 `Add a tail, put a flight on the board, and see it work on your own operation. ${TRIAL_DAYS} days, no credit card, no sales call.`}
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Button
-                href={cta}
-                size="lg"
-                className="bg-white text-brand-surface hover:bg-white/90"
-              >
+              <Button href={cta} size="lg" className="bg-white text-brand-surface hover:bg-white/90">
                 Start free trial
                 <ChevronRight className="size-4 opacity-80" />
               </Button>
