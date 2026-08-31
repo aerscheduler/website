@@ -2168,6 +2168,241 @@
         "operationId": "deleteOrganization"
       }
     },
+    "/organizations/adTracking": {
+      "get": {
+        "tags": [
+          "Organizations"
+        ],
+        "summary": "Read the Airworthiness Directive tracking mode and readiness",
+        "description": "Whether this school wants AerScheduler involved in Airworthiness Directives, and how well it could be. `mode` is one of `off` (we do nothing about ADs), `manual` (the school enters ADs itself), `catalogue` (we watch published ADs and propose the ones that mention this fleet) or `external` (applicability is tracked in another system, named by `externalSystem`).\n\n`aircraft` reports, per aeroplane, how precisely a published AD could be matched: `serial` when we can narrow the AD's serial-number range, `model` when we can only tell that an AD mentions this make and model, and `none` when we do not know enough to propose anything. **Admin only.**",
+        "responses": {
+          "200": {
+            "description": "The mode and what could be matched for each aeroplane.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "mode": {
+                          "type": "string",
+                          "enum": [
+                            "off",
+                            "manual",
+                            "catalogue",
+                            "external"
+                          ]
+                        },
+                        "externalSystem": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "description": "Which system tracks applicability, when mode is `external`."
+                        },
+                        "counts": {
+                          "type": "object",
+                          "properties": {
+                            "total": {
+                              "type": "integer"
+                            },
+                            "serial": {
+                              "type": "integer"
+                            },
+                            "model": {
+                              "type": "integer"
+                            },
+                            "none": {
+                              "type": "integer"
+                            }
+                          }
+                        },
+                        "aircraft": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "resourceId": {
+                                "type": "integer"
+                              },
+                              "tailNumber": {
+                                "type": "string"
+                              },
+                              "make": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "model": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "serialNumber": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "quality": {
+                                "type": "string",
+                                "enum": [
+                                  "serial",
+                                  "model",
+                                  "none"
+                                ]
+                              },
+                              "missing": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getAdTracking"
+      },
+      "patch": {
+        "tags": [
+          "Organizations"
+        ],
+        "summary": "Set the Airworthiness Directive tracking mode",
+        "description": "Changes what AerScheduler does about ADs. Setting `external` requires `externalSystem`, which is printed on the AD status report so a reader knows applicability lives elsewhere. Returns the same shape as the GET, including refreshed readiness. **Admin only.**",
+        "responses": {
+          "200": {
+            "description": "The updated mode and readiness.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "An unknown mode, or `external` with no system named.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "setAdTracking",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "mode"
+                ],
+                "properties": {
+                  "mode": {
+                    "type": "string",
+                    "enum": [
+                      "off",
+                      "manual",
+                      "catalogue",
+                      "external"
+                    ]
+                  },
+                  "externalSystem": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 60,
+                    "description": "Required when mode is `external`. Cleared otherwise."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/organizations/cancelDeletion": {
       "post": {
         "tags": [
@@ -15552,6 +15787,104 @@
         }
       }
     },
+    "/maintenance/squawks/{squawkId}/comments": {
+      "post": {
+        "tags": [
+          "Maintenance"
+        ],
+        "summary": "Add a note to a squawk",
+        "description": "Appends one note to the squawk's thread, for recording progress on a defect without closing it. Technicians and administrators only, matching who may verify or resolve one. Notes are append-only: there is no edit and no delete, and a mistake is corrected by adding another note. Read them back on the squawk itself, which returns `comments` oldest first.",
+        "responses": {
+          "201": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/SquawkComment"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The note was empty or longer than 2000 characters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not a technician or administrator, or the squawk belongs to another organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "addSquawkComment",
+        "parameters": [
+          {
+            "name": "squawkId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The squawk id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The note.",
+                "properties": {
+                  "body": {
+                    "type": "string",
+                    "maxLength": 2000
+                  }
+                },
+                "required": [
+                  "body"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
     "/maintenance/resources/{resourceId}/squawks": {
       "get": {
         "tags": [
@@ -16130,11 +16463,11 @@
                   },
                   "tachAtCompliance": {
                     "type": "integer",
-                    "description": "Tach time in service at compliance, in tenths. Defaults to the aircraft's current reading."
+                    "description": "Tach reading at compliance, NOT time in service as 14 CFR 1.1 defines it, in tenths. Defaults to the aircraft's current reading."
                   },
                   "hobbsAtCompliance": {
                     "type": "integer",
-                    "description": "Hobbs time in service at compliance, in tenths. Defaults to the aircraft's current reading."
+                    "description": "Hobbs reading at compliance, NOT time in service as 14 CFR 1.1 defines it, in tenths. Defaults to the aircraft's current reading."
                   },
                   "fileUrls": {
                     "type": "array",
@@ -23932,7 +24265,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "description": "The rule. Set `remindDays`, `remindHours`, or BOTH (\"every 100 hours or 12 months, whichever comes first\"), each with its matching `*Before` field; or set `remindDate` alone for a one-off that does not recur. `remindHours` is an INTERVAL in tenths of an hour (1000 = every 100.0), not a flag. On a combined interval whichever clock comes due first grounds and notifies, and signing off restarts both.",
+                "description": "The rule. Set `remindMonths` or `remindDays` for the calendar clock, `remindHours` for the meter clock, or BOTH clocks (\"every 100 hours or 12 calendar months, whichever comes first\"), each with its matching `*Before` field; or set `remindDate` alone for a one-off date, or `remindAtHours` alone for a one-off meter deadline. Neither one-off recurs. `remindHours` is an INTERVAL in tenths of an hour (1000 = every 100.0), not a flag. PREFER `remindMonths` for anything the regulations write in calendar months, which is the annual, the transponder, the static system and the ELT: a calendar month runs to the end of the month, so 365 days comes due up to a month early. Setting `remindMonths` overwrites `remindDays` with a derived approximation. On a combined interval whichever clock comes due first grounds and notifies, and signing off restarts both.",
                 "properties": {
                   "name": {
                     "type": "string"
@@ -23963,12 +24296,20 @@
                   "remindDays": {
                     "type": "integer"
                   },
+                  "remindMonths": {
+                    "type": "integer",
+                    "example": 12
+                  },
                   "remindDaysBefore": {
                     "type": "integer"
                   },
                   "remindDate": {
                     "type": "string",
                     "format": "date-time"
+                  },
+                  "remindAtHours": {
+                    "type": "integer",
+                    "example": 12500
                   },
                   "templateResources": {
                     "type": "array",
@@ -25869,6 +26210,38 @@
           },
           "resource": {
             "$ref": "#/components/schemas/Resource"
+          },
+          "comments": {
+            "type": "array",
+            "description": "The running thread, oldest first. Returned by the single-squawk read only, never on a list row.",
+            "items": {
+              "$ref": "#/components/schemas/SquawkComment"
+            }
+          }
+        },
+        "additionalProperties": true
+      },
+      "SquawkComment": {
+        "type": "object",
+        "description": "One note on a squawk. Append-only: there is no edit and no delete, and a mistake is corrected by adding another note.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "The note id."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When it was written."
+          },
+          "body": {
+            "type": "string",
+            "description": "The note.",
+            "example": "Ordered the pump, ETA Friday. Aircraft stays on the line."
+          },
+          "author": {
+            "$ref": "#/components/schemas/OrganizationUser",
+            "description": "Who wrote it. Null where that person has since left the organization: the note stays, because the account of what was done to an aircraft outlives anyone's membership."
           }
         },
         "additionalProperties": true
@@ -26154,7 +26527,16 @@
             "description": "Whether the aircraft is grounded when this comes due."
           },
           "remindDays": {
-            "description": "Interval in days, for calendar-based reminders. May be set alongside `remindHours` for `whichever comes first`.",
+            "description": "Interval in days, for calendar-based reminders. May be set alongside `remindHours` for `whichever comes first`. When `remindMonths` is set this is a DERIVED approximation kept for older clients and is not what the due date is computed from.",
+            "example": 365,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "remindMonths": {
+            "description": "Interval in CALENDAR MONTHS, which is what 14 CFR 91.409(a), 91.411, 91.413 and 91.207(d) actually require. A calendar month runs to the end of the month: an annual signed on any day in February is due at the end of February the following year. Wins over `remindDays`, which the server derives from this on write. Read on the organization's own time zone.",
+            "example": 12,
             "type": [
               "integer",
               "null"
@@ -26168,15 +26550,16 @@
             ]
           },
           "remindHours": {
-            "description": "Interval in hours, for meter-based reminders. May be set alongside `remindDays` for `whichever comes first`.",
-            "example": 100,
+            "description": "Interval in TENTHS OF AN HOUR, for meter-based reminders. `1000` is a 100-hour inspection. Every hour field in this API is tenths; sending `100` here schedules a 10-hour interval. May be set alongside `remindDays` for `whichever comes first`.",
+            "example": 1000,
             "type": [
               "integer",
               "null"
             ]
           },
           "remindHoursBefore": {
-            "description": "How many hours ahead to warn.",
+            "description": "How many tenths of an hour ahead to warn. `100` warns 10 hours out.",
+            "example": 100,
             "type": [
               "integer",
               "null"
@@ -26198,6 +26581,14 @@
             "description": "A one-off due date. Exclusive: a dated reminder does not also repeat.",
             "type": [
               "string",
+              "null"
+            ]
+          },
+          "remindAtHours": {
+            "description": "A ONE-OFF deadline at an absolute meter reading, in tenths of an hour: `12500` is due when the meter reads 1250.0. This is how a great many Airworthiness Directives are actually written (\"comply within the next 50 hours\"). Exclusive with `remindHours`, which is an interval, and with the calendar fields. Does not repeat.",
+            "example": 12500,
+            "type": [
+              "integer",
               "null"
             ]
           },
@@ -26296,7 +26687,7 @@
             "description": "When the work was completed."
           },
           "tachAtCompliance": {
-            "description": "Tach time in service at compliance, in tenths of an hour.",
+            "description": "Tach reading at compliance, in tenths of an hour. NOT time in service as 14 CFR 1.1 defines it.",
             "example": 11020,
             "type": [
               "integer",
@@ -26304,7 +26695,7 @@
             ]
           },
           "hobbsAtCompliance": {
-            "description": "Hobbs time in service at compliance, in tenths of an hour.",
+            "description": "Hobbs reading at compliance, in tenths of an hour. NOT time in service as 14 CFR 1.1 defines it.",
             "example": 11255,
             "type": [
               "integer",

@@ -952,10 +952,45 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "resolve-a-squawk",
         title: "Resolve a squawk",
         description:
-          "Maintenance, then Squawks, then Open. Click Resolve on the card, set Completed to the day the work finished, write what was done, then Resolve squawk. Verify is a separate stamp and only exists in the iOS app.",
+          "Maintenance, then Squawks, then Open. Click Resolve on the card, set Completed to the day the work finished, write what was done, then Resolve squawk. Verify is a separate second stamp, on both surfaces, and a squawk can be resolved without ever being verified.",
         kind: "task",
         audience: ["Owners", "Admins", "Technicians"],
         seoQuery: "resolve a squawk and the difference between resolved and verified",
+      },
+      {
+        slug: "add-a-note-to-a-squawk",
+        title: "Add a note to a squawk",
+        description:
+          "Open the squawk and use the Notes card: on the console, type in the box and click Add note; in the iOS app, tap Add Note. It records progress without closing the squawk, and notes cannot be edited or deleted afterwards.",
+        kind: "task",
+        audience: ["Owners", "Admins", "Technicians"],
+        seoQuery: "add a note or comment to an aircraft squawk without resolving it",
+        faqs: [
+          {
+            q: "Can I add a note to a squawk without resolving it?",
+            a: "Yes. Open the squawk and use the Notes card. That is what it is for: recording that the part is ordered, that the aircraft is waiting on a hangar slot, or that you ran it again and it did not repeat, none of which mean the defect is fixed.",
+          },
+          {
+            q: "Who can add a note to a squawk?",
+            a: "Admins, owners and technicians, the same people who can verify or resolve one. Dispatchers, instructors, students and renters can read the thread on a squawk they can open, but cannot write to it.",
+          },
+          {
+            q: "Can a note be edited or deleted?",
+            a: "No, by anybody, including us. A note is part of the account of work on an aircraft, and an account that can be quietly changed afterwards is worth less than none. Correct a mistake by adding another note saying so.",
+          },
+          {
+            q: "What is the difference between a note and the sign-off notes?",
+            a: "Sign-off notes are the single paragraph the Resolve form asks for, describing what was done to clear the squawk. There is one of them and the next sign-off overwrites it. Notes are a running thread, each stamped with who wrote it and when, and nothing overwrites them.",
+          },
+          {
+            q: "How long can a note be?",
+            a: "2000 characters. The console counts down over the last 200 and both surfaces refuse a longer one with a message rather than a silent failure.",
+          },
+          {
+            q: "Does adding a note notify anybody?",
+            a: "No. Notes are a record, not a message. If somebody needs to know now, tell them; the note is what they read afterwards.",
+          },
+        ],
       },
       {
         slug: "book-an-aircraft-in-for-maintenance",
@@ -1439,3 +1474,48 @@ export const DOC_LINKS: { href: string; label: string; description: string }[] =
     description: section.blurb,
   })),
 ];
+
+/**
+ * The handful of help articles worth a permanent seat in the Resources menu.
+ *
+ * These are not the most-read pages, they are the most USEFUL pages to somebody
+ * still deciding: each one answers a question a prospect asks on a sales call,
+ * and answers it by naming real screens rather than selling. "Which reservation
+ * type should I use" and "every report, and what it counts" do more to close a
+ * shopper than a fourth marketing page would.
+ *
+ * There is a second, colder reason. The nav renders on every page of the site,
+ * so anything listed here earns a site-wide internal link. Spending four of
+ * those on deep documentation pulls the docs out of the orphan tier they sit in
+ * when the only route to them is the /docs hub.
+ *
+ * Resolved against the registry rather than hand-written, so a retitled article
+ * cannot leave a stale label in the nav, and a deleted one fails the build here
+ * instead of shipping a dead menu entry.
+ */
+const POPULAR_DOC_PAGES: { section: string; slug: string; label?: string }[] = [
+  { section: "getting-started", slug: "set-up-your-school", label: "Set up your school" },
+  { section: "scheduling", slug: "reservation-types", label: "Which reservation type?" },
+  { section: "billing", slug: "how-billing-works", label: "How billing works" },
+  { section: "reports", slug: "report-catalog", label: "Every report, explained" },
+  {
+    section: "getting-started",
+    slug: "roles-and-permissions",
+    label: "Roles and permissions",
+  },
+];
+
+export const POPULAR_DOC_LINKS: { href: string; label: string; description: string }[] =
+  POPULAR_DOC_PAGES.map((entry) => {
+    const found = getArticle(entry.section, entry.slug);
+    if (!found) {
+      throw new Error(
+        `POPULAR_DOC_LINKS points at /docs/${entry.section}/${entry.slug}, which is not in DOC_SECTIONS. Fix the reference or drop the entry.`
+      );
+    }
+    return {
+      href: articleHref(entry.section, entry.slug),
+      label: entry.label ?? found.article.title,
+      description: found.article.description,
+    };
+  });

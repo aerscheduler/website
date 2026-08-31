@@ -1,0 +1,75 @@
+<Summary>
+Open the squawk and use the **Notes** card. On the console, type in the box and click **Add
+note**. In the iOS app, tap **Add Note**. It records what is happening without closing the
+squawk, and a note cannot be edited or deleted once it is written.
+</Summary>
+
+<Roles>Owners, Admins, Technicians</Roles>
+
+## Why this is not the same as resolving
+
+A squawk sits open for days. The part is on order, the hangar is full, the fault would not
+repeat on the ground. None of that means the defect is fixed, and none of it belongs in the
+Resolve form, because resolving a squawk says the aircraft is right again.
+
+Notes are where that goes. Each one carries who wrote it and when, and they sit in the
+order they were written, so the squawk reads as an account of the work rather than a status
+that jumped from open to closed.
+
+## Add one
+
+<Steps>
+  <Step n={1} title="Open the squawk">
+    <Where app="web">Maintenance → Squawks → Open</Where>, then click the row. The notes
+    are on the panel that slides in, and on the squawk's own page.
+  </Step>
+  <Step n={2} title="Write it">
+    Type into the box under the thread. Up to 2000 characters. On the console,
+    <kbd>Cmd</kbd> or <kbd>Ctrl</kbd> and <kbd>Enter</kbd> posts it; plain <kbd>Enter</kbd>
+    is a new line, because these run long.
+  </Step>
+  <Step n={3} title="Click Add note">
+    It appears at the bottom of the thread under your name and the time. Everyone looking
+    at the squawk sees the same thread.
+
+    <Screenshot id="squawk-notes-thread" />
+  </Step>
+</Steps>
+
+In the app, the squawk's detail page has the same thread, with **Add Note** under it and in
+the gear menu at the top.
+
+## Notes cannot be edited or deleted
+
+<Callout type="important">
+Nobody can change or remove a note once it is written, including us. Correct a mistake by
+adding another note saying what was wrong. This is the same rule as compliance records, and
+for the same reason: a record of work on an aircraft that can be quietly rewritten
+afterwards is worth less than no record at all.
+</Callout>
+
+## Who can write, and who can read
+
+Adding a note takes the same permission as verifying or resolving one: admins, owners and
+technicians. Everyone else who can open the squawk can read the thread but has no box to
+type in.
+
+That includes pilots. Somebody who reports a squawk on a tail and can open it again later
+sees what maintenance has written about it, which is usually the point: "part ordered, ETA
+Friday" is exactly what the person who reported the flickering light wants to know. Write
+notes as though the pilot will read them, because they can.
+
+## Notes do not notify anybody
+
+Adding a note sends nothing. It is a record, not a message. If somebody needs to know
+about it today, tell them, and let the note be the thing they read afterwards.
+
+## Sign-off notes are a different box
+
+The **Resolve** form has its own notes field, and that one is not part of this thread. It is
+a single paragraph describing what was done to clear the squawk, there is only ever one of
+it, and a later sign-off overwrites it. On the squawk's page it appears under **Sign-off
+notes**, separately, and it is capped at 500 characters rather than 2000.
+
+Use it for the closing statement. Use notes for everything on the way there. See
+[Resolve a squawk](/docs/maintenance/resolve-a-squawk).

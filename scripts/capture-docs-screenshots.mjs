@@ -614,6 +614,20 @@ async function resolvePlaceholders(page) {
   }
   const enrolledStudent = [...enrolledCount.entries()].sort((a, b) => b[1] - a[1])[0]?.[0];
 
+  // The thread only comes back on the single-squawk read, so the list cannot be sorted by
+  // it. A handful of details is enough to find one worth photographing without walking a
+  // board that can run to a hundred rows.
+  const squawkCandidates = openSquawks.filter((sq) => sq?.id).slice(0, 12);
+  const squawkDetails = await Promise.all(
+    squawkCandidates.map((sq) => get(`/api/maintenance/squawks/${sq.id}`))
+  );
+  const squawkWithMostNotes =
+    squawkDetails
+      .map((d) => d[0])
+      .filter(Boolean)
+      .sort((a, b) => (b.comments?.length ?? 0) - (a.comments?.length ?? 0))[0]?.id ??
+    squawkCandidates[0]?.id;
+
   const found = {
     reservationId: reservations.find((r) => r?.id)?.id,
     // A booking that has ramped in, for the close-out and who-pays-what shots. Reads
@@ -625,6 +639,11 @@ async function resolvePlaceholders(page) {
     invoiceId: invoices.find((i) => i?.id)?.id,
     aircraftId: planes.find((p) => !p?.type?.plane?.grounded)?.id ?? planes[0]?.id,
     groundedAircraftId: planes.find((p) => p?.type?.plane?.grounded)?.id,
+    // The squawk with the fullest thread, resolved just below. The picture is OF the
+    // thread, so the first open squawk is the wrong answer: it reliably has no notes at
+    // all, which is a photograph of an empty state under an article about reading a
+    // conversation. Two shots have already shipped that way.
+    openSquawkId: squawkWithMostNotes,
     personId: people.find((p) => p?.id)?.id,
     // Somebody whose ledger is worth photographing. `personId` is just the first
     // member on the roster, and on a roster this size that is reliably an account

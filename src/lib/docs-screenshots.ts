@@ -1150,6 +1150,15 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     crop: '[data-doc-shot="squawk-detail-panel"]',
   },
   {
+    id: "squawk-notes-thread",
+    screen: "Notes on a squawk",
+    route: "/maintenance/squawks/{openSquawkId}",
+    alt: "The notes thread on a squawk, with the composer under it",
+    dataState:
+      "An open squawk carrying at least three notes from two different people, so the thread shows names, stamps, and the order they were written in. DOCS_EMAIL=test-technician@aerscheduler.com, because the composer only renders for somebody who can resolve the squawk.",
+    crop: '[data-doc-shot="squawk-notes"]',
+  },
+  {
     id: "resolve-squawk-modal",
     screen: "Resolve squawk",
     route: "/maintenance?view=open",
