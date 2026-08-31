@@ -111,7 +111,26 @@ export default function RootLayout({
           `}</style>
         </noscript>
       </head>
-      <body className={`${instrument.variable} font-sans antialiased`}>
+      {/*
+        `suppressHydrationWarning` here is about browser extensions, not about
+        our own markup.
+
+        Extensions write their own attributes onto <body> before React hydrates:
+        ColorZilla adds `cz-shortcut-listen`, Grammarly adds `data-gr-ext-*`, and
+        several password managers do the same. React then compares the server
+        HTML against a DOM that a third party has already edited and reports a
+        mismatch nobody can fix, because the offending attribute is not in this
+        repo at all.
+
+        It is deliberately narrow: the flag covers only THIS element's own
+        attributes and text, and not one level deeper. A genuine hydration bug
+        anywhere inside the page still reports normally, which is the whole
+        reason it is on <body> and not on a wrapper further in.
+      */}
+      <body
+        className={`${instrument.variable} font-sans antialiased`}
+        suppressHydrationWarning
+      >
         <JsonLd data={organizationJsonLd()} />
         <JsonLd data={websiteJsonLd()} />
         <JsonLd data={softwareApplicationJsonLd()} />
