@@ -36,7 +36,7 @@
  * for this, and it costs the visitor nothing.
  */
 
-import type { PostHog } from "posthog-js";
+import type { CaptureResult, PostHog } from "posthog-js";
 import { readAttribution, channelOf } from "./attribution";
 import { hasConsent } from "./consent";
 
@@ -159,6 +159,55 @@ export function startAnalytics(): void {
   startMetaPixel();
 }
 
+/**
+ * Extension protocols. A frame served from one of these is not our code and cannot be
+ * our bug, whatever it says.
+ */
+const EXTENSION_PROTOCOLS = /^(chrome|moz|safari-web|ms-browser|webkit-masked-url)-?extension:\/\//;
+
+/**
+ * The signature of an extension that talks to its own background worker through the
+ * page, and rejects into our window when the worker has gone away. There is no version
+ * of this that is ours: it names a method and a parameter count that exist nowhere in
+ * this site.
+ */
+const EXTENSION_BRIDGE_REJECTION = /Object Not Found Matching Id:\d+, MethodName:\w+, ParamCount:\d+/;
+
+/**
+ * Keep somebody else's browser extension out of our crash reports.
+ *
+ * `capture_exceptions` is on so that a marketing page which throws is distinguishable
+ * from one nobody opened. A visitor's extension throwing into our window is neither,
+ * and on a public marketing site there are a lot of extensions: one visitor on Windows
+ * 7 filed nine of these in a single second, which is more occurrences than most real
+ * issues here have ever had.
+ *
+ * Matched on the frame's origin wherever there is a stack, and on one exact signature
+ * where there is not. Everything else is kept: a rejection with no stack is often a
+ * real bug, and guessing at messages is how a genuine crash eventually gets dropped.
+ */
+export function dropExtensionNoise(result: CaptureResult | null): CaptureResult | null {
+  if (!result || result.event !== "$exception") return result;
+
+  const list = result.properties?.["$exception_list"];
+  if (!Array.isArray(list) || list.length === 0) return result;
+
+  for (const item of list) {
+    const value = typeof item?.value === "string" ? item.value : "";
+    if (EXTENSION_BRIDGE_REJECTION.test(value)) return null;
+
+    const frames = item?.stacktrace?.frames;
+    if (!Array.isArray(frames) || frames.length === 0) continue;
+    // Every frame, or it is our stack with an extension somewhere in it, which is
+    // still worth seeing.
+    if (frames.every((f) => EXTENSION_PROTOCOLS.test(String(f?.filename ?? "")))) {
+      return null;
+    }
+  }
+
+  return result;
+}
+
 function startPostHog(): void {
   if (!POSTHOG_KEY || !ANALYTICS_ENABLED) return;
 
@@ -201,6 +250,8 @@ function initPostHog(posthog: PostHog): void {
     capture_exceptions: true,
     // Consent is handled by our own banner; PostHog should just run once started.
     opt_out_capturing_by_default: false,
+    // See dropExtensionNoise: a visitor's extension is not this site's crash.
+    before_send: dropExtensionNoise,
   });
 
   // Stamp the campaign onto every event and onto the person, so any chart in PostHog can
