@@ -101,6 +101,22 @@ body {
    the layers never realign into a visible loop.
 --------------------------------------------------------------------------- */
 .sky {
+  position: absolute;
+  /* Deliberately larger than the window that clips it.
+
+     The drift keyframes translate these layers by up to 2%, and `sky-drift-b`
+     finishes at scale(1), so at the end of its cycle there was no scale-up left
+     to cover the shift: the layer slid off and the white page showed through as
+     roughly 26px of gap on the LEFT and 7px along the BOTTOM. Never the right or
+     the top, because that animation only ever travels one way. The three phases
+     on drift-b (dawn, midday, dusk) showed it and the three on drift-a did not,
+     and since the animation alternates it drifted in and out, which is why it
+     looked intermittent.
+
+     Fixing the keyframe numbers would have worked until somebody changed a
+     keyframe number. An overhang is structural: whatever the motion does inside
+     this box, there is always more gradient than window. */
+  inset: -4%;
   opacity: 0;
   transition: opacity var(--dur-slow) var(--ease-out);
   will-change: opacity;

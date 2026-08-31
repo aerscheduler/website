@@ -20,7 +20,7 @@ export function HeroAtmosphere() {
       {PHASES.map((p) => (
         <div
           key={p}
-          className={`sky sky--${p} absolute inset-0${p === phase ? " sky--active" : ""}`} // em-dash-ok: BEM modifier
+          className={`sky sky--${p}${p === phase ? " sky--active" : ""}`} // em-dash-ok: BEM modifier
         />
       ))}
       <div className="absolute inset-0 grid-lines opacity-40" />
