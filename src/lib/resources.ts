@@ -3,7 +3,7 @@
 // erased at compile time, so this pair is not a runtime cycle.
 import { COMPETITOR_LIST, competitorHref } from "@/lib/competitors";
 import { DEVELOPER_LINKS } from "@/lib/developers";
-import { DOC_LINKS } from "@/lib/docs";
+import { DOC_LINKS, POPULAR_DOC_LINKS } from "@/lib/docs";
 
 /** Resource / guide links for nav, footer, and resources index. */
 export type ResourceLink = {
@@ -32,6 +32,14 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
     // support, so they should not have to scroll past the sales material.
     title: "Documentation",
     items: DOC_LINKS,
+  },
+  {
+    // Individual help articles, as opposed to the section landings above.
+    // They are here so the nav can point at a page that ANSWERS something
+    // rather than at another index, and so those pages pick up a site-wide
+    // internal link instead of sitting two clicks below the docs hub.
+    title: "Help articles",
+    items: POPULAR_DOC_LINKS,
   },
   {
     title: "Guides",
@@ -182,34 +190,49 @@ function linksByHref(...hrefs: string[]): ResourceLink[] {
 }
 
 /**
- * Mega-menu (and mobile Resources accordion). Four short columns, one row: the
- * full catalog above was wrapping Documentation + Reporting into a second band
- * and leaving empty space beside Training's single link. Topic guides, reporting
- * deep-dives, and extra doc sections stay on `/resources`.
+ * Mega-menu (and mobile Resources accordion). Four columns, one row.
+ *
+ * The previous curation was picked for tidiness rather than for value, and it
+ * showed: a Documentation column of four INDEX pages (the hub, then three
+ * section landings, none of which answers anything), and a Guides column whose
+ * best entry was a QuickBooks how-to. The pages this site actually ranks with,
+ * the airworthiness cluster and the reporting pillar, were not in the menu at
+ * all, and the API sat under Features where no developer looks for it.
+ *
+ * What each column is now FOR:
+ *
+ *   Guides          the five pillar pages, which own informational search and
+ *                   are the strongest thing to hand somebody still reading
+ *   Help articles   real documentation that answers a question, not an index
+ *   Switching       the pages paid traffic lands on, plus the published price
+ *   Developers      moved here from Features, next to the rest of the reading
+ *
+ * Every entry is a link a site-wide menu spends internal-link equity on, so the
+ * bar is "would I send a prospect this", not "does this exist". The rest of the
+ * catalog stays one click away on `/resources`.
  */
 export const NAV_RESOURCE_GROUPS: ResourceGroup[] = [
   {
-    title: "Documentation",
-    items: linksByHref(
-      "/docs",
-      "/docs/getting-started",
-      "/docs/scheduling",
-      "/docs/billing"
-    ),
-  },
-  {
     title: "Guides",
     items: linksByHref(
-      "/migrating/my-fbo",
       "/resources/flight-school-scheduling-software",
-      "/resources/quickbooks-integration"
+      "/resources/flight-school-reports",
+      "/resources/flight-training-records",
+      "/resources/airworthiness-directive-tracking",
+      "/resources/split-billing-shared-flights"
     ),
   },
   {
-    title: "Compare",
+    title: "Help articles",
+    items: POPULAR_DOC_LINKS,
+  },
+  {
+    title: "Switching",
     items: linksByHref(
+      "/migrating/my-fbo",
       "/compare/flight-schedule-pro",
       "/compare/flight-circle",
+      "/compare/talon-systems",
       "/pricing"
     ),
   },

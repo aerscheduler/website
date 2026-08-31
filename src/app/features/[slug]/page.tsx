@@ -65,9 +65,18 @@ const FEATURE_SEO: Record<
       "Charge joining fees and recurring dues automatically. Membership tiers, monthly or annual billing, prorated first periods, and a record of every period billed, waived, or owed.",
   },
   maintenance: {
-    title: "Aircraft Maintenance Squawk Tracking",
+    title: "Aircraft Maintenance & Squawk Tracking Software",
     description:
-      "Log squawks, ground aircraft on the schedule, and track AVIATES inspections for your fleet.",
+      "Log squawks against a tail, ground an aircraft so nobody can book it, schedule downtime on the dispatch board, and give your mechanic access without showing them a single invoice.",
+  },
+  inspections: {
+    // Commercial intent ("software", "tracking"). The three airworthiness guides
+    // under /resources keep the informational queries (what 12 calendar months
+    // means, what 91.417 requires, what AD tracking can and cannot do), so this
+    // page and those three do not compete.
+    title: "Aircraft Inspection Tracking Software",
+    description:
+      "Track annuals, 100-hours and the rest of the airworthiness set on hour or calendar intervals, with calendar months counted to the end of the month and optional grounding the day an inspection comes due.",
   },
   mobile: {
     title: "Flight School iOS App",
@@ -81,6 +90,14 @@ const FEATURE_SEO: Record<
     title: "Flight School Reporting Software & Dashboards",
     description:
       "Built-in reports for revenue, aircraft utilization, instructor activity, and compliance. Each one is filterable and savable, plus a dashboard where every figure opens the report behind it.",
+  },
+  utilization: {
+    // Commercial intent ("tracking software"). The informational query, "how do
+    // you calculate aircraft utilization", stays with
+    // /resources/aircraft-utilization-report.
+    title: "Aircraft Utilization Tracking Software",
+    description:
+      "Booked, flown and billed hours side by side for every aircraft, simulator and room, with efficiency derived rather than averaged, zero-activity tails kept in, and a monthly email you set once.",
   },
   integrations: {
     title: "Flight School Software Integrations",

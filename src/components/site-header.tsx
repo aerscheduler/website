@@ -13,10 +13,10 @@ import { Menu, X, ChevronRight, ChevronDown } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { SiteSearch } from "@/components/site-search";
 import { Button } from "@/components/button";
-import { FEATURE_GROUPS, FEATURES, featureHref } from "@/lib/features";
+import { FEATURES, featureHref } from "@/lib/features";
+import { MODULES, CROSS_CUTTING } from "@/lib/modules";
 import { INTEGRATION_LINKS } from "@/lib/integrations";
 import { NAV_RESOURCE_GROUPS } from "@/lib/resources";
-import { DEVELOPER_LINKS } from "@/lib/developers";
 import { APP_URL, DEMO_URL, LOGIN_URL } from "@/lib/site";
 import { useAppAuthStatus } from "@/lib/use-app-auth-status";
 import { cn } from "@/lib/cn";
@@ -82,21 +82,38 @@ function RightNavLink({
   );
 }
 
-/** Features mega-menu omits Integrations; that has its own trigger. */
-const NAV_FEATURE_GROUPS = FEATURE_GROUPS.map((group) => ({
-  ...group,
-  items: group.items.filter((slug) => slug !== "integrations"),
-})).filter((group) => group.items.length > 0);
+/**
+ * The Features menu is one column per product module.
+ *
+ * It used to be four invented groups ("Schedule", "Train", "Money & MX",
+ * "Everywhere") plus a Developers column. Nothing else in the company was
+ * organised that way: the product is sold as five modules, the help docs are
+ * five sections, and the console's own nav follows them. A visitor met a
+ * different taxonomy in the menu, in the docs, and again after signing up.
+ *
+ * Developers is gone from here entirely. The API is not a module and somebody
+ * hunting for it is not browsing features; it now lives in Resources, which is
+ * where a developer looks first and where it can sit next to the docs.
+ *
+ * Integrations keeps its own top-level trigger, so it appears in the strip at
+ * the foot of this panel rather than inside a module column.
+ */
+const CROSS_CUTTING_LINKS = CROSS_CUTTING.map((slug) => ({
+  slug,
+  href: featureHref(slug),
+  label: FEATURES[slug].navLabel,
+}));
 
 const PANEL_WIDTH: Record<MegaId, number> = {
-  // Five columns since Developers joined: the panel grows sideways rather than
-  // wrapping a fifth group onto a lonely second row.
-  features: 880,
+  // Five module columns. Wider than the old four-groups-plus-Developers layout
+  // because each column now leads with a described hub link rather than a bare
+  // label, and 176px columns wrap those taglines to four lines apiece.
+  features: 980,
   integrations: 380,
   // Four curated columns (see NAV_RESOURCE_GROUPS). Same ballpark as Features:
   // wide enough for four label columns, short enough that mid-width desktops
   // don't clip the panel off the right edge.
-  resources: 880,
+  resources: 900,
 };
 
 export function SiteHeader() {
@@ -265,57 +282,61 @@ export function SiteHeader() {
                     }}
                   >
                     <div className="grid grid-cols-2 gap-0 p-3 lg:grid-cols-5">
-                      {NAV_FEATURE_GROUPS.map((group) => (
-                        <div key={group.title} className="px-3 py-3">
+                      {MODULES.map((productModule) => (
+                        <div key={productModule.slug} className="px-2.5 py-3">
                           <p className="px-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                            {group.title}
+                            {productModule.title}
                           </p>
-                          <ul className="mt-2 space-y-0.5">
-                            {group.items.map((slug) => {
-                              const f = FEATURES[slug];
-                              return (
-                                <li key={slug}>
-                                  <Link
-                                    href={featureHref(slug)}
-                                    className="block rounded-lg px-2 py-2 text-sm font-medium text-foreground hover:bg-muted"
-                                    onClick={closeMega}
-                                  >
-                                    {f.navLabel}
-                                  </Link>
-                                </li>
-                              );
-                            })}
+                          {/* The hub link carries the module's one-liner. Every
+                              other entry is a bare label: a menu where every row
+                              has two lines of prose is a page, not a menu. */}
+                          <Link
+                            href={featureHref(productModule.hub)}
+                            className="mt-2 block rounded-lg px-2 py-2 hover:bg-muted"
+                            onClick={closeMega}
+                          >
+                            <span className="block text-sm font-semibold text-foreground">
+                              {FEATURES[productModule.hub].navLabel}
+                            </span>
+                            <span className="mt-1 block text-xs leading-snug text-muted-foreground">
+                              {productModule.tagline}
+                            </span>
+                          </Link>
+                          <ul className="mt-1 space-y-0.5">
+                            {productModule.supporting.map((slug) => (
+                              <li key={slug}>
+                                <Link
+                                  href={featureHref(slug)}
+                                  className="block rounded-lg px-2 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+                                  onClick={closeMega}
+                                >
+                                  {FEATURES[slug].navLabel}
+                                </Link>
+                              </li>
+                            ))}
                           </ul>
                         </div>
                       ))}
-
-                      {/* Developers gets its own column rather than a line in
-                          "Everywhere": the API is a different kind of thing to
-                          a feature page, and somebody looking for it is looking
-                          for exactly it. */}
-                      <div className="px-3 py-3">
-                        <p className="px-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                          Developers
-                        </p>
-                        <ul className="mt-2 space-y-0.5">
-                          {DEVELOPER_LINKS.map((item) => (
-                            <li key={item.href}>
-                              <Link
-                                href={item.href}
-                                className="block rounded-lg px-2 py-2 text-sm font-medium text-foreground hover:bg-muted"
-                                onClick={closeMega}
-                              >
-                                {item.label}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
                     </div>
-                    <div className="flex items-center justify-between gap-3 border-t border-border bg-[#fafbfc] px-5 py-3">
-                      <p className="text-xs text-muted-foreground">
-                        Scheduling, billing, MX, mobile &amp; a full REST API
-                      </p>
+                    {/* The three pages that belong to every module. Filing the
+                        roster under Scheduling or the app under Mobile-only
+                        would misdescribe all five. */}
+                    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border bg-[#fafbfc] px-5 py-3">
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <span className="text-xs text-muted-foreground">
+                          Across every module:
+                        </span>
+                        {CROSS_CUTTING_LINKS.map((item) => (
+                          <Link
+                            key={item.slug}
+                            href={item.href}
+                            className="rounded-full border border-border bg-white px-2.5 py-1 text-xs font-medium text-foreground hover:border-primary/40 hover:text-primary"
+                            onClick={closeMega}
+                          >
+                            {item.label}
+                          </Link>
+                        ))}
+                      </div>
                       <Link
                         href="/features"
                         className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-primary hover:underline"
@@ -405,18 +426,31 @@ export function SiteHeader() {
                         </div>
                       ))}
                     </div>
-                    <div className="flex items-center justify-between gap-3 border-t border-border bg-[#fafbfc] px-5 py-3">
+                    {/* The Documentation column was four index pages deep and is
+                        gone; the hub keeps a seat here instead, beside the
+                        catalog, because "already a customer and stuck" is a
+                        different errand from everything in the columns above. */}
+                    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border bg-[#fafbfc] px-5 py-3">
                       <p className="text-xs text-muted-foreground">
-                        Guides, comparisons, reporting, and full documentation
+                        Guides, documentation, comparisons and the REST API
                       </p>
-                      <Link
-                        href="/resources"
-                        className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-primary hover:underline"
-                        onClick={closeMega}
-                      >
-                        All resources
-                        <ChevronRight className="size-3.5" />
-                      </Link>
+                      <span className="inline-flex shrink-0 items-center gap-4">
+                        <Link
+                          href="/docs"
+                          className="inline-flex items-center gap-1 text-sm font-semibold text-foreground hover:text-primary"
+                          onClick={closeMega}
+                        >
+                          Product documentation
+                        </Link>
+                        <Link
+                          href="/resources"
+                          className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
+                          onClick={closeMega}
+                        >
+                          All resources
+                          <ChevronRight className="size-3.5" />
+                        </Link>
+                      </span>
                     </div>
                   </MegaPanel>
                 </div>
@@ -496,17 +530,24 @@ export function SiteHeader() {
             open={mobileOpen}
             setOpen={setMobileOpen}
           >
-            {NAV_FEATURE_GROUPS.map((group) => (
-              <div key={group.title}>
+            {MODULES.map((productModule) => (
+              <div key={productModule.slug}>
                 <p className="px-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                  {group.title}
+                  {productModule.title}
                 </p>
-                {group.items.map((slug) => (
+                <Link
+                  href={featureHref(productModule.hub)}
+                  onClick={() => setOpen(false)}
+                  className="block rounded-lg px-2 py-2 text-sm font-semibold text-foreground hover:bg-muted"
+                >
+                  {FEATURES[productModule.hub].navLabel}
+                </Link>
+                {productModule.supporting.map((slug) => (
                   <Link
                     key={slug}
                     href={featureHref(slug)}
                     onClick={() => setOpen(false)}
-                    className="block rounded-lg px-2 py-2 text-sm text-foreground hover:bg-muted"
+                    className="block rounded-lg px-2 py-2 text-sm text-muted-foreground hover:bg-muted"
                   >
                     {FEATURES[slug].navLabel}
                   </Link>
@@ -515,11 +556,11 @@ export function SiteHeader() {
             ))}
             <div>
               <p className="px-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                Developers
+                Across every module
               </p>
-              {DEVELOPER_LINKS.map((item) => (
+              {CROSS_CUTTING_LINKS.map((item) => (
                 <Link
-                  key={item.href}
+                  key={item.slug}
                   href={item.href}
                   onClick={() => setOpen(false)}
                   className="block rounded-lg px-2 py-2 text-sm text-foreground hover:bg-muted"

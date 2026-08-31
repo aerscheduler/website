@@ -10,8 +10,10 @@ export type FeatureSlug =
   | "billing"
   | "memberships"
   | "maintenance"
+  | "inspections"
   | "mobile"
   | "reports"
+  | "utilization"
   | "integrations";
 
 export type Feature = {
@@ -37,11 +39,6 @@ export type Feature = {
    * once they have seen a worked example, and a bullet has no room for one.
    */
   guides?: string[];
-};
-
-export type FeatureGroup = {
-  title: string;
-  items: FeatureSlug[];
 };
 
 export const FEATURES: Record<FeatureSlug, Feature> = {
@@ -256,7 +253,35 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
       "Log issues from the native app on the ramp",
     ],
     personas: ["Technicians", "Admins", "Dispatchers"],
-    related: ["fleet", "scheduling", "compliance", "reports"],
+    related: ["inspections", "fleet", "scheduling", "compliance"],
+  },
+  inspections: {
+    slug: "inspections",
+    title: "Inspection Tracking",
+    navLabel: "Inspection Tracking",
+    eyebrow: "Due dates",
+    headline: "Every tail counting down, on the meter or the calendar.",
+    summary:
+      "The standard airworthiness set in a few clicks, hour and calendar intervals tracked the way the regulation writes them, and an annual that takes its own aircraft off the board when it lapses.",
+    bullets: [
+      "The standard airworthiness set, ticked to start: annual, 100-hour, VOR, AD review, transponder, ELT, static and altimeter",
+      "Oil changes, hose lives and anything else your shop tracks, as your own recurring inspections",
+      "Count on the meter, on the calendar in days or weeks, or in calendar months",
+      "Calendar months run to the end of the month, so a February annual is good through the end of February",
+      "Count tach or Hobbs per inspection, independent of the meter you bill on",
+      "A warning lead per inspection that both flags the row and sends the email",
+      "Optional grounding when an inspection comes due, and an automatic return to service when it is signed off",
+      "One-off reminders for a single date, such as a prop back from the shop",
+      "A permanent compliance record per sign-off, with the meter readings and who certified it",
+      "AD number and revision recorded when an inspection's source is a directive",
+    ],
+    personas: ["Owners", "Admins", "Technicians"],
+    related: ["maintenance", "fleet", "scheduling", "reports"],
+    guides: [
+      "/resources/calendar-months-and-inspection-due-dates",
+      "/resources/airworthiness-directive-tracking",
+      "/resources/aircraft-maintenance-records",
+    ],
   },
   mobile: {
     slug: "mobile",
@@ -289,16 +314,44 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
       "Filter, group, and re-order any report, then save the view for next month",
       "Build your own dashboard. Drag, resize, and give each tile its own date range",
       "Click any figure to open the report that produced it. Same numbers, always",
-      "Export any report to CSV",
+      "Export any report to CSV or PDF, every matching row with a totals row",
       "Financial reports stay owner-and-admin only; dispatchers see operations",
       "Email any saved view to your team daily, weekly, or monthly",
+      "An append-only audit log of who changed what, for owners and admins",
     ],
     personas: ["Owners", "Admins", "Dispatchers", "Technicians"],
-    related: ["billing", "scheduling", "maintenance", "people-roles"],
+    related: ["utilization", "billing", "scheduling", "maintenance"],
     guides: [
       "/resources/flight-school-reports",
       "/resources/aircraft-utilization-report",
       "/resources/flight-school-revenue-reporting",
+    ],
+  },
+  utilization: {
+    slug: "utilization",
+    title: "Aircraft Utilization",
+    navLabel: "Aircraft Utilization",
+    eyebrow: "Fleet returns",
+    headline: "Booked, flown and billed, side by side, per tail.",
+    summary:
+      "One number tells you nothing. Utilization here is three, because the money is in the gap between the hours an aircraft was held, the hours it actually flew, and the hours that reached an invoice.",
+    bullets: [
+      "Booked, flown and billed hours per resource, in one row",
+      "Efficiency derived from the columns beside it, never averaged",
+      "Resources that flew nothing still appear, at zero",
+      "Group by resource, instructor, customer or lesson type",
+      "A share-of bar on every group, so ranking needs no arithmetic",
+      "Simulators and rooms included, not just aircraft",
+      "Export every matching row to CSV or PDF with a totals row",
+      "Pin it to your dashboard with its own date range",
+      "Email it to yourself monthly, covering the previous month exactly",
+      "Windows resolved in the airport's own time zone",
+    ],
+    personas: ["Owners", "Admins", "Dispatchers"],
+    related: ["reports", "fleet", "scheduling", "billing"],
+    guides: [
+      "/resources/aircraft-utilization-report",
+      "/resources/flight-school-reports",
     ],
   },
   integrations: {
@@ -322,26 +375,16 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
   },
 };
 
-export const FEATURE_GROUPS: FeatureGroup[] = [
-  {
-    // People and compliance sit with Schedule: currencies and roles gate a
-    // booking, which is a front-desk concern (a syllabus gates a certificate).
-    title: "Schedule",
-    items: ["scheduling", "self-booking", "fleet", "people-roles", "compliance"],
-  },
-  {
-    title: "Train",
-    items: ["training", "instruction"],
-  },
-  {
-    title: "Money & MX",
-    items: ["billing", "memberships", "maintenance"],
-  },
-  {
-    title: "Everywhere",
-    items: ["mobile", "reports", "integrations"],
-  },
-];
+/**
+ * Grouping moved to `lib/modules.ts`.
+ *
+ * This file used to carry a `FEATURE_GROUPS` array of four invented buckets
+ * ("Schedule", "Train", "Money & MX", "Everywhere"). Nothing else in the company
+ * was organised that way, so the nav, the docs and the console each showed a
+ * visitor a different shape of the same product. The five product modules are
+ * now the one taxonomy, and they live next to the cross-cutting list rather than
+ * here, because a page can belong to a module without the registry caring.
+ */
 
 export const FEATURE_LIST = Object.values(FEATURES);
 
