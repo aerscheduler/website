@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Check,
   ChevronRight,
@@ -141,22 +142,46 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Five modules: the product spine */}
-      <section className="relative bg-[#fafbfc]">
-        <div className="pointer-events-none absolute inset-0 grid-lines opacity-30" aria-hidden />
+      {/* Five modules: the product spine.
+          Photograph rather than the grid-lines pattern it used to carry. This
+          is the one section on the home page that has to land the whole
+          argument at once, and a row of trainers in front of the hangars says
+          "this is your operation" faster than any heading can. Same treatment
+          as the statement bands on the feature pages, so the two read as one
+          site. */}
+      <section className="relative isolate overflow-hidden bg-brand-surface">
+        <Image
+          src="/photos/homepage-fleet.jpg"
+          alt="A row of light training aircraft parked in front of the hangars at golden hour"
+          fill
+          sizes="100vw"
+          quality={60}
+          className="object-cover"
+        />
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-brand-surface via-brand-surface/85 to-brand-surface/45"
+          aria-hidden
+        />
+        <div
+          className="absolute inset-0 bg-gradient-to-b from-brand-surface/60 via-transparent to-brand-surface/70"
+          aria-hidden
+        />
         <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-24">
           <Reveal className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
             <div className="max-w-2xl">
-              <h2 className="text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
+              <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
                 Five modules. One operation.
               </h2>
-              <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
+              <p className="mt-4 text-lg leading-relaxed text-white/70">
                 Everything a flight school runs day to day, on one data layer,
                 so a reservation becomes a graded lesson, an invoice, and a
                 report without a spreadsheet in between.
               </p>
             </div>
-            <Button href="/features" variant="secondary">
+            <Button
+              href="/features"
+              className="border border-white/25 bg-white/10 text-white backdrop-blur-sm hover:bg-white/20"
+            >
               Explore all features
               <ChevronRight className="size-4 opacity-80" />
             </Button>
@@ -690,6 +715,11 @@ function HardCaseCard({
   );
 }
 
+/**
+ * Sits on the photographic band, so it is styled for a dark ground: a
+ * translucent card with a blur behind it rather than white, which would punch
+ * five bright holes in the photograph and undo the reason for having it.
+ */
 function TeaserCard({
   href,
   icon,
@@ -704,13 +734,13 @@ function TeaserCard({
   return (
     <Link
       href={href}
-      className="rounded-xl border border-border bg-white p-5 shadow-sm transition-colors hover:border-primary/30"
+      className="rounded-xl border border-white/15 bg-white/[0.07] p-5 backdrop-blur-sm transition-colors hover:border-white/35 hover:bg-white/[0.12]"
     >
-      <div className="inline-flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+      <div className="inline-flex size-10 items-center justify-center rounded-lg bg-white/10 text-white">
         {icon}
       </div>
-      <h3 className="mt-4 font-semibold tracking-tight text-foreground">{title}</h3>
-      <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{body}</p>
+      <h3 className="mt-4 font-semibold tracking-tight text-white">{title}</h3>
+      <p className="mt-1.5 text-sm leading-relaxed text-white/65">{body}</p>
     </Link>
   );
 }

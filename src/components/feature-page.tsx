@@ -191,6 +191,7 @@ export function FeaturePage({ feature }: { feature: Feature }) {
             alt={photo.alt}
             fill
             sizes="100vw"
+            quality={60}
             className="object-cover"
             // Not `priority`: it sits below the fold on every page, and the hero
             // demo above it is the thing that should win the network.
@@ -218,7 +219,7 @@ export function FeaturePage({ feature }: { feature: Feature }) {
             <RevealGroup className="mt-12 grid max-w-4xl gap-8 border-t border-white/20 pt-8 sm:grid-cols-3">
               {landing.proof.map((item) => (
                 <div key={item.label}>
-                  <p className="text-2xl font-semibold tracking-tight text-white">
+                  <p className="text-balance text-xl font-semibold leading-snug tracking-tight text-white sm:text-2xl">
                     {item.value}
                   </p>
                   <p className="mt-1.5 text-sm leading-snug text-white/65">

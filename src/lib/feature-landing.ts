@@ -15,7 +15,12 @@ import type { FeatureSlug } from "@/lib/features";
  * So the shape below is capped, deliberately, and the caps are not suggestions:
  *
  *   statement   one sentence, over a photograph. The single strongest claim.
- *   proof       exactly 3. A number and a short label.
+ *   proof       exactly 3, and NOT a count of anything. "8 reservation
+ *               types" and "5 report categories" are inventory: they read as
+ *               a spec sheet and a buyer does not care how many kinds of a
+ *               thing exist. Each one is a CONSEQUENCE instead, in three or
+ *               four words: "Refused, not flagged", "One invoice each",
+ *               "Grounds itself", "No per-user fee".
  *   outcomes    exactly 3, body under about 20 words.
  *   steps       exactly 4, body under about 14 words.
  *   sections    at most 2, at most 3 points each.
@@ -30,7 +35,9 @@ import type { FeatureSlug } from "@/lib/features";
  *
  * House rules for the writing:
  *  - An outcome is a RESULT, never a feature.
- *  - Numbers beat adjectives.
+ *  - Specifics beat adjectives, but a number is only worth printing when it is
+ *    a consequence (a price, a limit somebody hits) and never when it is a
+ *    count of our own internal taxonomy.
  *  - Every claim is true of the shipped product. This copy was written against
  *    the help docs in `src/content/docs`, so it is one hop from being checked.
  *  - No em dashes anywhere in the workspace.
@@ -78,9 +85,9 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
     h1: "Flight school scheduling and dispatch software",
     statement: "If it is not on the board, it did not happen.",
     proof: [
-      { value: "8", label: "Reservation types" },
-      { value: "15 min", label: "Everything snaps to the quarter hour" },
-      { value: "Live", label: "The board updates as others book" },
+      { value: "Refused, not flagged", label: "A clash is stopped when the booking saves, from every surface" },
+      { value: "Airport time", label: "9:00 AM stays 9:00 AM, whoever is looking and from where" },
+      { value: "Live", label: "The board redraws as other people book, move and cancel" },
     ],
     outcomesTitle: "What changes on Monday",
     outcomes: [
@@ -270,7 +277,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
     proof: [
       { value: "Always on", label: "Currency cannot be switched off" },
       { value: "At save", label: "Checked before the booking exists" },
-      { value: "Custom", label: "Your own currency types too" },
+      { value: "Your own types", label: "Beyond medicals and reviews, on your own renewal periods" },
     ],
     outcomesTitle: "What changes",
     outcomes: [
@@ -322,9 +329,9 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
     h1: "Flight school billing and invoicing software",
     statement: "The flight bills itself before the pilot reaches the car park.",
     proof: [
-      { value: "2 models", label: "Invoice each flight, or member accounts" },
-      { value: "5 ways", label: "To split one booking's cost" },
-      { value: "1 each", label: "A shared flight mints an invoice per payer" },
+      { value: "One invoice each", label: "Everybody on a shared flight is billed at their own rate" },
+      { value: "No second system", label: "The schedule and the books are the same product" },
+      { value: "Your Stripe", label: "Payouts land in your own account, on your own schedule" },
     ],
     outcomesTitle: "What changes",
     outcomes: [
@@ -409,7 +416,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
     h1: "Flying club membership and dues billing software",
     statement: "Nobody chases the first of the month.",
     proof: [
-      { value: "Once", label: "A period cannot be charged twice" },
+      { value: "Never twice", label: "One member, one period, enforced by the database itself" },
       { value: "Prorated", label: "Join on the 20th, pay for 10 days" },
       { value: "Pause", label: "A winter off creates no arrears" },
     ],
@@ -463,9 +470,9 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
     statement:
       "Written for the instructor on Tuesday and the inspector two years later.",
     proof: [
-      { value: "4 syllabi", label: "Private, Instrument, Commercial, CFI" },
-      { value: "6 gates", label: "What the Part 141 setting arms" },
-      { value: "Offline", label: "Grade at the aircraft, sync later" },
+      { value: "Frozen at signing", label: "A signed record cannot be quietly tidied up later" },
+      { value: "Part 141 enforced", label: "Stage checks, certification, and graduation actually blocked" },
+      { value: "Offline", label: "Grade at the aircraft, and it syncs when there is signal" },
     ],
     outcomesTitle: "What changes",
     outcomes: [
@@ -551,7 +558,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
     statement: "Who can teach whom, at what rate, and when they are free.",
     proof: [
       { value: "Per rating", label: "Dual and ground rates" },
-      { value: "Pairing", label: "Booking offers valid pairs only" },
+      { value: "Only valid pairs", label: "Booking stops offering combinations you did not intend" },
       { value: "Weekly", label: "Availability self-booking respects" },
     ],
     outcomesTitle: "What changes",
@@ -599,9 +606,9 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
     h1: "Aircraft maintenance and squawk tracking software",
     statement: "Nothing unairworthy leaves the ramp.",
     proof: [
-      { value: "3 things", label: "Inspections, squawks, and grounding" },
-      { value: "Anyone", label: "Can report a squawk from the ramp" },
-      { value: "Permanent", label: "A note can never be edited or deleted" },
+      { value: "Grounds itself", label: "An overdue annual clears the board with nobody remembering" },
+      { value: "Reported from the ramp", label: "Anybody who flies can file a squawk against the tail" },
+      { value: "Never edited", label: "A note on a squawk cannot be changed or deleted, by anybody" },
     ],
     outcomesTitle: "What changes",
     outcomes: [
@@ -676,9 +683,9 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
     h1: "Aircraft inspection tracking software",
     statement: "An annual signed 15 February is good through the end of February.",
     proof: [
-      { value: "7 presets", label: "The standard airworthiness set" },
-      { value: "3 ways", label: "Meter, calendar, or a one-off date" },
-      { value: "Tach or Hobbs", label: "Per inspection, not per aircraft" },
+      { value: "Calendar months", label: "Counted to the end of the month, never as 365 days" },
+      { value: "No guessed dates", label: "An hour-based inspection reports the meter, not an average" },
+      { value: "Tach or Hobbs", label: "Each inspection counts the meter you choose, not the billing one" },
     ],
     outcomesTitle: "What changes",
     outcomes: [
@@ -742,9 +749,9 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
     h1: "Flight school reporting software and dashboards",
     statement: "A figure and the report behind it can never disagree.",
     proof: [
-      { value: "5 categories", label: "Each with its own permission" },
-      { value: "CSV and PDF", label: "Every row, with a totals row" },
-      { value: "Scheduled", label: "Any saved view emails itself" },
+      { value: "Locked by role", label: "Financial stays owner and admin only, enforced on every run" },
+      { value: "CSV and PDF", label: "Every matching row, with a totals row, ready for your accountant" },
+      { value: "Sends itself", label: "Any saved view emails daily, weekly or monthly, on your clock" },
     ],
     outcomesTitle: "What changes",
     outcomes: [
@@ -829,9 +836,9 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
     h1: "Aircraft utilization tracking software",
     statement: "The money is in the gap between booked, flown and billed.",
     proof: [
-      { value: "3 numbers", label: "Not one. The gaps are the finding." },
-      { value: "Zero rows kept", label: "The idle tail is why you opened it" },
-      { value: "Monthly", label: "Emails itself, covering last month exactly" },
+      { value: "Booked, flown, billed", label: "Side by side, because the gaps between them are the finding" },
+      { value: "Idle tails included", label: "A resource that flew nothing still gets its own row" },
+      { value: "Sends itself", label: "Monthly, covering the previous calendar month exactly" },
     ],
     outcomesTitle: "What changes",
     outcomes: [
@@ -883,9 +890,9 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
     h1: "Flight school staff and student management",
     statement: "One roster the whole operation reads from.",
     proof: [
-      { value: "7 roles", label: "Owner through technician" },
-      { value: "$0", label: "No per-user fee, ever" },
-      { value: "Multi-org", label: "Fly at two schools as one person" },
+      { value: "No per-user fee", label: "Instructors, students, renters and staff are all unlimited" },
+      { value: "Grounded, not deleted", label: "Stop somebody flying without losing any of their history" },
+      { value: "Two schools, one login", label: "For the instructors who teach at more than one" },
     ],
     outcomesTitle: "What changes",
     outcomes: [

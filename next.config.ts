@@ -5,6 +5,29 @@ const nextConfig: NextConfig = {
   output: "standalone",
   images: {
     unoptimized: false,
+    /**
+     * AVIF first, WebP second, original last.
+     *
+     * The photography behind the statement bands is the heaviest thing the
+     * marketing site ships. Next already transcoded the source JPEGs to WebP,
+     * which took a 243KB source down to about 64KB on the wire; AVIF takes the
+     * same images down again by roughly a third for any browser that asks for
+     * it, and everything else silently falls back to WebP.
+     *
+     * The cost is build-time encoding, paid once per size per image on a set of
+     * five static files, and never by the visitor. The bands are below the fold
+     * and lazily loaded, so none of this is on the critical path either way.
+     */
+    formats: ["image/avif", "image/webp"],
+    /**
+     * Next 16 refuses any `quality` not on this list, so 60 has to be declared
+     * before a component can ask for it.
+     *
+     * 60 is for the statement bands. Those photographs sit under two gradients
+     * at between 45% and 85% opacity, so the detail that quality 75 is
+     * protecting is not detail anybody can see. 75 stays for everything else.
+     */
+    qualities: [60, 75],
   },
   async redirects() {
     return [
