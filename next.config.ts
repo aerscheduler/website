@@ -29,6 +29,30 @@ const nextConfig: NextConfig = {
      */
     qualities: [60, 75],
   },
+  async headers() {
+    return [
+      /**
+       * The search index is readable cross-origin, because the console reads it.
+       *
+       * app.aerscheduler.com's command palette searches the help documentation
+       * from the same corpus this site searches, so a signed-in member looking
+       * for "close out a flight" finds the article without leaving the console.
+       * There is one index rather than two, so the two searches cannot drift.
+       *
+       * `*` rather than the console's origin: the file is a build artifact made
+       * of published marketing and documentation copy, served to anyone who asks
+       * for it here, so an allowlist would protect nothing and would silently
+       * break the console the day a preview deployment gets its own origin.
+       */
+      {
+        source: "/search-index.json",
+        headers: [
+          { key: "Access-Control-Allow-Origin", value: "*" },
+          { key: "Cache-Control", value: "public, max-age=0, must-revalidate" },
+        ],
+      },
+    ];
+  },
   async redirects() {
     return [
       // Canonical terms URL referenced by the mobile app / store listings.
