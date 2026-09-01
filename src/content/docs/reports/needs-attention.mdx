@@ -1,6 +1,6 @@
 <Summary>
-The "Needs attention" card sits under the Overview tiles and counts what is genuinely outstanding: overdue
-invoices, flights flown but never invoiced, flights awaiting close-out, grounded aircraft, open squawks, and
+"Needs attention" is a tile on your dashboard that counts what is genuinely outstanding: overdue invoices, debt
+over 90 days, flights flown but never invoiced, flights awaiting close-out, grounded aircraft, open squawks, and
 anything expiring. Click a count and the report opens already filtered.
 </Summary>
 
@@ -8,35 +8,41 @@ anything expiring. Click a count and the report opens already filtered.
 
 ## Where the list is
 
-<Where app="web">Reports → Overview</Where>, below the grid of tiles. It is a single card titled "Needs attention".
+It is a tile on your board, titled "Needs attention", on <Where app="web">Dashboard</Where> and on
+<Where app="web">Reports → Overview</Where>. Both show the same board.
 
 If everything is clear it reads "Nothing needs attention right now."
 
-<Screenshot id="reports-overview-attention" />
+Because it is a tile, you can move it, resize it, or take it off the board entirely, and add it back later from
+"Add tile" by choosing the Widget shape. See
+[Build your dashboard](/docs/reports/build-your-overview-dashboard).
 
 ## What each item counts
 
-There are nine possible items. Each is a filter over a real report, and each carries its own time window.
+There are ten possible items. Each is a filter over a real report, and each carries its own time window.
 
 | Item | What it counts |
 |---|---|
 | Overdue invoices | Invoices past their due date and still unpaid |
-| Flown not invoiced | Flights that were closed out but never turned into an invoice |
-| Awaiting close-out | Bookings that flew and are still waiting to be closed out |
+| Receivables 90+ days | Debt older than 90 days, whether on an invoice or a ledger |
+| Flown, not invoiced | Flights that were closed out but never turned into an invoice |
+| Awaiting close-out | Flown in the last 60 days and still waiting to be closed out |
 | Grounded resources | Aircraft currently grounded |
-| Open squawks | Squawks still open |
-| Maintenance overdue | Maintenance reminders past due |
-| Documents expiring | Documents whose expiry date is coming up |
-| Currency lapsing | Pilot currencies about to lapse |
-| Endorsements expiring | Endorsements whose expiry date is coming up |
+| Open squawks | Squawks reported and not yet resolved |
+| Maintenance overdue | Maintenance past its hours or its date |
+| Documents expiring | Medicals, reviews and insurance lapsed or due within 30 days |
+| Currency lapsing | Pilots out of currency, or within 30 days of it |
+| Endorsements expiring | Solo and other timed sign-offs lapsed or due within 30 days |
 
-An item at zero is not hidden. Zeros are collapsed into a single "Clear:" line at the bottom of the card, naming
+An item at zero is not hidden. Zeros are collapsed into a single "Clear:" line at the bottom of the tile, naming
 them, so you can tell "nothing overdue" apart from "we do not track that".
+
+Hover a row to read what it counts, which is where the detail in the table above lives in the product.
 
 ## These counts ignore the date range above them
 
-The card sits under a dashboard with a date range picker, which makes it look as though it obeys that picker. It
-does not.
+The tile sits on a board with a date range picker, which makes it look as though it obeys that picker. It does not,
+and its header says what it is showing instead of naming a window.
 
 Each item uses whatever window makes it useful:
 
@@ -46,8 +52,8 @@ Each item uses whatever window makes it useful:
   the school opened, which nobody would ever work through.
 
 <Callout type="note">
-Changing the dashboard's date range does not change these counts. If you want a number that follows the picker,
-that is what the tiles above are for.
+Changing the board's date range does not change these counts. If you want a number that follows the picker, that is
+what the other tiles are for.
 </Callout>
 
 ## Clicking through opens the matching report
@@ -66,7 +72,7 @@ forward and the report opens on the last 30 days.
 A zero in the "Clear:" line is a real finding. It says the school has none of that thing outstanding right now, not
 that the check failed.
 
-The one to be careful about is "Flown not invoiced" reading zero when you expected a backlog. Voiding an invoice
+The one to be careful about is "Flown, not invoiced" reading zero when you expected a backlog. Voiding an invoice
 puts its flight back into that count, and closing out a flight is what puts it into scope in the first place. See
 [Why a flight was not invoiced](/docs/billing/why-a-flight-was-not-invoiced).
 
@@ -74,13 +80,13 @@ puts its flight back into that count, and closing out a flight is what puts it i
 
 An item is dropped entirely if you cannot run the report underneath it.
 
-| Role | What the card can show |
+| Role | What the tile can show |
 |---|---|
-| Owner, admin | All nine |
-| Dispatcher | Everything except Overdue invoices |
+| Owner, admin | All ten |
+| Dispatcher | Everything except Overdue invoices and Receivables 90+ days |
 | Technician | Grounded resources, Open squawks, Maintenance overdue |
 
-There is nothing greyed out to click, so a shorter card is not a fault. See
+There is nothing greyed out to click, so a shorter tile is not a fault. See
 [Who can see which reports](/docs/reports/who-can-see-which-reports).
 
 ## The one to work first
@@ -89,7 +95,7 @@ If you only have ten minutes, work them in this order. The first two are money a
 collected, and they are the items that most often sit untouched for months.
 
 <Steps>
-<Step n={1} title="Flown not invoiced">
+<Step n={1} title="Flown, not invoiced">
 Flights that happened and were never billed. This is revenue the school has already delivered.
 See [Why a flight was not invoiced](/docs/billing/why-a-flight-was-not-invoiced).
 </Step>

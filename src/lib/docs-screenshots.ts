@@ -1604,20 +1604,20 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   },
   {
     id: "reports-overview-board",
-    screen: "Reports, Overview dashboard",
-    route: "/reports?report=overview",
-    alt: "Reports, Overview dashboard",
+    screen: "The dashboard",
+    route: "/dashboard",
+    alt: "The dashboard, showing the default board of tiles",
     dataState:
-      "The default layout on Last 30 days with real figures in all eight number cards and both line charts. Needs a month of invoices and closed-out flights so no tile reads zero or blank.",
+      "The default fourteen-tile layout on Last 30 days: the Up next and Needs attention widgets, four operations figures, four money figures, both trend charts showing a dashed comparison line, and both by-aircraft breakdowns. Needs a month of invoices and closed-out flights across several aircraft so no tile reads zero or blank, and bookings in the next seven days so Up next is not empty. DOCS_EMAIL=test-owner@aerscheduler.com, an owner, so the money row is present.",
     crop: '[data-doc-shot="reports-overview-board"]',
   },
   {
     id: "reports-overview-attention",
-    screen: "Reports, Overview, Needs attention card",
-    route: "/reports?report=overview",
-    alt: "Reports, Overview, Needs attention card",
+    screen: "The Needs attention widget tile",
+    route: "/dashboard",
+    alt: "The Needs attention tile on the dashboard",
     dataState:
-      "At least five non-zero items and one Clear line. Requires an overdue invoice, a closed-out flight that was never invoiced, a booking awaiting close-out, an open squawk, and a document expiring inside 30 days.",
+      "At least five non-zero items and one Clear line. Requires an overdue invoice, a closed-out flight that was never invoiced, a booking awaiting close-out, an open squawk, and a document expiring inside 30 days. DOCS_EMAIL=test-owner@aerscheduler.com, an owner, so the two financial rows are present. The id sits on the TILE, not on the strip inside it, so the crop includes the header that names it.",
     crop: '[data-doc-shot="reports-overview-attention"]',
   },
   {
@@ -1736,9 +1736,9 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   },
   {
     id: "dashboard-edit-mode",
-    screen: "Reports, Overview in edit mode",
-    route: "/reports?report=overview",
-    alt: "Reports, Overview in edit mode",
+    screen: "The dashboard in edit mode",
+    route: "/dashboard",
+    alt: "The dashboard in edit mode",
     dataState:
       "Customise pressed, grip handles and resize corners visible on the tiles, and the Add tile, Reset, Cancel, and Done buttons in the header.",
     // Without this the crop is the ordinary board, which is a different picture
@@ -1748,11 +1748,11 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   },
   {
     id: "dashboard-tile-builder",
-    screen: "Reports, Add tile dialog",
-    route: "/reports?report=overview",
-    alt: "Reports, Add tile dialog",
+    screen: "The Add tile dialog",
+    route: "/dashboard",
+    alt: "The Add tile dialog",
     dataState:
-      "A report chosen that offers no dimension, so Line and Bar are greyed out with the reason shown, alongside the metric checkboxes and the Date range and Compare to fields.",
+      "A report chosen that offers no dimension, so Line, Bar and Breakdown are greyed out with the reason shown, alongside the metric checkboxes and the Date range and Compare to fields. The shape grid should show all six, including Widget.",
     open: ["text=Customise", "text=Add tile"],
     crop: '[data-doc-shot="dashboard-tile-builder"]',
   },
@@ -1762,7 +1762,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/reports?report=revenue",
     alt: "Reports, Pin to dashboard dialog",
     dataState:
-      "Opened from the pin icon on a saved view, showing the locked report field, the carried-over title, and the note that the tile is a copy. Needs a saved view on Revenue for the pin icon to sit on.",
+      "Opened from the pin icon on a saved view, showing the locked report field, the carried-over title, and the note that the tile is a copy. Needs a saved view on Revenue for the pin icon to sit on. The shape grid shows five, NOT six: Widget is deliberately absent when pinning, because it would throw the saved view away.",
     open: ["text=Saved views", "[data-doc-shot=report-saved-views] button[aria-label^=Pin]"],
     crop: '[data-doc-shot="dashboard-pin-view"]',
   },

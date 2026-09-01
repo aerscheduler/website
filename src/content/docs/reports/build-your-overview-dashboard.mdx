@@ -1,23 +1,44 @@
 <Summary>
-Overview is your own dashboard, not the school's. Click "Customise" to move, resize, add or remove tiles, then
-"Done" to save. Nothing is stored until you press Done.
+Your dashboard is your own, not the school's. Click "Customise" to move, resize, add or remove tiles, then "Done"
+to save. Nothing is stored until you press Done.
 </Summary>
 
 <Roles>Owners, Admins, Dispatchers, Technicians</Roles>
 
-## Overview belongs to you alone
+## One board, in two places
 
-Open <Where app="web">Reports → Overview</Where>. Everyone who can reach Reports gets their own board, and changing
-yours changes nobody else's. There is no shared school dashboard.
+The board is the whole of <Where app="web">Dashboard</Where>, the page you land on when you sign in. The same board
+is also <Where app="web">Reports → Overview</Where>.
 
-You start on the default layout: eight number cards (Billed, Collected, Outstanding, Flights, Hours flown, Hours
-booked, Efficiency, Cancellations) and two line charts ("Booked, flown and billed hours" and "Billed and
-collected"). Nothing is written down until the first time you save your own.
+They are not two dashboards. They are one saved layout shown in two places, so a tile you move on the Dashboard has
+moved on Reports as well.
 
-Every figure on the board opens the report behind it, so a number you distrust is one click from the rows that
-produced it.
+<Callout type="note">
+Technicians do not have the Dashboard page, but do have Reports, so for a technician the board lives at
+Reports → Overview only.
+</Callout>
 
-<Screenshot id="reports-overview-board" />
+Everyone gets their own board, and changing yours changes nobody else's. There is no shared school dashboard.
+
+Every figure opens the report behind it, so a number you distrust is one click from the rows that produced it.
+
+## What you start with
+
+Until you save your own layout, you get the default one: fourteen tiles, in four bands.
+
+| Band | Tiles |
+|---|---|
+| Widgets | Up next, Needs attention |
+| Operations | Flights, Flown, Efficiency, Cancellations |
+| Money | Billed, Collected, Outstanding, Collected % |
+| Trends | Booked and flown hours, Billed and collected |
+| Breakdowns | Flights by aircraft, Billed by aircraft |
+
+The operations and money rows are separate on purpose. Tiles you cannot see are dropped from your board, so a
+dispatcher, who has no access to the financial reports, loses the money row whole and keeps a tidy row of four
+rather than a row with holes in it.
+
+Nothing is written down until the first time you press Done on your own changes.
 
 ## Set the date range and the comparison
 
@@ -26,8 +47,8 @@ Two selects sit in the toolbar above the tiles.
 **Date range**: Last 7 days, Last 30 days, Last 90 days, Month to date, Year to date, Next 30 days, Next 90 days.
 It defaults to Last 30 days and drives every tile that has not overridden it.
 
-**Comparison**: "vs previous period", "vs last year" or "No comparison". It decides what the change percentage on
-each number card is measured against.
+**Comparison**: "vs previous period", "vs last year" or "No comparison". It decides what each number card's change
+percentage is measured against, and what the dashed line on a time chart is.
 
 | Comparison | What it compares to |
 |---|---|
@@ -41,6 +62,70 @@ to ask.
 </Callout>
 
 Changing either select counts as an unsaved edit, so remember to press Done.
+
+## Pick a shape
+
+| Shape | Metrics | Dimension | What it is for |
+|---|---|---|---|
+| Number | Exactly one | None | One headline figure and its change |
+| Line chart | Up to three | Required | A metric over time, or across a dimension |
+| Bar chart | Exactly one | Required | Ranking: which aircraft flew most |
+| Breakdown | Exactly one | Required | How a total divides, with the figures |
+| Table | Up to six | Optional | The rows themselves |
+| Widget | None | None | A built-in panel, see below |
+
+Only columns the report marks as metrics are offered, so you cannot put a label column such as a tail number on a
+number card.
+
+<Callout type="note">
+If Line, Bar and Breakdown are greyed out, the report you picked has nothing to break its numbers down by, so a
+chart would have no axis to draw. That report can still be a number card or a table.
+</Callout>
+
+### Breakdown or bar chart?
+
+They take the same two things and answer different questions. A bar chart is a **ranking**: it is good at "which
+aircraft flew most" and bad at "how much did N172TS bill", because reading a value off a bar is estimation. A
+breakdown carries the number on every row and uses length only for each row's share of the total.
+
+A breakdown shows the top five rows and folds everything else into "Other", then prints the total underneath, so
+the rows you can see always add up to the figure below them.
+
+## Widget tiles
+
+Two tiles are not built from a report at all.
+
+| Widget | What it shows |
+|---|---|
+| Up next | The next bookings on the schedule, today's first, for the next seven days |
+| Needs attention | Everything overdue or unfinished, each row opening the rows behind it |
+
+Click a booking on "Up next" and it opens exactly as it does on the schedule, so you can read it, edit it or cancel
+it without leaving the dashboard.
+
+<Callout type="important">
+Widgets ignore the date range and the comparison, and their tile header says what they are showing instead of a
+window. This is deliberate. What is overdue is not a question about the period you happen to be looking at, and
+"the next seven days" does not become "last month" because you changed the picker.
+</Callout>
+
+Because a widget has no report behind it, there is nothing for your roles to fail. A technician's board keeps both
+widgets even though every other default tile is dropped.
+
+## The comparison line on a time chart
+
+A line chart plotted over time draws the comparison period behind the current one, as a dashed line in the same
+colour as its series. The legend names the dates it is comparing against, for example "vs Jul 3, Aug 1".
+
+Three rules decide whether you get one:
+
+- The chart must be plotted over time. Comparing "the third busiest aircraft this month" against "the third busiest
+  last month" would draw a line between two different aeroplanes, so charts grouped by anything else do not get one.
+- The chart must have **two metrics or fewer**. Three metrics plus their comparisons is six lines on one axis. A
+  third metric turns the comparison off rather than drawing it.
+- The tile's comparison must not be "No comparison".
+
+Hover any point to read the current value and the same day of the previous period together.
 
 ## Move and resize tiles
 
@@ -61,11 +146,9 @@ Or "Cancel" to throw the changes away.
 </Step>
 </Steps>
 
-<Screenshot id="dashboard-edit-mode" />
-
 <Callout type="warning">
-Nothing is saved until you press Done. If you leave the Overview with unsaved edits, by the rail, the sidebar, the
-browser's back button or by closing the tab, you are prompted first.
+Nothing is saved until you press Done. If you leave with unsaved edits, by the sidebar, the browser's back button
+or by closing the tab, you are prompted first.
 </Callout>
 
 ## Add a tile
@@ -75,38 +158,20 @@ browser's back button or by closing the tab, you are prompted first.
 "Add tile" only appears in the toolbar once the board is in edit mode, so click "Customise" first.
 </Step>
 <Step n={2} title="Pick a report">
-The picker only lists reports your roles let you run.
+The picker only lists reports your roles let you run. Skip this if you are adding a widget.
 </Step>
-<Step n={3} title="Pick a shape and tick the metrics">
-Number, line, bar or table. See the table below for what each shape needs.
+<Step n={3} title="Pick a shape">
+Choosing "Widget" replaces the rest of the form with a list of the built-in widgets, because a widget has no
+report, no metric and no date range to choose.
 </Step>
-<Step n={4} title="Pick a dimension where the shape needs one">
-This is what the chart plots along its axis.
+<Step n={4} title="Tick the metrics, and pick a dimension where the shape needs one">
+The dimension is what the chart plots along its axis, or what a breakdown splits by.
 </Step>
 <Step n={5} title="Optionally add filters, a title, its own date range and its own comparison" />
 <Step n={6} title="Click Add tile, then Done">
 The tile lands at the bottom of the board. It is not saved until you press Done.
 </Step>
 </Steps>
-
-<Screenshot id="dashboard-tile-builder" />
-
-## Pick a shape: number, line, bar, or table
-
-| Shape | Metrics | Dimension |
-|---|---|---|
-| Number card | Exactly one | None |
-| Bar chart | Exactly one | Required |
-| Line chart | Up to three | Required |
-| Table | Up to six | Optional |
-
-Only columns the report marks as metrics are offered, so you cannot put a label column such as a tail number on a
-number card.
-
-<Callout type="note">
-If Line and Bar are greyed out, the report you picked has nothing to break its numbers down by, so a chart would
-have no axis to draw. That report can still be a number card or a table.
-</Callout>
 
 ## Give a tile its own date range
 
@@ -121,17 +186,14 @@ both be right. A comparison override carries no marker.
 If you have already shaped a report and saved it, you do not have to rebuild it here.
 
 <Steps>
-<Step n={1} title="Open the report and click Saved views">
-</Step>
+<Step n={1} title="Open the report and click Saved views" />
 <Step n={2} title="Click the pin icon on the view's row">
 The "Pin to dashboard" dialog opens with a suggested shape and metrics already chosen.
 </Step>
 <Step n={3} title="Click Pin tile">
-The success toast offers "View" to jump straight to the Overview.
+The success toast offers "View" to jump straight to the board.
 </Step>
 </Steps>
-
-<Screenshot id="dashboard-pin-view" />
 
 The shape is guessed from the view: grouped by day gives a line chart, grouped by anything else gives a bar chart,
 and ungrouped gives a single number.
@@ -152,9 +214,11 @@ Anyone can pin any view they can see. The tile is their own copy on their own bo
 In edit mode, each tile carries a menu. "Edit" reopens the same dialog you built it in; "Remove" deletes it.
 Neither is saved until you press Done.
 
+Removing a widget is allowed, and you can add it back later from "Add tile" by choosing the Widget shape.
+
 ## Reset to the default layout
 
-"Reset" in the header puts the board back to the eight default cards and two default charts.
+"Reset" in the header puts the board back to the fourteen default tiles.
 
 <Callout type="warning">
 Reset is destructive: it replaces your tiles and your layout, not just the positions. It confirms first.
@@ -169,6 +233,9 @@ can lose a tile you had previously saved with Done.
 
 A panel holds up to 40 tiles, and there can be up to 10 panels, though today there is only ever one.
 
+On a phone the board becomes a single column, in reading order, top to bottom and then left to right. Only the
+full width layout is saved, so rearranging on a laptop is what your phone follows.
+
 <Callout type="warning">
 A tile can vanish on its own, with only a toast to explain. If it points at a report you no longer have access to,
 or at a metric or dimension that report no longer offers, that one tile is dropped and the rest of the board still
@@ -177,9 +244,9 @@ renders. The toast names it, along the lines of "'X' needs access you don't have
 
 Two consequences worth knowing:
 
-- A technician's default board is nearly empty. All eight default cards and both default charts are built on
-  Revenue, Utilization and Cancellations, and a technician's roles grant only the Fleet category. Add your own
-  tiles from Fleet, Squawks and downtime, and Maintenance due.
+- A technician's default board is the two widgets and nothing else. Every other default tile is built on Revenue,
+  Utilization or Cancellations, and a technician's roles grant only the Fleet category. Add your own tiles from
+  Fleet, Squawks and downtime, and Maintenance due.
 - A number card shows no percentage change when the previous period was zero. Going from 0 to 40 is not a
   meaningful percentage, so the card says nothing rather than printing one. Where a comparison ran but produced no
   baseline, the card reads "No comparison".
@@ -188,7 +255,7 @@ Two consequences worth knowing:
 
 <CardGrid>
   <DocCard href="/docs/reports/needs-attention" title="Work the Needs attention list">
-    The card under the tiles, and why its counts ignore your date range.
+    The widget, and why its counts ignore your date range.
   </DocCard>
   <DocCard href="/docs/reports/save-a-report-view" title="Save a report as a view">
     The thing you pin.

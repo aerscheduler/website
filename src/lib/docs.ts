@@ -1322,9 +1322,9 @@ export const DOC_SECTIONS: DocSection[] = [
       },
       {
         slug: "build-your-overview-dashboard",
-        title: "Build your Overview dashboard",
+        title: "Build your dashboard",
         description:
-          "Overview is your own dashboard, not the school's. Click Customise to move, resize, add, or remove tiles, then Done to save. Nothing is stored until you press Done.",
+          "Your dashboard is your own, not the school's, and the same board is on Dashboard and on Reports \u2192 Overview. Click Customise to move, resize, add, or remove tiles, then Done to save. Nothing is stored until you press Done.",
         kind: "task",
         audience: ["Owners", "Admins", "Dispatchers", "Technicians"],
         seoQuery: "customize reports dashboard flight school",
@@ -1333,7 +1333,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "needs-attention",
         title: "Work the Needs attention list",
         description:
-          "The card under the Overview tiles counts what is genuinely outstanding: overdue invoices, flights flown but never invoiced, flights awaiting close-out, grounded aircraft, open squawks, and anything expiring. Click one and the report opens already filtered.",
+          "The Needs attention tile counts what is genuinely outstanding: overdue invoices, debt over 90 days, flights flown but never invoiced, flights awaiting close-out, grounded aircraft, open squawks, and anything expiring. Click one and the report opens already filtered.",
         kind: "task",
         audience: ["Owners", "Admins", "Dispatchers", "Technicians"],
         seoQuery: "flights flown but not invoiced flight school",
