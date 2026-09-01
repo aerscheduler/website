@@ -26,8 +26,9 @@ location, come back, and the picker works. You only do this once per airport.
     This is what appears on the dispatch board, on invoices and in every report.
 
     As you type, matches from the public US aircraft registry appear underneath. Pick
-    yours and the make, model, year, category, class, engine and seats fill themselves
-    in. Everything it fills stays editable.
+    yours and the make, model, year, category, class, engine and seats fill themselves in,
+    and the serial number too when our copy of the registry has one for that tail.
+    Everything it fills stays editable.
 
     Nothing appears for a registration outside the US, or for a very new one. That is
     normal and not an error: carry on and type the fields yourself.
@@ -40,6 +41,15 @@ location, come back, and the picker works. You only do this once per airport.
   <Step n={4} title="Fill in anything the lookup could not">
     Make and model are required. Year, engine, fuel, gear and seats are optional and can
     wait.
+
+    So is the **Serial number**, near the bottom of the form, above **Flying day** and
+    **Home base**. Choose a US tail number from the lookup and it arrives already filled:
+    every row in the federal file carries a serial. What the file does not carry is a
+    non-US registration, so a G-, D- or LV- aeroplane is typed off the data plate like
+    everything else about it. It is the
+    number an Airworthiness Directive names its affected aircraft by, and it prints on the
+    Airworthiness compliance report. See
+    [Choose how much AerScheduler does about ADs](/docs/maintenance/choose-how-we-handle-airworthiness-directives).
   </Step>
   <Step n={5} title="Enter the current Hobbs and the current tach">
     Type the readings exactly as they show on the meters, for example 1234.5. These are the
