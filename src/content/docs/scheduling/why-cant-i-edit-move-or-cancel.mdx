@@ -138,7 +138,7 @@ started are never cancelled by any of them.
 
 ## A Hobbs reading needs correcting
 
-Use **Correct times** on the reservation panel in the console, or **Update Details** on the
+Use **Correct times** on the reservation panel in the console, or **Correct times** on the
 reservation screen in the app. Only the figures the booking already carries can be
 corrected, and only once the aircraft is back.
 
@@ -148,9 +148,39 @@ Two things to know before you correct one.
 Correcting a reading after somebody has signed off **wipes every sign-off on the booking**, and
 everybody has to confirm with their PIN again.
 
-Correcting one after every pilot has signed off, or after any invoice exists, is refused
-outright with "This reservation has already been invoiced". Void the invoice first.
+Once the flight has been billed, the reading is fixed while that bill stands, and you are told
+so rather than left guessing. Undo the bill and the correction opens again:
+
+- **Billed through Stripe.** Void the invoice. Billing, then Invoices, then the invoice, then
+  **Void and open close-out**, which takes you straight back to the booking.
+- **Charged to an account ledger.** Open the member, then Ledger, find the flight charge and
+  choose **Reverse**. The money goes back on their balance, the original charge stays on the
+  statement with the reversal beside it, and the flight becomes correctable. Once the crew
+  sign off again it bills from the new hours.
 </Callout>
+
+## The flight is already signed off
+
+Use **Reopen to make a correction** on the reservation panel in the console, or **Reopen
+close-out** in the app's actions menu. It clears the sign-offs so everybody confirms the
+corrected numbers, and changes nothing else: the readings, the crew and the booked times all
+stay as they are.
+
+It is the same act **Correct times** performs on its own, offered separately for the case
+where the numbers are right and the sign-off is not: the wrong person confirmed, or somebody
+confirmed without looking.
+
+Reopening is narrower than correcting, because a PIN is a signature. The school's staff, an
+**admin** or the **front desk**, or the **instructor on that booking**, can reopen it. A pilot
+cannot clear another pilot's confirmation. You are asked why, and the reason goes on the
+flight's activity record with your name against it.
+
+Correcting is limited the same way, but only when it would clear a signature that is not
+yours. Your own is yours to redo: fix the reading on your own solo, then enter your PIN
+again. A booking nobody signs off, a maintenance block or a discovery flight with no
+instructor, has no signature to clear, so anybody who can close it out can correct it. What
+needs staff or the booking's instructor is clearing **somebody else's** confirmation, so a
+student cannot clear their instructor's.
 
 ## Things only the iOS app can do
 

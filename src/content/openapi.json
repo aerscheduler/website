@@ -5432,6 +5432,130 @@
         }
       }
     },
+    "/orgUsers/{orgUserId}/ledger/entries/{entryId}/reverse": {
+      "post": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Reverse a flight charge",
+        "description": "Posts an opposing entry that cancels a `flight_charge`, so the flight behind it can be corrected. **Admin only.**\n\n**This is the ledger's counterpart to voiding an invoice.** Correcting a recorded reading is refused while live money stands against the booking, and at a ledger school the charge posts automatically the moment the last pilot enters their PIN, so the booking locks on the same tap that finishes it. Reverse the charge, correct the reading, let the crew re-confirm, and the flight bills again from the corrected hours.\n\n**Money is countered, never rewritten.** The member's statement keeps the original charge and shows the reversal beside it. A charge that has already been reversed is refused, and a reversal cannot itself be reversed.\n\nOnly a `flight_charge` can be reversed here. Correct a top-up, a membership due or a manual adjustment by posting an adjustment of its own.",
+        "responses": {
+          "201": {
+            "description": "The reversing entry, and the balance it leaves.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "entry": {
+                          "$ref": "#/components/schemas/LedgerEntry"
+                        },
+                        "balanceCents": {
+                          "type": "integer",
+                          "description": "The member's balance after the reversal."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Not a flight charge, already reversed, or an invalid entry id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Admin only.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entry not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "reverseOrgUserLedgerFlightCharge",
+        "parameters": [
+          {
+            "name": "orgUserId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Member who holds the charge."
+          },
+          {
+            "name": "entryId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Flight charge ledger entry id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Optionally, why.",
+                "properties": {
+                  "memo": {
+                    "type": "string",
+                    "maxLength": 200,
+                    "description": "Kept on the reversing entry, so the statement says why."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/orgUsers/{orgUserId}/ledger/refundable": {
       "get": {
         "tags": [
@@ -7083,6 +7207,315 @@
                 "type": "object",
                 "description": "No fields required.",
                 "properties": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reservations/{id}/updateReviewTimes": {
+      "post": {
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Correct recorded times",
+        "description": "Rewrites a reading already recorded on a flight: Hobbs, tach, or the instruction time on a ground lesson. Only a figure the booking already holds can be corrected, so this opens once the aircraft is back and not before.\n\n**Every sign-off on the booking is cleared** and the crew confirm the new figures. Clearing a sign-off that is not your own needs the same authority as reopening (an **admin**, a **dispatcher**, or the **instructor on this booking**); re-entering your own PIN afterwards does not. Refused with `409 RESERVATION_BILLED` once the flight has been billed: void the invoice (or reverse the ledger charge) first.\n\n**A body that matches what is already stored writes nothing.** Both first-party forms are prefilled, so an unedited Save is a full echo of the stored figures. That is answered `200` with `noChanges: true`, and no sign-off is touched.\n\n**The aircraft's own meters follow only when this flight is still what they read.** Correcting an older booking leaves them alone rather than rolling the aircraft's logbook backwards; the response's `meter.followed` says which happened, and `meter.aircraftHobbs` / `meter.aircraftTach` report what the aircraft still reads so it can be corrected separately.\n\n**Two confirmable refusals.** `409 METER_ANOMALY` when the reading looks like a typo; `409 MAINTENANCE_TRIGGER` when saving it would pass an hour-based inspection and ground the aircraft. Resubmit with `confirmMeterAnomaly: true` / `confirmMaintenanceTrigger: true` to accept.",
+        "responses": {
+          "200": {
+            "description": "The corrected booking, plus a report of what this call did to the aircraft.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Reservation"
+                    },
+                    "meter": {
+                      "type": "object",
+                      "description": "What happened to the AIRCRAFT's own meters, as opposed to the booking's.",
+                      "properties": {
+                        "changed": {
+                          "type": "boolean",
+                          "description": "Did this correction touch a meter at all? False for a briefing-only fix."
+                        },
+                        "followed": {
+                          "type": "boolean",
+                          "description": "Did the aircraft's own Hobbs and tach move with the correction?"
+                        },
+                        "aircraftHobbs": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ],
+                          "description": "What the aircraft still reads, in tenths, when `followed` is false."
+                        },
+                        "aircraftTach": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "unlatched": {
+                          "type": "array",
+                          "description": "Hour-based inspections whose reminder was un-latched because the reading came back below their due point.",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "reminderId": {
+                                "type": "integer"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "notUnlatched": {
+                          "type": "array",
+                          "description": "Inspections this reading no longer earns but that were deliberately LEFT flagged, because their template also runs on a calendar clock (\"every 100 hours or 12 months\", which is most ADs and every annual). One latch serves all three clocks and nothing records which one set it, so an hour reading has no standing to clear it. Somebody has to clear these by hand.",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "reminderId": {
+                                "type": "integer"
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "writeFailed": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "description": "Set when the booking WAS corrected but pushing the reading onto the aircraft failed. Distinct from `followed: false`, which is the ordinary \"this is not the flight that set the aircraft's meter\" case."
+                        }
+                      }
+                    },
+                    "noChanges": {
+                      "type": "boolean",
+                      "description": "The submitted figures already matched what was stored, so nothing was written and no sign-off was cleared."
+                    },
+                    "splitLegsStale": {
+                      "type": "boolean",
+                      "description": "The per-person legs of a `measured` cost split still describe the OLD hours. Nothing here rewrites them, because dividing a flight between people is a human decision, but the invoice will refuse to generate until they are re-entered."
+                    },
+                    "guestCloseOutCleared": {
+                      "type": "boolean",
+                      "description": "A guest booking's close-out was cleared, so it needs closing out again before it can be billed."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Nothing to correct in the body, the booking holds no such figure, or it was cancelled.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "You are not on this booking, or it carries somebody else's sign-off and you are not an admin, a dispatcher, or its instructor.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "One of three, told apart by `code`. `METER_ANOMALY`: the reading looks like a typo. `MAINTENANCE_TRIGGER`: saving it would ground the aircraft. Resubmit with the matching confirm flag for either. `RESERVATION_BILLED`: money still stands against the booking, so void the invoice or reverse the ledger charge first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "correctReservationReviewTimes",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The reservation id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The corrected figures. Send both halves of whichever meter you are correcting.",
+                "properties": {
+                  "hobbsTimeOut": {
+                    "type": "number"
+                  },
+                  "hobbsTimeIn": {
+                    "type": "number"
+                  },
+                  "tachTimeOut": {
+                    "type": "number"
+                  },
+                  "tachTimeIn": {
+                    "type": "number"
+                  },
+                  "briefing": {
+                    "type": "number",
+                    "description": "Instruction time, on a booking measured by it."
+                  },
+                  "confirmMeterAnomaly": {
+                    "type": "boolean"
+                  },
+                  "confirmMaintenanceTrigger": {
+                    "type": "boolean",
+                    "description": "Accept that saving this reading will ground the aircraft."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reservations/{id}/reopen": {
+      "post": {
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Reopen a close-out",
+        "description": "Clears the sign-offs on a closed-out booking so its times, rates or cost split can be corrected, and the crew re-confirm afterwards.\n\nNothing else is undone: the readings, the crew and the booked times are left exactly as they are. This is the step that makes the existing correction endpoints reachable again on a booking everybody has already signed off.\n\n**Money comes first.** A booking with a standing invoice, or an un-reversed ledger charge, is refused with `409` and `code: \"RESERVATION_BILLED\"`. Void the invoice (or reverse the ledger charge) and call this again. A VOIDED invoice does not block it.\n\n**Narrower than correcting.** A close-out PIN is a signature, so taking one back off a flight record is limited to the school's staff: an **admin**, a **dispatcher**, or the **instructor on this booking**. A pilot cannot clear another pilot's confirmation. Correcting a reading before anybody has signed needs no such authority. `reason` is required and is kept on the flight's audit record.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Reservation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "No reason given, or this booking was cancelled, or it has not been signed off yet.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Only an admin, a dispatcher, or the instructor on this booking, can reopen a close-out.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Money is still standing against this booking. Void the invoice or reverse the ledger charge first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "reopenReservationCloseOut",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The reservation id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Why the close-out is being reopened.",
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "maxLength": 200,
+                    "description": "Kept on the audit record. Required."
+                  }
+                },
+                "required": [
+                  "reason"
+                ]
               }
             }
           }
