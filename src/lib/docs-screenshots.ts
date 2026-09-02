@@ -111,7 +111,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/schedule?reservation={scheduledReservationId}",
     alt: "Reservation detail panel",
     dataState:
-      "A dual that has not ramped out. Instructor and student both listed, notes filled in, a location set so the weather badge renders, and the Dispatch section showing the Not started badge. The Activity timeline is part of this panel but sits below the sheet's fold on a booking this full, so it is not in the frame.",
+      "A dual that has not ramped out. Instructor and student both listed, notes filled in, and a location set so the weather badge renders. The panel is deliberately a peek: the facts, the Dispatch progress row, and the one action the booking is asking for, which sits in the sticky footer below the crop. Everything else is behind Open the full booking.",
     crop: '[data-doc-shot="reservation-detail-panel"]',
   },
   {
@@ -280,7 +280,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "who-pays-what-panel",
     screen: "Who pays what panel",
-    route: "/schedule?reservation={splitReservationId}",
+    route: "/schedule/reservations/{splitReservationId}",
     alt: "Who pays what panel",
     dataState:
       "A booking with more than one person billed for it that has ramped in and has not been invoiced. The panel renders itself once there are two payers; it disappears the moment the invoices exist, because the server refuses to change the shares after that. The per-payer leg and share fields have no ids of their own, so the live mismatch warnings are not reachable from a capture step yet. The panel now folds behind a summary, so the step has to open it first. THE COLLIDED LABELS ARE FIXED: the field grid was asking for up to five columns off the VIEWPORT width inside a panel capped at 448px, which ran Instruction (hrs) underneath Share %. It is two columns now, at every width.",
@@ -290,7 +290,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "who-pays-split-evenly",
     screen: "Who pays what, after Split evenly",
-    route: "/schedule?reservation={splitReservationId}",
+    route: "/schedule/reservations/{splitReservationId}",
     alt: "Who pays what, after Split evenly",
     dataState:
       "The same booking, with Split evenly pressed: consecutive Hobbs legs per payer, instruction divided, 50/50 shares, and the running totals underneath reporting that the individual hours add up to what the aircraft flew and the shares come to 100%. The button only appears once the booking has ramped in, since before that there are no hours to divide.",
@@ -300,7 +300,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "cancel-reservation-dialog",
     screen: "Cancel reservation dialog",
-    route: "/schedule?reservation={repeatingReservationId}",
+    route: "/schedule/reservations/{repeatingReservationId}",
     alt: "Cancel reservation dialog",
     dataState:
       "One occurrence of a repeating booking that has not started, so both the reason type list and the three series scope options render. The scope options only appear on a booking that belongs to a series.",
@@ -338,7 +338,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   {
     id: "overnight-booking-fields",
     screen: "Booking form with multi-day on",
-    route: "/schedule?reservation={multiDayReservationId}",
+    route: "/schedule/reservations/{multiDayReservationId}",
     alt: "Booking form with multi-day on",
     dataState:
       "Multi-day bookings enabled on the organization, and a two night trip that has not been dispatched yet, opened for editing. Reached through Edit rather than by filling in a new form: the dates are a calendar popover rather than a typed field, and an existing trip already carries the real Out on, Back on and Back at values the picture is about.",
@@ -702,11 +702,11 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   },
   {
     id: "close-out-not-started",
-    screen: "Reservation detail sheet, Close-out section",
-    route: "/schedule?reservation={scheduledReservationId}",
-    alt: "Reservation detail sheet, Close-out section",
+    screen: "Booking page, Close-out section",
+    route: "/schedule/reservations/{scheduledReservationId}",
+    alt: "Booking page, Close-out section",
     dataState:
-      "Today's dual booking with an aircraft and an instructor, not yet ramped, so the progress row highlights Dispatch and the Ramp out button is the only action. There are no readings yet, so that block is absent, and everything secondary is folded.",
+      "Today's dual booking with an aircraft and an instructor, not yet ramped, so the progress row highlights Dispatch and the Ramp out button is the only action. There are no readings yet, so that block is absent, and everything secondary is folded. Shot on the booking's own page (/schedule/reservations/:id), which is where the close-out lives in full; the panel beside the board carries the progress row and the action only.",
     crop: '[data-doc-shot="close-out-not-started"]',
   },
   {
@@ -731,9 +731,9 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   },
   {
     id: "close-out-invoice-summary",
-    screen: "Reservation detail sheet, invoice summary",
-    route: "/schedule?reservation={invoicedReservationId}",
-    alt: "Reservation detail sheet, invoice summary",
+    screen: "Booking page, invoice summary",
+    route: "/schedule/reservations/{invoicedReservationId}",
+    alt: "Booking page, invoice summary",
     dataState:
       "A fully closed out and billed booking split between two payers, so the summary shows line items, a total, and the one of two shares label.",
     crop: '[data-doc-shot="close-out-invoice-summary"]',
@@ -1461,9 +1461,9 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   },
   {
     id: "closeout-training-section",
-    screen: "Close-out sheet, Training record section",
-    route: "/schedule?reservation={trainingReservationId}",
-    alt: "Close-out sheet, Training record section",
+    screen: "Booking page, Training record section",
+    route: "/schedule/reservations/{trainingReservationId}",
+    alt: "Booking page, Training record section",
     dataState:
       "A completed dual booking with an enrolled student, Hobbs out and in plus briefing time entered, and the Training record block expanded so the lesson dropdown (with completed lessons prefixed by a tick), the grade and the prefilled Flight and Ground fields all show. The block starts collapsed behind a Grade this lesson button, so the step has to open it.",
     crop: '[data-doc-shot="closeout-training-section"]',
@@ -1479,7 +1479,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     //that opens is the FIRST one on the sheet, and on that booking the first student's
     //first course is one whose next lesson carries no tasks, so the shot has nothing in it.
     //Here the first grader is a Part 141 flight lesson with four ACS tasks on it.
-    route: "/schedule?reservation={splitReservationId}",
+    route: "/schedule/reservations/{splitReservationId}",
     alt: "Per-task ACS grades in the close-out grader",
     dataState:
       "A completed dual booking whose FIRST student's first course has a next lesson carrying ACS tasks, so each task shows its code and this course's marks as buttons and the header counts how many are marked. Nothing is marked: unmarked is the state the reader has to recognise.",
