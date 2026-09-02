@@ -1819,10 +1819,20 @@
           "Availability"
         ],
         "summary": "Set your recurring availability",
-        "description": "Replaces your standing weekly availability.",
+        "description": "Replaces your standing weekly availability. Keyed by day of week, the same shape the GET returns; send at least one day, and a day you omit is left alone. Each window is `{ start, end }` as **\"HH:mm\" in the organization's timezone**, not an ISO timestamp.",
         "responses": {
           "200": {
             "description": "Updated."
+          },
+          "400": {
+            "description": "No day was supplied. Send at least one of `monday` through `sunday`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "401": {
             "description": "No token, an expired token, or a malformed one. Sign in again.",
@@ -1862,12 +1872,48 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "description": "The new pattern.",
+                "description": "The new pattern, by day. Omit a day to leave it unchanged.",
                 "properties": {
-                  "availability": {
+                  "monday": {
                     "type": "array",
                     "items": {
-                      "type": "object"
+                      "$ref": "#/components/schemas/Availability"
+                    }
+                  },
+                  "tuesday": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Availability"
+                    }
+                  },
+                  "wednesday": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Availability"
+                    }
+                  },
+                  "thursday": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Availability"
+                    }
+                  },
+                  "friday": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Availability"
+                    }
+                  },
+                  "saturday": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Availability"
+                    }
+                  },
+                  "sunday": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Availability"
                     }
                   }
                 }
@@ -6542,7 +6588,7 @@
           "Reservations"
         ],
         "summary": "Cancel a reservation",
-        "description": "Cancels rather than destroys: the booking stays readable with `cancelledAt` set, which is what keeps cancellation reporting honest. Both fields are required , `cancellationCategory` is what the report counts, `cancellationReason` is the detail that makes a count actionable. Get the current list of categories from `GET /reports/cancellations/categories`; sending a value that isn't on it is rejected.",
+        "description": "Cancels rather than destroys: the booking stays readable with `cancelledAt` set, which is what keeps cancellation reporting honest. Both fields are required , `cancellationCategory` is what the report counts, `cancellationReason` is the detail that makes a count actionable. Get the current list of categories from `GET /reports/cancellations/categories`; sending a value that isn't on it is rejected.\n\n`409 RESERVATION_RAMPED_OUT` once the aircraft has left: a flight that has flown cannot be cancelled, because ramp-in has already advanced the aircraft's own Hobbs and tach and cancelling cannot put them back. Void any invoice, reopen the close-out, and correct the readings instead.",
         "responses": {
           "204": {
             "description": "Success. No body."
@@ -6569,6 +6615,16 @@
           },
           "403": {
             "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`RESERVATION_RAMPED_OUT`: the aircraft has already left the ramp. Reopen the close-out and correct it instead.",
             "content": {
               "application/json": {
                 "schema": {
@@ -6608,18 +6664,18 @@
                 "type": "object",
                 "description": "Why it was cancelled.",
                 "properties": {
-                  "cancellationReason": {
+                  "reason": {
                     "type": "string",
                     "minLength": 1,
                     "maxLength": 200
                   },
-                  "cancellationCategory": {
+                  "category": {
                     "type": "string"
                   }
                 },
                 "required": [
-                  "cancellationReason",
-                  "cancellationCategory"
+                  "reason",
+                  "category"
                 ]
               }
             }
@@ -22633,13 +22689,32 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "description": "Fields to change. `type` must be present even when you are only changing a top-level field.",
+                "description": "Fields to change. `type` must be present even when you are only changing a top-level field, and it has to be the kind the resource already is: this cannot turn an aircraft into a room. **Omitting a key leaves the stored value alone, and on most fields `null` does the same. Four rules break that pattern, and each one is silent, because the write answers 200 whether it changed the field, left it alone, or blanked one nobody meant to blank.** On `serialNumber` and `year`, `\"\"` or `null` CLEARS the stored value. That is the only way back to blank once a wrong serial number has been typed in. On the pair `flyingDayStartMinute` and `flyingDayEndMinute`, `null` is taken literally and puts the aircraft back on the organization's hours, which changes the bookings the server will accept. Send both or neither; a half pair is rejected. On `cost.dryRate`, `cost.wetRate` and `cost.overnightMinimumTenths`, `null` is literal too, and it is not `0`: a `null` overnight minimum goes back to inheriting the organization's figure, while `0` exempts this aircraft. `groundedReason` is not independent of `grounded`. Any aircraft or simulator update that does not carry `grounded: true` writes the reason back to `null`, so send the two together. One value is not merely surprising but rejected: `cost.billByHobbsTime` is not nullable, and sending `null` fails the whole request with a 400. Omit the key to leave it alone. On the free-text fields (`tailNumber`, `make`, `model`) an empty string is stored AS an empty string and does not clear them.",
                 "properties": {
                   "name": {
                     "type": "string"
                   },
+                  "location": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      }
+                    }
+                  },
                   "type": {
-                    "type": "object"
+                    "type": "object",
+                    "properties": {
+                      "plane": {
+                        "$ref": "#/components/schemas/Plane"
+                      },
+                      "simulator": {
+                        "type": "object"
+                      },
+                      "room": {
+                        "type": "object"
+                      }
+                    }
                   }
                 }
               }
