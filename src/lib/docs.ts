@@ -510,6 +510,15 @@ export const DOC_SECTIONS: DocSection[] = [
         seoQuery: "flight review currency expired cannot book aircraft",
       },
       {
+        slug: "manage-a-currency-rule",
+        title: "Review and manage a currency rule",
+        description:
+          "Open a rule from Go / No-Go to see who it covers, who is current or lapsed, which documents are attached or missing, and who may sign it off.",
+        kind: "task",
+        audience: ["Owners", "Admins", "Dispatchers"],
+        seoQuery: "manage pilot currency rules and documents AerScheduler",
+      },
+      {
         slug: "filter-and-search-the-schedule",
         title: "Find a booking on the schedule",
         description:
@@ -857,6 +866,15 @@ export const DOC_SECTIONS: DocSection[] = [
         kind: "overview",
         audience: ["Owners", "Admins", "Dispatchers", "Technicians"],
         seoQuery: "how to track aircraft maintenance and inspections in AerScheduler",
+      },
+      {
+        slug: "use-the-go-no-go-board",
+        title: "Use the Go / No-Go board",
+        description:
+          "See every grounded aircraft and member in one place, open the record behind each item, and manage the currency rules your school tracks.",
+        kind: "task",
+        audience: ["Owners", "Admins", "Dispatchers"],
+        seoQuery: "how to use the AerScheduler Go No-Go board",
       },
       {
         slug: "add-the-standard-airworthiness-inspections",

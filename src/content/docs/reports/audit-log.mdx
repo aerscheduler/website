@@ -28,7 +28,7 @@ Three filters sit above the table.
 
 | Filter | Values |
 |---|---|
-| Type | Reservations, Invoices, Members, Aircraft &amp; facilities, Squawks, Inspections, Documents, Training, Memberships, Join requests, Settings, API keys |
+| Type | Reservations, Invoices, Members, Aircraft &amp; facilities, Squawks, Inspections, Documents, Training, Memberships, Join requests, Settings, API keys, Standby, Ledger |
 | Person | "Anyone", or any member of the school |
 | Date range | Defaults to the last 30 days |
 
@@ -104,6 +104,11 @@ is not proof that nothing happened. If you are investigating something old, chec
 
 The trail is append-only. There is no edit and no delete anywhere in the product, for anyone, including owners.
 That is the point: a log somebody can tidy up is not evidence.
+
+Slot offers are not in it either. When a cancellation frees a slot, the offer going out, rolling on after a
+decline, and expiring on its deadline are the product working rather than somebody acting, and a row for each one
+would bury the entries you came here to find. Whoever accepts still appears, as the booking they made. For who
+was offered a slot and what they said, open <Where app="web">Calendar → Pending offers</Where>.
 
 ## Which trails are admin only
 

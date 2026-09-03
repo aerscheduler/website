@@ -1,0 +1,58 @@
+<Summary>
+Open **Go / No-Go** to see every grounded aircraft and member in one place. Click any
+item to open its full record, where you can review the reason and take the next action.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers</Roles>
+
+## Work the no-go list
+
+<Steps>
+  <Step n={1} title="Open Go / No-Go">
+    <Where app="web">Go / No-Go</Where> shows separate counts and lists for grounded
+    aircraft and grounded members.
+  </Step>
+  <Step n={2} title="Open the item that needs attention">
+    Click a count to open the filtered Aircraft or People list. Click a named aircraft or
+    member to open that record directly. The card includes the grounding reason when one
+    was recorded.
+  </Step>
+  <Step n={3} title="Resolve it on the full record">
+    The Go / No-Go board is a triage view. Return an aircraft to service from its Aircraft
+    page. Reinstate a member from their People record. The available controls follow your
+    role and permissions.
+  </Step>
+</Steps>
+
+## What the board counts
+
+**No-go items** is the total of grounded aircraft and grounded members. Grounding blocks
+normal booking or participation until an authorized person clears it.
+
+**Currencies tracked** counts the rules your school has configured, such as a medical,
+flight review, or aircraft checkout. Click a rule to see every member on it, separated
+into current, expiring, expired, and not signed off, with its document evidence.
+
+<Callout type="note">
+Open Reports for the Pilot currency and Documents reports when you need an exportable
+school-wide view across every rule.
+</Callout>
+
+## Manage currency rules
+
+Owners and admins can click **Manage currency rules** to open the Currency rules section in
+Settings directly. Dispatchers can see the rules being tracked but cannot change school
+settings.
+
+A currency rule defines who it applies to, when it expires, and how it renews. Changing a
+rule can change who is considered current, so review its groups and aircraft scope before
+saving.
+
+Dispatchers can open each rule's detail page and work its member roster. They only receive
+the Sign off or Renew action when that rule allows dispatcher renewal.
+
+## Why an item is not here
+
+The board shows records that are explicitly grounded. An open squawk does not ground an
+aircraft by itself, and a maintenance reminder only grounds a tail when its rule has
+**Grounds the aircraft** turned on and the reminder becomes due.

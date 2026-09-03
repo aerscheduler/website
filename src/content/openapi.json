@@ -20179,8 +20179,8 @@
         "tags": [
           "Currencies"
         ],
-        "summary": "List currencies",
-        "description": "Every member's standing against every tracked requirement.",
+        "summary": "List my currencies",
+        "description": "The signed-in member's standing against every tracked requirement.",
         "responses": {
           "200": {
             "description": "The currency records.",
@@ -20650,6 +20650,125 @@
               "default": "asc"
             },
             "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
+      }
+    },
+    "/currencies/types/{currencyTypeId}/detail": {
+      "get": {
+        "tags": [
+          "Currencies"
+        ],
+        "summary": "Get a currency rule detail",
+        "description": "The rule, status totals, and a page of member standings with attached and missing document evidence.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CurrencyRuleDetail"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Only administrators and dispatchers in this organization may view the roster.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such currency rule.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getCurrencyRuleDetail",
+        "parameters": [
+          {
+            "name": "currencyTypeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The currency type id."
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Search member name or email.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Only return members in this standing.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "current",
+                "expiring",
+                "expired",
+                "notSignedOff"
+              ]
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum member rows to return.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Member rows to skip.",
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            }
           }
         ]
       }
@@ -28564,6 +28683,10 @@
               "null"
             ]
           },
+          "canFlyWithInstructor": {
+            "type": "boolean",
+            "description": "Whether a lapsed member may fly with a current instructor."
+          },
           "canRenewSelf": {
             "type": "boolean",
             "description": "Whether a member may sign off their own renewal."
@@ -28575,6 +28698,27 @@
           "dispatcherCanRenew": {
             "type": "boolean",
             "description": "Whether a dispatcher may sign it off."
+          },
+          "orgUserGroups": {
+            "type": "array",
+            "description": "Member groups covered by this rule.",
+            "items": {
+              "$ref": "#/components/schemas/Group"
+            }
+          },
+          "resourceGroups": {
+            "type": "array",
+            "description": "Aircraft groups covered by this rule.",
+            "items": {
+              "$ref": "#/components/schemas/Group"
+            }
+          },
+          "documentTypes": {
+            "type": "array",
+            "description": "Documents required to satisfy this rule.",
+            "items": {
+              "$ref": "#/components/schemas/DocumentType"
+            }
           }
         },
         "additionalProperties": true
@@ -28605,19 +28749,184 @@
               "null"
             ]
           },
-          "expiresAt": {
+          "warnedAt": {
             "format": "date-time",
-            "description": "When it lapses.",
+            "description": "When it entered its warning period.",
             "type": [
               "string",
               "null"
             ]
+          },
+          "expiredAt": {
+            "format": "date-time",
+            "description": "When the server marked it lapsed.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "archivedAt": {
+            "format": "date-time",
+            "description": "When a newer period replaced this record.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "renewedBy": {
+            "$ref": "#/components/schemas/OrganizationUser"
           },
           "orgUser": {
             "$ref": "#/components/schemas/OrganizationUser"
           },
           "currencyType": {
             "$ref": "#/components/schemas/CurrencyType"
+          }
+        },
+        "additionalProperties": true
+      },
+      "CurrencyRuleDetail": {
+        "type": "object",
+        "description": "One currency rule with its live member standings and document completeness.",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/CurrencyType"
+          },
+          "summary": {
+            "type": "object",
+            "description": "Counts across every active member record for this rule.",
+            "properties": {
+              "total": {
+                "type": "integer",
+                "description": "Members covered."
+              },
+              "current": {
+                "type": "integer",
+                "description": "Current members."
+              },
+              "expiring": {
+                "type": "integer",
+                "description": "Members inside the warning period."
+              },
+              "expired": {
+                "type": "integer",
+                "description": "Lapsed members."
+              },
+              "notSignedOff": {
+                "type": "integer",
+                "description": "Members who have never been signed off."
+              },
+              "missingDocuments": {
+                "type": "integer",
+                "description": "Members missing at least one required document type."
+              }
+            },
+            "additionalProperties": true
+          },
+          "members": {
+            "type": "array",
+            "description": "The requested page of member standings, attention first.",
+            "items": {
+              "type": "object",
+              "description": "One member's standing against this rule.",
+              "properties": {
+                "currencyId": {
+                  "type": "integer",
+                  "description": "The renewable currency record id."
+                },
+                "orgUser": {
+                  "$ref": "#/components/schemas/OrganizationUser"
+                },
+                "status": {
+                  "type": "string",
+                  "description": "The server-authoritative standing.",
+                  "enum": [
+                    "current",
+                    "expiring",
+                    "expired",
+                    "notSignedOff"
+                  ]
+                },
+                "startedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "When this period began."
+                },
+                "warnedAt": {
+                  "format": "date-time",
+                  "description": "When warning began.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "expiredAt": {
+                  "format": "date-time",
+                  "description": "When it lapsed.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "expiresOn": {
+                  "format": "date-time",
+                  "description": "The projected rule-based expiry, when the rule has one.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "renewedBy": {
+                  "$ref": "#/components/schemas/OrganizationUser"
+                },
+                "documents": {
+                  "type": "array",
+                  "description": "Documents attached to this currency period.",
+                  "items": {
+                    "type": "object",
+                    "description": "Attached document metadata.",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "The document id."
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "When it was uploaded."
+                      },
+                      "expiresAt": {
+                        "format": "date-time",
+                        "description": "When the document lapses.",
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "fileCount": {
+                        "type": "integer",
+                        "description": "How many files are attached."
+                      },
+                      "documentType": {
+                        "$ref": "#/components/schemas/DocumentType"
+                      }
+                    },
+                    "additionalProperties": true
+                  }
+                },
+                "missingDocumentTypeIds": {
+                  "type": "array",
+                  "description": "Required document type ids not attached to this period.",
+                  "items": {
+                    "type": "integer"
+                  }
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/Pagination"
           }
         },
         "additionalProperties": true
@@ -28985,7 +29294,6 @@
               "organization",
               "apiKey",
               "standbyInterest",
-              "slotOffer",
               "ledgerEntry"
             ]
           },
