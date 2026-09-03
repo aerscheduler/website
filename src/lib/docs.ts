@@ -228,12 +228,12 @@ export const DOC_SECTIONS: DocSection[] = [
       },
       {
         slug: "your-profile-and-time-zone",
-        title: "Your profile, PIN and time zone",
+        title: "Your profile, appearance, PIN and time zone",
         description:
-          "Your details, the PIN you sign close-outs with, and why the schedule shows airport time rather than the time on your phone.",
+          "Your details, light or dark appearance, the PIN you sign close-outs with, and why the schedule shows airport time rather than the time on your phone.",
         kind: "task",
         audience: ["Owners", "Admins", "Dispatchers", "Instructors", "Students", "Renters", "Technicians"],
-        seoQuery: "set my PIN and time zone AerScheduler",
+        seoQuery: "set dark mode PIN and time zone AerScheduler",
       },
       {
         slug: "switch-between-schools",
