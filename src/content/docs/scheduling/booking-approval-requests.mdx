@@ -1,7 +1,8 @@
 <Summary>
 When your school turns on booking approval, members in the selected roles or groups submit a
-request instead of booking instantly. Staff approve or decline from the calendar, and an
-approved request becomes a real reservation on the board.
+request instead of booking instantly. Staff approve or decline from the calendar or the Home
+**Needs you** list, and an approved request becomes a real reservation on the board. Requests
+that are not decided before the requested time passes expire automatically.
 </Summary>
 
 <Roles>Owners, Admins, Dispatchers, Students, Renters, Instructors</Roles>
@@ -21,44 +22,70 @@ queue.
 
 ## Submit a request (members)
 
-When approval applies to you, <Where app="web">You → Book a flight</Where> shows **Submit
-request** instead of **Book**. Fill in the same aircraft, time, and crew fields. AerScheduler
-checks the same calendar rules (notice, horizon, buffers, and the rest) before it accepts the
-request.
+When approval applies to you, **Book a flight** shows **Submit request** instead of **Book**.
+Fill in the same aircraft, time, and crew fields you would for a normal booking. On the web
+this is under <Where app="web">You → Book a flight</Where>; in the mobile app, tap **Book**
+from Home or the calendar.
 
-Open <Where app="web">You → Schedule → Requests</Where> to see pending, approved, and
-declined requests. You get an email or push when a decision is made if **Booking requests**
-is on under notification settings.
+Open **Booking requests** to see pending, approved, declined, and expired requests. On the web
+that is <Where app="web">You → Schedule → Requests</Where>. In the mobile app, open **Booking
+requests** from the menu or after you submit.
 
 Direct self-book is refused with a clear message if your school requires approval and you
 try to skip the queue through the API.
 
+You get an email or push when a decision is made if **Booking requests** is on under
+notification settings.
+
 ## Approve or decline (front desk)
 
 On <Where app="web">Calendar</Where>, open **Booking requests** when the badge shows pending
-items. Each row shows who asked, the aircraft, the time, and the reservation type.
+items. On the mobile app, open **Booking requests** from the calendar toolbar or from
+**Needs you** on Home when the count is shown.
 
-Press **Approve** to create the reservation on the board (same checks as a desk booking).
-Press **Decline** to close the request without booking.
+Each row shows who asked, the aircraft, the time, and the reservation type. Press **Approve**
+to create the reservation on the board (same checks as a desk booking). Press **Decline** to
+close the request without booking.
 
 Approvers need owner, admin, or dispatcher access.
+
+<Callout type="warning">
+A request does not hold the slot. Another booking can take the time while you are deciding.
+If you approve too late, the same conflict checks as a normal booking still apply.
+</Callout>
+
+## When a request expires
+
+If nobody approves or declines before the **end** of the requested time window, AerScheduler
+marks the request **Expired** and notifies the member. Expired requests leave the pending
+queue. They stay in the member's request history so everyone can see what happened.
+
+Staff cannot approve an expired request. The member can submit a new request for a different
+time.
+
+## Needs you on Home
+
+Owners, admins, and dispatchers see a **Booking requests** count on Home (and on the web
+Overview **Needs attention** strip) when members are waiting. Tap the row to open the
+pending queue.
 
 ## Notifications
 
 | Who | When | Where it goes |
 |---|---|---|
-| Desk staff | A member submits a request | Email/push to staff with **Booking requests** on |
-| Member | Request approved or declined | Email/push to the member with **Booking requests** on |
+| Desk staff | A member submits a request | Email/push to staff with **Booking requests** on; opens the pending queue |
+| Member | Request approved, declined, or expired | Email/push to the member with **Booking requests** on |
 
-Turn the category on under <Where app="web">You → Notification settings</Where> in the
-Reservations section.
+Turn the category on under notification settings (<Where app="web">You → Notification settings</Where>
+in the web console, or **Settings → Notifications** in the mobile app), in the Reservations
+section.
 
 ## Related
 
 <CardGrid>
 <DocCard href="/docs/scheduling/booking-rules-and-settings" title="Booking rules and settings">
 Flying day, caps, notice, horizon, and the rest of the shared calendar rules requests still
-must pass.
+must pass at approval time.
 </DocCard>
 <DocCard href="/docs/scheduling/why-was-my-booking-refused" title="Why was my booking refused?">
 Other refusal messages members see at book time.

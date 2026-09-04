@@ -423,7 +423,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "booking-approval-requests",
         title: "Require approval before members book",
         description:
-          "Students, renters, or instructors in selected roles or groups submit booking requests. Staff approve or decline from the calendar, and approval creates the reservation.",
+          "Students, renters, or instructors in selected roles or groups submit booking requests. Staff approve or decline from the calendar or Home, and approval creates the reservation. Undecided requests expire when the requested time passes.",
         kind: "task",
         audience: ["Owners", "Admins", "Dispatchers", "Students", "Renters", "Instructors"],
         seoQuery: "require approval before students book flight school scheduling",
@@ -434,11 +434,15 @@ export const DOC_SECTIONS: DocSection[] = [
           },
           {
             q: "Do booking requests skip calendar rules like minimum notice?",
-            a: "No. A request must pass the same shared calendar rules as an instant booking. Approval only adds a human step before the reservation is created.",
+            a: "Members must pick a valid slot when they submit. At approval time, desk staff can bypass minimum notice and horizon, but conflicts, grounding, and the rest of the booking checks still apply.",
+          },
+          {
+            q: "What happens if nobody approves before the flight time?",
+            a: "When the requested end time passes, the request is marked Expired, the member is notified, and it drops off the pending queue.",
           },
           {
             q: "Where do members see their pending requests?",
-            a: "On the web, open You → Schedule → Requests. Staff open Calendar → Booking requests when items are waiting.",
+            a: "On the web, open You → Schedule → Requests. In the mobile app, open Booking requests. Staff open Calendar → Booking requests, or tap Booking requests on Home when Needs you shows a count.",
           },
         ],
       },
