@@ -276,14 +276,14 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "delete-your-school",
         title: "Delete your school (30-day countdown)",
         description:
-          "An owner schedules permanent deletion from Settings. The school stays for 30 days, every admin and owner is notified, and any of them can cancel before the date.",
+          "An owner schedules permanent deletion from Settings → Security. The school stays for 30 days, every admin and owner is notified, and any of them can cancel before the date.",
         kind: "task",
         audience: ["Owners", "Admins"],
         seoQuery: "delete flight school AerScheduler organization",
         faqs: [
           {
             q: "Is deleting a school immediate?",
-            a: "No. Scheduling deletion starts a 30-day countdown. The school keeps working until that date, and any admin or owner can cancel from Settings → School.",
+            a: "No. Scheduling deletion starts a 30-day countdown. The school keeps working until that date, and any admin or owner can cancel from Settings → Security.",
           },
           {
             q: "Who is told when a school is scheduled for deletion?",
@@ -418,6 +418,29 @@ export const DOC_SECTIONS: DocSection[] = [
         kind: "task",
         audience: ["Owners", "Admins", "Dispatchers", "Instructors", "Students", "Renters", "Technicians"],
         seoQuery: "how to cancel a reservation and record a no show",
+      },
+      {
+        slug: "booking-approval-requests",
+        title: "Require approval before members book",
+        description:
+          "Students, renters, or instructors in selected roles or groups submit booking requests. Staff approve or decline from the calendar, and approval creates the reservation.",
+        kind: "task",
+        audience: ["Owners", "Admins", "Dispatchers", "Students", "Renters", "Instructors"],
+        seoQuery: "require approval before students book flight school scheduling",
+        faqs: [
+          {
+            q: "Can dispatchers still book walk-ups without a request?",
+            a: "Yes. Owners, admins, and dispatchers book directly on the calendar. Approval only gates members booking themselves when your policy says so.",
+          },
+          {
+            q: "Do booking requests skip calendar rules like minimum notice?",
+            a: "No. A request must pass the same shared calendar rules as an instant booking. Approval only adds a human step before the reservation is created.",
+          },
+          {
+            q: "Where do members see their pending requests?",
+            a: "On the web, open You → Schedule → Requests. Staff open Calendar → Booking requests when items are waiting.",
+          },
+        ],
       },
       {
         slug: "standby-and-slot-offers",

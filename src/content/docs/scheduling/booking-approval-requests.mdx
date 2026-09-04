@@ -1,0 +1,69 @@
+<Summary>
+When your school turns on booking approval, members in the selected roles or groups submit a
+request instead of booking instantly. Staff approve or decline from the calendar, and an
+approved request becomes a real reservation on the board.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers, Students, Renters, Instructors</Roles>
+
+## Turn approval on
+
+<Where app="web">Settings → Booking preferences</Where>, in **Booking and cancellation rules**.
+
+Under **Booking approval required**, tick the roles that must request approval (student,
+renter, instructor) and optionally tick **Groups requiring approval** for any people group.
+
+Off by default. With every role and group off, everyone books the way they always have.
+
+Staff scheduling on the dispatch board is unchanged. Owners, admins, and dispatchers still
+book directly. Instructors and technicians booking on someone else's behalf also skip the
+queue.
+
+## Submit a request (members)
+
+When approval applies to you, <Where app="web">You → Book a flight</Where> shows **Submit
+request** instead of **Book**. Fill in the same aircraft, time, and crew fields. AerScheduler
+checks the same calendar rules (notice, horizon, buffers, and the rest) before it accepts the
+request.
+
+Open <Where app="web">You → Schedule → Requests</Where> to see pending, approved, and
+declined requests. You get an email or push when a decision is made if **Booking requests**
+is on under notification settings.
+
+Direct self-book is refused with a clear message if your school requires approval and you
+try to skip the queue through the API.
+
+## Approve or decline (front desk)
+
+On <Where app="web">Calendar</Where>, open **Booking requests** when the badge shows pending
+items. Each row shows who asked, the aircraft, the time, and the reservation type.
+
+Press **Approve** to create the reservation on the board (same checks as a desk booking).
+Press **Decline** to close the request without booking.
+
+Approvers need owner, admin, or dispatcher access.
+
+## Notifications
+
+| Who | When | Where it goes |
+|---|---|---|
+| Desk staff | A member submits a request | Email/push to staff with **Booking requests** on |
+| Member | Request approved or declined | Email/push to the member with **Booking requests** on |
+
+Turn the category on under <Where app="web">You → Notification settings</Where> in the
+Reservations section.
+
+## Related
+
+<CardGrid>
+<DocCard href="/docs/scheduling/booking-rules-and-settings" title="Booking rules and settings">
+Flying day, caps, notice, horizon, and the rest of the shared calendar rules requests still
+must pass.
+</DocCard>
+<DocCard href="/docs/scheduling/why-was-my-booking-refused" title="Why was my booking refused?">
+Other refusal messages members see at book time.
+</DocCard>
+<DocCard href="/docs/scheduling/who-can-do-what-on-the-schedule" title="Who can book, edit and cancel">
+Role permissions on the schedule.
+</DocCard>
+</CardGrid>
