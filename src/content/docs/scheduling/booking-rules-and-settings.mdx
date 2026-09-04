@@ -1,10 +1,10 @@
 <Summary>
 Booking preferences under <Where app="web">Settings → Booking preferences</Where> change how
 booking works for the whole school, including the flying day window, multi-day trips, and
-opt-in cancel/edit locks, late-cancel fees, and booking caps. Currency checks at book are
-always on and live under Compliance, not in this opt-in section. Three more rules live
-elsewhere: the booking window on a membership plan, the overnight minimum in billing
-settings, and the school's time zone.
+opt-in cancel/edit locks, late-cancel fees, booking caps, notice, horizon, start interval,
+fixed duration, and buffers. Currency checks at book are always on and live under Compliance,
+not in this opt-in section. Three more rules live elsewhere: the booking window on a
+membership plan, the overnight minimum in billing settings, and the school's time zone.
 </Summary>
 
 <Roles>Owners, Admins</Roles>
@@ -164,6 +164,11 @@ All of these live under <Where app="web">Settings → Booking preferences</Where
 **Booking and cancellation rules** section. Every one is **off by default**. Turn on only
 what your school needs.
 
+They are shared calendar rules. The server checks them on every internal schedule booking:
+a member booking themselves **and** a front-desk booking on the dispatch board. There is no
+staff bypass. They are not waiting for a public embed; they already apply to the school
+schedule.
+
 ### Cancel and edit lock
 
 When set (for example 24 hours), members cannot cancel or edit a booking once it starts
@@ -195,6 +200,73 @@ date that would clearly go over.
 
 Caps how long a single booking may run. The refusal names both the school limit and the
 length they tried to book.
+
+### Minimum notice
+
+How far ahead a booking has to start. Times inside that window stop being offered in the
+picker, and the server refuses a start that is too soon. The refusal names the notice
+required.
+
+Owners, admins, and dispatchers can still create a walk-up inside the notice window.
+Instructors and technicians can too when booking on somebody else's behalf. Members booking
+themselves in a student or renter seat cannot. Editing notes or crew on an existing booking
+does not re-apply notice unless the start time actually moves. Claiming a cancelled
+slot you were offered also skips notice, horizon, start interval, and fixed duration:
+the original booking already passed those rules.
+
+### Booking horizon
+
+How far into the future anyone may book. Off leaves the standard one-year picker limit in
+place. The count is **calendar days in the school's time zone**, not a rolling 24-hour
+multiple, so a 1-day horizon set at 3pm still allows all of tomorrow. Horizon and start
+interval both need that time zone: if it is missing, the booking is refused until you set
+one under Settings → Organization. The refusal names how many days ahead the school allows.
+
+Owners, admins, and dispatchers can book past the horizon. Instructors and technicians
+can too when booking on behalf of someone else. Members booking themselves in a student or
+renter seat cannot. An edit that does not move the start does not re-check it.
+
+This is separate from a membership plan's **Booking window**, which is per tier under
+Settings → Memberships.
+
+### Start time interval
+
+Start times must land on a 15, 30, or 60 minute grid in the school's time zone, measured
+from midnight. The Start picker offers only those marks, so the board does not fill with
+ragged times. Off, the form still offers 15 minute marks.
+
+### Fixed reservation duration
+
+Every booking is exactly this long, and the End time is filled in for you. Leave it off to
+let people choose their own end time up to the max length.
+
+It **cannot be longer than max reservation length** when that ceiling is also on. The
+settings save will refuse the pair, and so will a booking that does not match the fixed
+length.
+
+### Buffer before a booking and buffer after a booking
+
+Idle time the resource needs around a booking: before for preflight or a turnaround, after
+for tie-down and paperwork. Each is its own rule. Setting one does not turn the other on.
+
+When both are on, they **stack** between adjacent bookings. A 15 minute buffer after one
+flight and a 15 minute buffer before the next means 30 minutes idle on that resource
+between them, not 15. The conflict check uses that combined gap, so a booking that would
+land inside the stacked idle time is refused the same way as an overlap.
+
+Buffers apply to bookings at **this** school. If an instructor also flies at another
+school, those other bookings still block the overlapping time, but they do not grow by
+this school's turnaround.
+
+A member's **weekly available hours** (People, then the person's availability) now gate
+the booking the same way the picker does. No hours configured means unrestricted. A week
+of empty days means they cannot be booked. Hours are read in the school's time zone.
+Maintenance bookings skip this gate, same as they skip flying-day hours: overnight shop
+time is allowed even if the technician's flying week is 9 to 5.
+
+Repeating bookings use the same seating, seat-role, and overnight opt-in rules as a
+single booking. A series cannot seat someone the caller is not allowed to seat, and it
+cannot stay overnight unless multi-day bookings are on.
 
 Currency checks at book (medical, flight review, checkouts under Compliance) are separate
 from these rules and stay **always on**, as they always have been. Duals can still go when
@@ -255,10 +327,13 @@ funds or ask the desk.
 
 ## How far ahead anyone can book
 
-Nobody can book more than **365 days** ahead, whatever their role and whatever their
-membership plan says. The date picker simply stops there.
+The date picker stops **365 days** ahead, whatever their role and whatever their membership
+plan says. [Booking horizon](#booking-horizon) can tighten that further for the whole
+school.
 
-Bookings also snap to 15 minute marks. There is no way to express an 09:07 departure.
+The Start picker still offers 15 minute marks unless you set a [start time
+interval](#start-time-interval) of 30 or 60 minutes. There is no way to express an 09:07
+departure.
 
 ## Settings a dispatcher cannot reach
 

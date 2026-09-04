@@ -531,7 +531,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "booking-rules-and-settings",
         title: "Booking rules: the settings that change how booking works",
         description:
-          "Flying day, multi-day trips, payment-method gate, cancel/edit lock, late-cancel fee, max upcoming bookings, max reservation length, and account-ledger book/dispatch gates. What each does and where it lives.",
+          "Flying day, multi-day trips, payment-method gate, cancel/edit lock, late-cancel fee, max upcoming bookings, max reservation length, minimum notice, booking horizon, start interval, fixed duration, buffers, and account-ledger book/dispatch gates. What each does and where it lives.",
         kind: "reference",
         audience: ["Owners", "Admins"],
         seoQuery: "flight school booking rules and settings",

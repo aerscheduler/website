@@ -2106,26 +2106,92 @@
                   },
                   "bookingPolicy": {
                     "type": "object",
-                    "description": "Org-wide booking rules. Send only the keys you are changing; `null` clears a rule. The four balance gates apply only when the organization is in **ledger** billing mode.",
+                    "description": "Org-wide booking rules. Send only the keys you are changing; `null` clears a rule. Minimum notice, booking horizon, start interval, fixed duration, and buffers apply to every internal schedule booking (member self-book and front desk), not only future public embeds. The four balance gates apply only when the organization is in **ledger** billing mode.",
                     "properties": {
+                      "minimumNoticeMinutes": {
+                        "type": [
+                          "integer",
+                          "null"
+                        ],
+                        "minimum": 15,
+                        "maximum": 525600,
+                        "description": "Minutes of notice a booking needs before it starts. Null = off. Range 15 to 525600 (1 year). Enforced on create and when the start time changes. Owners, admins, dispatchers, instructors, and technicians skip this on create."
+                      },
+                      "bookingHorizonDays": {
+                        "type": [
+                          "integer",
+                          "null"
+                        ],
+                        "minimum": 1,
+                        "maximum": 730,
+                        "description": "How many calendar days ahead anyone may book, counted in the school's time zone. Null = off (the clients still cap the picker at 365 days). Range 1 to 730. Enforced on create and when the start time changes. Staff skip this on create."
+                      },
+                      "startTimeIncrementMinutes": {
+                        "type": [
+                          "integer",
+                          "null"
+                        ],
+                        "enum": [
+                          15,
+                          30,
+                          60,
+                          null
+                        ],
+                        "description": "Start times must land on this minute grid in the school's time zone, measured from midnight. Null = off. Only 15, 30, or 60 are accepted. Requires a school or airport time zone; the request is refused until one is set. Enforced when the start time changes."
+                      },
+                      "fixedReservationMinutes": {
+                        "type": [
+                          "integer",
+                          "null"
+                        ],
+                        "minimum": 15,
+                        "maximum": 1440,
+                        "description": "Every booking must be exactly this many minutes long. Null = off. Range 15 to 1440. Cannot exceed `maxReservationMinutes` when that rule is also set. Enforced when start or end changes. Maintenance is exempt."
+                      },
+                      "bufferBeforeMinutes": {
+                        "type": [
+                          "integer",
+                          "null"
+                        ],
+                        "minimum": 5,
+                        "maximum": 720,
+                        "description": "Idle minutes required before a booking. Null = off. Range 5 to 720. Independent of `bufferAfterMinutes`. Adjacent bookings need the before and after buffers stacked (added together) as idle time between them."
+                      },
+                      "bufferAfterMinutes": {
+                        "type": [
+                          "integer",
+                          "null"
+                        ],
+                        "minimum": 5,
+                        "maximum": 720,
+                        "description": "Idle minutes required after a booking. Null = off. Range 5 to 720. Independent of `bufferBeforeMinutes`. Adjacent bookings need the before and after buffers stacked (added together) as idle time between them."
+                      },
                       "minimumBalanceCents": {
-                        "type": "integer",
-                        "nullable": true,
+                        "type": [
+                          "integer",
+                          "null"
+                        ],
                         "description": "Credit a student or renter needs to self-book. Null = off. 0 = cannot book while owing. Owners, admins and dispatchers booking on someone's behalf skip it."
                       },
                       "balanceMaximumCents": {
-                        "type": "integer",
-                        "nullable": true,
+                        "type": [
+                          "integer",
+                          "null"
+                        ],
                         "description": "Most a member may owe and still self-book. Null = off. 0 = any negative balance is refused."
                       },
                       "dispatchMinimumBalanceCents": {
-                        "type": "integer",
-                        "nullable": true,
+                        "type": [
+                          "integer",
+                          "null"
+                        ],
                         "description": "Same floor, checked at ramp-out instead of at book. Null = off, and the self-book floor is NOT re-applied. Only owners and admins override this one; dispatchers do not."
                       },
                       "dispatchBalanceMaximumCents": {
-                        "type": "integer",
-                        "nullable": true,
+                        "type": [
+                          "integer",
+                          "null"
+                        ],
                         "description": "Most a member may owe and still ramp out. Null = off."
                       }
                     }
@@ -14257,6 +14323,34 @@
             "description": "End of the window, ISO 8601."
           },
           {
+            "name": "reservationId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "When editing this booking, treat it as free so its own slot still appears."
+          },
+          {
+            "name": "applyBookingPolicy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "description": "When true (default), clip free windows by minimum notice and booking horizon."
+          },
+          {
+            "name": "locationId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Airport location for weekly hours and booking-policy time zone."
+          },
+          {
             "name": "limit",
             "in": "query",
             "required": false,
@@ -14397,6 +14491,34 @@
             "description": "End of the window, ISO 8601."
           },
           {
+            "name": "reservationId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "When editing this booking, treat it as free so its own slot still appears."
+          },
+          {
+            "name": "applyBookingPolicy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "description": "When true (default), clip free windows by minimum notice and booking horizon."
+          },
+          {
+            "name": "locationId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Airport location for weekly hours and booking-policy time zone."
+          },
+          {
             "name": "limit",
             "in": "query",
             "required": false,
@@ -14535,6 +14657,34 @@
               "format": "date-time"
             },
             "description": "End of the window, ISO 8601."
+          },
+          {
+            "name": "reservationId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "When editing this booking, treat it as free so its own slot still appears."
+          },
+          {
+            "name": "applyBookingPolicy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "description": "When true (default), clip free windows by minimum notice and booking horizon."
+          },
+          {
+            "name": "locationId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Airport location for weekly hours and booking-policy time zone."
           },
           {
             "name": "limit",
