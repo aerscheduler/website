@@ -35,7 +35,7 @@ export function organizationJsonLd() {
     "@type": "Organization",
     name: SITE_NAME,
     url: SITE_URL,
-    logo: absoluteUrl("/brand/logo-blue.png"),
+    logo: absoluteUrl("/brand/logo-white.png"),
     email: SUPPORT_EMAIL,
     description: SITE_DESCRIPTION,
     // TODO(android): add PLAY_STORE_URL back here when the Play listing is live.
