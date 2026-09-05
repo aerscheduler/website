@@ -1,5 +1,5 @@
 <Summary>
-An owner schedules deletion from Settings → School. The school stays for 30 days, every
+An owner schedules deletion from Settings → Security. The school stays for 30 days, every
 admin and owner is notified, and any of them can cancel before that date.
 </Summary>
 
@@ -9,7 +9,7 @@ admin and owner is notified, and any of them can cancel before that date.
 
 Deleting a school is not instant. It starts a **30-day countdown**:
 
-1. An owner confirms from <Where app="web">Settings → School</Where> (or Organization
+1. An owner confirms from <Where app="web">Settings → Security</Where> (or Organization
    Settings in the iOS app).
 2. AerScheduler emails and notifies every admin and owner with the deletion date.
 3. Until that date, the school keeps working as usual: bookings, invoices, training,
@@ -25,8 +25,8 @@ documents and every member's access go with the school.
 ## Schedule deletion
 
 <Steps>
-  <Step n={1} title="Open Settings → School">
-    Only an owner sees Delete this school. Settle every unpaid invoice first: the server
+  <Step n={1} title="Open Settings → Security">
+    Only an owner can schedule deletion. Settle every unpaid invoice first: the server
     refuses while anything is still owed.
   </Step>
   <Step n={2} title="Click Delete organization">
@@ -43,7 +43,7 @@ In the iOS app the same flow is under Organization Settings → Delete Organizat
 ## Cancel a scheduled deletion
 
 <Steps>
-  <Step n={1} title="Open Settings → School">
+  <Step n={1} title="Open Settings → Security">
     While a countdown is running, the destructive card is replaced by Deletion scheduled
     and a Cancel deletion button. Admins see this too, not only owners.
   </Step>

@@ -105,6 +105,10 @@
       "description": "When org policy requires approval, members submit requests and desk staff approve or decline them before a reservation is created."
     },
     {
+      "name": "Booking offerings",
+      "description": "Presets over org calendar policy for guest pages and internal slot discovery, plus per-audience calendar visibility settings."
+    },
+    {
       "name": "Reports",
       "description": "The reporting engine and saved views."
     },
@@ -21138,6 +21142,701 @@
         ]
       }
     },
+    "/booking-offerings/visibility": {
+      "get": {
+        "tags": [
+          "Booking offerings"
+        ],
+        "summary": "Get calendar visibility",
+        "description": "Returns per-audience calendar detail levels for the organization.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/OrganizationCalendarVisibility"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getOrganizationCalendarVisibility"
+      },
+      "patch": {
+        "tags": [
+          "Booking offerings"
+        ],
+        "summary": "Update calendar visibility",
+        "description": "Owners and admins set what each audience tier sees on calendars and slot pickers.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/OrganizationCalendarVisibility"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Only owners and admins may change visibility.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "updateOrganizationCalendarVisibility",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Audience levels to change.",
+                "properties": {
+                  "guestLevel": {
+                    "type": "string"
+                  },
+                  "studentLevel": {
+                    "type": "string"
+                  },
+                  "renterLevel": {
+                    "type": "string"
+                  },
+                  "instructorLevel": {
+                    "type": "string"
+                  },
+                  "memberLevel": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/booking-offerings": {
+      "get": {
+        "tags": [
+          "Booking offerings"
+        ],
+        "summary": "List booking offerings",
+        "description": "Owners and admins list presets used for guest pages and internal slot discovery.",
+        "responses": {
+          "200": {
+            "description": "The booking offerings.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/BookingOffering"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listBookingOfferings",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1,1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row , `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Booking offerings"
+        ],
+        "summary": "Create a booking offering",
+        "description": "Defines a bookable preset over org calendar policy. Offerings may only tighten org policy.",
+        "responses": {
+          "201": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/BookingOffering"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Only owners and admins may manage offerings.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "createBookingOffering",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The offering to create.",
+                "properties": {
+                  "slug": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "reservationType": {
+                    "type": "string"
+                  },
+                  "assignmentMode": {
+                    "type": "string"
+                  },
+                  "active": {
+                    "type": "boolean"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "locationId": {
+                    "type": "integer"
+                  },
+                  "resourceIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  },
+                  "instructorOrgUserIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  },
+                  "minimumNoticeMinutes": {
+                    "type": "integer"
+                  },
+                  "bookingHorizonDays": {
+                    "type": "integer"
+                  },
+                  "fixedReservationMinutes": {
+                    "type": "integer"
+                  },
+                  "allowResourceChoice": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "slug",
+                  "name",
+                  "reservationType"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/booking-offerings/{id}": {
+      "get": {
+        "tags": [
+          "Booking offerings"
+        ],
+        "summary": "Get a booking offering",
+        "description": "Returns one offering with eligible resources and instructors.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/BookingOffering"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Booking offering not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getBookingOffering",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The booking offering id."
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Booking offerings"
+        ],
+        "summary": "Update a booking offering",
+        "description": "Owners and admins change offering settings or eligible resources.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/BookingOffering"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Only owners and admins may manage offerings.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "updateBookingOffering",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The booking offering id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Fields to change.",
+                "properties": {
+                  "active": {
+                    "type": "boolean"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "reservationType": {
+                    "type": "string"
+                  },
+                  "assignmentMode": {
+                    "type": "string"
+                  },
+                  "locationId": {
+                    "type": "integer"
+                  },
+                  "resourceIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  },
+                  "instructorOrgUserIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  },
+                  "minimumNoticeMinutes": {
+                    "type": "integer"
+                  },
+                  "bookingHorizonDays": {
+                    "type": "integer"
+                  },
+                  "fixedReservationMinutes": {
+                    "type": "integer"
+                  },
+                  "bufferBeforeMinutes": {
+                    "type": "integer"
+                  },
+                  "bufferAfterMinutes": {
+                    "type": "integer"
+                  },
+                  "maxReservationMinutes": {
+                    "type": "integer"
+                  },
+                  "allowResourceChoice": {
+                    "type": "boolean"
+                  },
+                  "allowInstructorChoice": {
+                    "type": "boolean"
+                  },
+                  "allowLocationChoice": {
+                    "type": "boolean"
+                  },
+                  "questions": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/booking-offerings/{id}/slots": {
+      "get": {
+        "tags": [
+          "Booking offerings"
+        ],
+        "summary": "List offering slots",
+        "description": "Computes bookable slots for an offering, projected for the signed-in member's audience tier.",
+        "responses": {
+          "200": {
+            "description": "Projected bookable slots for the caller.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/BookableSlot"
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "startDate and endDate are required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listBookingOfferingSlots",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The booking offering id."
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Window start (inclusive)."
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Window end (inclusive)."
+          }
+        ]
+      }
+    },
     "/currencies": {
       "get": {
         "tags": [
@@ -30801,6 +31500,228 @@
               "type": "object",
               "additionalProperties": true
             }
+          }
+        },
+        "additionalProperties": true
+      },
+      "OrganizationCalendarVisibility": {
+        "type": "object",
+        "description": "Per-audience calendar detail levels for one organization.",
+        "properties": {
+          "guestLevel": {
+            "type": "string",
+            "description": "What unauthenticated guests see.",
+            "enum": [
+              "slots_only",
+              "blocked_anonymous",
+              "own_bookings_named",
+              "full"
+            ]
+          },
+          "studentLevel": {
+            "type": "string",
+            "description": "What signed-in students see.",
+            "enum": [
+              "slots_only",
+              "blocked_anonymous",
+              "own_bookings_named",
+              "full"
+            ]
+          },
+          "renterLevel": {
+            "type": "string",
+            "description": "What signed-in renters see.",
+            "enum": [
+              "slots_only",
+              "blocked_anonymous",
+              "own_bookings_named",
+              "full"
+            ]
+          },
+          "instructorLevel": {
+            "type": "string",
+            "description": "What signed-in instructors see.",
+            "enum": [
+              "slots_only",
+              "blocked_anonymous",
+              "own_bookings_named",
+              "full"
+            ]
+          },
+          "memberLevel": {
+            "type": "string",
+            "description": "What other signed-in members see.",
+            "enum": [
+              "slots_only",
+              "blocked_anonymous",
+              "own_bookings_named",
+              "full"
+            ]
+          }
+        },
+        "additionalProperties": true
+      },
+      "BookingOffering": {
+        "type": "object",
+        "description": "A bookable preset over org calendar policy (guest discovery flight, dual lesson, etc.).",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier, stable for the life of the record."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the record was created."
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the record last changed."
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether the offering accepts new requests."
+          },
+          "slug": {
+            "type": "string",
+            "description": "URL-safe identifier unique within the organization."
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name."
+          },
+          "description": {
+            "description": "Optional description shown on hosted pages.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reservationType": {
+            "type": "string",
+            "description": "Reservation type created on approval."
+          },
+          "assignmentMode": {
+            "type": "string",
+            "description": "desk_assigns or member_picks_resource."
+          },
+          "minimumNoticeMinutes": {
+            "description": "Optional tightening of org minimum notice.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "bookingHorizonDays": {
+            "description": "Optional tightening of org booking horizon.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "fixedReservationMinutes": {
+            "description": "Optional fixed slot length override.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "bufferBeforeMinutes": {
+            "description": "Optional buffer before each slot.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "bufferAfterMinutes": {
+            "description": "Optional buffer after each slot.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "maxReservationMinutes": {
+            "description": "Optional max duration cap.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "allowResourceChoice": {
+            "type": "boolean",
+            "description": "Whether the requester may pick an aircraft/sim."
+          },
+          "allowInstructorChoice": {
+            "type": "boolean",
+            "description": "Whether the requester may pick an instructor."
+          },
+          "allowLocationChoice": {
+            "type": "boolean",
+            "description": "Whether the requester may pick a location."
+          },
+          "questions": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": true
+          },
+          "location": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": true
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "instructors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        },
+        "additionalProperties": true
+      },
+      "BookableSlot": {
+        "type": "object",
+        "description": "One bookable window projected for the caller's audience.",
+        "properties": {
+          "start": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Slot start in UTC."
+          },
+          "end": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Slot end in UTC."
+          },
+          "timeZone": {
+            "type": "string",
+            "description": "IANA time zone used to present the slot."
+          },
+          "resourceId": {
+            "description": "Eligible resource id when the caller may choose one.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "resourceLabel": {
+            "description": "Resource label when visibility allows naming.",
+            "type": [
+              "string",
+              "null"
+            ]
           }
         },
         "additionalProperties": true
