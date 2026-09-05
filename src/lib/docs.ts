@@ -447,6 +447,33 @@ export const DOC_SECTIONS: DocSection[] = [
         ],
       },
       {
+        slug: "public-booking-requests",
+        title: "Let guests request a discovery flight without an account",
+        description:
+          "Turn on public booking links, share a page for an offering, and approve guest requests from the same Booking requests queue. Guests confirm by email first. Members keep booking as they do today.",
+        kind: "task",
+        audience: ["Owners", "Admins", "Dispatchers"],
+        seoQuery: "public discovery flight booking link flight school",
+        faqs: [
+          {
+            q: "Does this replace Solo, Dual, and the other booking types for members?",
+            a: "No. Members still book the way they always have. Offerings and public links are for guests who do not have an account.",
+          },
+          {
+            q: "Does submitting a request hold the aircraft?",
+            a: "No. The time can be taken by another booking while you decide. If you approve too late, the same conflict checks as a normal booking still apply.",
+          },
+          {
+            q: "When does the front desk see a guest request?",
+            a: "After the guest confirms the email link. Unconfirmed requests stay off the pending queue and expire after 24 hours.",
+          },
+        ],
+        related: [
+          "/docs/scheduling/booking-approval-requests",
+          "/docs/scheduling/booking-rules-and-settings",
+        ],
+      },
+      {
         slug: "standby-and-slot-offers",
         title: "Stand by for a slot and accept an offer",
         description:

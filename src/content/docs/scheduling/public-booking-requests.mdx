@@ -1,0 +1,84 @@
+<Summary>
+Turn on public booking under Settings → Booking offerings, share the link for an
+active offering, and approve guest requests from Calendar → Booking requests.
+Guests confirm by email first. Members still book with Solo, Dual, Ground and the
+rest; offerings do not replace reservation types.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers</Roles>
+
+## What guests get
+
+A public page at `/book/{your-slug}/{offering-slug}`. The guest picks an open time,
+enters name and email, and submits a **request**. AerScheduler emails them a
+confirmation link. After they confirm, the request appears in the same queue as
+member approval requests.
+
+This is not instant booking. The front desk still approves or declines it. Until
+you approve, nothing is on the board, and the slot is not held.
+
+<Callout type="note">
+Students and renters who already have accounts keep using **Book** as they do
+today. Public links are for people who are not members yet, typically a
+discovery or intro flight.
+</Callout>
+
+## Turn it on
+
+<Where app="web">Settings → Booking offerings</Where>
+
+1. Create an offering if you do not have one (name, slug, reservation type such as
+   Guest / discovery, eligible aircraft, and a fixed length if you want one).
+2. Flip **Allow public requests**. If you have not set a link slug yet, AerScheduler
+   fills one from the school name.
+3. Copy the public link from the offering's menu (**Copy public link**). Only
+   **Active** offerings get a link.
+
+Calendar visibility for **Guests (public booking)** still decides how much of the
+schedule the guest sees when picking times. Open slots only is the usual choice.
+
+Public booking lives on the web console only. There is nothing to configure in
+the mobile app.
+
+## What the guest does
+
+They open the link, pick a time, and submit. Copy on the page says the school
+must approve it. They then click **Confirm this request** in email.
+
+If they never confirm, the request never reaches the desk. Unconfirmed requests
+expire after 24 hours, or sooner if the requested time has already passed.
+
+## Approve or decline
+
+Same place as member requests: <Where app="web">Calendar → Booking requests</Where>.
+Guest rows show the name they entered rather than a member account. **Approve**
+creates a reservation (usually a guest on the flight). **Decline** emails them
+and closes the request.
+
+<Callout type="warning">
+A request does not hold the slot. Another booking can take the time while you
+are deciding. If you approve too late, the same conflict checks as a normal
+booking still apply.
+</Callout>
+
+## What can go wrong
+
+| What they see | What it means |
+|---|---|
+| This page is not available | Public requests are off, the offering is paused, or the slug in the URL is wrong. |
+| No open times this week | Guest visibility hides occupied times, or org notice/horizon/buffers leave no window. Try another week, or loosen guest calendar visibility. |
+| Check your email | The request is waiting on confirmation. It is not in the desk queue yet. |
+| Confirmation link expired | They waited more than 24 hours, or the slot already passed. They need to submit again. |
+
+The public demo sandbox cannot send guest requests. That is on purpose.
+
+## Related
+
+<CardGrid>
+<DocCard href="/docs/scheduling/booking-approval-requests" title="Require approval before members book">
+The same queue for students and renters who must request before they fly.
+</DocCard>
+<DocCard href="/docs/scheduling/booking-rules-and-settings" title="Booking rules and settings">
+Notice, horizon, buffers, and the other calendar rules guest slots still follow.
+</DocCard>
+</CardGrid>
