@@ -109,6 +109,10 @@
       "description": "Presets over org calendar policy for guest pages and internal slot discovery, plus per-audience calendar visibility settings."
     },
     {
+      "name": "Public booking",
+      "description": "Unauthenticated guest request pages. A guest picks an offering slot, confirms by email, and the front desk approves or declines the request. Members keep booking as they do today."
+    },
+    {
       "name": "Reports",
       "description": "The reporting engine and saved views."
     },
@@ -2203,6 +2207,23 @@
                         "description": "Most a member may owe and still ramp out. Null = off."
                       }
                     }
+                  },
+                  "publicBookingEnabled": {
+                    "type": "boolean",
+                    "description": "When true, guests can submit booking requests for active offerings at /book/{publicBookingSlug}/{offering.slug}. Staff still approve every request."
+                  },
+                  "publicBookingSlug": {
+                    "type": "string",
+                    "description": "Lowercase letters, numbers, and hyphens. Unique across schools. Generated from the school name if you enable public booking without one."
+                  },
+                  "publicBookingEmbedHosts": {
+                    "type": "array",
+                    "maxItems": 20,
+                    "items": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "description": "HTTPS origins allowed to iframe /book pages, stored like https://www.yourschool.com. Empty keeps the share link only. No wildcards, no IP addresses except localhost/127.0.0.1. Public hosts must be https. Demo organizations are refused."
                   }
                 }
               }
@@ -21886,6 +21907,525 @@
         ]
       }
     },
+    "/public/book/{orgSlug}/offerings/{offeringSlug}": {
+      "get": {
+        "tags": [
+          "Public booking"
+        ],
+        "summary": "Get a public offering page",
+        "description": "Unauthenticated. Returns school name and offering details for a shareable guest booking link. Hidden unless public booking is enabled and the offering is active.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PublicBookingPage"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Public booking is off, or this offering is not published.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getPublicBookingOffering",
+        "security": [],
+        "parameters": [
+          {
+            "name": "orgSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The organization's public booking slug."
+          },
+          {
+            "name": "offeringSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The offering slug."
+          }
+        ]
+      }
+    },
+    "/public/book/{orgSlug}/offerings/{offeringSlug}/slots": {
+      "get": {
+        "tags": [
+          "Public booking"
+        ],
+        "summary": "List public offering slots",
+        "description": "Unauthenticated. Bookable windows for one offering, projected for guests (open times only by default).",
+        "responses": {
+          "200": {
+            "description": "Guest-safe bookable slots.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/BookableSlot"
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "startDate and endDate are required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Public booking is off, or this offering is not published.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listPublicBookingOfferingSlots",
+        "security": [],
+        "parameters": [
+          {
+            "name": "orgSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The organization's public booking slug."
+          },
+          {
+            "name": "offeringSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The offering slug."
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Window start."
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Window end."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1,1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row , `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
+      }
+    },
+    "/public/book/{orgSlug}/offerings/{offeringSlug}/requests": {
+      "post": {
+        "tags": [
+          "Public booking"
+        ],
+        "summary": "Submit a public booking request",
+        "description": "Unauthenticated. Creates an unverified guest request and emails a confirmation link. The desk queue only sees the request after the guest confirms. Does not hold inventory.",
+        "responses": {
+          "200": {
+            "description": "Check your email to confirm.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "submitted": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing name, email, consent, or an invalid slot.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "That slot is gone, or a request for this email and time already exists.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "createPublicBookingRequest",
+        "security": [],
+        "parameters": [
+          {
+            "name": "orgSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The organization's public booking slug."
+          },
+          {
+            "name": "offeringSlug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The offering slug."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Guest request.",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "phone": {
+                    "type": "string"
+                  },
+                  "notes": {
+                    "type": "string"
+                  },
+                  "start": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "end": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "timeZoneName": {
+                    "type": "string"
+                  },
+                  "resourceId": {
+                    "type": "integer"
+                  },
+                  "consent": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "name",
+                  "email",
+                  "start",
+                  "end",
+                  "consent"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/public/book/confirm": {
+      "post": {
+        "tags": [
+          "Public booking"
+        ],
+        "summary": "Confirm a public booking request",
+        "description": "Unauthenticated. Promotes an unverified guest request to pending after the email link is opened.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "confirmed": {
+                          "type": "boolean"
+                        },
+                        "alreadyConfirmed": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or expired token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The request can no longer be confirmed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "confirmPublicBookingRequest",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Confirmation token from the email link.",
+                "properties": {
+                  "token": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "token"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
     "/currencies": {
       "get": {
         "tags": [
@@ -27563,6 +28103,26 @@
               "null"
             ]
           },
+          "publicBookingEnabled": {
+            "type": "boolean",
+            "description": "When true, guests can request active offerings at /book/{publicBookingSlug}/{offering.slug}."
+          },
+          "publicBookingSlug": {
+            "description": "Public share-link slug for guest booking pages.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "publicBookingEmbedHosts": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "HTTPS origins allowed to iframe /book pages. Empty means the share link only. AerScheduler itself can always open the page. Present on settings PATCH responses; not returned by GET /organizations/{orgId}."
+          },
           "details": {
             "type": "object",
             "description": "Contact details.",
@@ -31430,7 +31990,7 @@
           },
           "status": {
             "type": "string",
-            "description": "pending, approved, rejected, cancelled, or expired."
+            "description": "unverified, pending, approved, rejected, cancelled, or expired."
           },
           "source": {
             "type": "string",
@@ -31504,8 +32064,32 @@
               "null"
             ]
           },
+          "guestName": {
+            "description": "Guest name on a public request.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "guestEmail": {
+            "description": "Guest email on a public request.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "guestPhone": {
+            "description": "Guest phone on a public request.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "requestedBy": {
-            "type": "object",
+            "type": [
+              "object",
+              "null"
+            ],
             "additionalProperties": true
           },
           "decidedBy": {
@@ -31771,6 +32355,108 @@
               "string",
               "null"
             ]
+          }
+        },
+        "additionalProperties": true
+      },
+      "PublicBookingPage": {
+        "type": "object",
+        "description": "Public-safe offering page for a guest share link.",
+        "properties": {
+          "organization": {
+            "type": "object",
+            "description": "The school this offering belongs to. embedHosts is public: anyone with the share link can read which sites may iframe the page.",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "School name."
+              },
+              "slug": {
+                "description": "Public booking slug.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "logo": {
+                "description": "School logo URL.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "timeZone": {
+                "description": "School IANA time zone.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "embedHosts": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "description": "Origins allowed to iframe this page, like https://www.yourschool.com. Empty means the share link only."
+              }
+            },
+            "additionalProperties": false
+          },
+          "offering": {
+            "type": "object",
+            "description": "The offering being requested.",
+            "properties": {
+              "slug": {
+                "type": "string",
+                "description": "Offering slug."
+              },
+              "name": {
+                "type": "string",
+                "description": "Display name."
+              },
+              "description": {
+                "description": "Description shown to the guest.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "reservationType": {
+                "type": "string",
+                "description": "Reservation type created on approval."
+              },
+              "fixedReservationMinutes": {
+                "description": "Fixed slot length.",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "allowResourceChoice": {
+                "type": "boolean",
+                "description": "Whether the guest may pick an aircraft."
+              },
+              "location": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "timeZone": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            },
+            "additionalProperties": true
           }
         },
         "additionalProperties": true

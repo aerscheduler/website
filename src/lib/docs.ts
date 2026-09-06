@@ -467,10 +467,42 @@ export const DOC_SECTIONS: DocSection[] = [
             q: "When does the front desk see a guest request?",
             a: "After the guest confirms the email link. Unconfirmed requests stay off the pending queue and expire after 24 hours.",
           },
+          {
+            q: "Can I embed the request page on our school website?",
+            a: "Yes. Add your site under Websites that may embed, then use Copy embed code or Copy modal embed on an active offering. List both www.yourschool.com and yourschool.com if both serve the site. An empty list keeps the share link only. The embed does not set AerScheduler analytics or advertising cookies, and it does not show a cookie banner. Guests still confirm by email, and the desk still approves. This is not instant booking.",
+          },
         ],
         related: [
           "/docs/scheduling/booking-approval-requests",
           "/docs/scheduling/booking-rules-and-settings",
+          "/docs/scheduling/calendar-visibility",
+        ],
+      },
+      {
+        slug: "calendar-visibility",
+        title: "How much of the schedule guests and members see",
+        description:
+          "Calendar visibility under Booking offerings sets how much of the schedule each audience sees when picking a time. It does not change the staff Calendar. Open slots only is the usual guest setting.",
+        kind: "reference",
+        audience: ["Owners", "Admins"],
+        seoQuery: "calendar visibility public booking guests see schedule flight school",
+        faqs: [
+          {
+            q: "Does this hide names on the staff Calendar?",
+            a: "No. Owners, admins, and dispatchers always see the full board. These dropdowns only apply when someone is picking a time on a public /book page or an offering.",
+          },
+          {
+            q: "What should guests be set to?",
+            a: "Open slots only. They see times they can request, not who is already flying. Occupied times are omitted rather than shown as a named flight.",
+          },
+          {
+            q: "Why do Open slots only and Blocked, no names look the same on the public page?",
+            a: "The public page lists open start times. Occupied times are left off either way, so guests do not see a named busy block. If the offering lets them pick an aircraft, those free times include the tail even on Open slots only.",
+          },
+        ],
+        related: [
+          "/docs/scheduling/public-booking-requests",
+          "/docs/scheduling/who-can-do-what-on-the-schedule",
         ],
       },
       {

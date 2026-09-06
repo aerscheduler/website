@@ -42,8 +42,25 @@ the mobile app.
 
 ## What the guest does
 
-They open the link, pick a time, and submit. Copy on the page says the school
-must approve it. They then click **Confirm this request** in email.
+They open the link. Day view is the default: a month calendar plus start times for the
+day they pick (8:00 AM, not a range). On a computer they can switch to a week calendar
+or a week of start-time buttons. They can change 12-hour vs 24-hour and the time zone.
+
+On a phone there is only day view: the month sits above the start times, with large tap
+targets, and the window scrolls as one page. After they pick a time, the name and email
+form appears. Copy on the page says the school must approve it. They then click
+**Confirm this request** in email.
+
+To put the same page on your website, first add your site under **Websites that may
+embed** (one host per line, like `www.yourschool.com`). `www.yourschool.com` and
+`yourschool.com` are different websites: list both if both serve your pages. Then use
+the offering menu:
+**Copy public link**, **Copy embed code** (inline iframe), or **Copy modal embed** (a
+button that opens the page over your site). Leave that list empty to keep the share
+link only: other websites cannot put the page in a frame. AerScheduler can still open
+it in its own tab, including with `?embed=1` to preview. Do not inject your own CSS or
+scripts into the frame. The embed does not set AerScheduler analytics or advertising
+cookies, and it does not show a cookie banner.
 
 If they never confirm, the request never reaches the desk. Unconfirmed requests
 expire after 24 hours, or sooner if the requested time has already passed.
@@ -68,7 +85,7 @@ booking still apply.
 | This page is not available | Public requests are off, the offering is paused, or the slug in the URL is wrong. |
 | No open times this week | Guest visibility hides occupied times, or org notice/horizon/buffers leave no window. Try another week, or loosen guest calendar visibility. |
 | Check your email | The request is waiting on confirmation. It is not in the desk queue yet. |
-| Confirmation link expired | They waited more than 24 hours, or the slot already passed. They need to submit again. |
+| This page cannot be shown here | The page is in a frame on a site that is not listed under Websites that may embed. Add that exact host. `www` and the bare domain are not the same listing. |
 
 The public demo sandbox cannot send guest requests. That is on purpose.
 

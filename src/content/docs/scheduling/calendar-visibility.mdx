@@ -1,0 +1,78 @@
+<Summary>
+Under Settings → Booking offerings, Calendar visibility sets how much of the schedule
+each audience sees when they pick a time on a public /book page or an offering. It does
+not change the staff Calendar. Owners, admins, and dispatchers always see the full board.
+</Summary>
+
+<Roles>Owners, Admins</Roles>
+
+## This is not the dispatch board
+
+<Where app="web">Calendar</Where> is still the shared school board. Members who can open
+it still see bookings with names, as
+[Who can book, edit and cancel](/docs/scheduling/who-can-do-what-on-the-schedule)
+describes.
+
+Calendar visibility applies when someone is **choosing a start time**:
+
+- a guest on a public `/book/{slug}/{offering}` page
+- a signed-in member looking up times on an offering
+
+Owners, admins, and dispatchers are not in this list. Desk staff always get full detail.
+
+<Where app="web">Settings → Booking offerings</Where>, in **Calendar visibility**. Each
+audience has its own dropdown. A change saves as soon as you pick an option.
+
+## The four options
+
+**Open slots only.** They see times they can book. Occupied times are simply missing, and
+nobody else's name is shown. If the offering lets them pick an aircraft, those free times
+still include the tail so they can choose it. This is the usual setting for guests.
+
+**Blocked, no names.** Busy times stay anonymous: no who, no tail. On the public guest
+page those times are omitted rather than drawn as a named flight, so this often looks the
+same as Open slots only for guests.
+
+**Own bookings named.** They can see their own flights by name. Everyone else stays
+anonymous. If the offering lets them pick an aircraft, a free time can include the tail.
+
+**Full schedule.** Names and tails, closest to what the front desk sees. Use this only for
+people you trust with the whole board. Guests almost never need this.
+
+## Who each dropdown is for
+
+**Guests (public booking).** People with no account on a public /book link. Leave this on
+Open slots only unless an offering lets them choose a specific tail and you want that
+tail on the free times.
+
+**Students, Renters, Instructors.** Signed-in members with that role, when they pick
+times on an offering. This does not change what they see when they open Calendar.
+
+**Other members.** Signed-in people who are not student, renter, or instructor. Desk
+staff are never this audience.
+
+## What guests actually see today
+
+The public page lists **open start times**. It does not paint other people's bookings
+with names, even on Full schedule. Occupied times are left off the list.
+
+If the offering lets the requester pick an aircraft, each free time includes the tail
+even on Open slots only. Without that toggle, Open slots only and Blocked, no names keep
+tails hidden.
+
+<Callout type="note">
+A request still does not hold the slot. Another booking can take the time while the
+guest confirms email and you approve. Calendar visibility only changes what they see
+while picking, not who gets the aircraft.
+</Callout>
+
+## Related
+
+<CardGrid>
+<DocCard href="/docs/scheduling/public-booking-requests" title="Let guests request a discovery flight">
+Turn on public links, embed the page, and approve from Booking requests.
+</DocCard>
+<DocCard href="/docs/scheduling/who-can-do-what-on-the-schedule" title="Who can book, edit and cancel">
+What each role sees and can do on the staff Calendar, which these dropdowns do not change.
+</DocCard>
+</CardGrid>

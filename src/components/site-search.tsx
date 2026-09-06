@@ -67,7 +67,13 @@ const SUGGESTIONS: { label: string; href: string }[] = [
  * instances (one for the desktop bar, one for the mobile bar) would both answer
  * Cmd-K and both open.
  */
-export function SiteSearch({ className }: { className?: string }) {
+export function SiteSearch({
+  className,
+  onOpen,
+}: {
+  className?: string;
+  onOpen?: () => void;
+}) {
   const [open, setOpen] = useState(false);
   const [primed, setPrimed] = useState(false);
 
@@ -93,12 +99,13 @@ export function SiteSearch({ className }: { className?: string }) {
       if ((event.key === "k" || event.key === "K") && (event.metaKey || event.ctrlKey)) {
         event.preventDefault();
         prime();
+        onOpen?.();
         setOpen(true);
       }
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [prime]);
+  }, [prime, onOpen]);
 
   return (
     <>
@@ -111,6 +118,7 @@ export function SiteSearch({ className }: { className?: string }) {
         onFocus={prime}
         onClick={() => {
           prime();
+          onOpen?.();
           setOpen(true);
         }}
         className={cn(

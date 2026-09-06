@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X, ChevronRight, ChevronDown } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { SiteSearch } from "@/components/site-search";
@@ -117,6 +118,7 @@ const PANEL_WIDTH: Record<MegaId, number> = {
 };
 
 export function SiteHeader() {
+  const pathname = usePathname();
   const signedIn = useAppAuthStatus();
   const [open, setOpen] = useState(false);
   const [activeMega, setActiveMega] = useState<MegaId | null>(null);
@@ -162,7 +164,10 @@ export function SiteHeader() {
       if (!megaRef.current?.contains(e.target as Node)) closeMega();
     }
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") closeMega();
+      if (e.key === "Escape") {
+        closeMega();
+        setOpen(false);
+      }
     }
     document.addEventListener("mousedown", onDocClick);
     document.addEventListener("keydown", onKey);
@@ -172,21 +177,57 @@ export function SiteHeader() {
     };
   }, [closeMega]);
 
+  // Crossing into the desktop nav while the drawer is open would leave `open`
+  // true with no hamburger to clear it.
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const onChange = () => {
+      if (mq.matches) setOpen(false);
+    };
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
   useEffect(() => () => clearCloseTimer(), [clearCloseTimer]);
 
-  // Lock the page under the mobile menu so a tall Features accordion scrolls
-  // inside the panel instead of dragging the document underneath it.
   useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  // Lock the document behind the overlay. overflow:hidden on html is what
+  // unstuck the old sticky bar; pin body instead and restore the scroll
+  // offset when the drawer closes. Layout effect so unlock does not paint
+  // one frame at scroll 0. Skip restore after a route change: the header
+  // stays mounted and the origin offset would land on the destination page.
+  useLayoutEffect(() => {
     if (!open) return;
-    const html = document.documentElement;
     const body = document.body;
-    const prevHtml = html.style.overflow;
-    const prevBody = body.style.overflow;
-    html.style.overflow = "hidden";
+    const y = window.scrollY;
+    const lockedPath = window.location.pathname;
+    const prev = {
+      position: body.style.position,
+      top: body.style.top,
+      left: body.style.left,
+      right: body.style.right,
+      width: body.style.width,
+      overflow: body.style.overflow,
+    };
+    body.style.position = "fixed";
+    body.style.top = `-${y}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.width = "100%";
     body.style.overflow = "hidden";
     return () => {
-      html.style.overflow = prevHtml;
-      body.style.overflow = prevBody;
+      body.style.position = prev.position;
+      body.style.top = prev.top;
+      body.style.left = prev.left;
+      body.style.right = prev.right;
+      body.style.width = prev.width;
+      body.style.overflow = prev.overflow;
+      if (window.location.pathname !== lockedPath) return;
+      // "instant" ignores html { scroll-behavior: smooth }; "auto" does not.
+      window.scrollTo({ top: y, left: 0, behavior: "instant" });
     };
   }, [open]);
 
@@ -209,9 +250,23 @@ export function SiteHeader() {
   }, [activeMega]);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/80 bg-white/85 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:px-6">
-        <Logo />
+    <>
+    <header
+      className={cn(
+        "site-header fixed z-40 border-b border-border/80",
+        // Full-viewport overlay while the drawer is open. A sticky bar plus
+        // overflow:hidden on the document unsticks the header and parks the
+        // panel at document top, so opening the menu after a scroll either
+        // clips it or freezes the page with the drawer off-screen.
+        // inset-0 (not h-dvh) tracks the visual viewport on iOS. Opaque white
+        // while open so backdrop-blur is not on the same node as the overlay.
+        open
+          ? "inset-0 z-[60] flex flex-col bg-white overscroll-none lg:inset-x-0 lg:top-0 lg:bottom-auto lg:z-40"
+          : "inset-x-0 top-0 bg-white/85 backdrop-blur-md"
+      )}
+    >
+      <div className="mx-auto flex h-16 w-full max-w-7xl shrink-0 items-center gap-4 px-4 sm:px-6">
+        <Logo onClick={() => setOpen(false)} />
 
         <nav
           className={cn("hidden min-w-0 flex-1 items-center", NAV_DESKTOP)}
@@ -478,7 +533,7 @@ export function SiteHeader() {
           bordered square beside the hamburger on mobile, an icon with a label
           and a shortcut hint on desktop.
         */}
-        <SiteSearch className="ml-auto lg:ml-0" />
+        <SiteSearch className="ml-auto lg:ml-0" onOpen={() => setOpen(false)} />
 
         <div className={cn("hidden items-center gap-2", NAV_DESKTOP)}>
           {signedIn ? (
@@ -506,6 +561,8 @@ export function SiteHeader() {
             NAV_MOBILE_ONLY
           )}
           onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          aria-controls="site-mobile-nav"
           aria-label={open ? "Close menu" : "Open menu"}
         >
           {open ? <X className="size-5" /> : <Menu className="size-5" />}
@@ -513,13 +570,14 @@ export function SiteHeader() {
       </div>
 
       <div
+        id="site-mobile-nav"
         className={cn(
           "border-t border-border bg-white lg:hidden",
-          // Fill the viewport under the h-16 bar and scroll inside. Otherwise
-          // a long Features list grows the sticky header past the screen and
-          // touch-scroll moves the page underneath the open menu.
+          // Flex-fill the remaining overlay and scroll inside it. The header
+          // is position:fixed, so this panel stays glued to the viewport
+          // instead of the document top.
           open
-            ? "block max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain"
+            ? "min-h-0 flex-1 overflow-y-auto overscroll-contain pb-[env(safe-area-inset-bottom)]"
             : "hidden"
         )}
       >
@@ -667,6 +725,9 @@ export function SiteHeader() {
         </div>
       </div>
     </header>
+    {/* Reserve the bar: fixed headers are out of flow. */}
+    <div className="site-header-spacer h-16" aria-hidden />
+    </>
   );
 }
 

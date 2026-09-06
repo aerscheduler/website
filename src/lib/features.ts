@@ -57,6 +57,7 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
       "Multi-day trips. Out Friday, back Sunday, one reservation, and the tail is gone in between",
       "Optional cancel locks, late-cancel fees, and caps on upcoming bookings",
       "Booking approval: selected roles submit requests; staff approve from the desk queue",
+      "Public discovery-flight requests: share a link or embed a picker. Guests confirm by email, then the desk approves. This is a request, not instant booking",
       "Standby and timed offers for cancels, plus optional AI fill of matching idle aircraft time",
       "Ramp-out to ramp-in with Hobbs, tach, and fuel, then an invoice draft",
       "Conflict-aware create and edit so double-books don’t leave the desk",

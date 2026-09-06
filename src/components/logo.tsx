@@ -16,15 +16,18 @@ const LOGO_ON_DARK = "/brand/logo-blue.png";
 export function Logo({
   className,
   onDark = false,
+  onClick,
 }: {
   className?: string;
   onDark?: boolean;
+  onClick?: () => void;
 }) {
   return (
     <Link
       href="/"
       className={cn("inline-flex items-center gap-2.5", className)}
       aria-label="AerScheduler home"
+      onClick={onClick}
     >
       <Image
         src={onDark ? LOGO_ON_DARK : LOGO_ON_LIGHT}

@@ -255,6 +255,26 @@ body {
   animation: sky-drift-b 24s ease-in-out infinite alternate;
 }
 
+/*
+  The time-of-day sky is authored for the desktop hero, where the product mock
+  covers the saturated right-hand wash and the headline sits on a light left
+  edge. On a phone the mock stacks under the copy, so night (and dusk) paint
+  dark colour onto navy type. Keep the midday sky below the stacked-hero
+  breakpoint (lg, 1024px) and drop the drift, which is easy to miss and
+  expensive on a small screen.
+*/
+@media (max-width: 1023px) {
+  .sky {
+    animation: none !important;
+  }
+  .sky:not(.sky--midday) { /* em-dash-ok: BEM modifier */
+    opacity: 0 !important;
+  }
+  .sky--midday { /* em-dash-ok: BEM modifier */
+    opacity: 1 !important;
+  }
+}
+
 @keyframes sky-drift-a {
   from {
     transform: translate3d(0, 0, 0) scale(1);
@@ -679,5 +699,16 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .band-sky {
     transition: none !important;
+  }
+}
+
+@media print {
+  .site-header {
+    position: static !important;
+    inset: auto !important;
+    height: auto !important;
+  }
+  .site-header-spacer {
+    display: none;
   }
 }
