@@ -1,0 +1,106 @@
+<Summary>
+On a new booking, staff can choose <strong>Charge a package price when booked</strong>
+instead of billing Hobbs after the flight. AerScheduler emails a Stripe invoice for that
+fixed amount as soon as the reservation is created. The guest can pay any time, including
+the day of. Instructors see <strong>Collect payment</strong> until it is paid. Public
+discovery offerings use the same style: set it on the offering, and approval copies it
+onto the booking.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers, Instructors</Roles>
+
+This is a collection style on the reservation, not a separate checkout only for
+`/book`. A discovery page, a walk-up guest on the calendar, and a dual you book at the
+desk all use the same two choices.
+
+## The two styles
+
+| Style | When money is collected | What close-out does |
+|---|---|---|
+| **Bill after the flight** (default) | After ramp-in and sign-off, from Hobbs and instruction | Raises the usual flight invoice or ledger charge |
+| **Charge a package price when booked** | When the reservation is created | Still records Hobbs and tach. Does not mint a second flight invoice while the package bill stands |
+
+It is a package price in dollars, not a percentage deposit, and not an authorization hold.
+
+## From the calendar
+
+Open a new booking on <Where app="web">Calendar</Where> (staff only, not self-book, not
+maintenance). Under **How this booking is billed**, pick **Charge a package price when
+booked** and enter the amount. Save. Stripe emails the invoice through the same path as
+[Create a manual invoice](/docs/billing/create-a-manual-invoice).
+
+Connect Stripe first for guests and for invoice-mode members. Ledger-mode members
+are debited on their account instead. See
+[Turn on invoicing and card payments](/docs/billing/turn-on-invoicing-and-card-payments)
+and [How billing works](/docs/billing/how-billing-works).
+
+Repeating series cannot use this style: each occurrence would otherwise raise its own
+package bill. Maintenance cannot either.
+
+<Callout type="info">
+If the booking is cancelled, AerScheduler undoes the package bill. An unpaid Stripe
+invoice is voided. A paid Stripe invoice is refunded. A ledger debit is reversed.
+Connect Stripe (or use ledger mode for members) before you charge when booked.
+</Callout>
+
+## From a public offering
+
+<Where app="web">Settings → Booking offerings</Where>, on the offering. Under **How this
+offering is billed**, pick the same package style and amount. When the desk approves a
+guest request, the reservation is created with that style. The guest is emailed the
+Stripe invoice with the approval mail.
+
+The public page can show the package price. Paying it is still Stripe hosted checkout,
+not a card form on `/book`. Confirming the request email is not proof of payment.
+
+## After the flight
+
+The guest does not have to pay before they fly. Instructors must still be able to tell
+unpaid from paid.
+
+<Steps>
+<Step n={1} title="Confirm the booking">
+On the calendar, Save a walk-up guest with the package style, or approve a public request
+whose offering uses it. Stripe emails the invoice with the confirmation. Confirming the
+request email is not proof of payment.
+</Step>
+<Step n={2} title="Fly">
+Ramp out and ramp in as usual so the meters move. An unpaid package does not block dispatch.
+The booking shows <strong>Collect payment</strong> until the invoice is paid.
+
+<Screenshot id="package-payment-collect" />
+</Step>
+<Step n={3} title="Close out">
+On a guest booking, click <strong>Close out (collect package)</strong> (or Close out, if
+they already paid). Enter nothing extra for Hobbs billing: close-out records the flight
+and does not mint a second invoice while the package bill stands, paid or unpaid.
+</Step>
+<Step n={4} title="Collect or verify payment">
+If the banner still says Collect payment, open the pay link and send it, or wait for the
+guest to pay. Once Stripe marks the invoice paid, the booking shows <strong>Package paid</strong>.
+Ledger-mode members are already charged to their account at book, so there is nothing to
+collect from them.
+
+<Screenshot id="package-payment-paid" />
+</Step>
+</Steps>
+
+The package invoice is tied to the booking for reports. It is kept off the ordinary
+flight-invoice list so dispatch still treats the booking as needing ramp-out.
+
+If the package invoice never raised (Stripe not connected, or the charge was refused),
+the reservation is cancelled so you do not hold a tail with no bill.
+
+## Related
+
+<CardGrid>
+<DocCard href="/docs/billing/bill-a-discovery-or-guest-flight" title="Bill a discovery or guest flight">
+The close-out path when you bill after the hop instead.
+</DocCard>
+<DocCard href="/docs/scheduling/public-booking-requests" title="Public booking links">
+Share a discovery page. Approval uses this collection style when the offering is set to charge when booked.
+</DocCard>
+<DocCard href="/docs/billing/how-billing-works" title="How billing works">
+Invoice vs ledger, and what close-out prices when you bill after the flight.
+</DocCard>
+</CardGrid>

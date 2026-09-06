@@ -461,11 +461,19 @@ export const DOC_SECTIONS: DocSection[] = [
           },
           {
             q: "Does submitting a request hold the aircraft?",
-            a: "No. The time can be taken by another booking while you decide. If you approve too late, the same conflict checks as a normal booking still apply.",
+            a: "Only when the offering lets the guest pick an aircraft. That tail is held until the request expires, is declined, or you approve it. Without pick-aircraft, the desk assigns a plane at approval and the slot is not held.",
           },
           {
             q: "When does the front desk see a guest request?",
             a: "After the guest confirms the email link. Unconfirmed requests stay off the pending queue and expire after 24 hours.",
+          },
+          {
+            q: "Can I invite a public guest as a student or renter?",
+            a: "Yes, after you approve the request. Calendar → Booking requests keeps approved public guests for 30 days with Invite as student and Invite as renter. That sends a normal invitation to the email they used.",
+          },
+          {
+            q: "Can the public page charge a discovery price?",
+            a: "Yes, by using the same Charge a package price when booked style as a calendar booking. Set it on the offering. It is not a separate checkout only for /book, and it is not a percentage deposit.",
           },
           {
             q: "Can I embed the request page on our school website?",
@@ -476,6 +484,7 @@ export const DOC_SECTIONS: DocSection[] = [
           "/docs/scheduling/booking-approval-requests",
           "/docs/scheduling/booking-rules-and-settings",
           "/docs/scheduling/calendar-visibility",
+          "/docs/billing/charge-a-package-price-when-booked",
         ],
       },
       {
@@ -851,6 +860,38 @@ export const DOC_SECTIONS: DocSection[] = [
         kind: "task",
         audience: ["Owners", "Admins"],
         seoQuery: "flight school overnight minimum aircraft rental charge per night",
+      },
+      {
+        slug: "charge-a-package-price-when-booked",
+        title: "Charge a package price when the booking is created",
+        description:
+          "Staff invoice a fixed package amount when a reservation is created. The guest can pay any time. Instructors see Collect payment until it is paid. Close-out records Hobbs and does not bill the hop twice.",
+        kind: "task",
+        audience: ["Owners", "Admins", "Dispatchers", "Instructors"],
+        seoQuery: "charge discovery flight before the lesson flight school software",
+        faqs: [
+          {
+            q: "Is this a deposit?",
+            a: "No. It is the package price in dollars, invoiced through Stripe when the reservation is created. Close-out still records Hobbs and does not bill the flight a second time while that invoice stands.",
+          },
+          {
+            q: "Does this only apply to the public /book page?",
+            a: "No. It is a collection style on the reservation. The calendar booking form has the same control. An offering can default to it so public approvals copy those fields onto the booking.",
+          },
+          {
+            q: "Can I use this with Account ledger members?",
+            a: "Yes for members. Ledger-mode members are debited on their account when the reservation is created. Guests always get a Stripe invoice, even at a ledger school.",
+          },
+          {
+            q: "Can the guest fly before they pay?",
+            a: "Yes. The invoice is sent when you confirm the booking. They can pay any time, including the day of. Instructors see Collect payment on the booking until the invoice is paid. Close-out records Hobbs and does not bill the hop a second time.",
+          },
+        ],
+        related: [
+          "/docs/billing/bill-a-discovery-or-guest-flight",
+          "/docs/scheduling/public-booking-requests",
+          "/docs/billing/how-billing-works",
+        ],
       },
       {
         slug: "bill-a-discovery-or-guest-flight",

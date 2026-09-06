@@ -133,6 +133,9 @@ export function SiteHeader() {
     {}
   );
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Link clicks close the drawer before the App Router commits. Restoring the
+  // origin offset in that window lands the next page at the old scrollY.
+  const restoreOnCloseRef = useRef(true);
 
   const clearCloseTimer = useCallback(() => {
     if (closeTimer.current) {
@@ -225,6 +228,9 @@ export function SiteHeader() {
       body.style.right = prev.right;
       body.style.width = prev.width;
       body.style.overflow = prev.overflow;
+      const shouldRestore = restoreOnCloseRef.current;
+      restoreOnCloseRef.current = true;
+      if (!shouldRestore) return;
       if (window.location.pathname !== lockedPath) return;
       // "instant" ignores html { scroll-behavior: smooth }; "auto" does not.
       window.scrollTo({ top: y, left: 0, behavior: "instant" });
@@ -252,6 +258,12 @@ export function SiteHeader() {
   return (
     <>
     <header
+      onClickCapture={(e) => {
+        if (!open) return;
+        if ((e.target as HTMLElement).closest("a")) {
+          restoreOnCloseRef.current = false;
+        }
+      }}
       className={cn(
         "site-header fixed z-40 border-b border-border/80",
         // Full-viewport overlay while the drawer is open. A sticky bar plus

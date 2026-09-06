@@ -26,9 +26,11 @@ Every billable flight follows the same path. Only step 4 and 5 change with the m
 
 <Steps>
 <Step n={1} title="The flight is booked">
-Nothing is priced yet. The booking decides which aircraft and which people are involved,
-and both feed the bill later. On Account ledger, self-book can also be refused for low
-credit or too much owing. See
+By default nothing is priced yet. The booking decides which aircraft and which people
+are involved, and both feed the bill at close-out. Staff can instead
+[charge a package price when booked](/docs/billing/charge-a-package-price-when-booked):
+Stripe invoices that amount when the reservation is created. On Account ledger,
+self-book can also be refused for low credit or too much owing. See
 [Booking rules and settings](/docs/scheduling/booking-rules-and-settings#account-ledger-booking-gates).
 </Step>
 <Step n={2} title="Ramp out, then ramp in">
@@ -198,6 +200,9 @@ Bill each booking, or use a member account balance. Guests always get a visit in
 </DocCard>
 <DocCard href="/docs/billing/manage-a-member-account-ledger" title="Manage a member's account ledger">
 Add funds, auto-refill, late fees, statements, receipts, refunds, and reassign.
+</DocCard>
+<DocCard href="/docs/billing/charge-a-package-price-when-booked" title="Charge a package price when booked">
+Invoice a fixed amount when the reservation is created, including public discovery offerings.
 </DocCard>
 <DocCard href="/docs/billing/close-out-a-flight-and-bill-it" title="Close out a flight so it invoices">
 Ramp out, ramp in, confirm with a PIN, and the bill is posted.

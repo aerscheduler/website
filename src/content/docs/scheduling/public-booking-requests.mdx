@@ -15,7 +15,10 @@ confirmation link. After they confirm, the request appears in the same queue as
 member approval requests.
 
 This is not instant booking. The front desk still approves or declines it. Until
-you approve, nothing is on the board, and the slot is not held.
+you approve, nothing is on the board. If the offering lets the guest pick an
+aircraft, that tail is held until the request expires, is declined, or you
+approve it. Without pick-aircraft, the desk assigns the plane at approval and
+the time is not held.
 
 <Callout type="note">
 Students and renters who already have accounts keep using **Book** as they do
@@ -72,11 +75,28 @@ Guest rows show the name they entered rather than a member account. **Approve**
 creates a reservation (usually a guest on the flight). **Decline** emails them
 and closes the request.
 
-<Callout type="warning">
-A request does not hold the slot. Another booking can take the time while you
-are deciding. If you approve too late, the same conflict checks as a normal
-booking still apply.
-</Callout>
+If the offering lets the guest pick an aircraft, that tail stays occupied (same
+as a pending slot offer) until you approve, decline, or the request expires.
+Without pick-aircraft, another booking can still take a plane while you decide.
+Approve still runs the same conflict checks as a normal booking.
+
+After you approve a public guest, the queue keeps them for 30 days with
+**Invite as student** and **Invite as renter**. That sends a normal invitation
+to the email they used. The reservation already exists.
+
+## Package price
+
+An offering can use **Charge a package price when booked**, the same collection
+style as a staff calendar booking. Approval copies those fields onto the
+reservation and Stripe invoices the package amount. It is not a percentage
+deposit, and it is not a checkout that exists only on `/book`. See
+[Charge a package price when booked](/docs/billing/charge-a-package-price-when-booked).
+
+## Guest page look
+
+Under the public booking card you can set an accent color, light/dark/system,
+comfortable or compact density, and rounded or sharp corners. The school logo
+is already the header. There is no custom CSS or scripts.
 
 ## What can go wrong
 
@@ -97,5 +117,8 @@ The same queue for students and renters who must request before they fly.
 </DocCard>
 <DocCard href="/docs/scheduling/booking-rules-and-settings" title="Booking rules and settings">
 Notice, horizon, buffers, and the other calendar rules guest slots still follow.
+</DocCard>
+<DocCard href="/docs/billing/charge-a-package-price-when-booked" title="Charge a package price when booked">
+Invoice a fixed amount when the reservation is created, on the calendar or from an offering.
 </DocCard>
 </CardGrid>

@@ -2224,6 +2224,35 @@
                       "format": "uri"
                     },
                     "description": "HTTPS origins allowed to iframe /book pages, stored like https://www.yourschool.com. Empty keeps the share link only. No wildcards, no IP addresses except localhost/127.0.0.1. Public hosts must be https. Demo organizations are refused."
+                  },
+                  "publicBookingAccentHex": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "description": "Guest /book accent, #RRGGBB. Null clears it."
+                  },
+                  "publicBookingAppearance": {
+                    "type": "string",
+                    "enum": [
+                      "light",
+                      "dark",
+                      "system"
+                    ]
+                  },
+                  "publicBookingDensity": {
+                    "type": "string",
+                    "enum": [
+                      "compact",
+                      "comfortable"
+                    ]
+                  },
+                  "publicBookingCornerStyle": {
+                    "type": "string",
+                    "enum": [
+                      "rounded",
+                      "sharp"
+                    ]
                   }
                 }
               }
@@ -6483,6 +6512,21 @@
                   "recurrence": {
                     "type": "object",
                     "description": "Optional. Creates a repeating series."
+                  },
+                  "collectionStyle": {
+                    "type": "string",
+                    "enum": [
+                      "close_out",
+                      "prepaid_fixed"
+                    ],
+                    "description": "When to collect. close_out (default) bills after the flight. prepaid_fixed invoices prepaidAmountCents when the reservation is created. Same style for desk calendar bookings and public offering approvals. Invoice-mode members and all guests get a Stripe invoice. Ledger-mode members get a ledger debit. Refused on recurring series and maintenance. Cancelling voids an unpaid invoice, refunds a paid one, or reverses the ledger debit."
+                  },
+                  "prepaidAmountCents": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "description": "Package price in cents. Required when collectionStyle is prepaid_fixed, at least 50."
                   }
                 },
                 "required": [
@@ -20451,7 +20495,7 @@
           "Booking requests"
         ],
         "summary": "List pending booking requests",
-        "description": "Owners, admins, and dispatchers can list pending requests for their organization.",
+        "description": "Owners, admins, and dispatchers can list pending requests for their organization. Also returns recently approved public guests who have not yet been invited as a student or renter.",
         "responses": {
           "200": {
             "description": "The pending booking requests.",
@@ -21163,6 +21207,117 @@
         ]
       }
     },
+    "/booking-requests/{id}/convert": {
+      "post": {
+        "tags": [
+          "Booking requests"
+        ],
+        "summary": "Invite a public guest as a member",
+        "description": "After a public guest request is approved, desk staff can send a student or renter invitation to the guest email. Demo organizations are refused.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/BookingRequest"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Only an approved public guest request can be converted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Approve the request before inviting them as a member.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "convertBookingRequestGuest",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The booking request id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The membership to offer.",
+                "properties": {
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "student",
+                      "renter"
+                    ]
+                  }
+                },
+                "required": [
+                  "role"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
     "/booking-offerings/visibility": {
       "get": {
         "tags": [
@@ -21519,6 +21674,19 @@
                   },
                   "allowResourceChoice": {
                     "type": "boolean"
+                  },
+                  "collectionStyle": {
+                    "type": "string",
+                    "enum": [
+                      "close_out",
+                      "prepaid_fixed"
+                    ]
+                  },
+                  "prepaidAmountCents": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
                   }
                 },
                 "required": [
@@ -21736,11 +21904,18 @@
                   "allowResourceChoice": {
                     "type": "boolean"
                   },
-                  "allowInstructorChoice": {
-                    "type": "boolean"
+                  "collectionStyle": {
+                    "type": "string",
+                    "enum": [
+                      "close_out",
+                      "prepaid_fixed"
+                    ]
                   },
-                  "allowLocationChoice": {
-                    "type": "boolean"
+                  "prepaidAmountCents": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
                   },
                   "questions": {
                     "type": "object",
@@ -28123,6 +28298,25 @@
             },
             "description": "HTTPS origins allowed to iframe /book pages. Empty means the share link only. AerScheduler itself can always open the page. Present on settings PATCH responses; not returned by GET /organizations/{orgId}."
           },
+          "publicBookingAccentHex": {
+            "description": "Guest /book accent color, #RRGGBB.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "publicBookingAppearance": {
+            "type": "string",
+            "description": "Guest page appearance: light, dark, or system."
+          },
+          "publicBookingDensity": {
+            "type": "string",
+            "description": "Guest page density: compact or comfortable."
+          },
+          "publicBookingCornerStyle": {
+            "type": "string",
+            "description": "Guest page corners: rounded or sharp."
+          },
           "details": {
             "type": "object",
             "description": "Contact details.",
@@ -29012,9 +29206,28 @@
             },
             "additionalProperties": true
           },
+          "collectionStyle": {
+            "type": "string",
+            "description": "When money is collected. `close_out` (default) prices Hobbs after the flight. `prepaid_fixed` invoices a package amount when the reservation is created. Public offerings copy this onto the booking at approval. Not a public-calendar-only checkout.",
+            "enum": [
+              "close_out",
+              "prepaid_fixed"
+            ]
+          },
+          "prepaidAmountCents": {
+            "description": "Package price in cents when collectionStyle is prepaid_fixed.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "prepaidInvoice": {
+            "$ref": "#/components/schemas/Invoice",
+            "description": "The package invoice when collectionStyle is prepaid_fixed. Kept off `invoices[]` so ramp-out and close-out still run."
+          },
           "invoices": {
             "type": "array",
-            "description": "ONE PER PAYER. A booking shared between several people mints an invoice each, a Stripe invoice bills exactly one customer. A booking with one payer has an array of one, and an un-billed booking has an empty array.\n\nDo not read `invoices[0]` as \"the invoice\": on a split booking that is one person's share. Ask whether EVERY payer has one.",
+            "description": "ONE PER PAYER. A booking shared between several people mints an invoice each, a Stripe invoice bills exactly one customer. A booking with one payer has an array of one, and an un-billed booking has an empty array.\n\nDo not read `invoices[0]` as \"the invoice\": on a split booking that is one person's share. Ask whether EVERY payer has one.\n\nPackage invoices from prepaid_fixed are not in this array; they are `prepaidInvoice`.",
             "items": {
               "$ref": "#/components/schemas/Invoice"
             }
@@ -32127,6 +32340,21 @@
               "null"
             ]
           },
+          "convertedAt": {
+            "format": "date-time",
+            "description": "When a public guest was invited as a student or renter.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "convertRole": {
+            "description": "student or renter, after conversion.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "events": {
             "type": "array",
             "items": {
@@ -32283,15 +32511,22 @@
           },
           "allowResourceChoice": {
             "type": "boolean",
-            "description": "Whether the requester may pick an aircraft/sim."
+            "description": "Whether the requester may pick an aircraft/sim. A picked tail is held until the request expires, is declined, or is approved."
           },
-          "allowInstructorChoice": {
-            "type": "boolean",
-            "description": "Whether the requester may pick an instructor."
+          "collectionStyle": {
+            "type": "string",
+            "description": "Default collection style copied onto the reservation at approval.",
+            "enum": [
+              "close_out",
+              "prepaid_fixed"
+            ]
           },
-          "allowLocationChoice": {
-            "type": "boolean",
-            "description": "Whether the requester may pick a location."
+          "prepaidAmountCents": {
+            "description": "Package price in cents when collectionStyle is prepaid_fixed.",
+            "type": [
+              "integer",
+              "null"
+            ]
           },
           "questions": {
             "type": [
@@ -32400,6 +32635,32 @@
                   "format": "uri"
                 },
                 "description": "Origins allowed to iframe this page, like https://www.yourschool.com. Empty means the share link only."
+              },
+              "brand": {
+                "type": "object",
+                "description": "Bounded guest-page look. No custom CSS.",
+                "properties": {
+                  "accentHex": {
+                    "description": "Accent #RRGGBB.",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "appearance": {
+                    "type": "string",
+                    "description": "light, dark, or system."
+                  },
+                  "density": {
+                    "type": "string",
+                    "description": "compact or comfortable."
+                  },
+                  "cornerStyle": {
+                    "type": "string",
+                    "description": "rounded or sharp."
+                  }
+                },
+                "additionalProperties": true
               }
             },
             "additionalProperties": false
@@ -32437,6 +32698,17 @@
               "allowResourceChoice": {
                 "type": "boolean",
                 "description": "Whether the guest may pick an aircraft."
+              },
+              "collectionStyle": {
+                "type": "string",
+                "description": "close_out or prepaid_fixed."
+              },
+              "prepaidAmountCents": {
+                "description": "Package price in cents when prepaid_fixed.",
+                "type": [
+                  "integer",
+                  "null"
+                ]
               },
               "location": {
                 "type": [

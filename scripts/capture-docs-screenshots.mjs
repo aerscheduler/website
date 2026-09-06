@@ -683,6 +683,12 @@ async function resolvePlaceholders(page) {
     splitReservationId: pick((r) => step(r) !== "invoiced" && billable(r) > 1)?.id,
     // Billed, and preferably split, so the summary carries its "one of N shares" line.
     invoicedReservationId: pick((r) => live(r) > 1)?.id ?? pick((r) => live(r) === 1)?.id,
+    // Package-when-booked: unpaid vs paid banners on Close-out. prepaidInvoice is
+    // a sibling of invoices, not in that list (flight invoices exclude purpose prepaid).
+    prepaidUnpaidReservationId: pick(
+      (r) => r.prepaidInvoice && !r.prepaidInvoice.paidAt && !r.prepaidInvoice.voidedAt
+    )?.id,
+    prepaidPaidReservationId: pick((r) => r.prepaidInvoice?.paidAt)?.id,
     // Instruction with a student on it, far enough along that the close-out has
     // figures to prefill the training record from.
     trainingReservationId: pick(

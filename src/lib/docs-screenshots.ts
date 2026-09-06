@@ -749,6 +749,24 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     open: ['button:has-text("Close out")'],
   },
   {
+    id: "package-payment-collect",
+    screen: "Close-out, Collect payment",
+    route: "/schedule?reservation={prepaidUnpaidReservationId}",
+    alt: "Collect payment banner on a guest booking with an unpaid package invoice",
+    dataState:
+      "A guest booking charged a package price when booked, Stripe invoice still unpaid, Close-out section showing Collect payment and Open pay link.",
+    crop: '[data-doc-shot="package-payment-collect"]',
+  },
+  {
+    id: "package-payment-paid",
+    screen: "Close-out, Package paid",
+    route: "/schedule?reservation={prepaidPaidReservationId}",
+    alt: "Package paid banner on a guest booking after the package invoice is paid",
+    dataState:
+      "A guest booking charged a package price when booked, Stripe invoice paid, Close-out section showing Package paid.",
+    crop: '[data-doc-shot="package-payment-paid"]',
+  },
+  {
     id: "cost-splitting-summary",
     screen: "Settings, Cost splitting",
     route: "/settings?tab=cost-splitting",
