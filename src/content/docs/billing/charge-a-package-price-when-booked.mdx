@@ -71,13 +71,14 @@ The booking shows <strong>Collect payment</strong> until the invoice is paid.
 <Screenshot id="package-payment-collect" />
 </Step>
 <Step n={3} title="Close out">
-On a guest booking, click <strong>Close out (collect package)</strong> (or Close out, if
+On a guest booking, click <strong>Close out (collect payment)</strong> (or Close out, if
 they already paid). Enter nothing extra for Hobbs billing: close-out records the flight
-and does not mint a second invoice while the package bill stands, paid or unpaid.
+and does not mint a second invoice while that bill stands, paid or unpaid.
 </Step>
 <Step n={4} title="Collect or verify payment">
-If the banner still says Collect payment, open the pay link and send it, or wait for the
-guest to pay. Once Stripe marks the invoice paid, the booking shows <strong>Package paid</strong>.
+If the banner still says Collect payment, open the pay link and send it, wait for the
+guest to pay, or click **Record check** / **Record cash** on the booking if they already
+paid at the desk. Once it is paid, the booking shows <strong>Paid</strong>.
 Ledger-mode members are already charged to their account at book, so there is nothing to
 collect from them.
 
@@ -88,8 +89,11 @@ collect from them.
 The package invoice is tied to the booking for reports. It is kept off the ordinary
 flight-invoice list so dispatch still treats the booking as needing ramp-out.
 
-If the package invoice never raised (Stripe not connected, or the charge was refused),
-the reservation is cancelled so you do not hold a tail with no bill.
+If the invoice never raised (Stripe not connected, or the charge was refused), a
+desk booking is cancelled so you do not hold a tail with no bill. If the booking is already
+on the calendar and the invoice still did not go out, the booking shows **Invoice did
+not go out**. Send the Stripe invoice from there, or record a check or cash, so
+close-out does not bill Hobbs a second time.
 
 ## Related
 
@@ -102,5 +106,8 @@ Share a discovery page. Approval uses this collection style when the offering is
 </DocCard>
 <DocCard href="/docs/billing/how-billing-works" title="How billing works">
 Invoice vs ledger, and what close-out prices when you bill after the flight.
+</DocCard>
+<DocCard href="/docs/billing/mark-an-invoice-paid-void-or-refund-it" title="Mark paid, void or refund">
+Record a check or cash on the booking, or from Billing for other invoices.
 </DocCard>
 </CardGrid>

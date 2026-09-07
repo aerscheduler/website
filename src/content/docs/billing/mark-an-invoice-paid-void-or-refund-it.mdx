@@ -5,7 +5,7 @@ only works while it is still unpaid. There is no refund in AerScheduler: a refun
 in your own Stripe dashboard.
 </Summary>
 
-<Roles>Owners, Admins</Roles>
+<Roles>Owners, Admins, Dispatchers, Instructors</Roles>
 
 ## Mark an invoice paid after cash, check or bank transfer
 
@@ -39,6 +39,19 @@ Two things can stop you:
 - **Stripe could not be reached.** You get a warning rather than an error, saying the
   invoice was marked paid here but Stripe could not be updated. The invoice is correct in
   AerScheduler; go and mark it paid in Stripe too, or the two will not agree.
+
+## Record check or cash on a package booking
+
+For a discovery or other package-price booking, you do not have to open Billing. On the
+booking itself, desk staff, the instructor on it, or the person who created it can click
+**Record check** or **Record cash**. That marks the invoice paid the same way Mark
+paid does.
+
+If the booking is on the calendar but the invoice never went out, the banner says
+**Invoice did not go out**. Send the Stripe invoice from there, or record the check
+or cash, so close-out does not bill Hobbs a second time.
+
+See [Charge a package price when booked](/docs/billing/charge-a-package-price-when-booked).
 
 ## Void an invoice
 
@@ -117,13 +130,13 @@ instead. It only comes back if you void every invoice on the booking.
 
 ## Who is allowed to do this
 
-| Role | Mark paid | Void | Send reminder |
-|---|---|---|---|
-| Owner | Yes | Yes | Yes |
-| Admin | Yes | Yes | Yes |
-| Dispatcher | No | No | No |
-| Instructor | No | No | No |
-| Student, renter | No | No | No |
+| Role | Mark paid (Billing) | Record check/cash on a package booking | Void | Send reminder |
+|---|---|---|---|---|
+| Owner | Yes | Yes | Yes | Yes |
+| Admin | Yes | Yes | Yes | Yes |
+| Dispatcher | No | Yes, on bookings they collect | No | No |
+| Instructor | No | Yes, on bookings they instructed or created | No | No |
+| Student, renter | No | No | No | No |
 
 Dispatchers cannot open the Billing page at all. Full detail in
 [Who can see and do what in billing](/docs/billing/who-can-do-what-in-billing).
@@ -131,6 +144,9 @@ Dispatchers cannot open the Billing page at all. Full detail in
 ## Related
 
 <CardGrid>
+<DocCard href="/docs/billing/charge-a-package-price-when-booked" title="Charge a package price when booked">
+Send the invoice or record a check on the booking itself.
+</DocCard>
 <DocCard href="/docs/billing/chase-unpaid-invoices" title="Chase an unpaid invoice">
 Reminders and grounding, for the invoices you do want paid.
 </DocCard>

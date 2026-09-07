@@ -39,7 +39,7 @@ save is refused, the owner has to make the change.
 | Open Accounts (ledger balances who owes) | Yes | Yes | No | No | No | No |
 | See financial reports | Yes | Yes | No | No | No | No |
 | Create a manual invoice | Yes | Yes | Only if switched on | Only if switched on | No | No |
-| Mark an invoice paid | Yes | Yes | No | No | No | No |
+| Mark an invoice paid | Yes | Yes | On a package booking they collect | On a package booking they instructed or created | No | No |
 | Void an invoice | Yes | Yes | No | No | No | No |
 | Send a payment reminder | Yes | Yes | No | No | No | No |
 | Set cost-splitting rules | Yes | Yes | No | No | No | No |
@@ -107,8 +107,9 @@ A dispatcher who opens <Where app="web">Billing</Where> is sent back to their ow
 page. The organization-wide invoice list is admin-only.
 </Callout>
 
-They cannot mark an invoice paid, void one, see any financial report, or see anyone's
-membership. They can create a manual invoice only if the school has switched on
+They cannot mark an invoice paid from Billing, void one, see any financial report, or see anyone's
+membership. On a package-price booking they are collecting, they can send the invoice or
+record a check or cash on that booking. They can create a manual invoice only if the school has switched on
 "Dispatchers can manually generate invoices". The owner sets that toggle in the console, on
 <Where app="web">Settings → Billing</Where>. Raising the invoice itself is still an app
 job: the console's **New invoice** button stays owner and admin only.
@@ -117,7 +118,9 @@ job: the console's **New invoice** button stays owner and admin only.
 
 An instructor can ramp out and in and fill in Who pays what on bookings they are on, and
 can [close out and bill a guest or discovery flight](/docs/billing/bill-a-discovery-or-guest-flight)
-they instructed, including viewing that guest's invoice.
+they instructed, including viewing that guest's invoice. On a package-price booking they
+instructed or created, they can send the invoice or record a check or cash so the guest
+does not have to pay through Stripe.
 
 With "Instructors can override reservation prices" switched on, they can also override the
 instruction and resource rate on a booking, from **Override payment** on the reservation
@@ -135,7 +138,8 @@ override the rates on any booking in the organization, not only the ones they ar
 </Callout>
 
 They cannot open Billing, see other members' invoices or balances, see any financial
-report, or mark anything paid.
+report, or mark a Billing invoice paid. They can record a check or cash on a package
+booking they instructed or created.
 
 ## Student and renter
 
@@ -144,6 +148,8 @@ Identical for billing purposes. Both can:
 - See their own invoices (invoice mode), or their own ledger balance, Add funds, receipts,
   and statements (Account ledger). See
   [Manage a member's account ledger](/docs/billing/manage-a-member-account-ledger).
+  On a split booking they see only their own share, not the other person's amount or pay
+  link.
 - Pay their own invoices by card, save cards, set a default, and turn on autopay. See
   [Pay your invoice and set up autopay](/docs/billing/pay-an-invoice-and-save-a-card).
 - On Account ledger, turn on **Auto-refill** on their own account (needs a default card).

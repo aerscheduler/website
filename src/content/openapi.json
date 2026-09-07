@@ -6548,7 +6548,7 @@
           "Reservations"
         ],
         "summary": "Get a reservation",
-        "description": "One booking, with personnel and close-out figures.",
+        "description": "One booking, with personnel and close-out figures. Invoice totals, Stripe pay links, and paymentOverrides follow the same rule as GET /invoices/{id}: a member does not receive another person's share or rate.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -7710,6 +7710,185 @@
                 },
                 "required": [
                   "reason"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reservations/{id}/prepaid/ensure": {
+      "post": {
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Send the package invoice",
+        "description": "Retries raising the Stripe package invoice (or ledger debit) on a prepaid_fixed booking that is already on the calendar. Does not cancel the booking if Stripe fails. Desk staff, the instructor on the booking, or the person who created it. Demo orgs are refused.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Reservation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The package invoice could not be created. The booking is still on the calendar.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "You cannot collect payment on this booking.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "ensurePrepaidInvoice",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The reservation id."
+          }
+        ]
+      }
+    },
+    "/reservations/{id}/prepaid/record-offline": {
+      "post": {
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Record a cash or check package payment",
+        "description": "Creates the package invoice if it is missing, then marks it paid out of band for cash or a check. Same people who may collect on the booking. Use this when the guest already paid at the desk, or when the package invoice never went out and they are paying by check or cash. Demo orgs are refused.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Reservation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "This booking is billed after the flight, or the invoice could not be marked paid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "You cannot collect payment on this booking.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "recordPrepaidOfflinePayment",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The reservation id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "How they paid.",
+                "properties": {
+                  "method": {
+                    "type": "string",
+                    "enum": [
+                      "cash",
+                      "check"
+                    ]
+                  }
+                },
+                "required": [
+                  "method"
                 ]
               }
             }
@@ -29227,7 +29406,7 @@
           },
           "invoices": {
             "type": "array",
-            "description": "ONE PER PAYER. A booking shared between several people mints an invoice each, a Stripe invoice bills exactly one customer. A booking with one payer has an array of one, and an un-billed booking has an empty array.\n\nDo not read `invoices[0]` as \"the invoice\": on a split booking that is one person's share. Ask whether EVERY payer has one.\n\nPackage invoices from prepaid_fixed are not in this array; they are `prepaidInvoice`.",
+            "description": "ONE PER PAYER. A booking shared between several people mints an invoice each, a Stripe invoice bills exactly one customer. A booking with one payer has an array of one, and an un-billed booking has an empty array.\n\nDo not read `invoices[0]` as \"the invoice\": on a split booking that is one person's share. Ask whether EVERY payer has one.\n\nPackage invoices from prepaid_fixed are not in this array; they are `prepaidInvoice`.\n\nAmounts, pay links, and rate overrides follow GET /invoices/{id}: a member only receives invoices billed to them (and a guest-flight instructor or creator can receive that guest package). Desk (owner, admin, dispatcher) receives every invoice on a booking they can open.",
             "items": {
               "$ref": "#/components/schemas/Invoice"
             }

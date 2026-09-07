@@ -752,18 +752,18 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     id: "package-payment-collect",
     screen: "Close-out, Collect payment",
     route: "/schedule?reservation={prepaidUnpaidReservationId}",
-    alt: "Collect payment banner on a guest booking with an unpaid package invoice",
+    alt: "Collect payment banner on a guest booking with an unpaid invoice",
     dataState:
-      "A guest booking charged a package price when booked, Stripe invoice still unpaid, Close-out section showing Collect payment and Open pay link.",
+      "A guest booking charged a fixed price when booked, Stripe invoice still unpaid, Close-out section showing Collect payment, Open pay link, Record check, and Record cash.",
     crop: '[data-doc-shot="package-payment-collect"]',
   },
   {
     id: "package-payment-paid",
-    screen: "Close-out, Package paid",
+    screen: "Close-out, Paid",
     route: "/schedule?reservation={prepaidPaidReservationId}",
-    alt: "Package paid banner on a guest booking after the package invoice is paid",
+    alt: "Paid banner on a guest booking after the invoice is paid",
     dataState:
-      "A guest booking charged a package price when booked, Stripe invoice paid, Close-out section showing Package paid.",
+      "A guest booking charged a fixed price when booked, Stripe invoice paid, Close-out section showing Paid.",
     crop: '[data-doc-shot="package-payment-paid"]',
   },
   {

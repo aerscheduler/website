@@ -886,11 +886,20 @@ export const DOC_SECTIONS: DocSection[] = [
             q: "Can the guest fly before they pay?",
             a: "Yes. The invoice is sent when you confirm the booking. They can pay any time, including the day of. Instructors see Collect payment on the booking until the invoice is paid. Close-out records Hobbs and does not bill the hop a second time.",
           },
+          {
+            q: "What if they pay by check or cash?",
+            a: "On the booking, click Record check or Record cash. Desk staff, the instructor on it, or the person who created it can do that. You do not have to open Billing first.",
+          },
+          {
+            q: "What if the invoice never went out?",
+            a: "If the booking is already on the calendar, it shows Invoice did not go out. Send the Stripe invoice from there, or record a check or cash, so close-out does not bill Hobbs a second time.",
+          },
         ],
         related: [
           "/docs/billing/bill-a-discovery-or-guest-flight",
           "/docs/scheduling/public-booking-requests",
           "/docs/billing/how-billing-works",
+          "/docs/billing/mark-an-invoice-paid-void-or-refund-it",
         ],
       },
       {
@@ -917,7 +926,7 @@ export const DOC_SECTIONS: DocSection[] = [
         description:
           "Record a cash or check payment, cancel an invoice that should never have been raised, and understand why refunds only happen in Stripe.",
         kind: "task",
-        audience: ["Admins", "Owners"],
+        audience: ["Admins", "Owners", "Dispatchers", "Instructors"],
         seoQuery: "how to refund or void a flight school invoice",
       },
       {
