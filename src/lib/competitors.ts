@@ -251,6 +251,11 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
         "Available",
       ],
       [
+        "Public discovery-flight requests",
+        "Embeddable request page. Guest confirms by email, desk approves. Not instant booking.",
+        "Not published",
+      ],
+      [
         "Integrations",
         "Stripe, Google Calendar, QuickBooks Online, plus a public REST API.",
         "Available",
@@ -327,6 +332,11 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
         "Mobile",
         "Native iOS app for the whole team. Book, dispatch and close out from the ramp.",
         "Mobile access",
+      ],
+      [
+        "Public discovery-flight requests",
+        "Embeddable request page. Guest confirms by email, desk approves. Not instant booking.",
+        "Not published",
       ],
       [
         "Integrations",

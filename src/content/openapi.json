@@ -20684,7 +20684,7 @@
           "Booking requests"
         ],
         "summary": "List pending booking requests",
-        "description": "Owners, admins, and dispatchers can list pending requests for their organization. Also returns recently approved public guests who have not yet been invited as a student or renter.",
+        "description": "Owners, admins, and dispatchers can list pending requests for their organization. Also returns recently approved public guests who have not yet been invited as a student or renter, and pick-aircraft holds that are still waiting on email confirmation (without the guest's name, email, or phone).",
         "responses": {
           "200": {
             "description": "The pending booking requests.",
@@ -22539,7 +22539,7 @@
           "Public booking"
         ],
         "summary": "Submit a public booking request",
-        "description": "Unauthenticated. Creates an unverified guest request and emails a confirmation link. The desk queue only sees the request after the guest confirms. Does not hold inventory.",
+        "description": "Unauthenticated. Creates an unverified guest request and emails a confirmation link. The desk queue only sees the request after the guest confirms. When the offering lets the guest pick an aircraft, that tail is held from submit until the request is approved, declined, or expired. Desk-assigns offerings do not hold a specific tail.",
         "responses": {
           "200": {
             "description": "Check your email to confirm.",
@@ -22562,7 +22562,7 @@
             }
           },
           "400": {
-            "description": "Missing name, email, consent, or an invalid slot.",
+            "description": "Missing name, email, phone, consent, or an invalid slot.",
             "content": {
               "application/json": {
                 "schema": {
@@ -22675,6 +22675,7 @@
                 "required": [
                   "name",
                   "email",
+                  "phone",
                   "start",
                   "end",
                   "consent"
@@ -32544,6 +32545,14 @@
               "null"
             ]
           },
+          "offering": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": true,
+            "description": "Offering this request came from, including eligible aircraft and instructors for desk approve overrides."
+          },
           "events": {
             "type": "array",
             "items": {
@@ -32613,7 +32622,7 @@
       },
       "BookingOffering": {
         "type": "object",
-        "description": "A bookable preset over org calendar policy (guest discovery flight, dual lesson, etc.).",
+        "description": "A bookable preset over org calendar policy (public guest / discovery flights).",
         "properties": {
           "id": {
             "type": "integer",
@@ -32650,7 +32659,7 @@
           },
           "reservationType": {
             "type": "string",
-            "description": "Reservation type created on approval."
+            "description": "Must be guest. Public offerings mint a guest reservation on approval."
           },
           "assignmentMode": {
             "type": "string",
@@ -32815,6 +32824,10 @@
                   "string",
                   "null"
                 ]
+              },
+              "privacyUrl": {
+                "type": "string",
+                "description": "Privacy policy URL shown on the guest form."
               },
               "embedHosts": {
                 "type": "array",

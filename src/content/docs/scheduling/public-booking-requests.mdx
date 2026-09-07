@@ -1,6 +1,6 @@
 <Summary>
-Turn on public booking under Settings → Booking links, configure offerings under
-More → Offerings, and approve guest requests from Calendar → Booking requests.
+Turn on public booking under Settings → Booking links, configure each public page under
+More → Booking links, and approve guest requests from Calendar → Booking requests.
 Guests confirm by email first. Members still book with Solo, Dual, Ground and the
 rest; offerings do not replace reservation types.
 </Summary>
@@ -10,15 +10,22 @@ rest; offerings do not replace reservation types.
 ## What guests get
 
 A public page at `/book/{your-slug}/{offering-slug}`. The guest picks an open time,
-enters name and email, and submits a **request**. AerScheduler emails them a
+enters name, email, and phone, and submits a **request**. AerScheduler emails them a
 confirmation link. After they confirm, the request appears in the same queue as
 member approval requests.
 
-This is not instant booking. The front desk still approves or declines it. Until
-you approve, nothing is on the board. If the offering lets the guest pick an
-aircraft, that tail is held until the request expires, is declined, or you
-approve it. Without pick-aircraft, the desk assigns the plane at approval and
-the time is not held.
+This is not instant booking. The front desk still approves or declines it. Offerings
+are guest-only: dual, solo, and rental stay on the member Book flow.
+
+If the offering lets the guest pick an aircraft, that tail is held until the request
+expires, is declined, or you approve it, and it shows on the Calendar like a pending
+slot offer. The hold paints as **Guest (awaiting email)** until they confirm; the
+API does not include their name or email on that row. Confirming the email fails if
+that tail was taken in the meantime. Without pick-aircraft, the desk assigns the
+plane at approval. Those unlabeled times are not reserved for the guest; once as
+many pending requests as free tails already cover a slot, the public page stops
+offering it, and later confirmation links expire instead of overfilling the slot.
+Unconfirmed unlabeled requests do not consume that capacity until the guest confirms.
 
 <Callout type="note">
 Students and renters who already have accounts keep using **Book** as they do
@@ -32,7 +39,7 @@ discovery or intro flight.
 
 1. Flip **Allow public requests**. If you have not set a link slug yet, AerScheduler
    fills one from the school name.
-2. Open **More → Offerings**. A **Discovery flight** offering is already there (60
+2. Open **More → Booking links**. A **Discovery flight** offering is already there (60
    minutes, guest type, desk assigns the plane). Add or confirm eligible aircraft,
    then edit name, price, or duration if you want. You can add more offerings later.
 3. Copy the public link from the offering's menu (**Copy public link**), or choose
@@ -43,8 +50,8 @@ Calendar visibility for **Guests (public booking)** still decides how much of th
 schedule the guest sees when picking times. Open slots only is the usual choice.
 That setting stays on Booking links.
 
-Settings → Booking links also has a **Configure booking offerings** button that
-opens the same Offerings page.
+Settings → Booking links also has a **Configure booking links** button that
+opens the same Booking links page.
 
 Public booking lives on the web console only. There is nothing to configure in
 the mobile app.
@@ -57,13 +64,14 @@ or a week of start-time buttons. They can change 12-hour vs 24-hour and the time
 
 On a phone there is only day view: the month sits above the start times, with large tap
 targets, and the window scrolls as one page. After they pick a time, the name and email
-form appears. Copy on the page says the school must approve it. They then click
+form appears. Phone is required so the desk can call. Copy on the page says the school
+must approve it, and links AerScheduler's privacy policy. They then click
 **Confirm this request** in email.
 
 To put the same page on your website, first add your site under **Websites that may
 embed** (one host per line, like `www.yourschool.com`). `www.yourschool.com` and
 `yourschool.com` are different websites: list both if both serve your pages. Then use
-the offering menu on <Where app="web">More → Offerings</Where>:
+the offering menu on <Where app="web">More → Booking links</Where>:
 **Open public link**, **Copy public link**, **Copy embed code** (inline iframe), or **Copy modal
 embed** (a button that opens the page over your site). Open public link is the same page
 guests get. Leave that
@@ -83,7 +91,9 @@ Safari and iframe-heavy hosts can still block a frame if the host you listed is 
 exact origin serving the page.
 
 If they never confirm, the request never reaches the desk. Unconfirmed requests
-expire after 24 hours, or sooner if the requested time has already passed.
+expire after 24 hours, or sooner if the requested time has already passed. Expired,
+declined, and cancelled public requests that never became a reservation have the
+guest's name, email, phone, and notes removed.
 
 ## Approve or decline
 
@@ -93,9 +103,12 @@ creates a reservation (usually a guest on the flight). **Decline** emails them
 and closes the request.
 
 If the offering lets the guest pick an aircraft, that tail stays occupied (same
-as a pending slot offer) until you approve, decline, or the request expires.
-Without pick-aircraft, another booking can still take a plane while you decide.
-Approve still runs the same conflict checks as a normal booking.
+as a pending slot offer) until you approve, decline, or the request expires, and
+the Calendar paints the hold. You can pick a different eligible aircraft or
+instructor when you approve. Aircraft and instructors have to be on the offering.
+Without pick-aircraft, another booking can still take a plane while you decide,
+unless that slot already has as many pending unlabeled requests as there are free
+tails. Approve still runs the same conflict checks as a normal booking.
 
 After you approve a public guest, the queue keeps them for 30 days with
 **Invite as student** and **Invite as renter**. That sends a normal invitation

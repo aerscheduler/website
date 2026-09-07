@@ -1,17 +1,18 @@
 <Summary>
-<Where app="web">Settings</Where> is one page with a left rail of fourteen sections in four
+<Where app="web">Settings</Where> is one page with a left rail of fifteen sections in four
 groups: **School**, **Billing**, **Connections** and **Security**. The gear icon in the topbar only
 appears for admins and owners, and nobody else can open the page.
 </Summary>
 
 <Roles>Owners, Admins</Roles>
 
-## The fourteen sections
+## The fifteen sections
 
 | Group | Section | What it holds |
 |---|---|---|
 | School | Organization | Name, contact details, logo, join code, time zone |
 | School | Booking preferences | Four rules about who can book what |
+| School | Booking links | Public slug, embed hosts, guest calendar visibility, and branding for `/book` pages |
 | School | Groups | Named sets of aircraft and of people |
 | School | Document types | The categories members file documents under |
 | School | Airworthiness Directives | AD applicability tracking for your fleet |
@@ -75,6 +76,13 @@ configure currencies under Compliance. They are not a toggle on this tab.
 See [Booking rules and settings](/docs/scheduling/booking-rules-and-settings) for the full
 story, including
 [account ledger book and dispatch gates](/docs/scheduling/booking-rules-and-settings#account-ledger-booking-gates).
+
+## School → Booking links
+
+Public discovery-flight requests: the school slug, whether guests may request, which
+websites may embed `/book`, guest calendar visibility, and the guest-page look. The
+public pages themselves live under More → Booking links. See
+[Let guests request a discovery flight without an account](/docs/scheduling/public-booking-requests).
 
 ## School → Groups
 

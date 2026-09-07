@@ -138,7 +138,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
       "/docs/scheduling/reservation-types",
       "/docs/scheduling/booking-rules-and-settings",
       "/docs/scheduling/ramp-out-and-ramp-in",
-      "/docs/scheduling/standby-and-slot-offers",
+      "/docs/scheduling/public-booking-requests",
     ],
     faqs: [
       {
@@ -156,6 +156,10 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
       {
         q: "Does it handle simulators and classrooms?",
         a: "They are first-class resources with their own lanes and their own person limits, up to 6 on a sim and 12 in a ground class. They are also free on your subscription: only aircraft count toward the bill.",
+      },
+      {
+        q: "Can guests request a discovery flight from our website?",
+        a: "Yes. Share or embed a public request page. The guest picks a time, confirms by email, and the front desk approves it. That is a request, not instant booking, and it is not a live calendar widget.",
       },
       {
         q: "What happens across a daylight saving change?",
