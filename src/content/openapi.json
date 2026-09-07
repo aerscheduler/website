@@ -2110,6 +2110,16 @@
                   "name": {
                     "type": "string"
                   },
+                  "organizationType": {
+                    "type": "string",
+                    "enum": [
+                      "flight_school",
+                      "flying_club",
+                      "rental",
+                      "solo_instructor"
+                    ],
+                    "description": "What kind of operation this is. Same values as create. Changing it here does not rewrite signup attribution."
+                  },
                   "about": {
                     "type": "string"
                   },

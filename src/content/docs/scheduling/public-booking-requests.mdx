@@ -1,6 +1,6 @@
 <Summary>
-Turn on public booking under Settings → Booking links, share the link for an
-active offering, and approve guest requests from Calendar → Booking requests.
+Turn on public booking under Settings → Booking links, configure offerings under
+More → Offerings, and approve guest requests from Calendar → Booking requests.
 Guests confirm by email first. Members still book with Solo, Dual, Ground and the
 rest; offerings do not replace reservation types.
 </Summary>
@@ -30,17 +30,21 @@ discovery or intro flight.
 
 <Where app="web">Settings → Booking links</Where>
 
-1. A **Discovery flight** offering is already there (60 minutes, guest type, desk
-   assigns the plane). Add or confirm eligible aircraft, then edit name, price, or
-   duration if you want. You can add more offerings later.
-2. Flip **Allow public requests**. If you have not set a link slug yet, AerScheduler
+1. Flip **Allow public requests**. If you have not set a link slug yet, AerScheduler
    fills one from the school name.
+2. Open **More → Offerings**. A **Discovery flight** offering is already there (60
+   minutes, guest type, desk assigns the plane). Add or confirm eligible aircraft,
+   then edit name, price, or duration if you want. You can add more offerings later.
 3. Copy the public link from the offering's menu (**Copy public link**), or choose
    **Open public link** to see the guest page in a new tab. Only
    **Active** offerings get a link.
 
 Calendar visibility for **Guests (public booking)** still decides how much of the
 schedule the guest sees when picking times. Open slots only is the usual choice.
+That setting stays on Booking links.
+
+Settings → Booking links also has a **Configure booking offerings** button that
+opens the same Offerings page.
 
 Public booking lives on the web console only. There is nothing to configure in
 the mobile app.
@@ -59,7 +63,7 @@ form appears. Copy on the page says the school must approve it. They then click
 To put the same page on your website, first add your site under **Websites that may
 embed** (one host per line, like `www.yourschool.com`). `www.yourschool.com` and
 `yourschool.com` are different websites: list both if both serve your pages. Then use
-the offering menu:
+the offering menu on <Where app="web">More → Offerings</Where>:
 **Open public link**, **Copy public link**, **Copy embed code** (inline iframe), or **Copy modal
 embed** (a button that opens the page over your site). Open public link is the same page
 guests get. Leave that

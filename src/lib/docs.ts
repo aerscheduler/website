@@ -450,14 +450,14 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "public-booking-requests",
         title: "Let guests request a discovery flight without an account",
         description:
-          "Turn on public booking links, share a page for an offering, and approve guest requests from the same Booking requests queue. Guests confirm by email first. Members keep booking as they do today.",
+          "Turn on public booking under Settings → Booking links, configure offerings under More → Offerings, and approve guest requests from the same Booking requests queue. Guests confirm by email first. Members keep booking as they do today.",
         kind: "task",
         audience: ["Owners", "Admins", "Dispatchers"],
         seoQuery: "public discovery flight booking link flight school",
         faqs: [
           {
             q: "Do I have to create an offering before guests can request a flight?",
-            a: "No. Every school starts with a Discovery flight offering. Add aircraft if the list is empty, turn on Allow public requests, and share the link. You can edit, pause, or add more offerings.",
+            a: "No. Every school starts with a Discovery flight offering. Open More → Offerings, add aircraft if the list is empty, turn on Allow public requests under Settings → Booking links, and share the link. You can edit, pause, or add more offerings.",
           },
           {
             q: "Does this replace Solo, Dual, and the other booking types for members?",
@@ -481,11 +481,11 @@ export const DOC_SECTIONS: DocSection[] = [
           },
           {
             q: "Can I embed the request page on our school website?",
-            a: "Yes. Add your site under Websites that may embed, then use Copy embed code or Copy modal embed on an active offering. Open the public link from the offering menu to see the same page guests get. List both www.yourschool.com and yourschool.com if both serve the site. An empty list keeps the share link only. If a CMS embed block strips scripts, paste into an HTML block or use the public link. The embed does not set AerScheduler analytics or advertising cookies, and it does not show a cookie banner. Guests still confirm by email, and the desk still approves. This is not instant booking.",
+            a: "Yes. Add your site under Websites that may embed on Settings → Booking links, then use Copy embed code or Copy modal embed from the offering menu on More → Offerings. Open the public link from that menu to see the same page guests get. List both www.yourschool.com and yourschool.com if both serve the site. An empty list keeps the share link only. If a CMS embed block strips scripts, paste into an HTML block or use the public link. The embed does not set AerScheduler analytics or advertising cookies, and it does not show a cookie banner. Guests still confirm by email, and the desk still approves. This is not instant booking.",
           },
           {
             q: "How do I see what guests will see before I share the link?",
-            a: "On Settings → Booking links, open the offering menu and choose Open public link. That is the same page guests get. You can also copy the link and paste it into a new tab.",
+            a: "On More → Offerings, open the offering menu and choose Open public link. That is the same page guests get. You can also copy the link and paste it into a new tab. Turn on Allow public requests first under Settings → Booking links.",
           },
         ],
         related: [
