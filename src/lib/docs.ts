@@ -1109,10 +1109,24 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "report-a-squawk",
         title: "Report a squawk",
         description:
-          "On the console: Maintenance, then Log a squawk. On the iOS app: any aircraft page, or the prompt that opens by itself after you enter Hobbs and tach at close-out. Give it a title, a description, and a tail.",
+          "On the console: Maintenance, then Log a squawk, or open the aircraft and use Squawks, then Log. On the iOS app: any aircraft page, or the prompt that opens by itself after you enter Hobbs and tach at close-out. Give it a title, a description, and a tail. Photos and PDFs are optional.",
         kind: "task",
         audience: ["Owners", "Admins", "Dispatchers", "Technicians", "Instructors", "Students", "Renters"],
         seoQuery: "report an aircraft squawk or discrepancy in a flight school app",
+        faqs: [
+          {
+            q: "Can I attach a photo to a squawk?",
+            a: "Yes. When you report a squawk, attach up to five photos (jpg or png) or PDFs. On the phone, that includes the camera. The files stay on that squawk and cannot be deleted afterwards.",
+          },
+          {
+            q: "What file types can I attach to a squawk?",
+            a: "jpg, jpeg, png, and pdf, up to 25 MB each, and up to five files per report or per note.",
+          },
+          {
+            q: "Can I delete a photo after I attach it?",
+            a: "No. Photos and PDFs follow the same append-only rule as notes. If a photo was the wrong one, add another note saying so.",
+          },
+        ],
       },
       {
         slug: "resolve-a-squawk",
@@ -1127,7 +1141,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "add-a-note-to-a-squawk",
         title: "Add a note to a squawk",
         description:
-          "Open the squawk and use the Notes card: on the console, type in the box and click Add note; in the iOS app, tap Add Note. It records progress without closing the squawk, and notes cannot be edited or deleted afterwards.",
+          "Open the squawk and use the Notes card: on the console, type in the box and click Add note; in the iOS app, tap Add Note. You can attach photos or a PDF, including a note that is only files. It records progress without closing the squawk, and notes cannot be edited or deleted afterwards.",
         kind: "task",
         audience: ["Owners", "Admins", "Technicians"],
         seoQuery: "add a note or comment to an aircraft squawk without resolving it",
@@ -1151,6 +1165,10 @@ export const DOC_SECTIONS: DocSection[] = [
           {
             q: "How long can a note be?",
             a: "2000 characters. The console counts down over the last 200 and both surfaces refuse a longer one with a message rather than a silent failure.",
+          },
+          {
+            q: "Can a note be only a photo?",
+            a: "Yes. A note needs a body, or files, or both. An empty note with nothing attached is still refused.",
           },
           {
             q: "Does adding a note notify anybody?",
@@ -1180,9 +1198,9 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "who-can-do-what-in-maintenance",
         title: "Who can do what in maintenance",
         description:
-          "Admins, owners and technicians do the work. Dispatchers can read every board but cannot sign anything off. Instructors, students and renters cannot open Maintenance in the console at all, and file squawks from the iOS app.",
+          "Admins, owners and technicians do the work. Dispatchers can read every board but cannot sign anything off. Instructors, students and renters cannot open the Maintenance board, but they can open a single squawk write-up and see open squawks on the aircraft page.",
         kind: "reference",
-        audience: ["Owners", "Admins", "Dispatchers", "Technicians", "Instructors"],
+        audience: ["Owners", "Admins", "Dispatchers", "Technicians", "Instructors", "Students", "Renters"],
         seoQuery: "flight school technician and dispatcher permissions for maintenance",
       },
       {

@@ -16438,10 +16438,10 @@
           "Maintenance"
         ],
         "summary": "Report a squawk",
-        "description": "Note the resource is given as a flat `resourceId` here, where reservations take a nested `resource: { id }`. That inconsistency is real and is on the list to reconcile.",
+        "description": "Note the resource is given as a flat `resourceId` here, where reservations take a nested `resource: { id }`. That inconsistency is real and is on the list to reconcile. Photos and PDFs are attached by sending `fileNames` (jpg, jpeg, png, or pdf, up to five). The server writes the S3 keys and returns `signedUrlData` for the client to POST each file to. `fileUrls` in the body is refused. Uploading is turned off in the public demo; a text squawk still files.",
         "responses": {
           "201": {
-            "description": "Success.",
+            "description": "The squawk. When files were attached, `signedUrlData` is a list of S3 presigned POSTs in the same order as `fileNames`. Upload each file after this response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -16449,6 +16449,12 @@
                   "properties": {
                     "data": {
                       "$ref": "#/components/schemas/Squawk"
+                    },
+                    "signedUrlData": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PresignedPost"
+                      }
                     }
                   }
                 }
@@ -16523,6 +16529,14 @@
                       "low"
                     ],
                     "description": "How urgent it is. Defaults to `normal`. `grounding` records that the aircraft should not fly, and is what the Squawks report's Grounding filter selects; it does not by itself set the aircraft's `grounded` flag."
+                  },
+                  "fileNames": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 5,
+                    "description": "Original file names. jpg, jpeg, png, or pdf. The server mints the S3 keys."
                   }
                 },
                 "required": [
@@ -16721,10 +16735,10 @@
           "Maintenance"
         ],
         "summary": "Add a note to a squawk",
-        "description": "Appends one note to the squawk's thread, for recording progress on a defect without closing it. Technicians and administrators only, matching who may verify or resolve one. Notes are append-only: there is no edit and no delete, and a mistake is corrected by adding another note. Read them back on the squawk itself, which returns `comments` oldest first.",
+        "description": "Appends one note to the squawk's thread, for recording progress on a defect without closing it. Technicians and administrators only, matching who may verify or resolve one. Notes are append-only: there is no edit and no delete, and a mistake is corrected by adding another note. A photo or PDF may stand in for text: `body` may be empty when `fileNames` is present. Read them back on the squawk itself, which returns `comments` oldest first.",
         "responses": {
           "201": {
-            "description": "Success.",
+            "description": "The note. When files were attached, `signedUrlData` is a list of S3 presigned POSTs in the same order as `fileNames`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -16732,6 +16746,12 @@
                   "properties": {
                     "data": {
                       "$ref": "#/components/schemas/SquawkComment"
+                    },
+                    "signedUrlData": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PresignedPost"
+                      }
                     }
                   }
                 }
@@ -16739,7 +16759,7 @@
             }
           },
           "400": {
-            "description": "The note was empty or longer than 2000 characters.",
+            "description": "The note was empty, longer than 2000 characters, or the files were refused.",
             "content": {
               "application/json": {
                 "schema": {
@@ -16797,16 +16817,21 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "description": "The note.",
+                "description": "The note. Send `body`, `fileNames`, or both. Empty with neither is refused.",
                 "properties": {
                   "body": {
                     "type": "string",
                     "maxLength": 2000
+                  },
+                  "fileNames": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 5,
+                    "description": "Original file names. jpg, jpeg, png, or pdf. The server mints the S3 keys."
                   }
-                },
-                "required": [
-                  "body"
-                ]
+                }
               }
             }
           }
@@ -29522,6 +29547,17 @@
           "resource": {
             "$ref": "#/components/schemas/Resource"
           },
+          "fileUrls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Signed GET URLs for photos and PDFs attached when the squawk was filed. On the single-squawk read only. List rows send `hasAttachments` instead of keys."
+          },
+          "hasAttachments": {
+            "type": "boolean",
+            "description": "True when this squawk or any of its notes has a photo or PDF. Always present on list rows so a paperclip can render without signing N files."
+          },
           "comments": {
             "type": "array",
             "description": "The running thread, oldest first. Returned by the single-squawk read only, never on a list row.",
@@ -29547,12 +29583,41 @@
           },
           "body": {
             "type": "string",
-            "description": "The note.",
+            "description": "The note. Empty when the note is photos or a PDF only.",
             "example": "Ordered the pump, ETA Friday. Aircraft stays on the line."
+          },
+          "fileUrls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Signed GET URLs for photos and PDFs on this note. On the single-squawk read only."
           },
           "author": {
             "$ref": "#/components/schemas/OrganizationUser",
             "description": "Who wrote it. Null where that person has since left the organization: the note stays, because the account of what was done to an aircraft outlives anyone's membership."
+          }
+        },
+        "additionalProperties": true
+      },
+      "PresignedPost": {
+        "type": "object",
+        "description": "An S3 presigned POST the client uploads one file to. Append every field first and the file part last.",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "The S3 POST URL."
+          },
+          "fields": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Form fields S3 requires. The `key` is the object path that was stored on the row."
+          },
+          "maxBytes": {
+            "type": "integer",
+            "description": "Size ceiling this POST will accept, in bytes. 25 MB for squawk photos and PDFs."
           }
         },
         "additionalProperties": true

@@ -1,8 +1,9 @@
 <Summary>
 On the console: <Where app="web">Maintenance → Log a squawk</Where> if you are staff, or
-**Report a squawk** in any booking's close-out if you are not. On the iOS app: any aircraft's
-page, or the prompt that opens by itself after you enter Hobbs and tach at close-out. A
-squawk needs a title, a description, and a tail.
+open the aircraft then <Where app="web">Squawks → Log</Where> if you are not. On the iOS
+app: any aircraft's page, or the prompt that opens by itself after you enter Hobbs and tach
+at close-out. A squawk needs a title, a description, and a tail. Photos and PDFs are
+optional. They stay with the squawk and cannot be deleted afterwards.
 </Summary>
 
 <Roles>Owners, Admins, Dispatchers, Technicians, Instructors, Students, Renters</Roles>
@@ -12,7 +13,8 @@ squawk needs a title, a description, and a tail.
 <Steps>
   <Step n={1} title="Click Log a squawk">
     From <Where app="web">Maintenance</Where>, top right. Or use **Log** on the Open squawks
-    card at <Where app="web">Aircraft → the tail → Maintenance</Where>, which fills the
+    card at <Where app="web">Aircraft → the tail → Maintenance</Where> (staff) or
+    <Where app="web">Aircraft → the tail → Squawks</Where> (everyone else), which fills the
     aircraft in for you.
   </Step>
   <Step n={2} title="Write a title">
@@ -22,12 +24,16 @@ squawk needs a title, a description, and a tail.
   <Step n={3} title="Write a description">
     What you noticed and when. This is required, even though the form does not mark it.
   </Step>
-  <Step n={4} title="Pick the aircraft">
+  <Step n={4} title="Attach photos or a PDF (optional)">
+    Up to five files. jpg, png, or pdf, 25 MB each. On the phone, use **Camera**, **Photos**,
+    or **PDF**. They stay on this squawk and cannot be deleted afterwards.
+  </Step>
+  <Step n={5} title="Pick the aircraft">
     Skipped if you opened the dialog from a tail.
 
     <Screenshot id="log-squawk-modal" />
   </Step>
-  <Step n={5} title="Click Log squawk">
+  <Step n={6} title="Click Log squawk">
     It appears under <Where app="web">Maintenance → Squawks → Open</Where>, on the
     aircraft's page, and as an open-squawk note on the booking form for that tail.
   </Step>
@@ -38,7 +44,8 @@ squawk needs a title, a description, and a tail.
 ## Report one from the iOS app
 
 Anybody can file a squawk from the app, including instructors, students and renters. Open
-the aircraft, then **Report Squawk** from the gear menu.
+the aircraft, then **Report Squawk** from the gear menu. Use **Camera**, **Photos**, or
+**PDF** on that sheet if you want a picture on the record.
 
 ## Report one from a booking
 
@@ -46,10 +53,10 @@ Open the booking on the schedule, then **Open the full booking** at the foot of 
 **Report a squawk** sits in the close-out on that page, under whatever the booking is
 waiting on, with the tail already filled in.
 
-This is the route for an instructor, a student or a renter working in the console. The
-Maintenance page and the aircraft page's Maintenance section are staff-only, so the booking
-you just flew is where the action lives for everybody else. It shows on any booking with an
-aircraft on it, from the moment it is on the board until it is billed.
+This is also the route for an instructor, a student or a renter working from a booking they
+just flew. The Maintenance page is staff-only; the aircraft **Squawks** tab is not. Close-out
+still offers **Report a squawk** on any booking with an aircraft, from the moment it is on
+the board until it is billed.
 
 Ground lessons and simulator bookings do not offer it, because there is no airframe to squawk.
 

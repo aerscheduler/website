@@ -250,6 +250,7 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
       "Track AVIATES inspections and squawks on each tail, triage with the tech, and keep grounded airplanes off the bookable board.",
     bullets: [
       "Log, triage, and resolve squawks, optionally grounding the aircraft",
+      "Photos and PDFs on a squawk, from the ramp or the desk",
       "AVIATES inspections (annual, 100-hour, ELT and the rest) on hour and date intervals",
       "Sign off overdue items and return the aircraft to service",
       "Grounded status visible across scheduling",

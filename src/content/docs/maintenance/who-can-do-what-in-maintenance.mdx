@@ -1,7 +1,7 @@
 <Summary>
 Admins, owners and technicians do the work. Dispatchers can read every board but cannot sign
-anything off. Instructors, students and renters cannot open Maintenance in the console at
-all, and file squawks from the iOS app instead.
+anything off. Instructors, students and renters cannot open the Maintenance board, but they
+can open a single squawk write-up and see open squawks on the aircraft page.
 </Summary>
 
 <Callout type="note">
@@ -17,9 +17,10 @@ permission](/docs/getting-started/permissions-and-grants).
 | | Owner, Admin | Technician | Dispatcher | Instructor, Student, Renter |
 |---|---|---|---|---|
 | Open the Maintenance page | Yes | Yes | Yes, read only | No |
+| Open one squawk write-up | Yes | Yes | Yes | Yes, read only |
 | Add, edit or delete an inspection rule | Yes | Yes | No | No |
 | Sign off an inspection | Yes | Yes | No | No |
-| File a squawk | Yes | Yes | Yes | App only |
+| File a squawk | Yes | Yes | Yes | Yes |
 | Resolve a squawk | Yes | Yes | No | No |
 | Verify a squawk | Yes | Yes | No | No |
 | Ground an aircraft or return it to service | Yes | No | No | No |
@@ -63,16 +64,24 @@ not sent maintenance or squawk notifications.
 
 ## Instructors, students, and renters
 
-None of these roles can open the Maintenance page. In the console the link is not there, and
-following one anyway redirects to your own page. The Maintenance section on an aircraft's
-page is hidden from them too, which means there is no **Log** button they can reach.
+These roles cannot open the Maintenance page. In the console the sidebar link is not there,
+and following `/maintenance` anyway redirects to your own page.
 
-They do see what matters at the moment of booking: the grounding reason and the open-squawk
-count on the airworthiness notice. See
+They can still read a squawk. Open the aircraft, then **Squawks**. That list is the open
+defects on that tail, so you can see whether someone already filed the crack you just
+found. Click a row for the write-up and photos. Adding a note, verifying, and resolving
+stay with the shop.
+
+A `/maintenance/squawks/123` link (from a notification or a colleague) opens that same
+write-up. It does not dump you on Home.
+
+They do also see what matters at the moment of booking: the grounding reason and the
+open-squawk count on the airworthiness notice. See
 [Why can't I book this aircraft?](/docs/maintenance/why-cant-i-book-this-aircraft).
 
-To file a squawk, they use the iOS app: the aircraft's page, or the prompt that opens by
-itself at close-out. See [Report a squawk](/docs/maintenance/report-a-squawk).
+To file a squawk from the console, use **Log** on that Squawks card, or **Report a squawk**
+on a booking's close-out. The iOS app still has Report Squawk on the aircraft and at
+close-out. See [Report a squawk](/docs/maintenance/report-a-squawk).
 
 ## Admins and owners
 
