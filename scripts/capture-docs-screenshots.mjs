@@ -222,7 +222,9 @@ try {
     }
     const target = `${APP_URL}${route}`;
     try {
-      await page.goto(target, { waitUntil: "networkidle", timeout: 45_000 });
+      // `load`, not `networkidle`. The console keeps a WebSocket open, so idle never comes
+      // and goto times out on an otherwise ready schedule page.
+      await page.goto(target, { waitUntil: "load", timeout: 45_000 });
       await settle(page);
 
       // Roughly a third of the shots are of a dialog, a dropdown or a sheet, and
@@ -689,6 +691,9 @@ async function resolvePlaceholders(page) {
       (r) => r.prepaidInvoice && !r.prepaidInvoice.paidAt && !r.prepaidInvoice.voidedAt
     )?.id,
     prepaidPaidReservationId: pick((r) => r.prepaidInvoice?.paidAt)?.id,
+    prepaidMissingReservationId: pick(
+      (r) => r.collectionStyle === "prepaid_fixed" && !r.prepaidInvoice
+    )?.id,
     // Instruction with a student on it, far enough along that the close-out has
     // figures to prefill the training record from.
     trainingReservationId: pick(

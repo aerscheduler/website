@@ -15,7 +15,9 @@ import path from "node:path";
  *
  * A route may carry a `{placeholder}` for a record id: `{reservationId}`,
  * `{rampedReservationId}`, `{invoiceId}`, `{aircraftId}`, `{groundedAircraftId}`,
- * `{personId}` or `{ledgerPersonId}`. The script resolves each once per run against
+ * `{personId}`, `{ledgerPersonId}`, `{prepaidUnpaidReservationId}`,
+ * `{prepaidPaidReservationId}` or `{prepaidMissingReservationId}`. The script
+ * resolves each once per run against
  * whatever the org actually holds, because a hardcoded id pins the manifest to one
  * database.
  *
@@ -765,6 +767,15 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     dataState:
       "A guest booking charged a fixed price when booked, Stripe invoice paid, Close-out section showing Paid.",
     crop: '[data-doc-shot="package-payment-paid"]',
+  },
+  {
+    id: "package-payment-missing",
+    screen: "Close-out, Invoice did not go out",
+    route: "/schedule?reservation={prepaidMissingReservationId}",
+    alt: "Invoice did not go out banner with Send invoice, Record check, and Record cash",
+    dataState:
+      "A guest booking charged a fixed price when booked, no standing Stripe invoice, Close-out section showing Invoice did not go out, Send invoice, Record check, and Record cash.",
+    crop: '[data-doc-shot="package-payment-missing"]',
   },
   {
     id: "cost-splitting-summary",
