@@ -456,6 +456,10 @@ export const DOC_SECTIONS: DocSection[] = [
         seoQuery: "public discovery flight booking link flight school",
         faqs: [
           {
+            q: "Do I have to create an offering before guests can request a flight?",
+            a: "No. Every school starts with a Discovery flight offering. Add aircraft if the list is empty, turn on Allow public requests, and share the link. You can edit, pause, or add more offerings.",
+          },
+          {
             q: "Does this replace Solo, Dual, and the other booking types for members?",
             a: "No. Members still book the way they always have. Offerings and public links are for guests who do not have an account.",
           },
@@ -477,7 +481,11 @@ export const DOC_SECTIONS: DocSection[] = [
           },
           {
             q: "Can I embed the request page on our school website?",
-            a: "Yes. Add your site under Websites that may embed, then use Copy embed code or Copy modal embed on an active offering. List both www.yourschool.com and yourschool.com if both serve the site. An empty list keeps the share link only. The embed does not set AerScheduler analytics or advertising cookies, and it does not show a cookie banner. Guests still confirm by email, and the desk still approves. This is not instant booking.",
+            a: "Yes. Add your site under Websites that may embed, then use Copy embed code or Copy modal embed on an active offering. Open the public link from the offering menu to see the same page guests get. List both www.yourschool.com and yourschool.com if both serve the site. An empty list keeps the share link only. If a CMS embed block strips scripts, paste into an HTML block or use the public link. The embed does not set AerScheduler analytics or advertising cookies, and it does not show a cookie banner. Guests still confirm by email, and the desk still approves. This is not instant booking.",
+          },
+          {
+            q: "How do I see what guests will see before I share the link?",
+            a: "On Settings → Booking links, open the offering menu and choose Open public link. That is the same page guests get. You can also copy the link and paste it into a new tab.",
           },
         ],
         related: [
@@ -491,7 +499,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "calendar-visibility",
         title: "How much of the schedule guests and members see",
         description:
-          "Calendar visibility under Booking offerings sets how much of the schedule each audience sees when picking a time. It does not change the staff Calendar. Open slots only is the usual guest setting.",
+          "Calendar visibility under Booking links sets how much of the schedule each audience sees when picking a time. It does not change the staff Calendar. Open slots only is the usual guest setting.",
         kind: "reference",
         audience: ["Owners", "Admins"],
         seoQuery: "calendar visibility public booking guests see schedule flight school",
