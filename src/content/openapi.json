@@ -17673,6 +17673,203 @@
         ]
       }
     },
+    "/maintenance/reminders/{maintenanceReminderId}/files": {
+      "post": {
+        "tags": [
+          "Maintenance"
+        ],
+        "summary": "Attach files to an open inspection",
+        "description": "Photos or PDFs on the OPEN reminder (packing slip, in-progress photos). Admin or technician. Copied onto the compliance record at sign-off, then cleared. Send `fileNames` only.",
+        "responses": {
+          "201": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/MaintenanceReminder"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "addReminderFiles",
+        "parameters": [
+          {
+            "name": "maintenanceReminderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The reminder id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The files to attach.",
+                "properties": {
+                  "fileNames": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Display names with jpg, png, heic, or pdf extensions. Up to five on the inspection."
+                  }
+                },
+                "required": [
+                  "fileNames"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Maintenance"
+        ],
+        "summary": "Remove a file from an open inspection",
+        "description": "Removes one working file by its file name. Does not touch a signed compliance record.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/MaintenanceReminder"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such file.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "removeReminderFile",
+        "parameters": [
+          {
+            "name": "maintenanceReminderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The reminder id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Which file.",
+                "properties": {
+                  "fileName": {
+                    "type": "string",
+                    "description": "The file name as shown, e.g. packing-slip.pdf."
+                  }
+                },
+                "required": [
+                  "fileName"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
     "/maintenance/reminders/{maintenanceReminderId}": {
       "get": {
         "tags": [
@@ -17755,7 +17952,7 @@
           "Maintenance"
         ],
         "summary": "Sign off a maintenance reminder",
-        "description": "Marks the work done, which starts the next interval if the template repeats. POST rather than PATCH for historical reasons.\n\nSend `methodOfCompliance` and `mechanicName` to also write a permanent compliance record, which is what 14 CFR 91.417 asks for on an Airworthiness Directive. That record is append-only and cannot be edited or removed afterwards, and it snapshots the rule's number and revision as they stood at signature. Omit them and the reminder simply rolls forward as before, keeping no history.",
+        "description": "Marks the work done, which starts the next interval if the template repeats. POST rather than PATCH for historical reasons.\n\nSend `methodOfCompliance` and `mechanicName` to also write a permanent compliance record, which is what 14 CFR 91.417 asks for on an Airworthiness Directive. That record is append-only and cannot be edited or removed afterwards, and it snapshots the rule's number and revision as they stood at signature. Omit them and the reminder simply rolls forward as before, keeping no history.\n\nPhotos and PDFs already on the open inspection (`POST /maintenance/reminders/{id}/files`) are copied onto that compliance record, then cleared so they do not follow the next cycle. Do not send `fileUrls`.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -17869,13 +18066,6 @@
                   "hobbsAtCompliance": {
                     "type": "integer",
                     "description": "Hobbs reading at compliance, NOT time in service as 14 CFR 1.1 defines it, in tenths. Defaults to the aircraft's current reading."
-                  },
-                  "fileUrls": {
-                    "type": "array",
-                    "description": "Attached evidence object keys.",
-                    "items": {
-                      "type": "string"
-                    }
                   }
                 },
                 "required": [
@@ -30388,6 +30578,17 @@
           },
           "resource": {
             "$ref": "#/components/schemas/Resource"
+          },
+          "hasAttachments": {
+            "type": "boolean",
+            "description": "Whether the open inspection has working files. List rows send this instead of keys."
+          },
+          "fileUrls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Signed GET URLs for photos and PDFs on the open inspection. On the single-reminder read only. List rows send `hasAttachments` instead of keys. Copied onto the compliance record at sign-off."
           }
         },
         "additionalProperties": true

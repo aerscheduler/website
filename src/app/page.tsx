@@ -401,6 +401,7 @@ export default function HomePage() {
                 "Open and resolved squawks with optional grounding",
                 "AVIATES inspections: annual, 100-hour, ELT, transponder, and more",
                 "Hour- and date-based countdowns that move with close-out",
+                "Photos and PDFs on an open inspection, from the phone or the desk",
                 "Sign off overdue items and return the aircraft to service",
                 "Grounded status visible across scheduling and self-booking",
               ].map((item) => (

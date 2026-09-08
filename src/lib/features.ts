@@ -251,6 +251,7 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
     bullets: [
       "Log, triage, and resolve squawks, optionally grounding the aircraft",
       "Photos and PDFs on a squawk, from the ramp or the desk",
+      "Photos and PDFs on an open inspection, copied onto the signed record",
       "POH and weight and balance on the aircraft, readable when you book",
       "AVIATES inspections (annual, 100-hour, ELT and the rest) on hour and date intervals",
       "Sign off overdue items and return the aircraft to service",
@@ -278,6 +279,7 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
       "Optional grounding when an inspection comes due, and an automatic return to service when it is signed off",
       "One-off reminders for a single date, such as a prop back from the shop",
       "A permanent compliance record per sign-off, with the meter readings and who certified it",
+      "Photos and PDFs on an open inspection, from the phone or the desk, copied onto that record",
       "AD number and revision recorded when an inspection's source is a directive",
     ],
     personas: ["Owners", "Admins", "Technicians"],
@@ -301,9 +303,9 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
       "Home shows what's next: flights, maintenance, squawks, and dues",
       "Book and manage lessons from anywhere",
       "Pay invoices and keep documents current",
-      "Log squawks and check inspections on the go",
+      "Log squawks, attach inspection files, and check due items on the go",
     ],
-    personas: ["Students", "Renters", "Instructors", "Everyone"],
+    personas: ["Students", "Renters", "Instructors", "Technicians", "Everyone"],
     related: ["self-booking", "scheduling", "billing", "maintenance"],
   },
   reports: {

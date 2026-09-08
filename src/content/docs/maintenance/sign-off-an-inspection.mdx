@@ -12,22 +12,31 @@ inspection starts counting again immediately, from exactly those two numbers.
   <Step n={1} title="Find the inspection">
     <Where app="web">Maintenance → All inspections</Where> is the work queue for the whole
     school, worst first. Or open the tail and use its Inspections card at
-    <Where app="web">Aircraft → the tail → Maintenance</Where>.
+    <Where app="web">Aircraft → the tail → Maintenance</Where>. On the phone:
+    <Where app="mobile">Maintenance → Inspections</Where>, which is where technicians
+    usually work.
 
     <Screenshot id="maintenance-all-inspections" />
   </Step>
-  <Step n={2} title="Click Sign off on the row">
+  <Step n={2} title="Attach files while the work is open (optional)">
+    Tap **Files** on the row. Photos and PDFs sit on this open inspection (a packing slip,
+    an in-progress photo). On the phone that is **Take photo**, **Choose from Photos**, or
+    **Browse Files**. When you sign off and keep a compliance record, they copy onto that
+    record. They do not follow the next cycle. If you sign off without a record, they come
+    off this inspection and are not stored.
+  </Step>
+  <Step n={3} title="Click Sign off on the row">
     Dispatchers do not see this button. Only admins, owners and technicians can sign work
     off.
   </Step>
-  <Step n={3} title="Set Completed on">
+  <Step n={4} title="Set Completed on">
     The day the work was actually finished. It cannot be in the future.
   </Step>
-  <Step n={4} title="Correct the meter reading">
+  <Step n={5} title="Correct the meter reading">
     On an hour-based inspection you are asked for the tach or Hobbs reading when the work
     was done. It defaults to today's meter, which is usually not the right number.
   </Step>
-  <Step n={5} title="Add notes and click Sign off">
+  <Step n={6} title="Add notes and click Sign off">
     Work order number, who did it, what was found. Up to 500 characters.
 
     <Screenshot id="sign-off-inspection-modal" />

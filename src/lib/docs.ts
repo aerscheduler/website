@@ -1077,6 +1077,12 @@ export const DOC_SECTIONS: DocSection[] = [
         kind: "task",
         audience: ["Owners", "Admins", "Technicians"],
         seoQuery: "sign off a completed 100 hour or annual inspection",
+        faqs: [
+          {
+            q: "Can I attach a packing slip before I sign off?",
+            a: "Yes. Tap Files on the inspection row, on the phone or the desk. Those photos and PDFs copy onto the compliance record when you sign off, then come off the open inspection so they do not follow the next cycle. If you sign off without a record, they come off the inspection and are not stored.",
+          },
+        ],
       },
       {
         slug: "change-or-stop-tracking-an-inspection",
@@ -1116,7 +1122,7 @@ export const DOC_SECTIONS: DocSection[] = [
         faqs: [
           {
             q: "Can I attach a photo to a squawk?",
-            a: "Yes. When you report a squawk, attach up to five photos or PDFs. On the phone, use Camera or Photos. The files stay on that squawk and cannot be deleted afterwards.",
+            a: "Yes. When you report a squawk, attach up to five photos or PDFs. On the phone, use Take photo, Choose from Photos, or Browse Files. The files stay on that squawk and cannot be deleted afterwards.",
           },
           {
             q: "What file types can I attach to a squawk?",
@@ -1143,7 +1149,7 @@ export const DOC_SECTIONS: DocSection[] = [
           },
           {
             q: "Can I upload an iPhone photo?",
-            a: "Yes. Use Camera or Photos on the phone. A photo that is really a JPEG with a .HEIC name is stored as a JPEG so the console can open it. A Mac that cannot read HEIC will ask you to export a JPEG from Photos.",
+            a: "Yes. Use Take photo or Choose from Photos on the phone. A photo that is really a JPEG with a .HEIC name is stored as a JPEG so the console can open it. A Mac that cannot read HEIC will ask you to export a JPEG from Photos.",
           },
           {
             q: "Can I delete a paper after I upload it?",

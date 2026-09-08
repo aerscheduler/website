@@ -711,7 +711,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
       { title: "Add the standard set", body: "Untick anything your operation does not owe." },
       { title: "Say when each was last done", body: "The date and reading from when the work was actually performed." },
       { title: "Pick the tails", body: "One rule for the school becomes a live inspection per aircraft." },
-      { title: "Sign off", body: "A repeating inspection starts again from those numbers." },
+      { title: "Sign off", body: "Attach photos or a packing slip first if you have them. A repeating inspection starts again from those numbers." },
     ],
     docs: [
       "/docs/maintenance/add-the-standard-airworthiness-inspections",
