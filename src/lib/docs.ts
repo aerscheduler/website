@@ -1122,7 +1122,7 @@ export const DOC_SECTIONS: DocSection[] = [
         faqs: [
           {
             q: "Can I attach a photo to a squawk?",
-            a: "Yes. When you report a squawk, attach up to five photos or PDFs. On the phone, use Take photo, Choose from Photos, or Browse Files. The files stay on that squawk and cannot be deleted afterwards.",
+            a: "Yes. When you report a squawk, attach up to five photos or PDFs. On the phone, use Take photo, Choose from Photos, or Browse Files. The photo shows on the squawk. The files stay on that squawk and cannot be deleted afterwards.",
           },
           {
             q: "What file types can I attach to a squawk?",
@@ -1146,6 +1146,10 @@ export const DOC_SECTIONS: DocSection[] = [
           {
             q: "Can a student open the POH?",
             a: "Yes, if that file is marked for bookers, which is the default for POH and weight and balance. Insurance and logbook scans default to staff only.",
+          },
+          {
+            q: "Why do I only see a file name?",
+            a: "You should see the photo on the aircraft. Tap it to zoom. A PDF shows as a document card; tap that to open it. The same preview is on squawks and inspection files.",
           },
           {
             q: "Can I upload an iPhone photo?",
