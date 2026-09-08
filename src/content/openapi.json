@@ -25032,7 +25032,7 @@
           "Weather"
         ],
         "summary": "Current METAR",
-        "description": "The latest observation for a field.",
+        "description": "The latest observation for a field. Prefer `airport` when the location has a stored identifier; `lat`/`lon` are the fallback for a typed site, and for a strip whose ident has no METAR.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -25042,7 +25042,10 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "type": "object"
+                      "type": [
+                        "object",
+                        "null"
+                      ]
                     }
                   }
                 }
@@ -25050,7 +25053,7 @@
             }
           },
           "400": {
-            "description": "Unknown or missing airport identifier.",
+            "description": "A valid airport identifier or lat and lon are required.",
             "content": {
               "application/json": {
                 "schema": {
@@ -25100,7 +25103,27 @@
               "type": "string",
               "example": "KAPA"
             },
-            "description": "ICAO identifier."
+            "description": "Airport identifier. ICAO when the field has one, otherwise the FAA local code."
+          },
+          {
+            "name": "lat",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "example": 39.5701
+            },
+            "description": "Latitude. Used when `airport` is omitted, or when that station has no METAR."
+          },
+          {
+            "name": "lon",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "example": -104.8493
+            },
+            "description": "Longitude."
           }
         ]
       }
@@ -25452,18 +25475,41 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "description": "The new location. The address is geocoded on the way in and is rejected if it cannot be resolved.",
+                "description": "The new location. Picking a published airport should send its `ident` and `coordinates`. A typed site can omit both. The address is stored as entered.",
                 "properties": {
                   "name": {
                     "type": "string"
                   },
+                  "ident": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "description": "ICAO when the field has one (`KAPA`), otherwise the FAA local code. Optional."
+                  },
+                  "timeZone": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
                   "address": {
                     "$ref": "#/components/schemas/Address"
+                  },
+                  "coordinates": {
+                    "type": "object",
+                    "properties": {
+                      "lat": {
+                        "type": "number"
+                      },
+                      "lng": {
+                        "type": "number"
+                      }
+                    }
                   }
                 },
                 "required": [
-                  "name",
-                  "address"
+                  "name"
                 ]
               }
             }
@@ -25629,16 +25675,36 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "description": "Fields to change.",
+                "description": "Fields to change. Omitting `ident` leaves the stored identifier alone; send null to clear it. Same rule for `timeZone`. Omitting `coordinates` leaves the stored position alone.",
                 "properties": {
                   "name": {
                     "type": "string"
                   },
+                  "ident": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
                   "timeZone": {
-                    "type": "string"
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   },
                   "address": {
                     "$ref": "#/components/schemas/Address"
+                  },
+                  "coordinates": {
+                    "type": "object",
+                    "properties": {
+                      "lat": {
+                        "type": "number"
+                      },
+                      "lng": {
+                        "type": "number"
+                      }
+                    }
                   }
                 }
               }
@@ -29278,6 +29344,15 @@
             "type": "string",
             "description": "Display name.",
             "example": "Main Hangar"
+          },
+          "ident": {
+            "description": "Published airport identifier. ICAO when the field has one (`KAPA`), otherwise the FAA local code (`00A`). Null when the person typed a site by hand. Weather uses this when present instead of guessing the nearest reporting station from coordinates.",
+            "example": "KAPA",
+            "maxLength": 10,
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "showInDirectory": {
             "type": "boolean",
