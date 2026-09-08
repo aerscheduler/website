@@ -251,6 +251,7 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
     bullets: [
       "Log, triage, and resolve squawks, optionally grounding the aircraft",
       "Photos and PDFs on a squawk, from the ramp or the desk",
+      "POH and weight and balance on the aircraft, readable when you book",
       "AVIATES inspections (annual, 100-hour, ELT and the rest) on hour and date intervals",
       "Sign off overdue items and return the aircraft to service",
       "Grounded status visible across scheduling",

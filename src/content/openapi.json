@@ -15961,6 +15961,454 @@
         }
       }
     },
+    "/resources/{id}/files": {
+      "get": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "List papers on an aircraft",
+        "description": "POH, weight and balance, and other files on the tail. Any org member may read `bookers` files. Staff, dispatchers, and technicians also see `staff` files. Soft-deleted rows are omitted.",
+        "responses": {
+          "200": {
+            "description": "The papers.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ResourceFile"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listResourceFiles",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The resource id."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1,1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row , `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Add papers to an aircraft",
+        "description": "Send `fileNames` (jpg, jpeg, png, heic, heif, or pdf, up to five in that category). The server writes the S3 keys and returns `signedUrlData` for the client to POST each file to. `fileUrls` in the body is refused. Requires owner, admin, dispatcher, or technician. Uploading is turned off in the public demo.",
+        "responses": {
+          "201": {
+            "description": "The papers. `signedUrlData` is a list of S3 presigned POSTs in the same order as the created rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ResourceFile"
+                      }
+                    },
+                    "signedUrlData": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PresignedPost"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed to upload, or this is the public demo.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "createResourceFiles",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The resource id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The papers.",
+                "properties": {
+                  "category": {
+                    "type": "string",
+                    "enum": [
+                      "poh",
+                      "weight_and_balance",
+                      "insurance",
+                      "form_337",
+                      "logbook_scan",
+                      "other"
+                    ]
+                  },
+                  "visibility": {
+                    "type": "string",
+                    "enum": [
+                      "bookers",
+                      "staff"
+                    ],
+                    "description": "Defaults: POH and weight and balance are bookers; the rest are staff."
+                  },
+                  "label": {
+                    "type": "string",
+                    "maxLength": 120
+                  },
+                  "fileNames": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 5,
+                    "description": "Original file names. The server mints the S3 keys."
+                  }
+                },
+                "required": [
+                  "category",
+                  "fileNames"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resources/{id}/files/{fileId}": {
+      "patch": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Rename or recategorize a paper",
+        "description": "Changes label, visibility, or category. Does not replace the bytes. Requires owner, admin, dispatcher, or technician.",
+        "responses": {
+          "200": {
+            "description": "The paper.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ResourceFile"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "That file is not on this aircraft.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "updateResourceFile",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The resource id."
+          },
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The paper id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "What to change.",
+                "properties": {
+                  "category": {
+                    "type": "string",
+                    "enum": [
+                      "poh",
+                      "weight_and_balance",
+                      "insurance",
+                      "form_337",
+                      "logbook_scan",
+                      "other"
+                    ]
+                  },
+                  "visibility": {
+                    "type": "string",
+                    "enum": [
+                      "bookers",
+                      "staff"
+                    ]
+                  },
+                  "label": {
+                    "type": "string",
+                    "maxLength": 120
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Remove a paper from an aircraft",
+        "description": "Soft-deletes the row and drops the S3 object. A stale W&B should come down. Requires owner, admin, dispatcher, or technician.",
+        "responses": {
+          "204": {
+            "description": "Success. No body."
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "That file is not on this aircraft.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "deleteResourceFile",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The resource id."
+          },
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The paper id."
+          }
+        ]
+      }
+    },
     "/audit": {
       "get": {
         "tags": [
@@ -16438,7 +16886,7 @@
           "Maintenance"
         ],
         "summary": "Report a squawk",
-        "description": "Note the resource is given as a flat `resourceId` here, where reservations take a nested `resource: { id }`. That inconsistency is real and is on the list to reconcile. Photos and PDFs are attached by sending `fileNames` (jpg, jpeg, png, or pdf, up to five). The server writes the S3 keys and returns `signedUrlData` for the client to POST each file to. `fileUrls` in the body is refused. Uploading is turned off in the public demo; a text squawk still files.",
+        "description": "Note the resource is given as a flat `resourceId` here, where reservations take a nested `resource: { id }`. That inconsistency is real and is on the list to reconcile. Photos and PDFs are attached by sending `fileNames` (jpg, jpeg, png, heic, heif, or pdf, up to five). The server writes the S3 keys and returns `signedUrlData` for the client to POST each file to. `fileUrls` in the body is refused. Uploading is turned off in the public demo; a text squawk still files.",
         "responses": {
           "201": {
             "description": "The squawk. When files were attached, `signedUrlData` is a list of S3 presigned POSTs in the same order as `fileNames`. Upload each file after this response.",
@@ -16536,7 +16984,7 @@
                       "type": "string"
                     },
                     "maxItems": 5,
-                    "description": "Original file names. jpg, jpeg, png, or pdf. The server mints the S3 keys."
+                    "description": "Original file names. jpg, jpeg, png, heic, heif, or pdf. The server mints the S3 keys."
                   }
                 },
                 "required": [
@@ -16829,7 +17277,7 @@
                       "type": "string"
                     },
                     "maxItems": 5,
-                    "description": "Original file names. jpg, jpeg, png, or pdf. The server mints the S3 keys."
+                    "description": "Original file names. jpg, jpeg, png, heic, heif, or pdf. The server mints the S3 keys."
                   }
                 }
               }
@@ -28980,6 +29428,86 @@
               }
             },
             "additionalProperties": true
+          },
+          "papers": {
+            "type": "array",
+            "description": "Booker-visible papers on this tail (POH, weight and balance). No keys. Staff-only files are omitted. Full rows with signed GET URLs are `GET /resources/{id}/files`.",
+            "items": {
+              "$ref": "#/components/schemas/ResourceFileSummary"
+            }
+          }
+        },
+        "additionalProperties": true
+      },
+      "ResourceFile": {
+        "type": "object",
+        "description": "One paper on a tail: a POH, weight and balance sheet, insurance cert, 337, logbook scan, or other PDF/photo. Not a member Document.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier, stable for the life of the record."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the record was created."
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the record last changed."
+          },
+          "category": {
+            "type": "string",
+            "description": "poh, weight_and_balance, insurance, form_337, logbook_scan, or other."
+          },
+          "visibility": {
+            "type": "string",
+            "description": "bookers (any member who can see the aircraft) or staff.",
+            "enum": [
+              "bookers",
+              "staff"
+            ]
+          },
+          "label": {
+            "description": "Display name.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "fileUrls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Signed GET URLs. On the files list only, never on the resource summary."
+          }
+        },
+        "additionalProperties": true
+      },
+      "ResourceFileSummary": {
+        "type": "object",
+        "description": "Enough to show a Papers tab without signing URLs. Booker-visible only when nested on a resource.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "The paper id."
+          },
+          "category": {
+            "type": "string",
+            "description": "poh, weight_and_balance, insurance, form_337, logbook_scan, or other."
+          },
+          "label": {
+            "description": "Display name.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "hasFile": {
+            "type": "boolean",
+            "description": "True when a file was stored."
           }
         },
         "additionalProperties": true

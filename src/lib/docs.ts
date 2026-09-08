@@ -1116,15 +1116,38 @@ export const DOC_SECTIONS: DocSection[] = [
         faqs: [
           {
             q: "Can I attach a photo to a squawk?",
-            a: "Yes. When you report a squawk, attach up to five photos (jpg or png) or PDFs. On the phone, that includes the camera. The files stay on that squawk and cannot be deleted afterwards.",
+            a: "Yes. When you report a squawk, attach up to five photos or PDFs. On the phone, use Camera or Photos. The files stay on that squawk and cannot be deleted afterwards.",
           },
           {
             q: "What file types can I attach to a squawk?",
-            a: "jpg, jpeg, png, and pdf, up to 25 MB each, and up to five files per report or per note.",
+            a: "jpg, jpeg, png, and pdf, up to 25 MB each, and up to five files per report or per note. On the iPhone, Camera and Photos store as JPEG so the console can open them. Chrome on a Mac may not read a raw HEIC; export JPEG from Photos instead.",
           },
           {
             q: "Can I delete a photo after I attach it?",
             a: "No. Photos and PDFs follow the same append-only rule as notes. If a photo was the wrong one, add another note saying so.",
+          },
+        ],
+      },
+      {
+        slug: "aircraft-papers",
+        title: "Aircraft papers (POH and weight and balance)",
+        description:
+          "Put the current POH and weight and balance on the aircraft. Members who book it can open the ones marked for bookers. Staff can replace a stale file.",
+        kind: "task",
+        audience: ["Owners", "Admins", "Dispatchers", "Technicians", "Instructors", "Students", "Renters"],
+        seoQuery: "upload POH weight and balance PDF on aircraft in flight school software",
+        faqs: [
+          {
+            q: "Can a student open the POH?",
+            a: "Yes, if that file is marked for bookers, which is the default for POH and weight and balance. Insurance and logbook scans default to staff only.",
+          },
+          {
+            q: "Can I upload an iPhone photo?",
+            a: "Yes. Use Camera or Photos on the phone. A photo that is really a JPEG with a .HEIC name is stored as a JPEG so the console can open it. A Mac that cannot read HEIC will ask you to export a JPEG from Photos.",
+          },
+          {
+            q: "Can I delete a paper after I upload it?",
+            a: "Yes. Papers are the current documents on the tail. A stale weight and balance should come down. Squawk photos cannot be deleted; papers can.",
           },
         ],
       },
