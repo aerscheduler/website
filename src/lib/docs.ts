@@ -76,7 +76,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "what-is-aerscheduler",
         title: "What AerScheduler is",
         description:
-          "The three things everything else hangs off, and how the web console and the iOS app divide the work.",
+          "The three things everything else hangs off, and how the web console and the mobile app divide the work.",
         kind: "overview",
         audience: ["Owners", "Admins"],
         seoQuery: "what is AerScheduler",
@@ -89,6 +89,25 @@ export const DOC_SECTIONS: DocSection[] = [
         kind: "task",
         audience: ["Owners", "Admins"],
         seoQuery: "flight school software setup first day",
+      },
+      {
+        slug: "set-up-a-privately-owned-airplane",
+        title: "Set up a privately owned airplane",
+        description:
+          "Choose I own an airplane, name the hangar, pick the home airport, add the tail. You get owner, admin and renter, not student, and the rate can stay at zero.",
+        kind: "task",
+        audience: ["Owners"],
+        seoQuery: "schedule a privately owned airplane AerScheduler",
+        faqs: [
+          {
+            q: "Will the booking form ask me which student I am?",
+            a: "No. That happened when every founder was also given the student role. A private-owner signup now gets renter instead, so you book the airplane as yourself.",
+          },
+          {
+            q: "Do I have to enter an hourly rate?",
+            a: "No. Leave it at zero if you do not bill hours. You can fill it in later on Aircraft.",
+          },
+        ],
       },
       {
         slug: "roles-and-permissions",
@@ -212,7 +231,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "notifications-and-emails",
         title: "Choose which emails and push alerts you get",
         description:
-          "Notifications come by email and push to the iOS app, grouped by category so you can turn off the ones you do not need without losing the ones you do.",
+          "Notifications come by email and push to the iOS and Android apps, grouped by category so you can turn off the ones you do not need without losing the ones you do.",
         kind: "task",
         audience: ["Owners", "Admins", "Dispatchers", "Instructors", "Students", "Renters", "Technicians"],
         seoQuery: "turn off flight school software email notifications",
@@ -246,7 +265,7 @@ export const DOC_SECTIONS: DocSection[] = [
       },
       {
         slug: "the-mobile-app",
-        title: "What the iOS app does",
+        title: "What the mobile app does",
         description:
           "The app is built for pilots away from a desk. It does some things the console cannot, and the console does a great deal the app does not.",
         kind: "reference",

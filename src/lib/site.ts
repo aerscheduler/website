@@ -75,7 +75,7 @@ export const signupUrl = (source?: CampaignSource) =>
  * surfaces share no package. Change all of them in the same commit as the wording,
  * and see the note in web/src/lib/legal.ts about the 30 day notice obligation.
  */
-export const TERMS_VERSION = "2026-08-17";
+export const TERMS_VERSION = "2026-09-09";
 
 /**
  * Full-page Google OAuth via the API (no popup). Lands on APP_URL after Google
@@ -90,17 +90,9 @@ export const GOOGLE_SIGNIN_URL = `${API_URL}/auth/google/start?return_to=${encod
 export const APP_STORE_URL =
   "https://apps.apple.com/us/app/aerscheduler/id6444074155";
 
-/**
- * TODO(android): Android is off the marketing site until the app is back on
- * Google Play. The old Play developer account was closed for inactivity in
- * Oct 2024 and this listing now 404s, so every Android claim on the site was
- * unshippable. Search the repo for TODO(android) to restore: uncomment this
- * URL (the package name may change if com.aerscheduler.app can't be reclaimed),
- * re-add the Play badge in components/store-badges.tsx, and put "& Android"
- * back into the copy and JSON-LD.
- */
-// export const PLAY_STORE_URL =
-//   "https://play.google.com/store/apps/details?id=com.aerscheduler.app&hl=en_US&gl=US";
+/** Live listing. The old `com.aerscheduler.app` package is tombstoned and 404s. */
+export const PLAY_STORE_URL =
+  "https://play.google.com/store/apps/details?id=com.aerscheduler.aerscheduler";
 
 export const PRICE_PER_AIRCRAFT = 20;
 export const TRIAL_DAYS = 14;
@@ -143,4 +135,4 @@ export const ENTERPRISE_FEATURES: { title: string; body: string; soon?: boolean 
 
 /** Longer default meta description for SEO. */
 export const SITE_DESCRIPTION =
-  "Flight school management software for scheduling, billing, training records, maintenance, and reporting. Native iOS app. Self-serve from $20/mo per aircraft.";
+  "Flight school management software for scheduling, billing, training records, maintenance, and reporting. Native iOS and Android apps. Self-serve from $20/mo per aircraft.";

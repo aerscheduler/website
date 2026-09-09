@@ -10,7 +10,7 @@ import { DEMO_URL, PRICE_PER_AIRCRAFT, SIGNUP_URL, TRIAL_DAYS } from "@/lib/site
 export const metadata: Metadata = {
   title: "Flight School Software Features",
   description:
-    "The five modules that run a flight school: scheduling and dispatch, billing and payments, training records, maintenance and airworthiness, and reporting. Plus a native iOS app and integrations, on every plan.",
+    "The five modules that run a flight school: scheduling and dispatch, billing and payments, training records, maintenance and airworthiness, and reporting. Plus native iOS and Android apps and integrations, on every plan.",
   alternates: { canonical: "/features" },
   openGraph: {
     title: "Flight School Software Features",

@@ -135,7 +135,7 @@ export default function HomePage() {
             <ValuePoint
               href="/app"
               eyebrow="Mobile"
-              title="Native iOS"
+              title="Native iOS and Android"
               body="The same operation in your pocket, not a mobile website."
               rule
             />
@@ -490,7 +490,7 @@ export default function HomePage() {
             <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
               Students book from their phone. Instructors check the day on the go.
               Dispatchers aren&apos;t chained to a front-desk PC. Same schedule,
-              same invoices in a real native app for iOS.
+              same invoices in a real native app for iOS and Android.
             </p>
             <ul className="mt-6 space-y-3">
               {[
@@ -567,7 +567,7 @@ export default function HomePage() {
               <ul className="mt-6 space-y-3">
                 {[
                   "Unlimited instructors, students, and renters",
-                  "Web console + native iOS app included",
+                  "Web console + native iOS and Android apps included",
                   "Prorated when you add or remove a tail",
                   "Enterprise plan for API access, integrations, and dedicated support",
                 ].map((item) => (

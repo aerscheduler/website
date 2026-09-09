@@ -10,7 +10,7 @@ const PRODUCT = [
   { href: "/integrations", label: "Integrations" },
   { href: "/docs", label: "Docs" },
   { href: "/product", label: "Product overview" },
-  { href: "/app", label: "iOS App" },
+  { href: "/app", label: "iOS and Android" },
 ];
 
 const COMPANY = [
@@ -42,7 +42,7 @@ export function SiteFooter() {
             <Logo />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
               Schedule aircraft, manage your team, and keep billing square on the
-              web and in a native iOS app.
+              web and in native iOS and Android apps.
             </p>
           </div>
           <FooterColumn title="Product">

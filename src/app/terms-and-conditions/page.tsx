@@ -6,7 +6,7 @@ import { LegalDocument } from "@/components/legal-document";
 export const metadata: Metadata = {
   title: "Terms and Conditions",
   description:
-    "AerScheduler terms and conditions for use of the website, web app, and native iOS application.",
+    "AerScheduler terms and conditions for use of the website, web app, and native iOS and Android applications.",
   alternates: { canonical: "/terms-and-conditions" },
   robots: { index: true, follow: true },
 };
@@ -20,7 +20,7 @@ export default function TermsAndConditionsPage() {
   return (
     <LegalDocument
       title="Terms and Conditions"
-      updated="August 17, 2026"
+      updated="September 9, 2026"
       html={html}
     />
   );

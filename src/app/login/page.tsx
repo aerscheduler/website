@@ -26,7 +26,7 @@ export default function LoginPage() {
         </h1>
         <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
           Sign in to your school&apos;s schedule, invoices, fleet, and team.
-          Same account on the web and in the native iOS app.
+          Same account on the web and in the iOS and Android apps.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <Button href={LOGIN_URL} size="lg">

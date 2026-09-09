@@ -246,7 +246,7 @@ export function MobileLiveDemo({
           <p className="text-[9px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
             Native app
           </p>
-          <p className="mt-0.5 text-xs font-semibold text-foreground">iOS</p>
+          <p className="mt-0.5 text-xs font-semibold text-foreground">iOS and Android</p>
         </div>
       </div>
 

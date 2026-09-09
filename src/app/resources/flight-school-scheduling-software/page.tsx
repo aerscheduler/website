@@ -9,7 +9,7 @@ import { PRICE_PER_AIRCRAFT, signupUrl, SITE_NAME, TRIAL_DAYS } from "@/lib/site
 
 export const metadata: Metadata = {
   title: "Flight School Scheduling Software",
-  description: `${SITE_NAME} is flight school scheduling software with dispatch boards, self-booking, billing, maintenance, and a native iOS app. From $${PRICE_PER_AIRCRAFT}/mo per aircraft.`,
+  description: `${SITE_NAME} is flight school scheduling software with dispatch boards, self-booking, billing, maintenance, and native iOS and Android apps. From $${PRICE_PER_AIRCRAFT}/mo per aircraft.`,
   alternates: { canonical: "/resources/flight-school-scheduling-software" },
   openGraph: {
     title: "Flight School Scheduling Software",
@@ -34,7 +34,7 @@ const MUST_HAVES = [
   ],
   [
     "Mobile that people use",
-    "A native iOS app so instructors and students stay in the system off-desk.",
+    "Native iOS and Android apps so instructors and students stay in the system off-desk.",
   ],
   [
     "Compliance on the board",
@@ -57,7 +57,7 @@ const FAQS = [
   },
   {
     q: "Does AerScheduler include a mobile app?",
-    a: "Yes. The native iOS app is included with every plan.",
+    a: "Yes. The native iOS and Android apps are included with every plan.",
   },
 ];
 

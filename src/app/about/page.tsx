@@ -7,7 +7,7 @@ import { SIGNUP_URL, SITE_NAME } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "About",
-  description: `${SITE_NAME} builds flight school management software for scheduling, billing, maintenance, and compliance. Self-serve, with a native iOS app.`,
+  description: `${SITE_NAME} builds flight school management software for scheduling, billing, maintenance, and compliance. Self-serve, with native iOS and Android apps.`,
   alternates: { canonical: "/about" },
   openGraph: {
     title: `About ${SITE_NAME}`,
@@ -53,7 +53,7 @@ export default function AboutPage() {
             </p>
             <p>
               The desk and the ramp should share one system. That means a real
-              web console and a native iOS app, not a mobile afterthought.
+              web console and native iOS and Android apps, not a mobile afterthought.
             </p>
           </div>
 

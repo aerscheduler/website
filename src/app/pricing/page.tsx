@@ -39,7 +39,7 @@ const INCLUDED = [
   "Maintenance squawks and AVIATES inspections",
   "Reports, dashboards, and an audit log",
   "QuickBooks Online and Google Calendar sync",
-  "Native iOS app + web console",
+  "Native iOS and Android apps + web console",
   "Proration when fleet size changes",
 ];
 

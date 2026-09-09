@@ -20,7 +20,7 @@ export default function PrivacyPage() {
   return (
     <LegalDocument
       title="Privacy Policy"
-      updated="August 15, 2026"
+      updated="September 9, 2026"
       html={html}
     />
   );

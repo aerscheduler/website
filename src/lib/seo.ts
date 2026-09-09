@@ -1,5 +1,6 @@
 import {
   APP_STORE_URL,
+  PLAY_STORE_URL,
   PRICE_PER_AIRCRAFT,
   SITE_DESCRIPTION,
   SITE_NAME,
@@ -38,8 +39,7 @@ export function organizationJsonLd() {
     logo: absoluteUrl("/brand/logo-white.png"),
     email: SUPPORT_EMAIL,
     description: SITE_DESCRIPTION,
-    // TODO(android): add PLAY_STORE_URL back here when the Play listing is live.
-    sameAs: [APP_STORE_URL],
+    sameAs: [APP_STORE_URL, PLAY_STORE_URL],
     contactPoint: {
       "@type": "ContactPoint",
       email: SUPPORT_EMAIL,
@@ -65,11 +65,10 @@ export function softwareApplicationJsonLd() {
     "@type": "SoftwareApplication",
     name: SITE_NAME,
     applicationCategory: "BusinessApplication",
-    // TODO(android): restore "Android" and PLAY_STORE_URL when the Play listing is live.
-    operatingSystem: "Web, iOS",
+    operatingSystem: "Web, iOS, Android",
     description: SITE_DESCRIPTION,
     url: SITE_URL,
-    downloadUrl: [APP_STORE_URL],
+    downloadUrl: [APP_STORE_URL, PLAY_STORE_URL],
     offers: {
       "@type": "Offer",
       price: String(PRICE_PER_AIRCRAFT),
@@ -141,7 +140,7 @@ export const PRICING_FAQS = [
   },
   {
     q: "Is the mobile app included?",
-    a: "Yes. The native iOS app is included with every plan. Same price, no mobile surcharge.",
+    a: "Yes. The native iOS and Android apps are included with every plan. Same price, no mobile surcharge.",
   },
   {
     q: "What is on the Enterprise plan?",
@@ -149,7 +148,7 @@ export const PRICING_FAQS = [
   },
   {
     q: "Can I use the API on the standard plan?",
-    a: "No. API keys are an Enterprise feature. Everything else, scheduling, billing, maintenance, training records, reports, the iOS app, is included in the standard per-aircraft price.",
+    a: "No. API keys are an Enterprise feature. Everything else, scheduling, billing, maintenance, training records, reports, the iOS and Android apps, is included in the standard per-aircraft price.",
   },
   {
     q: "What about Google Calendar or QuickBooks?",
@@ -183,6 +182,6 @@ export const MYFBO_MIGRATION_FAQS = [
   },
   {
     q: "Is AerScheduler a full MyFBO replacement?",
-    a: "It covers scheduling, fleet, people, billing, maintenance, training records and compliance, on web and a native iOS app. Run both systems in parallel for a week before you cut over, so dispatch and billing are proven on your own operation first.",
+    a: "It covers scheduling, fleet, people, billing, maintenance, training records and compliance, on web and native iOS and Android apps. Run both systems in parallel for a week before you cut over, so dispatch and billing are proven on your own operation first.",
   },
 ];

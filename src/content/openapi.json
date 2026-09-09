@@ -2116,7 +2116,8 @@
                       "flight_school",
                       "flying_club",
                       "rental",
-                      "solo_instructor"
+                      "solo_instructor",
+                      "aircraft_owner"
                     ],
                     "description": "What kind of operation this is. Same values as create. Changing it here does not rewrite signup attribution."
                   },
@@ -6713,7 +6714,8 @@
                 "description": "Fields to change.",
                 "properties": {
                   "title": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 50
                   },
                   "start": {
                     "type": "string",

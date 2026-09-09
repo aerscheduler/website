@@ -177,7 +177,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
     h1: "Online aircraft booking for students and renters",
     statement: "Give the front desk its afternoon back.",
     proof: [
-      { value: "Web + iOS", label: "The same flow on both" },
+      { value: "Web + mobile", label: "The same flow on both" },
       { value: "Your rules", label: "Checked at save, not after" },
       { value: "Standby", label: "Cancellations get refilled" },
     ],
@@ -938,7 +938,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
   },
 
   mobile: {
-    h1: "The flight school app for iPhone",
+    h1: "The flight school app for iPhone and Android",
     statement: "Built for the ramp, not shrunk from a desktop.",
     proof: [
       { value: "Included", label: "On every plan, no surcharge" },
@@ -969,7 +969,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
       { q: "Does the app cost extra?", a: "No. It is included with every plan at the same per-aircraft price." },
       {
         q: "Is there an Android app?",
-        a: "Not today. The iPhone app is live on the App Store, and the web console runs in any mobile browser in the meantime.",
+        a: "Yes. It is on Google Play, alongside the iPhone app on the App Store. Same app, same school.",
       },
       {
         q: "Can I run reports on the phone?",
@@ -981,7 +981,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
       },
     ],
     ctaTitle: "Put the ramp in everybody's pocket",
-    ctaBody: "Included on every plan, on the App Store, the same operation as the desk.",
+    ctaBody: "Included on every plan, on the App Store and Google Play, the same operation as the desk.",
   },
 
   integrations: {

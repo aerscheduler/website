@@ -294,10 +294,10 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
     slug: "mobile",
     title: "Mobile App",
     navLabel: "Mobile App",
-    eyebrow: "iOS",
+    eyebrow: "iOS and Android",
     headline: "Built for the ramp, not a shrunk-down desktop.",
     summary:
-      "A native iOS app with a real Home: next booking, open squawks, unpaid invoices and AVIATES inspections. The same operation as the web desk.",
+      "A native iOS and Android app with a real Home: next booking, open squawks, unpaid invoices and AVIATES inspections. The same operation as the web desk.",
     bullets: [
       "A real native app, not a mobile website",
       "Home shows what's next: flights, maintenance, squawks, and dues",

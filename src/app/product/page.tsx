@@ -23,7 +23,7 @@ import { StoreBadges } from "@/components/store-badges";
 export const metadata: Metadata = {
   title: "Flight School Management Product",
   description:
-    "Aircraft dispatch, fleet, billing, maintenance, and a native iOS app. See how AerScheduler runs a flight school from desk to ramp.",
+    "Aircraft dispatch, fleet, billing, maintenance, and native iOS and Android apps. See how AerScheduler runs a flight school from desk to ramp.",
   alternates: { canonical: "/product" },
   openGraph: {
     title: "Flight School Management Product",
@@ -78,7 +78,7 @@ export default function ProductPage() {
 
       {/* Mobile */}
       <ProductSection
-        eyebrow="Native iOS"
+        eyebrow="Native iOS and Android"
         title="If you can do it at the desk, you should be able to do it on your phone."
         body="A real native app, not a mobile website. Students book lessons, instructors see their day, and owners aren’t stuck finding a computer to move a flight."
         points={[

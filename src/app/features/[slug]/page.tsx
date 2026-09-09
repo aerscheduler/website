@@ -79,7 +79,7 @@ const FEATURE_SEO: Record<
       "Track annuals, 100-hours and the rest of the airworthiness set on hour or calendar intervals, with calendar months counted to the end of the month and optional grounding the day an inspection comes due.",
   },
   mobile: {
-    title: "Flight School iOS App",
+    title: "Flight School iOS and Android App",
     description:
       "The native AerScheduler app for booking, invoices, documents, and squawks. The same operation as the web desk.",
   },

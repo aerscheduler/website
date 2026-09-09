@@ -242,7 +242,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       ],
       [
         "Mobile",
-        "Native iOS app. Book, dispatch and close out from the ramp.",
+        "Native iOS and Android apps. Book, dispatch and close out from the ramp.",
         "iOS app",
       ],
       [
@@ -330,7 +330,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       ],
       [
         "Mobile",
-        "Native iOS app for the whole team. Book, dispatch and close out from the ramp.",
+        "Native iOS and Android apps for the whole team. Book, dispatch and close out from the ramp.",
         "Mobile access",
       ],
       [
@@ -423,7 +423,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       ],
       [
         "Mobile",
-        "Native iOS app for the whole team. Book, dispatch and close out from the ramp.",
+        "Native iOS and Android apps for the whole team. Book, dispatch and close out from the ramp.",
         "iOS and Android apps",
       ],
       [
@@ -520,7 +520,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       ],
       [
         "Mobile",
-        "Native iOS app for the whole team. Book, dispatch and close out from the ramp.",
+        "Native iOS and Android apps for the whole team. Book, dispatch and close out from the ramp.",
         "Available",
       ],
       [
@@ -614,7 +614,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       ],
       [
         "Mobile",
-        "Native iOS app for the whole team. Book, dispatch and close out from the ramp.",
+        "Native iOS and Android apps for the whole team. Book, dispatch and close out from the ramp.",
         "Not published",
       ],
       [
@@ -706,7 +706,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       ],
       [
         "Mobile",
-        "Native iOS app for the whole team. Book, dispatch and close out from the ramp.",
+        "Native iOS and Android apps for the whole team. Book, dispatch and close out from the ramp.",
         "Mobile access",
       ],
     ],
@@ -790,7 +790,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       ],
       [
         "Mobile",
-        "Native iOS app for the whole club.",
+        "Native iOS and Android apps for the whole club.",
         "Mobile-friendly website",
       ],
       [
@@ -857,7 +857,7 @@ export const COMPETITOR_FAQS: Record<
     },
     {
       q: "Does AerScheduler have a mobile app?",
-      a: "Yes, a native iOS app for the whole team. Instructors, students and renters can book, and dispatchers can ramp a flight in and out from the ramp itself.",
+      a: "Yes, native iOS and Android apps for the whole team. Instructors, students and renters can book, and dispatchers can ramp a flight in and out from the ramp itself.",
     },
     {
       q: "Can several people be billed for one flight?",
