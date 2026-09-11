@@ -41,7 +41,9 @@ open their enrollment, which is enough to cache it.
     type your notes.
   </Step>
   <Step n={4} title="Save draft, or Sign and complete">
-    Save draft leaves the record open and editable. Sign and complete freezes it and credits
+    Save draft leaves the record open and editable, except on a lesson the syllabus marked
+    sign-off optional: a passing Save draft is the finish, stamps your signature, and posts
+    the hours. Sign and complete freezes a lesson that still requires sign-off and credits
     the student's hours.
   </Step>
 </Steps>
@@ -53,18 +55,25 @@ turns out to be wrong, see [Correct a signed lesson record](/docs/training/corre
 </Callout>
 
 If the syllabus author ticked Notes required on that lesson, the app will not let you sign
-it with an empty Notes box.
+it with an empty Notes box. On a sign-off-optional lesson that also requires notes, Save
+draft is refused the same way: that save is the signature.
+
+Hours from a grade captured offline count on the day you wrote them at the aircraft, not
+the day the phone finds a network. Recency windows (for example test prep in the last two
+calendar months) use that flying day.
 
 ## Simulator hours and per-task grades
 
-The phone is the only place these two can be entered. Neither the grading dialog on the
-web training record nor the Training record section of a flight close-out has a SIM field
-or a task grid.
+SIM hours appear when the lesson type is Simulator, on the phone, on the web training
+record, and in the close-out Training record section. Per-task ACS marks are on all three
+as well.
 
-That matters more than it sounds. A course with a simulator limit on a requirement can only
-apply that limit to hours that were recorded as simulator time, so a school that grades
-entirely in the console never populates it. If you teach in a device, grade those lessons
-on the phone.
+A course with a simulator limit on a requirement can only apply that limit to hours that
+were recorded as simulator time. Type those hours into SIM, not only into Flight, or the
+ceiling never sees them.
+
+Grades saved on the phone with no signal keep the per-task marks you tapped. They sync with
+the rest of the grade when you are back.
 
 ## What the pending banner means
 

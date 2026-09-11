@@ -51,7 +51,9 @@ Training → the enrollment.
 The **Course fee** card shows the amount recorded when they enrolled.
 </Step>
 <Step n={3} title="Click Bill $X">
-The card flips to **Invoiced** with a **View invoice** button.
+The card flips to **Invoiced**. If invoicing is on, a **View invoice** button opens it. If
+the school bills on the member ledger instead, there is no invoice to open: the fee is
+still billed, and a second click is refused.
 </Step>
 </Steps>
 
@@ -75,8 +77,9 @@ record is not something to do twice.
 
 ## It can only be billed once
 
-The link between an enrollment and its fee invoice is unique on purpose. A second attempt is
-refused with "That enrollment fee has already been invoiced."
+The link between an enrollment and its fee is unique on purpose, whether that is an invoice
+or a ledger charge. A second attempt is refused with "That enrollment fee has already been
+billed."
 
 Two more things worth knowing:
 

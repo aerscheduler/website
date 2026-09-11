@@ -10139,7 +10139,7 @@
           "Training"
         ],
         "summary": "List courses",
-        "description": "The courses your school teaches. Requires the **admin** role , a syllabus is not students' business.",
+        "description": "The courses your school teaches. Requires the **configureTraining** grant or the **admin** role , a syllabus is not students' business.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -10257,7 +10257,7 @@
           "Training"
         ],
         "summary": "Create a course",
-        "description": "Creates the course and its first editable draft version, `Rev A`. Requires the **admin** role.",
+        "description": "Creates the course and its first editable draft version, `Rev A`. Requires the **configureTraining** grant or the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -10375,7 +10375,7 @@
           "Training"
         ],
         "summary": "List syllabus templates",
-        "description": "Ready-made syllabi a school can fork. Requires the **admin** role.",
+        "description": "Ready-made syllabi a school can fork. Requires the **configureTraining** grant or the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -10486,7 +10486,7 @@
           "Training"
         ],
         "summary": "Create a course from a template",
-        "description": "Builds a complete course , stages, lessons, ACS-coded tasks and requirements, with the credit map already wired , as an editable **draft**. Templates are always created as Part 61: a template cannot be an FAA-approved Training Course Outline, because approval is per school and per FSDO. Requires the **admin** role.",
+        "description": "Builds a complete course , stages, lessons, ACS-coded tasks and requirements, with the credit map already wired , as an editable **draft**. Templates are always created as Part 61: a template cannot be an FAA-approved Training Course Outline, because approval is per school and per FSDO. Requires the **configureTraining** grant or the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -10584,7 +10584,7 @@
           "Training"
         ],
         "summary": "Get a course",
-        "description": "The course and every version of its syllabus. Requires the **admin** role.",
+        "description": "The course and every version of its syllabus. Requires the **configureTraining** grant or the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -10650,7 +10650,7 @@
           "Training"
         ],
         "summary": "Update a course",
-        "description": "Requires the **admin** role. `regulatoryPart` cannot be changed.",
+        "description": "Requires the **configureTraining** grant or the **admin** role. `regulatoryPart` cannot be changed.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -10751,7 +10751,7 @@
           "Training"
         ],
         "summary": "Create a syllabus version",
-        "description": "Pass `copyFromVersionId` to fork an existing version , the normal way to revise a published syllabus, since the published one cannot be edited. The copy is deep and the new version is an editable draft. Requires the **admin** role.",
+        "description": "Pass `copyFromVersionId` to fork an existing version , the normal way to revise a published syllabus, since the published one cannot be edited. The copy is deep and the new version is an editable draft. Requires the **configureTraining** grant or the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -10852,7 +10852,7 @@
           "Training"
         ],
         "summary": "Get a syllabus version",
-        "description": "The whole syllabus: stages, lessons, tasks and requirements. Requires the **admin** role.",
+        "description": "The whole syllabus: stages, lessons, tasks and requirements. Requires the **configureTraining** grant or the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -10920,7 +10920,7 @@
           "Training"
         ],
         "summary": "Publish a syllabus version",
-        "description": "**Freezes the version permanently.** After this, no stage, lesson, task or requirement under it can be changed , students are enrolled against exactly these lessons. To revise, create a new version from this one. Requires the **admin** role.",
+        "description": "**Freezes the version permanently.** After this, no stage, lesson, task or requirement under it can be changed , students are enrolled against exactly these lessons. To revise, create a new version from this one. Requires the **configureTraining** grant or the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -11028,7 +11028,7 @@
           "Training"
         ],
         "summary": "Retire a syllabus version",
-        "description": "Stops new enrollments. Students already on it finish on it. Requires the **admin** role.",
+        "description": "Stops new enrollments. Students already on it finish on it. Requires the **configureTraining** grant or the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -11112,7 +11112,7 @@
           "Training"
         ],
         "summary": "Create or update a stage",
-        "description": "Omit `stageId` to create. Only works on a draft. Requires the **admin** role.",
+        "description": "Omit `stageId` to create. Only works on a draft. Requires the **configureTraining** grant or the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -11222,7 +11222,7 @@
           "Training"
         ],
         "summary": "Delete a stage",
-        "description": "Only works on a draft. Requires the **admin** role.",
+        "description": "Only works on a draft. Requires the **configureTraining** grant or the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -11260,7 +11260,7 @@
             }
           },
           "409": {
-            "description": "The version is published.",
+            "description": "The version is published, or training records exist on it.",
             "content": {
               "application/json": {
                 "schema": {
@@ -11309,7 +11309,7 @@
           "Training"
         ],
         "summary": "Create or update a lesson",
-        "description": "Omit `lessonId` to create. `credits` declares what this lesson is designed to credit and from which clock , this is what makes one flight post to several requirements at once. Only works on a draft. Requires the **admin** role.",
+        "description": "Omit `lessonId` to create. `credits` declares what this lesson is designed to credit and from which clock , this is what makes one flight post to several requirements at once. Only works on a draft. Requires the **configureTraining** grant or the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -11347,7 +11347,7 @@
             }
           },
           "409": {
-            "description": "The version is published.",
+            "description": "The version is published, or training records exist and the credit map, sign-off, notes, or stage-check flag would change.",
             "content": {
               "application/json": {
                 "schema": {
@@ -11472,7 +11472,7 @@
           "Training"
         ],
         "summary": "Delete a lesson",
-        "description": "Only works on a draft. Requires the **admin** role.",
+        "description": "Only works on a draft. Requires the **configureTraining** grant or the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -11510,7 +11510,7 @@
             }
           },
           "409": {
-            "description": "The version is published.",
+            "description": "The version is published, or training records exist on it.",
             "content": {
               "application/json": {
                 "schema": {
@@ -11559,7 +11559,7 @@
           "Training"
         ],
         "summary": "Replace a lesson's tasks",
-        "description": "Send the full list; it replaces what is there. `acsCode` maps a task to the ACS, e.g. `PA.VI.A`. Requires the **admin** role.",
+        "description": "Send the full list; it replaces what is there. `acsCode` maps a task to the ACS, e.g. `PA.VI.A`. Requires the **configureTraining** grant or the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -11597,7 +11597,7 @@
             }
           },
           "409": {
-            "description": "The version is published.",
+            "description": "The version is published, or training records exist on the tasks.",
             "content": {
               "application/json": {
                 "schema": {
@@ -11682,7 +11682,7 @@
           "Training"
         ],
         "summary": "Create or update a requirement",
-        "description": "What a student must accumulate , 35 hours total, 3 hours night, 10 towered landings. Measured in hours **or** a count, never both. `source` is `part61`, `part141` or `school`; only FAA-sourced ones can block a Part 141 graduation. Requires the **admin** role.",
+        "description": "What a student must accumulate , 35 hours total, 3 hours night, 10 towered landings. Measured in hours **or** a count, never both. `source` is `part61`, `part141` or `school`; only FAA-sourced ones can block a Part 141 graduation. Requires the **configureTraining** grant or the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -11695,6 +11695,16 @@
                       "type": "object"
                     }
                   }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Measured in hours or events, never both, and never neither.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -11814,7 +11824,7 @@
           "Training"
         ],
         "summary": "Delete a requirement",
-        "description": "Only works on a draft. Requires the **admin** role.",
+        "description": "Only works on a draft. Requires the **configureTraining** grant or the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -11852,7 +11862,7 @@
             }
           },
           "409": {
-            "description": "The version is published.",
+            "description": "The version is published, or training records exist on it.",
             "content": {
               "application/json": {
                 "schema": {
@@ -12037,7 +12047,7 @@
           "Training"
         ],
         "summary": "Enroll a student",
-        "description": "Pins the student to this syllabus version. A Part 141 course must be published first. Requires the **admin** role.",
+        "description": "Pins the student to this syllabus version. A Part 141 course must be published first. Requires the **manageEnrollment** grant or the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -12075,7 +12085,7 @@
             }
           },
           "409": {
-            "description": "Already enrolled, or the version is a draft or retired.",
+            "description": "Already enrolled, or the version is a draft, retired, or the course or member is archived.",
             "content": {
               "application/json": {
                 "schema": {
@@ -12131,7 +12141,7 @@
           "Training"
         ],
         "summary": "A student's progress",
-        "description": "The syllabus, every graded record against it, and where the ledger stands on each requirement , including what a simulator or transfer ceiling disallowed. Readable by the student themselves, and by instructors and admins.",
+        "description": "The syllabus, every graded record against it, and where the ledger stands on each requirement , including what a simulator or transfer ceiling disallowed. Readable by the student themselves, instructors, admins, and anyone granted `manageEnrollment`.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -12199,7 +12209,7 @@
           "Training"
         ],
         "summary": "Graduate a student",
-        "description": "Under Part 141 this refuses while any FAA-sourced requirement is unmet, and requires the chief instructor to have certified the record. Under Part 61 nothing blocks , the instructor decides readiness. Requires the **admin** role.",
+        "description": "Under Part 141 this refuses while any FAA-sourced requirement is unmet, and requires the chief instructor to have certified the record. Under Part 61 nothing blocks , the instructor decides readiness. Requires the **manageEnrollment** grant or the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -12294,7 +12304,7 @@
           "Training"
         ],
         "summary": "Terminate or transfer an enrollment",
-        "description": "§141.101 wants the date and the reason. Requires the **admin** role.",
+        "description": "§141.101 wants the date and the reason. Requires the **manageEnrollment** grant or the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -12398,7 +12408,7 @@
           "Training"
         ],
         "summary": "Certify a training record",
-        "description": "§141.85 , the chief instructor certifying the record before graduation. Requires the **admin** role.",
+        "description": "§141.85 , the chief instructor certifying the record before graduation. Requires the **checkInstructor** designation for this course, or the **admin** role. The record stays amendable after certify.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -12427,6 +12437,16 @@
           },
           "403": {
             "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The enrollment is closed, or the record is already certified.",
             "content": {
               "application/json": {
                 "schema": {
@@ -12901,7 +12921,7 @@
           "Training"
         ],
         "summary": "Bill the course enrollment fee",
-        "description": "Raises an invoice for the fee this enrollment snapshotted when the student enrolled. Refuses if the course had no fee or the fee has already been invoiced , a second invoice for the same fee is not something a refund undoes cleanly. Requires the **manageEnrollment** grant or the **admin** role.",
+        "description": "Raises an invoice, or a ledger charge if the school bills that way, for the fee this enrollment snapshotted when the student enrolled. Refuses if the course had no fee or the fee has already been billed , a second charge for the same fee is not something a refund undoes cleanly. Requires the **manageEnrollment** grant or the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -12917,11 +12937,32 @@
                           "type": "integer"
                         },
                         "invoiceId": {
-                          "type": "integer"
+                          "type": [
+                            "integer",
+                            "null"
+                          ],
+                          "description": "Set when invoicing raised a Stripe invoice."
+                        },
+                        "ledgerEntryId": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ],
+                          "description": "Set when the fee posted to the member ledger instead."
                         }
                       }
                     }
                   }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Stripe or billing configuration refused the charge.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -12938,6 +12979,16 @@
           },
           "403": {
             "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "There is no fee on this enrollment, or it has already been billed.",
             "content": {
               "application/json": {
                 "schema": {
@@ -12977,10 +13028,10 @@
           "Training"
         ],
         "summary": "Grade a lesson",
-        "description": "Creates or updates a training record. Editable until it is signed and **frozen the moment it is**. Pass `reservationId` to tie it to the booking it came from. Requires the **instructor** or **admin** role.",
+        "description": "Creates or updates a training record. Editable until it is signed and **frozen the moment it is**. A passing grade on a lesson the syllabus marked sign-off optional also signs and posts credits (`signed: true` on the response), because the console then treats the lesson as complete and hides Sign. Pass `reservationId` to tie it to the booking it came from. Requires the **instructor** or **admin** role.",
         "responses": {
           "200": {
-            "description": "Saved. `warning` carries a Part 141 out-of-order notice, if any.",
+            "description": "Saved. `warning` carries a Part 141 out-of-order notice, if any. `signed` is true when a passing grade on a sign-off-optional lesson also posted its credits.",
             "content": {
               "application/json": {
                 "schema": {
@@ -13062,16 +13113,25 @@
                     "type": "string"
                   },
                   "flightDeciHours": {
-                    "type": "integer",
-                    "description": "Tenths. Normally the Hobbs delta."
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "description": "Tenths. Normally the Hobbs delta. Omit on an update to leave the existing figure; send null to clear it."
                   },
                   "instructionDeciHours": {
-                    "type": "integer",
-                    "description": "Tenths. Normally the briefing time."
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "description": "Tenths. Normally the briefing time. Omit on an update to leave the existing figure; send null to clear it."
                   },
                   "simulatorDeciHours": {
-                    "type": "integer",
-                    "description": "Tenths. The part flown in a simulator or FTD."
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "description": "Tenths. The part flown in a simulator or FTD. Omit on an update to leave the existing figure; send null to clear it."
                   },
                   "reservationId": {
                     "type": "integer"
@@ -13079,6 +13139,11 @@
                   "instructorOrgUserId": {
                     "type": "integer",
                     "description": "Defaults to the caller."
+                  },
+                  "occurredAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "When the training happened. The phone sends this from a grade queued offline so recency is judged on the flying, not on the sync. A linked booking's start still wins. Defaults to now."
                   },
                   "taskGrades": {
                     "type": "array",
@@ -13114,7 +13179,7 @@
           "Training"
         ],
         "summary": "Sign a lesson",
-        "description": "**Freezes the record and posts what it earned to the ledger, atomically.** By default the credits come from what the syllabus says the lesson credits; pass `credits` to override , weather turns a night cross-country into a local day flight, and the record has to be able to say so. Requires the **instructor** or **admin** role.",
+        "description": "**Freezes the record and posts what it earned to the ledger, atomically.** By default the credits come from what the syllabus says the lesson credits; pass `credits` to override , weather turns a night cross-country into a local day flight, and the record has to be able to say so. A second Sign on an already-signed record is a no-op (200 with the existing `creditsPosted`), so save-then-sign after a sign-off-optional save does not fail. Requires the **instructor** or **admin** role.",
         "responses": {
           "200": {
             "description": "Signed. `creditsPosted` is how many ledger entries it wrote.",
@@ -13152,7 +13217,7 @@
             }
           },
           "409": {
-            "description": "Already signed, or not graded yet.",
+            "description": "Not graded yet, or the enrollment is closed.",
             "content": {
               "application/json": {
                 "schema": {
@@ -13208,6 +13273,11 @@
                         }
                       }
                     }
+                  },
+                  "occurredAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "When the training happened. Same field as grade. A linked booking's start still wins."
                   }
                 }
               }
@@ -13260,7 +13330,7 @@
             }
           },
           "409": {
-            "description": "The instructor has not signed yet.",
+            "description": "The instructor has not signed yet, or this lesson does not ask for a student signature.",
             "content": {
               "application/json": {
                 "schema": {
@@ -13398,7 +13468,7 @@
           "Training"
         ],
         "summary": "Post credit by hand",
-        "description": "For transferred training and backfills. Measured in hours **or** a count, never both, and never negative , to take credit back, reverse the entry that granted it. A `manual` credit must carry a note. Requires the **admin** role.",
+        "description": "For transferred training and backfills. Measured in hours **or** a count, never both, and never negative , to take credit back, reverse the entry that granted it. A `manual` credit must carry a note. Lesson hours are posted when the instructor signs, not through this endpoint. Requires the **manageEnrollment** grant or the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -13416,7 +13486,7 @@
             }
           },
           "400": {
-            "description": "The entry would be meaningless or unexplained.",
+            "description": "The entry would be meaningless or unexplained, a transfer is missing when it was flown, or the source is a signed lesson (those are posted by signing).",
             "content": {
               "application/json": {
                 "schema": {
@@ -13437,6 +13507,16 @@
           },
           "403": {
             "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The enrollment is closed.",
             "content": {
               "application/json": {
                 "schema": {
@@ -13481,7 +13561,6 @@
                   "source": {
                     "type": "string",
                     "enum": [
-                      "lesson",
                       "transfer_141",
                       "transfer_61",
                       "simulator",
@@ -13495,7 +13574,7 @@
                   "occurredAt": {
                     "type": "string",
                     "format": "date-time",
-                    "description": "When the training actually happened. Defaults to now. Send it for transferred hours , a requirement with a recency window judges credit by this date, not by when the row was written."
+                    "description": "When the training actually happened. Required for transferred hours (`transfer_61`, `transfer_141`): recency is judged on this date, not on when the row was written. Defaults to now for simulator and manual credits."
                   }
                 },
                 "required": [
@@ -13515,7 +13594,7 @@
           "Training"
         ],
         "summary": "Reverse a ledger entry",
-        "description": "Writes a negative entry alongside. Nothing is deleted, and a reversal cannot itself be reversed. Requires the **admin** role.",
+        "description": "Writes a negative entry alongside. Nothing is deleted, and a reversal cannot itself be reversed. Hours posted by a signed lesson are taken back by amending the lesson, not here. Requires the **manageEnrollment** grant or the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -13553,7 +13632,7 @@
             }
           },
           "409": {
-            "description": "Already reversed, or itself a reversal.",
+            "description": "Already reversed, itself a reversal, or the hours came from a signed lesson.",
             "content": {
               "application/json": {
                 "schema": {
@@ -13977,7 +14056,7 @@
           "Training"
         ],
         "summary": "Set the grading scale",
-        "description": "Declares this course's marks and which of them mean a lesson is complete. `\"3\"` passes at a school marking 1,4 and fails at one marking 1,3, so guessing from the string is how a gradebook quietly disagrees with the school using it. Draft versions only. Requires the **admin** role.\n\n**The scale is written as rows and read back as two fields.** Anywhere a course version is returned, `gradingScale` is the list of codes in display order and `gradeOptions` is the same list with each mark's `passing` flag. Build a grade picker from `gradingScale`, and read `gradeOptions` when you need to know what a mark means.",
+        "description": "Declares this course's marks and which of them mean a lesson is complete. `\"3\"` passes at a school marking 1,4 and fails at one marking 1,3, so guessing from the string is how a gradebook quietly disagrees with the school using it. Draft versions only. Requires the **configureTraining** grant or the **admin** role.\n\n**The scale is written as rows and read back as two fields.** Anywhere a course version is returned, `gradingScale` is the list of codes in display order and `gradeOptions` is the same list with each mark's `passing` flag. Build a grade picker from `gradingScale`, and read `gradeOptions` when you need to know what a mark means.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -14016,6 +14095,16 @@
           },
           "403": {
             "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The version is published, or training records exist on it.",
             "content": {
               "application/json": {
                 "schema": {
@@ -14088,7 +14177,7 @@
         "description": "The lessons a booking could be closing out, unfinished ones first, filtered to what the booking type can be , a `dual` booking offers flight lessons, `ground` offers ground. A rental or a guest flight offers nothing.",
         "responses": {
           "200": {
-            "description": "One entry per enrollment. Each lesson carries its ACS `tasks` (`id`, `name`, `acsCode`, `standard`), which are what `taskGrades` on a saved record refer to.",
+            "description": "One entry per enrollment. Each lesson carries its ACS `tasks` (`id`, `name`, `acsCode`, `standard`), which are what `taskGrades` on a saved record refer to; `complete` is true only for a signed passing grade (a U is not complete); `recordId` is the unsigned draft for that lesson, if there is one, so a close-out can update it rather than creating a second row; `draft` is that row's grade, notes, hours, task marks and `reservationId` (the booking already linked, if any) so the close-out can show what was already written rather than overwriting it, and so it can refuse to Sign a draft that belongs to a different flight; `gradedReservationIds` are the bookings that already have a signed record on this enrollment; and `gradedOn` names the lesson signed on each of those bookings, so a reload of the close-out can still say this flight was graded.",
             "content": {
               "application/json": {
                 "schema": {

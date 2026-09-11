@@ -24,7 +24,9 @@ Stages and lessons in syllabus order. The lesson the syllabus suggests next is h
 and badged **Next up**.
 </Step>
 <Step n={3} title="Click Grade">
-It reads **Continue** instead if somebody has already started a draft for that lesson.
+It reads **Continue** instead if somebody has already started a draft for that lesson. A
+lesson already marked complete has no Grade button: correct it with **Amend** on the signed
+row instead.
 </Step>
 </Steps>
 
@@ -32,14 +34,17 @@ It reads **Continue** instead if somebody has already started a draft for that l
 
 ## Save a draft, or save and sign
 
-Fill in **Grade**, **Flight hours**, **Ground / instruction hours** and **Notes**. If the
-lesson carries minimum flight and ground hours from the syllabus, the boxes arrive prefilled
-with them, so the common case is open, confirm, sign.
+Fill in **Grade**, **Flight hours**, **Ground / instruction hours**, **When it was flown**
+and **Notes**. If the lesson carries minimum flight and ground hours from the syllabus, the
+boxes arrive prefilled with them, so the common case is open, confirm, sign.
+
+On a **flight** or **simulator** lesson, **Of which, simulator hours** is part of the flight
+figure, not extra. Recency is judged on the date you type, not on when you press Sign.
 
 | Button | What it does |
 |---|---|
-| **Save draft** | Leaves an editable record. The row reads **Grading**. Nothing is credited yet, and anyone who can grade can pick it up. |
-| **Save and sign** | Freezes the record and posts its credits. The row reads **Awaiting student** until the student countersigns. |
+| **Save draft** | Leaves an editable record. The row reads **Grading**. Nothing is credited yet, and anyone who can grade can pick it up. On a lesson the syllabus marked sign-off optional, a passing Save draft is the finish: it stamps the instructor signature and posts the hours, and the student is not asked to countersign. |
+| **Save and sign** | Freezes the record and posts its credits. The row reads **Awaiting student** until the student countersigns. On a sign-off-optional lesson, Save and sign after a passing Save draft does nothing further: the hours are already posted. |
 
 <Screenshot id="grade-lesson-dialog" />
 
@@ -69,7 +74,8 @@ Nothing in the product chases the student. To find records nobody has countersig
 the Training records report on Signatures = Awaiting student. See
 [Pull training records for an FAA inspection](/docs/training/training-records-for-an-faa-inspection).
 
-Students sign from <Where app="web">My training</Where> or from the app. See
+Students sign from <Where app="web">My training</Where>, from the course record that link
+opens, or from the app. See
 [See your training progress and sign your lessons](/docs/training/my-training-for-students).
 
 ## Grading out of order on a Part 141 course
@@ -77,6 +83,10 @@ Students sign from <Where app="web">My training</Where> or from the app. See
 On a Part 141 course, saving a draft for a lesson whose earlier lessons are not complete
 returns a warning naming the count: "N earlier lessons in this course have not been
 completed. Record a reason if you are taking this one out of order."
+
+Complete here is the same rule as the rest of the record: a signed unsatisfactory grade
+still counts as outstanding, and a lesson the syllabus marked as not needing a signature
+is complete on its passing grade alone.
 
 It is a warning and never a block. Put the reason in the notes and carry on. **Save and sign**
 does not raise it at all.
@@ -97,19 +107,22 @@ clears it.
 <Screenshot id="grade-lesson-dialog" />
 
 A lesson marked **Notes required** in the syllabus will not sign with the Notes box empty.
-**Save draft** is still available: an unfinished record is exactly what a draft is for.
+On a lesson that still requires sign-off, **Save draft** is still available: an unfinished
+record is exactly what a draft is for. On a sign-off-optional lesson, a passing Save draft
+is the signature, so notes are required there too.
 
 ## What this dialog cannot do
 
 - **No records on a closed enrollment.** Once an enrollment is graduated, terminated or
   transferred, nothing further can be added: "This student's enrollment is graduated; records
-  cannot be added to it." There is no un-graduate, so record everything before you graduate
-  somebody. See
+  cannot be added to it." An unsigned draft left on the enrollment cannot be signed,
+  amended, or countersigned either, and it does not post hours. There is no un-graduate, so
+  record everything before you graduate somebody. See
   [Graduate a student, or end an enrollment](/docs/training/graduate-or-end-an-enrollment).
 - **No link back to a booking.** A record saved from this dialog stands on its own, and the
   instructor named on it becomes whoever saved it. A record graded at the close-out carries a
-  link to the flight, and re-saving it here clears that link. If you care about the link,
-  grade at the close-out.
+  link to the flight. Re-saving from this dialog leaves that link alone; it does not clear
+  it. If you care about the link, grade at the close-out.
 
 <Callout type="tip">
 Drafts are easy to lose track of, because an unsigned record credits nothing and shows only

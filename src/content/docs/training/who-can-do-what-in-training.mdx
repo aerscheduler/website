@@ -58,8 +58,9 @@ school-wide.
     Each grant carries a description of exactly what it adds.
   </Step>
   <Step n={3} title="Pick a person">
-    Only owners, admins, instructors and dispatchers are offered. Students and renters cannot
-    hold a training grant.
+    For Configure training, Enroll and graduate, and Check instructor: only owners, admins,
+    instructors and dispatchers are offered. Auditor can go to any member, including an FAA
+    inspector who is not staff.
   </Step>
   <Step n={4} title="Choose which course, for Check instructor only">
     Or Every course.
@@ -80,14 +81,15 @@ administrator who is not an org admin can do the job without being made one.
 
 ## Read-only access for an FAA inspector
 
-The **Auditor** grant reads every training record in the school and changes nothing, but it
-can only be given to somebody who already holds a staff role. The person picker offers
-owners, admins, instructors and dispatchers only, so an inspector added to your roster as an
-ordinary member never appears in it and cannot be granted Auditor at all.
+The **Auditor** grant reads every training record in the school and changes nothing. It can
+be given to any member of the roster, including someone with no staff role, so an FAA
+inspector does not have to be made a dispatcher first. The other three grants (configure
+training, enroll and graduate, check instructor) are still offered only to owners, admins,
+instructors, and dispatchers.
 
-<Callout type="warning">
-Making the inspector a dispatcher or an instructor so that the grant can be given also hands
-them that role's own powers, which is a good deal more than read-only.
+<Callout type="note">
+Auditor is read-only. Making the inspector an instructor or dispatcher instead would also
+hand them that role's own powers, which is a good deal more than reading records.
 </Callout>
 
 In practice the cleaner route is to export the record yourself. See
@@ -95,19 +97,6 @@ In practice the cleaner route is to export the record yourself. See
 
 ## Where the button and the permission disagree
 
-Two places in the console offer a dispatcher something the server will refuse. Both are worth
-knowing before somebody emails you about a broken screen.
-
-**Sign one, on the Endorsements card.** The button is shown to dispatchers, but only an
-instructor or an administrator can sign an endorsement. A dispatcher who tries gets told so.
-
-**A training record opened by link or by search.** Dispatchers can reach the address, but the
-server only serves a record to the student on it, to somebody who can grade, or to an Auditor.
-A dispatcher gets a refusal on everybody but themselves.
-
-<Callout type="note">
-There is a related oddity on a person's page. If you are staff but not an instructor, the
-Training card on somebody else's page can show your own enrollments and your own endorsements
-rather than theirs. It is your data being shown in the wrong frame, not two members' records
-mixed together. Read other people's records from Reports instead.
-</Callout>
+Dispatchers can reach a training record by link or search, but the server only serves a
+record to the student on it, to somebody who can grade, or to an Auditor. A dispatcher gets
+a refusal on everybody but themselves. Read other people's records from Reports instead.

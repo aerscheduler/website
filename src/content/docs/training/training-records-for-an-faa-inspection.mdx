@@ -40,7 +40,7 @@ enrolled on more than one.
 
 Useful optional columns, added from the report toolbar: **Stage**, **Type**, **Simulator**,
 **Notes**, **Superseded**, **Correction**, and **Credits**, which counts the ledger entries
-each signed lesson posted.
+each signed lesson posted. An amendment's reversals are not counted on that row.
 
 If you pull the same thing every year, [save the view](/docs/reports/save-a-report-view) so the
 range, the filters and the columns come back next time.
@@ -50,8 +50,8 @@ range, the filters and the columns come back next time.
 | Value | Means |
 |---|---|
 | Not signed | A draft. The instructor opened it and never signed. It credits nothing. |
-| Awaiting student | The instructor signed it, so the hours are credited, but the student has not countersigned. |
-| Complete | Both signatures are on the record. |
+| Awaiting student | The instructor signed it, so the hours are credited, but the student has not countersigned. Lessons the syllabus marked sign-off optional never sit here. |
+| Complete | Both signatures are on the record, or the lesson does not require a student signature. |
 
 Filter Signatures to **Not signed** before an inspection to find drafts an instructor left
 open, and to **Awaiting student** to find records nobody countersigned. Neither is chased
@@ -60,7 +60,8 @@ automatically, so this report is how you find them.
 ## Superseded and Correction rows
 
 A record that has been amended stays in the report, flagged **Superseded**, with its
-replacement flagged **Correction**. Both are shown on purpose.
+replacement flagged **Correction**. Both are shown on purpose. Hour and credit **totals**
+skip superseded rows so the correction is not added on top of the original.
 
 That is the whole reason AerScheduler amends rather than edits: the original is still there,
 the correction is beside it, and the reason for the change is on the reversal in the student's
@@ -84,7 +85,9 @@ school's name, the window and the date it was produced on the page itself.
 
 The other half of the picture. One row per **enrollment**, with lessons done against lessons
 in the syllabus, percent complete, total hours, how many requirements are still short, the
-next lesson, and days since the student last flew.
+next lesson, and days since the student last flew. The optional **Awaiting student** column
+counts instructor-signed lessons still waiting for a countersignature. Lessons marked
+sign-off optional are not counted.
 
 <Screenshot id="report-student-progress" />
 

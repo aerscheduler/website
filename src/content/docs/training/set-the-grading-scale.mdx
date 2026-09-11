@@ -1,7 +1,8 @@
 <Summary>
 Open the course and go to **Requirements**. The **Grading scale** card at the top holds the
 marks this course version uses and which of them mean the lesson is complete. It defaults to
-S, U and I with S completing the lesson, and it freezes when the version is published.
+S, U and I with S completing the lesson. It freezes when the version is published, and on a
+Part 61 draft it also freezes the moment a training record exists on that version.
 </Summary>
 
 <Roles>Owners, Admins, holders of the Configure training grant</Roles>
@@ -16,7 +17,9 @@ version.
 
 <Steps>
 <Step n={1} title="Course → Requirements">
-The **Grading scale** card sits above the requirement list. The version has to be a draft.
+The **Grading scale** card sits above the requirement list. The version has to be a draft,
+and it cannot already have training records. Changing which marks complete the lesson after
+someone has been graded would silently rewrite their progress.
 </Step>
 <Step n={2} title="Edit the codes">
 One row per mark.
@@ -58,12 +61,10 @@ An unsatisfactory grade is a real record, not a failure to record anything.
 - Its hours are still credited to every requirement the lesson credits. The student flew
   them.
 
-<Callout type="warning">
-The close-out lesson picker and the "Next up" strip on the booking form treat a lesson as
-flown as soon as **any** signed record exists for it, including one graded U. So the same
-student can read as "Flight 5 ✓, next up Flight 6" at the close-out while their training
-record still shows Flight 5 incomplete and Next up. The training record is the one to
-believe.
+<Callout type="note">
+The close-out picker and the Next up strip use the same complete rule as the training
+record: a U is on the record, and the lesson stays outstanding until a passing grade is
+signed.
 </Callout>
 
 ## Your marks follow the course everywhere
@@ -83,10 +84,15 @@ school part way through a change is running two scales at once, correctly, and e
 screens show their own.
 </Callout>
 
-## The scale freezes when you publish
+## The scale freezes when records exist, and when you publish
 
-Publishing the version locks the grading scale along with the lessons, the tasks and the
-requirements. There is no unpublish.
+A signed lesson is complete only if its mark is one this card says completes the lesson.
+Flipping that after records exist would move the lessons-complete bar with no amendment.
+So Save scale is refused, with "This syllabus has training records on it," the same way
+deleting a lesson is refused.
+
+Publishing the version also locks the grading scale along with the lessons, the tasks and
+the requirements. There is no unpublish.
 
 To change the marks on a published course, create a new version, edit its scale, publish
 that, and retire the old one. Students already enrolled stay on their version and keep

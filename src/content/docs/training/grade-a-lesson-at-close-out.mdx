@@ -2,22 +2,23 @@
 This is the intended path. Close the booking out the way you always do, then scroll to the
 **Training record** section on the close-out sheet, click **Grade this lesson**, check the
 lesson and the grade, and click **Sign lesson**. Flight and Ground are already filled in from
-the Hobbs delta and the briefing time.
+the billed meter (Hobbs or tach, whichever that aircraft invoices on) and the briefing time.
 </Summary>
 
-<Roles>Instructors assigned to the booking, Admins, Owners</Roles>
+<Roles>Instructors at the school, Admins, Owners</Roles>
 
 ## Close out the flight as usual
 
-Nothing about training changes the close-out. Enter the Hobbs readings and the briefing time
+Nothing about training changes the close-out. Enter the meter readings and the briefing time
 exactly as you would on a rental. See
 [Close out a flight and bill it](/docs/billing/close-out-a-flight-and-bill-it).
 
 If the student is enrolled on a course, you will already have seen a grey **Next up** strip
 on the booking form when the flight was made, naming the lesson the syllabus suggests and
-how far through they are. If they are on more than one course, the strip starts as one line
-with a link to show the others. Nothing is committed there: you pick and grade the lesson
-at close-out, once you know how it went.
+how far through they are. If they have finished every matching lesson, the strip says
+**Syllabus complete** instead of naming one. If they are on more than one course, the strip
+starts as one line with a link to show the others. Nothing is committed there: you pick and
+grade the lesson at close-out, once you know how it went.
 
 <Screenshot id="booking-next-up-hint" />
 
@@ -35,17 +36,22 @@ the course name and the lesson the syllabus suggests next.
 </Step>
 <Step n={2} title="Check the Lesson dropdown">
 The first unfinished lesson is preselected. Lessons that have already been flown are prefixed
-with a tick. Change it if you flew something else.
+with a tick and cannot be selected: Sign is for a new grade, not a correction. To fix a
+signed lesson, amend it from the student's training record.
 </Step>
 <Step n={3} title="Set the Grade">
-The dropdown here offers S, U and I.
+The dropdown offers this course's own marks, the same scale the training record and the
+phone use. On a template course that is S, U and I.
 </Step>
 <Step n={4} title="Check Flight and Ground">
-**Flight** is prefilled from the Hobbs delta and **Ground** from the briefing time. Both are
-editable, so trim them if the numbers on the sheet are not the numbers you taught.
+**Flight** is prefilled from the billed meter delta (Hobbs, or tach if that is how the
+aircraft is billed) and **Ground** from the briefing time. Both are editable, so trim them
+if the numbers on the sheet are not the numbers you taught.
 </Step>
 <Step n={5} title="Type Notes">
-What the student did, and what to work on. This is what an inspector reads.
+What the student did, and what to work on. This is what an inspector reads. If you already
+saved a draft on the phone, those notes, hours, the grade and any task marks are already in
+the form. Do not wipe them: Sign writes whatever is on screen.
 </Step>
 </Steps>
 
@@ -53,7 +59,12 @@ What the student did, and what to work on. This is what an inspector reads.
 
 Click **Sign lesson**. In one action the record is saved, signed, frozen, linked to this
 booking, and its hours fan out into a ledger credit for every requirement the lesson credits.
-The section then reads "&lt;Lesson&gt; signed and credited to &lt;Course&gt;."
+The section then reads "&lt;Lesson&gt; signed and credited to &lt;Course&gt;." Reopening the
+booking later still says that, and the folded header says **signed** (or **1 of 2 graded** on
+a two-student flight).
+
+If every matching lesson on the course is already finished, the section says **Syllabus
+complete** instead of offering a grade. There is nothing left to sign on that booking.
 
 <Callout type="important">
 Signing is final. A signed record can never be edited, only amended, which creates a
@@ -81,21 +92,18 @@ The Training record section is hidden unless all of this is true:
 - that student is **enrolled** on a course
 - the course has a lesson whose type matches the booking (dual and solo offer flight
   lessons, ground offers ground lessons, sim offers sim lessons)
-- you are staff, or one of the instructors assigned to that booking
+- you are an instructor or an admin at the school
 
 A rental, a guest flight or a maintenance booking shows no trace of it rather than guessing.
 So does a dual flight for somebody who is on no course. If you expected the section and it is
 not there, work down that list: the usual answer is that the student was never enrolled, or
 the booking was made as a rental.
 
-<Callout type="warning">
-The tick beside a lesson in the close-out picker, and the count on the Next up strip, treat a
-lesson as flown as soon as **any** signed record exists for it, including one graded U. The
-student's training record only counts a lesson complete when it is signed with a passing
-grade.
-
-So the close-out can say "Flight 5 ✓, next up Flight 6" while the training record still shows
-Flight 5 incomplete. The training record is the one to believe.
+<Callout type="note">
+A lesson graded U is signed and stays on the record, but it is not ticked complete. The
+close-out picker, the Next up strip, and the student's training record all use the same
+rule: only a signed passing grade finishes the lesson. Fly it again to complete it. Hours
+from the U still count toward the lesson's requirements.
 </Callout>
 
 ## Simulator hours
@@ -115,6 +123,8 @@ as buttons, and a count of how many you have marked.
 Marking them is optional and nothing is marked for you. A syllabus lesson routinely covers
 tasks that were not attempted, so leave those alone: the record should say what you assessed,
 not tick everything the lesson could have covered. Press a mark a second time to clear it.
+Clearing every chip and signing writes that the tasks were unmarked, including on a draft
+that already had marks from the phone.
 
 <Screenshot id="task-grades" />
 
@@ -124,6 +134,8 @@ not tick everything the lesson could have covered. Press a mark a second time to
 |---|---|
 | **Save as a draft**. The close-out signs in one action. | [Grade from the student's training record](/docs/training/grade-a-lesson-from-a-training-record), which has Save draft. |
 | **Grading offline.** The console needs a connection. | The [iPhone app](/docs/training/grade-lessons-offline-on-the-app) queues lessons graded with no signal. |
+
+If the lesson already has an unsigned draft on another flight, Sign takes that draft over for this booking and fills hours from this close-out. If the lesson is already signed, you can still pick it and Sign again: that records another dual on the same lesson.
 
 Your course's own marks are offered here, whatever scale you set. A lesson your syllabus
 marks **Notes required** will not sign until the Notes box has something in it, on this

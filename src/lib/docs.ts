@@ -1373,6 +1373,16 @@ export const DOC_SECTIONS: DocSection[] = [
         kind: "task",
         audience: ["Instructors", "Admins"],
         seoQuery: "grade a training lesson after a flight",
+        faqs: [
+          {
+            q: "Can I sign a lesson that already has a draft on another flight?",
+            a: "Yes. Sign takes that unsigned draft over for this booking and uses this flight's hours. The other close-out will show the lesson signed here.",
+          },
+          {
+            q: "The syllabus is already finished. Can I still sign this flight?",
+            a: "Yes. Pick the completed lesson and Sign again. That records another dual on the same lesson, the same way a U retake does.",
+          },
+        ],
       },
       {
         slug: "grade-a-lesson-from-a-training-record",

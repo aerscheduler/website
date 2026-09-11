@@ -118,9 +118,14 @@ being recorded as a pass.
 
 ## Edit, delete and reorder
 
-- **Edit** anything with the pencil on its row, while the version is still a draft.
+- **Edit** anything with the pencil on its row, while the version is still a draft. Name,
+  objectives, hours and the other lesson fields stay editable after a student has a record
+  on that lesson. **Credits toward** does not: once a record exists, changing what the
+  lesson credits is refused, because it would rewrite what already-signed hours counted
+  toward. Make a new version instead.
 - **Delete** with the trash icon. Deleting a stage deletes the lessons inside it, and the
-  confirmation names how many.
+  confirmation names how many. If the syllabus already has training records, delete is
+  refused and the page tells you why.
 - **Reorder** is the one thing you cannot do. There is no drag to reorder, and a lesson
   keeps the position it had when it was added. Add lessons in the order you teach them, and
   if the order is wrong, delete and re-add rather than hunting for a handle.
@@ -129,8 +134,16 @@ being recorded as a pass.
 
 - **Notes required** refuses the signature while the Notes box is empty ("This lesson needs
   notes before it can be signed."), on every surface: the app, the grading dialog, the flight
-  close-out and the API. Set it on the lessons where a narrative matters. Save draft is
-  unaffected, so a half-written record can still be parked.
+  close-out and the API. Set it on the lessons where a narrative matters. On a lesson that
+  still requires sign-off, Save draft is unaffected, so a half-written record can still be
+  parked. On a sign-off-optional lesson a passing Save draft is the signature, so notes are
+  required then too. Once a record exists on the lesson, this switch, **Requires sign-off**,
+  and **This is the stage check** freeze with the credit map: flipping them would rewrite
+  whether an unsigned grade already counts as complete.
+- **Requires sign-off** defaults on. Turn it off for a self-study module or a written quiz:
+  a passing grade finishes the lesson without a student countersignature, and saving that
+  passing grade also stamps the instructor and posts the hours. The console hides Sign once
+  the lesson is complete, so those hours have to post on Save draft or they never would.
 - **Flight hrs** and **Ground hrs** prefill the grading dialog, as above.
 
 ## Next

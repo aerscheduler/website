@@ -53,15 +53,20 @@ Four sources, and the choice decides which ceiling applies to the hours.
 
 ## The date is the point
 
-**When it was flown** looks optional beside the requirement and the hours. It is not.
+**When it was flown** is required for previous training (Part 61 or Part 141). Post credit
+will not go through without it.
 
-If you leave it blank it defaults to today. On any requirement that only counts training
-from the last few calendar months, that quietly makes a 2019 logbook look like it was flown
-this morning, and the student is told they are ready when they are not.
+Simulator time and a correction by hand still default to today if you leave the date blank,
+because those usually happened this afternoon. Transferred hours did not.
+
+On any requirement that only counts training from the last few calendar months, a missing
+date used to quietly make a 2019 logbook look like it was flown this morning, and the
+student was told they were ready when they were not.
 
 <Callout type="warning">
-Enter the real date every time, even on requirements that have no recency window. You cannot
-tell from the Add credit dialog which requirements have one.
+Enter the real date every time. When a requirement only counts recent training, the dialog
+says so under When it was flown. Requirements with no window still keep the date, because
+you may add one later.
 </Callout>
 
 A date in the future is refused: training cannot be credited before it has happened. Zero is
@@ -80,14 +85,18 @@ the ledger; the requirement simply refuses to count more than its share.
 The Requirements row says which one bit. See
 [Read a training record](/docs/training/read-a-training-record).
 
-## Credits you cannot take back
+## Reverse a credit you posted by hand
 
-There is no button anywhere in the console to reverse a credit you posted by hand. Check the
-requirement, the amount and the date before you click Post credit.
+On the **Ledger** tab of the training record, each hand-posted credit has a **Reverse**
+button. It does not delete the original: it writes the negative beside it and both stay
+visible, which is the point of a ledger. You have to say why.
 
-The one undo the console does have is [amending a signed lesson
-record](/docs/training/correct-a-signed-lesson), which reverses the credits that lesson
-posted. That does nothing for a hand-posted transfer or simulator credit.
+Check the requirement, the amount and the date before you click Post credit. Reversing is
+for a number that should not have been posted, not for changing your mind about the source.
+
+Amending a [signed lesson record](/docs/training/correct-a-signed-lesson) is the other undo:
+it reverses the credits that lesson posted. Use that for a flight grade, and Reverse for a
+hand-posted transfer or simulator credit.
 
 ## Read the result on the Ledger
 
