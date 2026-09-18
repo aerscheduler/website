@@ -1000,7 +1000,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "send-paid-invoices-to-quickbooks",
         title: "Send paid invoices to QuickBooks Online",
         description:
-          "Connect the Intuit company once, pick the income item every line posts to, and each invoice becomes a Sales Receipt the moment it is paid.",
+          "Connect your Intuit company, answer a few setup questions (start date, what else records this revenue, where money lands), and each paid invoice becomes a Sales Receipt.",
         kind: "task",
         audience: ["Owners"],
         seoQuery: "AerScheduler QuickBooks Online integration for flight schools",

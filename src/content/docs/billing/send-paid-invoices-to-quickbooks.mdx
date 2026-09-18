@@ -1,118 +1,184 @@
 <Summary>
 <Where app="web">Settings → Integrations → QuickBooks Online</Where>, organization owner
-only. Connect the Intuit company, pick one income item, then turn on Sync paid invoices.
-From then on every invoice becomes a QuickBooks Sales Receipt the moment it is paid. Unpaid
-and voided invoices never go across.
+only. Connect your Intuit company, answer the setup questions, then turn sync on. Every
+invoice paid on or after the start date you choose becomes a QuickBooks Sales Receipt.
+Nothing is sent to QuickBooks until every question is answered.
 </Summary>
 
 <Roles>Owners</Roles>
 
 ## Before you connect
 
-Two things have to be true.
-
 **You must be the organization owner.** Every part of this page is owner only. An admin who
 is not the owner opens it and sees an Owner required panel. On the iOS app, Accounting
 Integrations tells you to manage QuickBooks on the web.
 
-**You need an active Product/Service item in QuickBooks.** Every line of every Sales Receipt
-posts to one income item that you pick here, and you cannot pick it if it does not exist
-yet. Create it in QuickBooks first if you have not: most schools use a single Flight
-Revenue or Sales item.
+**You need at least one active Service or Non-inventory item in QuickBooks.** Each line of a
+Sales Receipt posts to an item you pick, and its income account is what shows on your Profit
+and Loss. Inventory items are not offered, because they would take stock off your shelf and
+post cost of goods on every receipt.
+
+<Callout type="warning">
+Check that nothing else already records your flight revenue in this QuickBooks company: a
+bank feed rule that books your Stripe deposits as income, Stripe's own QuickBooks app, a tool
+like Synder, or a bookkeeper entering it by hand. If one does and AerScheduler posts it too,
+every payment is counted twice. QuickBooks cannot tell us which tool made an entry, so setup
+asks you.
+</Callout>
 
 ## Connect QuickBooks
 
 <Steps>
 <Step n={1} title="Open Settings → Integrations → QuickBooks Online">
-The page has a three-step strip across the top: Connect, Map income, Sync on. It tells you
-where you are.
-
 <Screenshot id="quickbooks-setup" />
 </Step>
 
 <Step n={2} title="Click Connect QuickBooks">
-Intuit's own sign-in opens. Authorize the company you want AerScheduler to post into. Pick
-carefully if you keep more than one company file.
+Intuit's own sign-in opens. Authorize the company you want AerScheduler to post into.
+Connecting only reads your company. Nothing is written to QuickBooks yet.
 </Step>
 
-<Step n={3} title="Check the company name">
-Once connected, the page shows the connected company's name. A sandbox company is labelled
-so.
+<Step n={3} title="Confirm it is the right company">
+The page shows the company's name, legal name, location and when it was created in
+QuickBooks. Intuit lists every company your login can see, including an accountant's client
+files and separate LLCs, so check before you confirm. Customers AerScheduler creates can
+never be deleted from the wrong company.
 </Step>
 </Steps>
 
-## Choose the income item
+## What setup asks
 
-Pick one from Income item (from QuickBooks). The list is loaded live from your Products &amp;
-Services, so what you see here is what is in QuickBooks right now.
+<div>
 
-Every line of every receipt posts to this one item. There is no per-line mapping.
+**What else records this revenue.** Pick the answer that is true today.
 
-## Turn sync on
+- **Nothing yet**: AerScheduler can post from any start date you choose, including history.
+- **A bank feed rule, or your bookkeeper by hand**: AerScheduler can take over, but only from
+  today onward. Turn the bank rule off, or tell your bookkeeper to stop, the same day.
+- **Stripe's QuickBooks app, another tool, or not sure**: sync stays off. Turn the other tool
+  off first. If you are not sure, run Profit and Loss for last month in QuickBooks: if your
+  flight revenue is already there, something is recording it.
 
-Switch on Sync paid invoices. The toggle cannot be turned on until an income item has been
-chosen, which is the point of the three-step strip.
+**Start date.** Invoices paid on or after this day post. Nothing before it ever does. Pick
+today to start fresh, or an earlier day to bring history in. Before you save, the page shows
+how many invoices and how much money would post, by year. A date that reaches into a year you
+have probably already filed asks you to type that year to confirm. If your QuickBooks books
+are closed through a date, nothing can post on or before it.
 
-From that moment, an invoice is pushed as soon as it becomes paid, whether that was a card
-payment, autopay, or you clicking Mark paid.
+**Income items.** A default item for every line, plus an optional item per kind of charge:
+aircraft and simulator rental, instruction and ground school, fees (late, cancellation, card,
+service), membership dues, and everything else. Decide this before bringing in history.
+Changing it later does not re-file receipts already posted.
 
-## Backfill past paid invoices
+**Where card payments land.** The QuickBooks account card and ACH payments collected through
+Stripe are recorded to. Most schools use a Stripe clearing account, because Stripe pays out
+in batches with its fees taken off. Undeposited Funds works too, but then your bookkeeper
+groups receipts into deposits and subtracts the Stripe fees by hand.
 
-Click Sync past paid invoices to send invoices that were already paid before you connected.
+**Front-desk payments.** Whether cash and check payments the desk marks as paid post too,
+and to which account (usually Undeposited Funds). An invoice someone marked paid in your own
+Stripe dashboard counts as a front-desk payment too, because no card was charged; for older
+invoices AerScheduler asks Stripe before posting. Leave front-desk payments out if your
+bookkeeper already records them when the money is deposited.
 
-A run is capped at 25 invoices. Run it again for the next batch until the activity feed
-stops finding work.
+**Turn on.** Sync paid invoices. Pausing it is safe: anything paid while it is off posts
+when you turn it back on, as long as it is on or after the start date.
+
+</div>
 
 ## What lands in QuickBooks
 
-One Sales Receipt per paid invoice, against a customer matched by email address, once and
-only once.
+One Sales Receipt per paid invoice, dated the day it was paid in your school's time zone,
+against a customer matched by email. Guest bookings post under the guest's own name and
+email. The same person booking twice, or a guest who is also a member, lands on one
+customer.
 
-Each receipt carries a private note holding the AerScheduler and Stripe references, the
-member, the instructor, the flight date and the tail number, so a receipt can always be
+Each receipt's private note holds the AerScheduler and Stripe references, the member or
+guest, the instructor, the flight date and the tail number, so a receipt can always be
 traced back to the flight that produced it.
 
-In AerScheduler you see the result in two places: a green tick on the invoice row in the
-Billing table, and a QuickBooks section in the invoice detail panel showing the Sales
-Receipt id, how long ago it synced, and Open in QBO.
+History posts in the background, oldest first, about 25 a minute. You can close the page.
+The Sync status section shows how many are in QuickBooks, how many are still to post, how
+many are before your start date, and how far along it is.
+
+In AerScheduler you see the result on each invoice: a QuickBooks section in the invoice
+detail panel with the Sales Receipt id and Open in QBO.
 
 <Screenshot id="invoice-detail-panel" />
 
-<Callout type="warning">
-Only paid invoices sync. Nothing about an unpaid or a voided invoice ever reaches
-QuickBooks. And because AerScheduler never learns about a refund made in Stripe, refunding
-somebody does not remove or reverse the Sales Receipt. See
-[Mark an invoice paid, void it, or refund it](/docs/billing/mark-an-invoice-paid-void-or-refund-it).
-</Callout>
+## When something can't post
 
-## When a sync fails
+Syncing never blocks the money. If QuickBooks is down or busy when a member pays, the payment
+still succeeds and the invoice is still Paid here. It posts on its own once QuickBooks
+answers.
 
-Syncing fails softly and never blocks the money. If QuickBooks is unreachable when a member
-pays, the payment still succeeds and the invoice is still Paid here. Only the bookkeeping
-step is outstanding.
+An invoice that needs a person lands under **Needs attention**, with a sentence saying what
+to fix. The common ones:
 
-A failed invoice shows a red Failed chip with the error on the Billing list, and the invoice
-detail panel offers Retry.
+| Shown as | What to do |
+| --- | --- |
+| Name already used in QuickBooks | You already have this person in QuickBooks under their name but without their email. Add the email to that customer in QuickBooks, then Retry. If it is a different person, create a customer with this email in QuickBooks, then Retry. |
+| Customer inactive in QuickBooks | Make the customer active again in QuickBooks, then Retry. |
+| Several QuickBooks customers match | Two customers share this email. Merge them in QuickBooks, then Retry. |
+| No email address | Add an email to the member's profile, then Retry. |
+| No member or guest | The booking's type was changed after it was paid. Void it, or record it in QuickBooks by hand. |
+| Partially refunded | A receipt for the original amount would overstate your income. Record it and the refund in QuickBooks by hand. |
+| Refunded, then paid again | It was partly refunded and then marked paid again at the desk. Record the payments and the refund in QuickBooks by hand, then choose Handled. |
+| Couldn't confirm how it was paid | Stripe no longer has the invoice (for example, the school moved to a different Stripe account), so AerScheduler can't tell a card payment from cash marked paid in Stripe. Record it in QuickBooks by hand if it belongs there. |
 
-The Activity feed at the bottom of the QuickBooks page records every attempt, success,
-skipped or error, with the invoice number and what triggered it. The most recent error is
-also shown at the top of the page.
+Retry on an invoice, or Retry all after fixing, puts it back in the queue. For the ones you
+record in QuickBooks yourself (a partial refund, a payment Stripe can no longer show), choose
+**Handled** once you have: AerScheduler leaves that invoice alone from then on and it drops
+off the list. If an earlier try to post it never got an answer, Handled first checks QuickBooks
+for the receipt that try may have made: one for the right amount is kept (the invoice counts as
+posted), a wrong-amount copy is removed.
 
-The common one is **"Invoice has no customer email for QuickBooks."** A Sales Receipt is
-matched to a QuickBooks customer by email, so an invoice with no email on it cannot be
-posted. Add the email to the member's record. Guest invoices without an email hit the same
-wall.
+If you delete or deactivate an item or account in QuickBooks that AerScheduler posts to, sync
+pauses and the setup step asks you to pick a replacement. Turn sync back on once you have.
 
-If Intuit's authorization has lapsed, the page offers Reauthorize or Reconnect QuickBooks.
-Use it and then retry the failed invoices from their detail panels.
+## Refunds
+
+When a paid invoice is refunded in Stripe after its receipt went to QuickBooks, AerScheduler
+removes that receipt. A full refund stays out. A partial refund then shows under Needs
+attention for you to record by hand. If your bookkeeper already included the receipt in a
+bank deposit, QuickBooks will not let it be removed automatically, and it shows under Needs
+attention instead.
+
+## Taking receipts back out
+
+<div>
+
+- **Before a date**: set the start date and tick Also remove the receipts AerScheduler already
+  posted before this date. If some are already before your start date, Undo also offers to
+  remove them without changing it.
+- **Everything** (for example, the wrong company was connected): Undo → Remove all receipts
+  AerScheduler posted. Sync turns off and every receipt AerScheduler posted to that company is
+  deleted there. Customers stay, because QuickBooks does not allow deleting a customer that has
+  ever had a transaction.
+
+</div>
+
+## Reconnecting and switching companies
+
+If Intuit's authorization lapses, the page offers Reconnect QuickBooks. Reconnecting to the
+same company picks up where you left off.
+
+Connecting to a **different** company clears every setup answer and turns sync off, so
+nothing posts into the new company until you confirm it and answer the questions again.
+Receipts already posted to the old company stay there. While receipts are still being removed
+from the connected company, switching is refused until that finishes. If removals can't run
+(for example, the connection lapsed), **Stop removing** leaves those receipts in QuickBooks so
+you can disconnect or switch.
+
+Start a connection from this page, in the browser you finish it in. Intuit's approval page
+only completes in the browser that started it, so a link forwarded to your bookkeeper is
+refused. If your bookkeeper holds the QuickBooks login, connect together on one computer:
+start it here, and let them sign in to Intuit when it asks.
 
 ## Disconnecting
 
-Disconnect QuickBooks revokes the tokens at Intuit and deletes the stored credentials here.
-Sales Receipts that already went across stay in QuickBooks; disconnecting does not reach
-back into your books.
-
-Reconnecting later starts from the setup strip again, including picking the income item.
+Disconnect QuickBooks revokes access at Intuit. Sales Receipts that already went across stay
+in QuickBooks; disconnecting does not reach back into your books.
 
 ## Related
 
