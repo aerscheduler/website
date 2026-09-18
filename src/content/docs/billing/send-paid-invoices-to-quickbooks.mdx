@@ -10,7 +10,7 @@ Nothing is sent to QuickBooks until every question is answered.
 ## Before you connect
 
 **You must be the organization owner.** Every part of this page is owner only. An admin who
-is not the owner opens it and sees an Owner required panel. On the iOS app, Accounting
+is not the owner opens it and sees an Owner only notice. On the iOS app, Accounting
 Integrations tells you to manage QuickBooks on the web.
 
 **You need at least one active Service or Non-inventory item in QuickBooks.** Each line of a
@@ -39,14 +39,18 @@ Connecting only reads your company. Nothing is written to QuickBooks yet.
 </Step>
 
 <Step n={3} title="Confirm it is the right company">
-The page shows the company's name, legal name, location and when it was created in
-QuickBooks. Intuit lists every company your login can see, including an accountant's client
+Setup opens one question at a time, starting with the company: its name, legal name,
+location and when it was created in QuickBooks. Intuit lists every company your login can see, including an accountant's client
 files and separate LLCs, so check before you confirm. Customers AerScheduler creates can
 never be deleted from the wrong company.
 </Step>
 </Steps>
 
 ## What setup asks
+
+Each answer saves as you give it, so you can close setup and come back: the Overview shows
+how many are answered, and Continue setup picks up at the next one. To change an answer
+later, open the Settings section and choose Change next to it.
 
 <div>
 
@@ -98,8 +102,9 @@ guest, the instructor, the flight date and the tail number, so a receipt can alw
 traced back to the flight that produced it.
 
 History posts in the background, oldest first, about 25 a minute. You can close the page.
-The Sync status section shows how many are in QuickBooks, how many are still to post, how
-many are before your start date, and how far along it is.
+The Overview shows how many are in QuickBooks, how many are still to post, how many are
+before your start date, and how far along it is. Activity lists every post, removal and
+problem, newest first. Switch it to Problems only to see just the failures.
 
 In AerScheduler you see the result on each invoice: a QuickBooks section in the invoice
 detail panel with the Sales Receipt id and Open in QBO.
@@ -112,8 +117,8 @@ Syncing never blocks the money. If QuickBooks is down or busy when a member pays
 still succeeds and the invoice is still Paid here. It posts on its own once QuickBooks
 answers.
 
-An invoice that needs a person lands under **Needs attention**, with a sentence saying what
-to fix. The common ones:
+An invoice that needs a person lands in the **Needs attention** section, with a sentence
+saying what to fix. The common ones:
 
 | Shown as | What to do |
 | --- | --- |
@@ -127,7 +132,7 @@ to fix. The common ones:
 | Refunded, then paid again | It was partly refunded and then marked paid again at the desk. Record the payments and the refund in QuickBooks by hand, then choose Handled. |
 | Couldn't confirm how it was paid | Stripe no longer has the invoice (for example, the school moved to a different Stripe account), so AerScheduler can't tell a card payment from cash marked paid in Stripe. Record it in QuickBooks by hand if it belongs there. |
 
-Retry on an invoice, or Retry all after fixing, puts it back in the queue. For the ones you
+Retry from an invoice's menu, or Retry all after fixing, puts it back in the queue. For the ones you
 record in QuickBooks yourself (a partial refund, a payment Stripe can no longer show), choose
 **Handled** once you have: AerScheduler leaves that invoice alone from then on and it drops
 off the list. If an earlier try to post it never got an answer, Handled first checks QuickBooks
@@ -135,7 +140,7 @@ for the receipt that try may have made: one for the right amount is kept (the in
 posted), a wrong-amount copy is removed.
 
 If you delete or deactivate an item or account in QuickBooks that AerScheduler posts to, sync
-pauses and the setup step asks you to pick a replacement. Turn sync back on once you have.
+pauses and the Overview asks you to pick a replacement. Turn sync back on once you have.
 
 ## Refunds
 
@@ -157,10 +162,10 @@ closed period, it shows under Needs attention for you to record by hand.
 <div>
 
 - **Before a date**: set the start date and tick Also remove the receipts AerScheduler already
-  posted before this date. If some are already before your start date, Undo also offers to
-  remove them without changing it.
-- **Everything** (for example, the wrong company was connected): Undo → Remove all receipts
-  AerScheduler posted. Sync turns off and every receipt AerScheduler posted to that company is
+  posted before this date. If some are already before your start date, Connection → Receipts
+  before the start date → Remove takes them out without changing it.
+- **Everything** (for example, the wrong company was connected): Connection → All receipts →
+  Remove all. Sync turns off and every receipt AerScheduler posted to that company is
   deleted there. Customers stay, because QuickBooks does not allow deleting a customer that has
   ever had a transaction.
 
@@ -168,12 +173,12 @@ closed period, it shows under Needs attention for you to record by hand.
 
 ## Reconnecting and switching companies
 
-If Intuit's authorization lapses, the page offers Reconnect QuickBooks. Reconnecting to the
-same company picks up where you left off.
+If Intuit's authorization lapses, the page offers Reconnect QuickBooks at the top.
+Reconnecting to the same company picks up where you left off.
 
-Connecting to a **different** company clears every setup answer and turns sync off, so
-nothing posts into the new company until you confirm it and answer the questions again.
-Receipts already posted to the old company stay there. While receipts are still being removed
+Connecting to a **different** company (Connection → Connect a different company) clears every
+setup answer and turns sync off, so nothing posts into the new company until you confirm it
+and answer the questions again. Receipts already posted to the old company stay there. While receipts are still being removed
 from the connected company, switching is refused until that finishes. If removals can't run
 (for example, the connection lapsed), **Stop removing** leaves those receipts in QuickBooks so
 you can disconnect or switch.
@@ -185,7 +190,7 @@ start it here, and let them sign in to Intuit when it asks.
 
 ## Disconnecting
 
-Disconnect QuickBooks revokes access at Intuit. Sales Receipts that already went across stay
+Connection → Disconnect revokes access at Intuit. Sales Receipts that already went across stay
 in QuickBooks; disconnecting does not reach back into your books.
 
 ## Related
