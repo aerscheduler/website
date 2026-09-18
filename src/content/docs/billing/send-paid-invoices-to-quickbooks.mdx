@@ -123,6 +123,7 @@ to fix. The common ones:
 | No email address | Add an email to the member's profile, then Retry. |
 | No member or guest | The booking's type was changed after it was paid. Void it, or record it in QuickBooks by hand. |
 | Partially refunded | A receipt for the original amount would overstate your income. Record it and the refund in QuickBooks by hand. |
+| Dispute won, period closed | A card dispute was won and the payment is back, but its date is now inside a period your QuickBooks books are closed through. Record it in QuickBooks by hand, then choose Handled. |
 | Refunded, then paid again | It was partly refunded and then marked paid again at the desk. Record the payments and the refund in QuickBooks by hand, then choose Handled. |
 | Couldn't confirm how it was paid | Stripe no longer has the invoice (for example, the school moved to a different Stripe account), so AerScheduler can't tell a card payment from cash marked paid in Stripe. Record it in QuickBooks by hand if it belongs there. |
 
@@ -143,6 +144,13 @@ removes that receipt. A full refund stays out. A partial refund then shows under
 attention for you to record by hand. If your bookkeeper already included the receipt in a
 bank deposit, QuickBooks will not let it be removed automatically, and it shows under Needs
 attention instead.
+
+### Card disputes
+
+A dispute takes the money back out of your Stripe balance, so AerScheduler treats it like a
+full refund and removes the receipt. If you win the dispute, the payment is put back: the
+receipt stays if it had not been removed yet, or it posts again. If its date is now inside a
+closed period, it shows under Needs attention for you to record by hand.
 
 ## Taking receipts back out
 
