@@ -103,8 +103,11 @@ traced back to the flight that produced it.
 
 History posts in the background, oldest first, about 25 a minute. You can close the page.
 The Overview shows how many are in QuickBooks, how many are still to post, how many are
-before your start date, and how far along it is. Activity lists every post, removal and
-problem, newest first. Switch it to Problems only to see just the failures.
+before your start date, and how far along it is. Activity lists every receipt posted or
+removed and every problem, newest first, with the invoice it was about and what started it (the
+background sync, a payment, a refund in Stripe, or a button someone pressed). A problem row also
+says where that invoice stands now: still waiting on you, sorted out since, or being tried again
+automatically. Switch it to Problems only to see just the failures.
 
 In AerScheduler you see the result on each invoice: a QuickBooks section in the invoice
 detail panel with the Sales Receipt id and Open in QBO.
@@ -127,17 +130,20 @@ saying what to fix. The common ones:
 | Several QuickBooks customers match | Two customers share this email. Merge them in QuickBooks, then Retry. |
 | No email address | Add an email to the member's profile, then Retry. |
 | No member or guest | The booking's type was changed after it was paid. Void it, or record it in QuickBooks by hand. |
-| Partially refunded | A receipt for the original amount would overstate your income. Record it and the refund in QuickBooks by hand. |
+| Partially refunded | A receipt for the full amount would count money you gave back. Record the payment and the refund in QuickBooks yourself, then choose Handled. |
 | Dispute won after books closed | A card dispute was won and the payment is back, but its date is now inside a period your QuickBooks books are closed through. Record it in QuickBooks by hand, then choose Handled. |
 | Refunded, then paid again | It was partly refunded and then marked paid again at the desk. Record the payments and the refund in QuickBooks by hand, then choose Handled. |
 | Couldn't confirm how it was paid | Stripe no longer has the invoice (for example, the school moved to a different Stripe account), so AerScheduler can't tell a card payment from cash marked paid in Stripe. Record it in QuickBooks by hand if it belongs there. |
 
 Retry from an invoice's menu, or Retry all after fixing, puts it back in the queue. For the ones you
-record in QuickBooks yourself (a partial refund, a payment Stripe can no longer show), choose
-**Handled** once you have: AerScheduler leaves that invoice alone from then on and it drops
-off the list. If an earlier try to post it never got an answer, Handled first checks QuickBooks
-for the receipt that try may have made: one for the right amount is kept (the invoice counts as
-posted), a wrong-amount copy is removed.
+record in QuickBooks yourself (a partial refund, sales tax, a payment Stripe can no longer show),
+choose **Handled** once you have. Retry isn't offered for a partial refund, sales tax or an
+invoice that collected nothing, because retrying can't change those.
+
+Once you choose Handled, AerScheduler leaves that invoice alone and it drops off the list. If an
+earlier attempt to post it never got an answer, Handled first checks QuickBooks for a receipt
+from that attempt: one for the right amount is kept (the invoice counts as posted), and any
+other copy is deleted.
 
 If you delete or deactivate an item or account in QuickBooks that AerScheduler posts to, sync
 pauses and the Overview asks you to pick a replacement. Turn sync back on once you have.
