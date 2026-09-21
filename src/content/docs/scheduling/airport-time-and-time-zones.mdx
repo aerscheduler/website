@@ -1,8 +1,9 @@
 <Summary>
 Every time on the schedule is drawn in the airport's own zone, so a 9:00 AM lesson reads
-9:00 AM whether you check it from the front desk or from another state. Admins set the
-school's zone under <Where app="web">Settings → Organization</Where>. You can switch your
-own view to your own zone under <Where app="web">You → Profile</Where>.
+9:00 AM whether you check it from the front desk or from another state. Every school needs
+one: until it is set, members cannot book themselves. Admins set it under
+<Where app="web">Settings → Organization</Where> or <Where app="mobile">Settings → School time zone</Where>.
+You can switch your own view to your own zone under <Where app="web">You → Profile</Where>.
 </Summary>
 
 <Roles>Owners, Admins, Dispatchers, Instructors, Students, Renters, Technicians</Roles>
@@ -21,8 +22,14 @@ booking form and the detail panel, no matter where the person looking at it happ
 
 ## Set your school's time zone
 
-<Where app="web">Settings → Organization</Where>, then pick a zone. Owners and admins
-only.
+Setting up a new school asks for its time zone. It is filled in from the home airport when you
+pick one from the search, or from your computer or phone when you type the airport yourself,
+and you can change it before you carry on.
+
+To change it later, go to <Where app="web">Settings → Organization</Where> and pick a zone, or
+on iPhone <Where app="mobile">Settings → School time zone</Where>. Owners and admins only.
+Don't confuse it with the **Time zone** row just above it in the app: that one is your own
+clock and never moves anybody's booking.
 
 <Screenshot id="settings-org-timezone" />
 
@@ -31,10 +38,10 @@ works in Zulu. Everything else follows underneath, grouped by region. You can se
 the things you would actually type: the zone name, the city, or the identifier of a field in
 it, so **KBOI** finds Mountain and **KMIA** finds Eastern.
 
-Do this on day one. It is the single setting that makes everybody's schedule agree, and it is
-a hard prerequisite for
+It is the single setting that makes everybody's schedule agree, members need it to book
+themselves, and it is a hard prerequisite for
 [multi-day bookings](/docs/scheduling/overnight-and-multi-day-trips), which stay greyed out
-until it is set.
+until it is set. A school's zone can be changed but not cleared.
 
 ## Set a time zone for a second airport
 
@@ -86,14 +93,28 @@ without anybody changing a setting.
 
 ## If no time zone is set anywhere
 
-With no zone on the location and none on the organization, times fall back to each person's
-own device. The schedule then genuinely looks different to different people, and it changes
-under one person when they travel. That is the state that produces "the times moved" support
-calls. Set the organization's zone and it stops.
+With no zone on the location and none on the organization, two things go wrong.
 
-Members cannot self-book against operating hours, a booking horizon, or a start-time interval
-until a zone is set. The front desk can still schedule, and the time picker stays usable so
-the form does not look permanently full. A banner on the schedule explains what is missing.
+**Members can't book themselves.** Every school has flying hours (6:00 AM to 10:00 PM unless you
+change them), and hours mean nothing without a clock to read them on. So a student or renter
+who tries to book is told their school hasn't set its time zone yet. Owners and admins get a
+notification the first time that happens, at most once a day, in the app and by email, with a
+button that goes straight to the setting. The front desk can still book for them in the
+meantime.
+
+**Times fall back to each person's own device.** The schedule then genuinely looks different to
+different people, and it changes under one person when they travel. That is the state that
+produces "the times moved" support calls.
+
+Owners and admins see a banner on the dashboard and the schedule, on the web and in the app,
+while the zone is missing. It offers the airport's zone when we can work it out from the
+school's airport, so fixing it is one click.
+
+<Callout type="important">
+Setting the zone also switches on your flying hours, for everybody including the front desk. A
+school that never changed them books 6:00 AM to 10:00 PM airport time from then on. Change them
+under <Where app="web">Settings → Booking preferences</Where> if you fly earlier or later.
+</Callout>
 
 <Callout type="warning">
 In the Month view, a booking's chip can show a different start time from the one on the day
