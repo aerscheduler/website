@@ -121,7 +121,8 @@ still succeeds and the invoice is still Paid here. It posts on its own once Quic
 answers.
 
 An invoice that needs a person lands in the **Needs attention** section, with a sentence
-saying what to fix. The common ones:
+saying what to fix. If anything has been waiting a day or more, every owner gets a
+notification, so nothing sits there unnoticed. The common ones:
 
 | Shown as | What to do |
 | --- | --- |
@@ -179,8 +180,15 @@ closed period, it shows under Needs attention for you to record by hand.
 
 ## Reconnecting and switching companies
 
-If Intuit's authorization lapses, the page offers Reconnect QuickBooks at the top.
-Reconnecting to the same company picks up where you left off.
+AerScheduler keeps the connection alive by itself. Intuit's authorization lasts 100 days
+and renews every time something posts, and for a school with sync paused, or a quiet
+season, AerScheduler renews it in the background. You should never be asked to reconnect
+on a schedule.
+
+If it does lapse (you revoked access at Intuit, or the connection was refused for long
+enough), the page offers Reconnect QuickBooks at the top and every owner gets a
+notification. Reconnecting to the same company picks up where you left off, and
+everything paid meanwhile posts once you do.
 
 Connecting to a **different** company (Connection → Connect a different company) clears every
 setup answer and turns sync off, so nothing posts into the new company until you confirm it
