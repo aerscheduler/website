@@ -3,38 +3,38 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
+  BarChart3,
+  CalendarDays,
   Check,
   ChevronRight,
-  CalendarDays,
   CreditCard,
   GraduationCap,
   PlayCircle,
   Wrench,
-  BarChart3,
-  Users,
-  MoonStar,
 } from "lucide-react";
 import { Button } from "@/components/button";
-import { ScheduleHeroDemo } from "@/components/mocks/schedule-hero-demo";
-import {
-  BillingLiveDemo,
-  TrainingLiveDemo,
-  MaintenanceLiveDemo,
-  ReportsLiveDemo,
-  MobileLiveDemo,
-  SchedulingLiveDemo,
-} from "@/components/mocks/living";
+import { FeatureSection, type FeatureSectionData } from "@/components/landing/feature-sections";
+import { STATUS } from "@/components/landing/product-tokens";
+import { PhoneMock } from "@/components/phone-mock";
 import { StoreBadges } from "@/components/store-badges";
-import { HeroAtmosphere } from "@/components/hero-atmosphere";
 import { SkyScrim } from "@/components/sky-scrim";
 import { Reveal, RevealGroup } from "@/components/reveal";
 import {
+  BillingComposite,
+  HeroConsole,
+  MobileHome,
+  MaintenanceComposite,
+  ReportingComposite,
+  SchedulingComposite,
+  TrainingComposite,
+} from "@/components/landing/product-composites";
+import {
+  DEMO_URL,
   PRICE_PER_AIRCRAFT,
   SIGNUP_URL,
   SITE_DESCRIPTION,
   SITE_NAME,
   TRIAL_DAYS,
-  DEMO_URL,
 } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -50,107 +50,283 @@ export const metadata: Metadata = {
   },
 };
 
+/*
+ * The home page, rebuilt 2026-09-27 in the Linear style Tony picked after we
+ * studied Linear, Raycast, Vercel, Stripe and Apple. What it copies:
+ *
+ * 1. THE PRODUCT, DRAWN BY HAND. HTML composites of the console (`components/landing/product-composites.tsx`): two panels, one
+ *    overlapping the other, fading into the page at the edges. Rejected along
+ *    the way: an abstract one-shape motion loop, real screenshots ("look so
+ *    cheap"), and light mocks in a pinned tour ("I don't like this style").
+ *    Every name and figure in them is invented.
+ * 2. LINEAR'S SECTION PATTERN, VARIED. A two-line title, a paragraph and
+ *    "Learn more", the composite, then a "Features" row of links, one section
+ *    per module. Five identical sections in a row read as repetitive (Tony), so
+ *    each has its own layout (`feature-sections.tsx`).
+ *    Headings stay plain ("Maintenance tracking").
+ * 3. THINGS HAPPEN AS YOU SCROLL. The hero window grows and flattens with the
+ *    page scroll and its bookings land on load; each composite's back and front
+ *    panels rise at different speeds (`.rise-back`, `.rise-front`), and its
+ *    rows, bars and dots play once in view (`Moment`); the price statement
+ *    fills word by word. CSS scroll-driven animation plus IntersectionObserver,
+ *    no animation library, and readable with motion or JavaScript off.
+ * 4. LIGHT, like every other page on the site (it was dark for a day; Tony
+ *    moved it back for consistency). One accent, status colours only where
+ *    they mean something.
+ *
+ * Kept on purpose: "Five modules. One operation." (Tony's favourite; leave it
+ * exactly as it is) and the mobile app card.
+ */
+
+const PAGE_BG = "bg-white";
+
+/**
+ * The five feature sections, each with its own layout (see
+ * `feature-sections.tsx`). Every "Features" link goes to a real page.
+ */
+const SECTIONS: FeatureSectionData[] = [
+  {
+    id: "scheduling",
+    color: STATUS.blue,
+    layout: "split",
+    title: <>Scheduling<br />and dispatch</>,
+    body: "Students and renters book from their phones under the rules you set. Currency, conflicts, grounded aircraft and open squawks show before a booking saves.",
+    href: "/features/scheduling",
+    visual: <SchedulingComposite />,
+    features: [
+      [
+        { label: "Dispatch board", href: "/features/scheduling" },
+        { label: "Self-booking", href: "/features/self-booking" },
+        { label: "Currency checks", href: "/features/compliance" },
+      ],
+      [
+        { label: "Standby and slot offers", href: "/docs/scheduling/standby-and-slot-offers" },
+        { label: "Multi-day trips", href: "/resources/overnight-and-multi-day-rentals" },
+        { label: "Discovery flight requests", href: "/docs/scheduling/public-booking-requests" },
+      ],
+    ],
+  },
+  {
+    id: "billing",
+    color: STATUS.green,
+    layout: "closeout",
+    title: <>Billing<br />at close-out</>,
+    body: "Hobbs and tach go in at ramp-in and the invoice is built from your rates. Charge a card on file, run autopay, or keep members on a prepaid account ledger.",
+    href: "/features/billing",
+    visual: <BillingComposite />,
+    features: [
+      [
+        { label: "Invoices and autopay", href: "/features/billing" },
+        { label: "Account ledger", href: "/features/billing" },
+        { label: "Split billing", href: "/resources/split-billing-shared-flights" },
+      ],
+      [
+        { label: "Club dues", href: "/features/memberships" },
+        { label: "QuickBooks Online", href: "/resources/quickbooks-integration" },
+        { label: "Stripe payouts", href: "/features/integrations" },
+      ],
+    ],
+  },
+  {
+    id: "training",
+    color: STATUS.purple,
+    layout: "side",
+    title: <>Training<br />records</>,
+    body: "Part 61 and Part 141 courses with stages and stage checks. Lessons are graded against the flights that flew them, and hours credit themselves toward each requirement.",
+    href: "/features/training",
+    visual: <TrainingComposite />,
+    features: [
+      [
+        { label: "Syllabi and stages", href: "/features/training" },
+        { label: "Graded lessons", href: "/features/training" },
+        { label: "Endorsements", href: "/resources/flight-training-records" },
+      ],
+      [
+        { label: "Offline grading", href: "/features/mobile" },
+        { label: "Instructor rates", href: "/features/instruction" },
+        { label: "Training records", href: "/resources/flight-training-records" },
+      ],
+    ],
+  },
+  {
+    id: "maintenance",
+    color: STATUS.orange,
+    layout: "readouts",
+    title: <>Maintenance<br />tracking</>,
+    body: "Every inspection counts down by tach, Hobbs or calendar month, and squawks come in from the ramp with photos. An overdue annual or 100-hour grounds the aircraft until it is signed off.",
+    href: "/features/maintenance",
+    visual: <MaintenanceComposite />,
+    features: [
+      [
+        { label: "Inspection tracking", href: "/features/inspections" },
+        { label: "Squawks", href: "/features/maintenance" },
+        { label: "Automatic grounding", href: "/features/maintenance" },
+      ],
+      [
+        { label: "AD compliance", href: "/resources/airworthiness-directive-tracking" },
+        { label: "Go / No-Go board", href: "/docs/maintenance/use-the-go-no-go-board" },
+        { label: "Mechanic access", href: "/docs/maintenance/who-can-do-what-in-maintenance" },
+      ],
+    ],
+  },
+  {
+    id: "reporting",
+    color: "#0f9aa8",
+    layout: "tint",
+    title: <>Reporting<br />and insight</>,
+    body: "21 reports on the same records as the schedule, from revenue and utilization to currency and endorsements. Filter and group any of them, save the view, export it to CSV or PDF, or email it daily, weekly or monthly.",
+    href: "/features/reports",
+    visual: <ReportingComposite />,
+    features: [
+      [
+        { label: "Revenue by aircraft", href: "/features/reports" },
+        { label: "Utilization", href: "/features/utilization" },
+        { label: "Saved views", href: "/features/reports" },
+      ],
+      [
+        { label: "Scheduled emails", href: "/features/reports" },
+        { label: "Custom dashboard", href: "/features/reports" },
+        { label: "Reporting guide", href: "/resources/flight-school-reports" },
+      ],
+    ],
+  },
+];
+
+const APP_ROLES: { who: string; what: string }[] = [
+  { who: "Students and renters", what: "Book aircraft and pay invoices from their phone." },
+  { who: "Instructors", what: "See the day and grade lessons in the app, even without a signal." },
+  { who: "Mechanics", what: "Log squawks with photos and attach inspection files from the ramp." },
+  { who: "Everyone", what: "Push notifications when the schedule changes, and standby offers to accept." },
+];
+
+const INCLUDED = [
+  "Scheduling, billing, training, maintenance and reporting",
+  "Unlimited instructors, students and renters",
+  "iOS and Android apps",
+  "Simulators and classrooms at no charge",
+  "No setup fee and no contract",
+];
+
+/**
+ * Real customer words only. The section renders nothing while this is empty, so
+ * adding the first quote is the whole job. Never paraphrase a customer or invent
+ * an attribution to fill it.
+ */
+type Testimonial = { quote: string; name: string; role: string; school: string };
+const TESTIMONIALS: Testimonial[] = [];
+
 export default function HomePage() {
   return (
-    <>
-      {/* Hero */}
-      <section className="relative">
-        <HeroAtmosphere />
-
-        <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 pb-20 pt-16 sm:px-6 lg:grid-cols-[0.9fr_1.2fr] lg:gap-10 lg:pb-28 lg:pt-20">
-          <div>
-            {/* The eyebrow does the category work the H1 deliberately does not.
-                Every paid click on the generic ad group lands here (that ad group
-                points at "/"), and somebody who just searched "flight school
-                management software" should not have to decode "command deck" to
-                learn what this is. It also keeps the exact phrase people search
-                in the first line of the page. */}
-            <p className="animate-fade-up text-sm font-semibold tracking-tight text-primary">
+    <div className={`${PAGE_BG} text-[#0b0b0d]`}>
+      {/* Hero: the headline, subhead and calls to action centered over still
+          column lines, then the dispatch board with the mobile app
+          stacked over it, growing flat as the page scrolls. */}
+      <section className="relative isolate overflow-hidden">
+        {/* The same still column lines the hero carried before the rebuild
+            (`.grid-lines`), fading out before the board. Footage, streamlines
+            and an animated grid with beams and a cursor glow were tried and
+            dropped as too busy. */}
+        <div
+          className="grid-lines pointer-events-none absolute inset-x-0 top-0 h-[720px] opacity-60 [mask-image:linear-gradient(to_bottom,black_40%,transparent)]"
+          aria-hidden
+        />
+        <div className="relative mx-auto max-w-7xl px-4 pt-16 text-center sm:px-6 lg:pt-24">
+          {/* The category phrase is the first line of the H1, styled as a pill.
+              Every paid click on the generic ad group lands here, and somebody
+              who searched "flight school management software" should read those
+              words first. Keeping it INSIDE the h1 puts the exact search phrase
+              in the page's main heading. */}
+          <h1 className="animate-fade-up">
+            <span className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-3.5 py-1.5 text-xs font-semibold tracking-tight text-[#1b1c1f] shadow-sm sm:text-sm">
+              <span className="size-1.5 rounded-full bg-primary" aria-hidden />
               Flight school management software
-            </p>
-            <h1 className="animate-fade-up-delay-1 mt-3 max-w-xl text-[2.5rem] font-semibold leading-[1.08] tracking-tight text-brand-surface sm:text-5xl lg:text-[3.35rem]">
+            </span>
+            <span className="sr-only">: </span>
+            <span className="mx-auto mt-6 block max-w-4xl text-balance text-[2.6rem] font-semibold leading-[1.02] tracking-[-0.035em] text-[#0b0b0d] sm:text-6xl lg:text-[5rem]">
               The command deck for your flight school.
-            </h1>
-            {/* Was a list of five modules, which answered "what is included" and
-                left "why this one" unanswered. Now: one system, live for everyone,
-                a published price, and how fast you can be running. Every clause is
-                a claim we can stand behind. */}
-            <p className="animate-fade-up-delay-2 mt-5 max-w-lg text-lg leading-relaxed text-muted-foreground">
-              The schedule, the invoice and the maintenance record in one system,
-              updating live for everyone at once. Set it up this afternoon for
-              ${PRICE_PER_AIRCRAFT} per aircraft, with every instructor, student
-              and renter included.
-            </p>
-            <div className="animate-fade-up-delay-3 mt-8 flex flex-wrap items-center gap-3">
-              <Button href={SIGNUP_URL} size="lg">
-                Start free trial
-                <ChevronRight className="size-4 opacity-80" />
-              </Button>
-              <Button href={DEMO_URL} variant="secondary" size="lg">
-                <PlayCircle className="size-4 opacity-80" />
-                See the live demo
-              </Button>
-            </div>
-            {/* "No sales call" earns its place here: every established competitor
-                in this market is demo-led, so it is the fastest differentiator to
-                read. The no-signup demo used to be spelled out here too, which
-                pushed the line to two rows and left one orphaned word; the
-                secondary CTA next to it already says the same thing. */}
-            <p className="animate-fade-up-delay-3 mt-4 text-sm text-muted-foreground">
-              {TRIAL_DAYS}-day free trial · No credit card · No sales call
-            </p>
+            </span>
+          </h1>
+          {/* Calls to action directly under the promise, where the eye already
+              is. They used to sit alone on the far right, which read as an
+              afterthought. */}
+          <p className="animate-fade-up-delay-2 mx-auto mt-6 max-w-xl text-lg leading-relaxed text-black/55 sm:text-xl">
+            Scheduling, billing, training records and maintenance tracking in
+            one system, with iOS and Android apps. ${PRICE_PER_AIRCRAFT} per
+            aircraft, with every instructor, student and renter included.
+          </p>
+          <div className="animate-fade-up-delay-3 mt-8 flex flex-wrap items-center justify-center gap-3">
+            <Button href={SIGNUP_URL} size="lg">
+              Start free trial
+              <ChevronRight className="size-4 opacity-80" />
+            </Button>
+            <Button href={DEMO_URL} size="lg" variant="secondary">
+              <PlayCircle className="size-4 opacity-80" />
+              Try the live demo
+            </Button>
           </div>
+          <p className="animate-fade-up-delay-3 mt-4 text-sm text-black/45">
+            {TRIAL_DAYS}-day free trial · No credit card · No sales call
+          </p>
+        </div>
 
-          <div className="animate-fade-up-delay-2 flex min-w-0 justify-center">
-            <ScheduleHeroDemo />
+        <div className="relative mx-auto mt-16 max-w-[1280px] px-4 sm:px-6 lg:mt-20">
+          <div className="hero-window animate-fade-up-delay-3 relative">
+            <div className="lg:mr-[190px]">
+              <HeroConsole />
+            </div>
+            {/* The mobile app, stacked over the board (see MobileHome). It rises
+                a little faster than the window as the page scrolls. */}
+            <div className="hero-phone absolute -right-4 top-16 hidden lg:block xl:-right-10">
+              <MobileHome />
+            </div>
           </div>
         </div>
+        {/* The window runs into the page rather than stopping at a line. */}
+        <div className={`pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-white`} aria-hidden />
       </section>
 
-      {/* Value strip */}
-      <section className="border-y border-border bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:py-16">
-          <RevealGroup className="grid gap-10 sm:grid-cols-3 sm:gap-0">
-            <ValuePoint
-              href={DEMO_URL}
-              eyebrow="Live demo"
-              title="Try it before you sign up"
-              body="Open a sample flight school and click around as any role. No account, no sales call."
+      {/* Who it is for. Visitors sort themselves before they read anything else,
+          and "Part 141" or "flying club" is the phrase they searched. */}
+      <section aria-labelledby="home-audience-heading">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-20">
+          <h2
+            id="home-audience-heading"
+            className="text-[11px] font-semibold uppercase tracking-[0.16em] text-black/40"
+          >
+            Built for every kind of flying operation
+          </h2>
+          <RevealGroup className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-0">
+            <AudiencePoint
+              href="/features/scheduling"
+              title="Part 61 flight schools"
+              body="Book, fly, bill and log a lesson without the desk juggling three tools."
             />
-            <ValuePoint
-              href="/pricing"
-              eyebrow="Pricing"
-              title={
-                <>
-                  <span className="tabular-nums">${PRICE_PER_AIRCRAFT}</span>
-                  <span className="text-[0.55em] font-semibold tracking-normal text-muted-foreground">
-                    /mo
-                  </span>{" "}
-                  per aircraft
-                </>
-              }
-              body="Simulators and classrooms are always free on your bill."
+            <AudiencePoint
+              href="/features/training"
+              title="Part 141 programs"
+              body="Stages, stage checks and certified training records on one syllabus."
               rule
             />
-            <ValuePoint
-              href="/app"
-              eyebrow="Mobile"
-              title="Native iOS and Android"
-              body="The same operation in your pocket, not a mobile website."
+            <AudiencePoint
+              href="/features/memberships"
+              title="Flying clubs"
+              body="Members book themselves, dues collect monthly, balances stay current."
+              rule
+            />
+            <AudiencePoint
+              href="/features/compliance"
+              title="Aircraft rental"
+              body="Checkouts and currency checked before every booking, billed off the meters."
               rule
             />
           </RevealGroup>
         </div>
       </section>
 
-      {/* Five modules: the product spine.
-          A photograph rather than the grid-lines pattern it used to carry, and
-          scrimmed by `SkyScrim` rather than a flat navy slab. The slab was the
-          problem: the hero above it changes colour with the visitor's local
-          time, so a rectangle of fixed brand paint underneath read as two
-          designs meeting rather than one page continuing. The scrim tints from
-          the same six phases off the same clock, so the sky above and the band
-          below are always the same weather. */}
+      {/* Five modules: the product spine. LEFT EXACTLY AS IT WAS; see rule 1 at
+          the top of the file.
+          A photograph scrimmed by `SkyScrim` rather than a flat navy slab. The
+          scrim tints from six time-of-day phases off one clock. */}
       <section className="relative isolate overflow-hidden bg-brand-surface">
         <Image
           src="/photos/homepage-fleet.jpg"
@@ -217,496 +393,200 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Scheduling spotlight */}
-      <section className="border-t border-border bg-white">
-        <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[0.9fr_1.2fr] lg:gap-14 lg:py-28">
-          <Reveal>
-            <p className="text-sm font-semibold text-primary">Scheduling</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
-              A dispatch board that feels like the ramp.
-            </h2>
-            <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-              Lane views for every aircraft, sim, and classroom. Students and
-              renters book themselves. Close out with Hobbs and tach, and the
-              invoice starts drafting itself.
-            </p>
-            <ul className="mt-6 space-y-3">
-              {[
-                "Day and week boards by resource",
-                "Dual, solo, rental, ground, and sim reservations",
-                "Self-booking with approval when you want it",
-                "Optional cancel locks, late fees, and booking caps",
-                "Standby, cancel recovery offers, and optional AI fill of idle matching time",
-                "Conflict-aware create and edit",
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-2.5 text-sm text-foreground">
-                  <Check className="mt-0.5 size-4 shrink-0 text-primary" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button href="/features/scheduling">
-                Explore scheduling
-                <ChevronRight className="size-4 opacity-80" />
-              </Button>
-              <Button href="/docs/scheduling/standby-and-slot-offers" variant="secondary">
-                Standby & offers
-              </Button>
-            </div>
-          </Reveal>
-          <Reveal delay={120} className="flex min-w-0 justify-center">
-            <SchedulingLiveDemo animated={false} />
-          </Reveal>
-        </div>
-      </section>
+      {/* The five feature sections, each laid out differently so they don't
+          read as one block five times (see FeatureSection). Each composite's panels rise as it scrolls in. */}
+      {SECTIONS.map((section) => (
+        <FeatureSection key={section.id} section={section} />
+      ))}
 
-      {/* Billing spotlight + hard cases tucked underneath */}
-      <section className="border-t border-border bg-[#fafbfc]">
-        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-28">
-          <div className="grid items-center gap-12 lg:grid-cols-[1.2fr_0.9fr] lg:gap-14">
-            <Reveal delay={120} className="order-2 flex min-w-0 justify-center lg:order-1">
-              <BillingLiveDemo animated={false} />
-            </Reveal>
-            <Reveal className="order-1 lg:order-2">
-              <p className="text-sm font-semibold text-primary">Billing</p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
-                Close-out posts the bill.
-              </h2>
-              <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-                Close out a flight and the line items write themselves. Bill each
-                visit with a Stripe invoice, or put members on an account ledger
-                with Add funds and auto-refill. No separate billing tool taped onto
-                the schedule.
-              </p>
-              <ul className="mt-6 space-y-3">
-                {[
-                  "Invoice each booking, or Account ledger for a running balance",
-                  "Auto-drafted bills from Hobbs and tach close-out",
-                  "Saved cards, autopay, and optional auto-refill",
-                  "AR: unpaid invoices, or who owes on Accounts",
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-2.5 text-sm text-foreground">
-                    <Check className="mt-0.5 size-4 shrink-0 text-primary" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Button href="/features/billing">
-                  Explore billing
-                  <ChevronRight className="size-4 opacity-80" />
-                </Button>
-                <Button href="/resources/quickbooks-integration" variant="secondary">
-                  QuickBooks
-                </Button>
-              </div>
-            </Reveal>
-          </div>
-
-          {/* Specialty cases: proof under Billing, not peers of the product */}
-          <Reveal className="mt-14 border-t border-border pt-10">
-            <p className="text-sm font-semibold text-primary">
-              Billing that matches real flights
-            </p>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-              The bookings most schools fake in a spreadsheet are just bookings
-              here.
-            </p>
-            <div className="mt-6 grid gap-4 md:grid-cols-2">
-              <HardCaseCard
-                icon={<Users className="size-4" />}
-                title="Split billing"
-                body="One flight, one invoice each. Split evenly, by hours flown, or by a share you set."
-                href="/resources/split-billing-shared-flights"
-              />
-              <HardCaseCard
-                icon={<MoonStar className="size-4" />}
-                title="Overnight and multi-day"
-                body="Book the whole trip. Charge a minimum for each night the aircraft is away."
-                href="/resources/overnight-and-multi-day-rentals"
-              />
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* Training spotlight */}
-      <section className="border-t border-border bg-white">
-        <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[0.9fr_1.2fr] lg:gap-14 lg:py-28">
-          <Reveal>
-            <p className="text-sm font-semibold text-primary">Training</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
-              Syllabus, hours, and endorsements in one record.
-            </h2>
-            <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-              Build or import a syllabus, enroll a student, grade lessons off
-              the flights you already booked, and sign endorsements. Part 61
-              and Part 141.
-            </p>
-            <ul className="mt-6 space-y-3">
-              {[
-                "Private, Instrument, Commercial, and CFI syllabi to start from",
-                "Graded lessons tied to the bookings on the board",
-                "Hour requirements tracked apart from lesson checklists",
-                "Endorsements from AC 61-65K, with expiry where it matters",
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-2.5 text-sm text-foreground">
-                  <Check className="mt-0.5 size-4 shrink-0 text-primary" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button href="/features/training">
-                Explore training
-                <ChevronRight className="size-4 opacity-80" />
-              </Button>
-              <Button href="/resources/flight-training-records" variant="secondary">
-                Training records guide
-              </Button>
-            </div>
-          </Reveal>
-          <Reveal delay={120} className="flex min-w-0 justify-center">
-            <TrainingLiveDemo animated={false} />
-          </Reveal>
-        </div>
-      </section>
-
-      {/* Maintenance spotlight */}
-      <section
-        id="maintenance"
-        aria-labelledby="home-maintenance-heading"
-        className="border-t border-border bg-[#fafbfc]"
-      >
-        <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1.2fr_0.9fr] lg:gap-14 lg:py-28">
-          <Reveal delay={120} className="order-2 flex min-w-0 justify-center lg:order-1">
-            <MaintenanceLiveDemo animated={false} />
-          </Reveal>
-          <Reveal className="order-1 lg:order-2">
-            <p className="text-sm font-semibold text-primary">Maintenance</p>
-            <h2
-              id="home-maintenance-heading"
-              className="mt-3 text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl"
-            >
-              Squawks and AVIATES inspections on every tail.
-            </h2>
-            <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-              Log defects at the aircraft, track annuals and 100-hours by Hobbs
-              or calendar date, and ground a tail so it cannot be booked. Same
-              data as the schedule — grounded aircraft leave the board.
-            </p>
-            <ul className="mt-6 space-y-3">
-              {[
-                "Open and resolved squawks with optional grounding",
-                "AVIATES inspections: annual, 100-hour, ELT, transponder, and more",
-                "Hour- and date-based countdowns that move with close-out",
-                "Photos and PDFs on an open inspection, from the phone or the desk",
-                "Sign off overdue items and return the aircraft to service",
-                "Grounded status visible across scheduling and self-booking",
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-2.5 text-sm text-foreground">
-                  <Check className="mt-0.5 size-4 shrink-0 text-primary" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button href="/features/maintenance">
-                Explore maintenance
-                <ChevronRight className="size-4 opacity-80" />
-              </Button>
-              <Button href="/docs/maintenance/how-maintenance-tracking-works" variant="secondary">
-                How maintenance works
-              </Button>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* Reporting spotlight */}
-      <section
-        id="reporting"
-        aria-labelledby="home-reporting-heading"
-        className="border-t border-border bg-white"
-      >
-        <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[0.9fr_1.2fr] lg:gap-14 lg:py-28">
-          <Reveal>
-            <p className="text-sm font-semibold text-primary">Reporting</p>
-            <h2
-              id="home-reporting-heading"
-              className="mt-3 text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl"
-            >
-              Filter any report. Save it. Schedule it. Pin it.
-            </h2>
-            <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-              Revenue, hours, instruction, and utilization on the same data as
-              the schedule. Every figure on your dashboard opens the report
-              behind it — same numbers, always.
-            </p>
-            <ul className="mt-6 space-y-3">
-              {[
-                "Filter, group, and re-order any report the way you think about it",
-                "Save a view for next month — Dual on N8830M, overdue invoices, and more",
-                "Email a saved view to your team daily, weekly, or monthly",
-                "Build your own Overview dashboard; each tile can pin its own date range",
-                "Export any report to CSV",
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-2.5 text-sm text-foreground">
-                  <Check className="mt-0.5 size-4 shrink-0 text-primary" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button href="/features/reports">
-                Explore reporting
-                <ChevronRight className="size-4 opacity-80" />
-              </Button>
-              <Button href="/resources/flight-school-reports" variant="secondary">
-                Reporting guide
-              </Button>
-            </div>
-          </Reveal>
-          <Reveal delay={120} className="flex min-w-0 justify-center">
-            <ReportsLiveDemo animated={false} />
-          </Reveal>
-        </div>
-      </section>
-
-      {/* Mobile spotlight */}
-      <section className="border-t border-border bg-[#fafbfc]">
-        <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:gap-16 lg:py-28">
-          <Reveal delay={120} className="order-2 flex min-w-0 justify-center lg:order-1">
-            <div className="animate-float w-full min-w-0">
-              <MobileLiveDemo animated={false} />
-            </div>
-          </Reveal>
-          <Reveal className="order-1 lg:order-2">
-            <p className="text-sm font-semibold text-primary">Native mobile</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
-              Built for the ramp, not a shrunk-down desktop.
-            </h2>
-            <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-              Students book from their phone. Instructors check the day on the go.
-              Dispatchers aren&apos;t chained to a front-desk PC. Same schedule,
-              same invoices in a real native app for iOS and Android.
-            </p>
-            <ul className="mt-6 space-y-3">
-              {[
-                "Book and manage lessons from anywhere",
-                "See aircraft availability in real time",
-                "Pay invoices and keep documents current",
-                "Works alongside the full web app at app.aerscheduler.com",
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-2.5 text-sm text-foreground">
-                  <Check className="mt-0.5 size-4 shrink-0 text-primary" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <div className="mt-8">
-              <StoreBadges />
-            </div>
-            <div className="mt-6">
-              <Button href="/app" variant="secondary">
-                App download page
-                <ChevronRight className="size-4 opacity-80" />
-              </Button>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* Clubs side door: demoted from a full spotlight */}
-      <section className="border-t border-border bg-white">
-        <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-          <Reveal>
-            <Link
-              href="/features/memberships"
-              className="group flex flex-col items-start justify-between gap-4 rounded-2xl border border-border bg-white px-6 py-5 transition-colors hover:border-primary/30 sm:flex-row sm:items-center sm:gap-8 sm:px-8"
-            >
-              <div className="max-w-2xl">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
-                  Also for flying clubs
-                </p>
-                <p className="mt-2 text-lg font-semibold tracking-tight text-brand-surface">
-                  Membership dues that collect themselves on the 1st.
-                </p>
-                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                  Tiers, joining fees, prorated mid-month joins. Same invoices
-                  and reports as the rest of the school.
-                </p>
-              </div>
-              <span className="inline-flex shrink-0 items-center gap-0.5 text-sm font-semibold text-primary">
-                Explore memberships
-                <ChevronRight className="size-3.5 transition-transform duration-150 group-hover:translate-x-0.5" />
-              </span>
-            </Link>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* Pricing teaser.
-          `overflow-hidden` because the price card's glow is `-inset-6` (24px)
-          inside a 16px mobile gutter, which pushed the whole document 8px wider
-          than the viewport and gave the homepage a horizontal scroll on a
-          phone. The glow is translucent and well inside the container at
-          desktop widths, so clipping it costs nothing visually. */}
-      <section className="overflow-hidden border-t border-border bg-white">
+      {/* The statement: one fact, huge, filling in as it scrolls into view
+          (`.statement-fill`). With motion off it is simply filled. */}
+      <section aria-labelledby="home-price-statement">
         <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:py-28">
-          <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.05fr]">
-            <Reveal>
-              <h2 className="text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
-                Simple pricing that scales with your fleet.
-              </h2>
-              <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
-                Pay for aircraft. Simulators and ground-school rooms are free.
-                Start with a {TRIAL_DAYS}-day trial. No card required.
-              </p>
-              <ul className="mt-6 space-y-3">
-                {[
-                  "Unlimited instructors, students, and renters",
-                  "Web console + native iOS and Android apps included",
-                  "Prorated when you add or remove a tail",
-                  "Enterprise plan for API access, integrations, and dedicated support",
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-2.5 text-sm text-foreground">
-                    <Check className="mt-0.5 size-4 shrink-0 text-primary" />
+          <h2
+            id="home-price-statement"
+            className="statement-fill text-balance text-5xl font-semibold leading-[1.02] tracking-[-0.04em] sm:text-7xl lg:text-[6.5rem]"
+          >
+            ${PRICE_PER_AIRCRAFT} per aircraft. Every instructor, student and
+            renter included. No sales call.
+          </h2>
+        </div>
+      </section>
+
+      {/* The mobile app, as a contained card (Tony: "incredible"; keep it). */}
+      <section>
+        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-28">
+          <Reveal
+            as="div"
+            className="relative isolate overflow-hidden rounded-[28px] bg-brand-surface shadow-[0_40px_80px_-40px_rgba(16,35,63,0.55)]"
+          >
+            <Image
+              src="/photos/reporting-panel.jpg"
+              alt="A pilot at the controls with the instrument panel lit"
+              fill
+              sizes="(min-width: 1280px) 1232px, 100vw"
+              quality={55}
+              className="object-cover"
+            />
+            <SkyScrim />
+            <div className="relative grid items-center gap-12 px-6 py-14 sm:px-10 lg:grid-cols-[1.15fr_0.85fr] lg:px-14 lg:py-16">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-sky-300">
+                  Mobile app
+                </p>
+                <h2
+                  id="home-app-heading"
+                  className="mt-3 max-w-xl text-3xl font-semibold tracking-tight text-white sm:text-4xl"
+                >
+                  iOS and Android apps for students, instructors and mechanics
+                </h2>
+                <p className="mt-4 max-w-xl text-lg leading-relaxed text-white/70">
+                  Included on every plan, and working from the same schedule,
+                  invoices and maintenance records as the web console.
+                </p>
+
+                <dl className="mt-10 grid max-w-2xl gap-x-10 gap-y-6 sm:grid-cols-2">
+                  {APP_ROLES.map((role) => (
+                    <div key={role.who} className="border-t border-white/15 pt-4">
+                      <dt className="text-sm font-semibold text-white">{role.who}</dt>
+                      <dd className="mt-1 text-sm leading-relaxed text-white/65">{role.what}</dd>
+                    </div>
+                  ))}
+                </dl>
+
+                <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-4">
+                  <StoreBadges />
+                  <Link
+                    href="/app"
+                    className="inline-flex items-center gap-1 text-sm font-semibold text-white/85 hover:text-white"
+                  >
+                    About the app
+                    <ChevronRight className="size-3.5" />
+                  </Link>
+                </div>
+              </div>
+              <div className="flex justify-center lg:justify-end">
+                <PhoneMock badge={false} className="w-[260px] sm:w-[285px]" />
+              </div>
+            </div>
+          </Reveal>
+
+          {TESTIMONIALS.length > 0 && (
+            <RevealGroup
+              className={`mt-20 grid gap-12 ${TESTIMONIALS.length > 1 ? "lg:grid-cols-2" : "mx-auto max-w-3xl"}`}
+            >
+              {TESTIMONIALS.map((t) => (
+                <figure key={t.name}>
+                  <blockquote className="text-2xl font-medium leading-snug tracking-tight text-[#0b0b0d] sm:text-[1.75rem]">
+                    &ldquo;{t.quote}&rdquo;
+                  </blockquote>
+                  <figcaption className="mt-6 text-sm">
+                    <span className="font-semibold text-[#0b0b0d]">{t.name}</span>
+                    <span className="text-muted-foreground">
+                      {" "}
+                      · {t.role}, {t.school}
+                    </span>
+                  </figcaption>
+                </figure>
+              ))}
+            </RevealGroup>
+          )}
+
+        </div>
+      </section>
+
+      {/* Pricing and the final call to action, as one closing section. The
+          price is the pitch: most competitors quote per school, so a number you
+          can read is itself the differentiator. */}
+      <section
+        className="relative isolate overflow-hidden bg-brand-surface text-white"
+        aria-labelledby="home-pricing-heading"
+      >
+        <div
+          className="absolute inset-0 bg-[radial-gradient(60%_80%_at_85%_0%,rgba(56,130,246,0.28),transparent_70%),radial-gradient(50%_70%_at_0%_100%,rgba(14,165,233,0.16),transparent_70%)]"
+          aria-hidden
+        />
+        <div className="relative mx-auto grid max-w-7xl gap-14 px-4 py-20 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:py-28">
+          <Reveal>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-sky-300">
+              Flight school software pricing
+            </p>
+            <h2
+              id="home-pricing-heading"
+              className="mt-3 max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl lg:leading-[1.08]"
+            >
+              ${PRICE_PER_AIRCRAFT} per aircraft per month, with unlimited users
+            </h2>
+            <p className="mt-5 max-w-xl text-lg leading-relaxed text-white/70">
+              A ten-aircraft school pays ${PRICE_PER_AIRCRAFT * 10} a month.
+              Start with a {TRIAL_DAYS}-day free trial, no credit card required.
+            </p>
+            <div className="mt-9 flex flex-wrap items-center gap-3">
+              <Button href={SIGNUP_URL} size="lg" className="bg-white text-brand-surface hover:bg-white/90">
+                Start free trial
+                <ChevronRight className="size-4 opacity-80" />
+              </Button>
+              <Button href={DEMO_URL} size="lg" className={GLASS_BUTTON}>
+                <PlayCircle className="size-4 opacity-80" />
+                Try the live demo
+              </Button>
+            </div>
+          </Reveal>
+          <Reveal delay={100}>
+            <div className="rounded-2xl border border-white/15 bg-white/[0.06] p-7 backdrop-blur-sm sm:p-8">
+              <p className="text-sm font-semibold text-white">Included in every plan</p>
+              <ul className="mt-5 space-y-3">
+                {INCLUDED.map((item) => (
+                  <li key={item} className="flex items-start gap-2.5 text-sm text-white/80">
+                    <Check className="mt-0.5 size-4 shrink-0 text-sky-300" />
                     {item}
                   </li>
                 ))}
               </ul>
-            </Reveal>
-
-            <Reveal delay={120} className="relative">
-              <div
-                className="pointer-events-none absolute -inset-6 rounded-[28px] bg-[linear-gradient(118deg,rgba(25,103,210,0.18),rgba(14,165,233,0.2),rgba(16,35,63,0.12))]"
-                aria-hidden
-              />
-              <div className="relative overflow-hidden rounded-2xl border border-border bg-white p-8 shadow-lg">
-                <p className="text-sm font-semibold text-primary">Per aircraft</p>
-                <div className="mt-3 flex items-baseline gap-1">
-                  <span className="text-5xl font-semibold tracking-tight text-brand-surface tabular-nums">
-                    ${PRICE_PER_AIRCRAFT}
-                  </span>
-                  <span className="text-muted-foreground">/mo</span>
-                </div>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  Billed monthly. Sims & rooms free. {TRIAL_DAYS} days free to start.
-                </p>
-                <Button href={SIGNUP_URL} size="lg" className="mt-8 w-full">
-                  Start free trial
-                  <ChevronRight className="size-4 opacity-80" />
-                </Button>
-                <Button href="/pricing" variant="ghost" className="mt-2 w-full">
-                  See full pricing & Enterprise
-                </Button>
+              <div className="mt-7 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-5 text-sm">
+                <span className="text-white/60">API access and custom integrations</span>
+                <Link href="/pricing" className="inline-flex items-center gap-1 font-semibold text-white hover:underline">
+                  See Enterprise
+                  <ChevronRight className="size-3.5" />
+                </Link>
               </div>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA */}
-      <section className="border-t border-border bg-brand-surface text-white">
-        <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-8 px-4 py-16 sm:px-6 lg:flex-row lg:items-center lg:py-20">
-          <Reveal className="max-w-xl">
-            <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-              See it running before you commit.
-            </h2>
-            <p className="mt-3 text-base leading-relaxed text-white/65">
-              Open the live demo and walk a real schedule, roster, and reports as any
-              role. Nothing to install, no signup. Ready to make it yours? Add a tail
-              and go, or bring your questions.
-            </p>
-          </Reveal>
-          <Reveal delay={100} className="flex flex-wrap items-center gap-3">
-            <Button href={DEMO_URL} size="lg" className="bg-white text-brand-surface hover:bg-white/90">
-              <PlayCircle className="size-4 opacity-80" />
-              Try the live demo
-            </Button>
-            <Button
-              href={SIGNUP_URL}
-              size="lg"
-              className="border border-white/25 bg-transparent text-white hover:bg-white/10"
-            >
-              Start free trial
-              <ChevronRight className="size-4 opacity-80" />
-            </Button>
+            </div>
           </Reveal>
         </div>
       </section>
-    </>
+    </div>
   );
 }
 
-function ValuePoint({
+/** The secondary button on a dark ground. */
+const GLASS_BUTTON =
+  "border border-white/20 bg-white/[0.06] text-white backdrop-blur-sm hover:bg-white/[0.12]";
+
+function AudiencePoint({
   href,
-  eyebrow,
   title,
   body,
   rule,
 }: {
   href: string;
-  eyebrow: string;
-  title: ReactNode;
+  title: string;
   body: string;
   rule?: boolean;
 }) {
   return (
     <Link
       href={href}
-      className={`group relative block rounded-xl sm:px-8 sm:py-1 lg:px-10 ${
+      className={`group relative block lg:px-8 lg:first:pl-0 ${
         rule
-          ? "sm:before:absolute sm:before:inset-y-2 sm:before:left-0 sm:before:w-px sm:before:bg-border"
+          ? "lg:before:absolute lg:before:inset-y-1 lg:before:left-0 lg:before:w-px lg:before:bg-black/10"
           : ""
       }`}
     >
-      <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
-        {eyebrow}
-      </p>
-      <p className="mt-3 text-xl font-semibold tracking-tight text-brand-surface transition-colors duration-150 group-hover:text-primary sm:text-[1.35rem]">
+      <h3 className="flex items-center gap-1 text-lg font-semibold tracking-tight text-[#0b0b0d] transition-colors duration-150 group-hover:text-primary">
         {title}
-      </p>
-      <p className="mt-2 max-w-[18rem] text-sm leading-relaxed text-muted-foreground">
-        {body}
-      </p>
-      <span className="mt-4 inline-flex items-center gap-0.5 text-sm font-semibold text-primary">
-        Learn more
-        <ChevronRight className="size-3.5 transition-transform duration-150 group-hover:translate-x-0.5" />
-      </span>
-    </Link>
-  );
-}
-
-function HardCaseCard({
-  icon,
-  title,
-  body,
-  href,
-}: {
-  icon: ReactNode;
-  title: string;
-  body: string;
-  href: string;
-}) {
-  return (
-    <Link
-      href={href}
-      className="group flex gap-3 rounded-xl border border-border bg-white p-5 transition-colors hover:border-primary/30"
-    >
-      <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-        {icon}
-      </span>
-      <div>
-        <p className="font-semibold tracking-tight text-foreground">{title}</p>
-        <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{body}</p>
-        <span className="mt-3 inline-flex items-center gap-0.5 text-sm font-semibold text-primary">
-          Read the guide
-          <ChevronRight className="size-3.5 transition-transform duration-150 group-hover:translate-x-0.5" />
-        </span>
-      </div>
+        <ChevronRight className="size-4 text-primary opacity-0 transition-all duration-150 group-hover:translate-x-0.5 group-hover:opacity-100" />
+      </h3>
+      <p className="mt-1.5 max-w-[17rem] text-sm leading-relaxed text-black/50">{body}</p>
     </Link>
   );
 }

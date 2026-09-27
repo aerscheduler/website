@@ -7,7 +7,14 @@ import { cn } from "@/lib/cn";
  * iOS Home mock matching the real AerScheduler staff Home:
  * wallet-pass hero, Calendar/Invoices/Squawks pills, 2×2 stats, Upcoming list.
  */
-export function PhoneMock({ className = "" }: { className?: string }) {
+export function PhoneMock({
+  className = "",
+  badge = true,
+}: {
+  className?: string;
+  /** The floating "iOS and Android" label. Off where the copy beside it already says so. */
+  badge?: boolean;
+}) {
   const [selected, setSelected] = useState<string | null>(null);
 
   return (
@@ -19,29 +26,68 @@ export function PhoneMock({ className = "" }: { className?: string }) {
           interactive
         />
       </PhoneChrome>
-      <div className="absolute -right-2 bottom-[16%] z-10 rounded-lg border border-border bg-white px-2.5 py-2 shadow-md sm:-right-5 sm:bottom-[18%]">
-        <p className="text-[9px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-          Native app
-        </p>
-        <p className="mt-0.5 text-xs font-semibold text-foreground">iOS and Android</p>
+      {badge && (
+        <div className="absolute -right-2 bottom-[16%] z-10 rounded-lg border border-border bg-white px-2.5 py-2 shadow-md sm:-right-5 sm:bottom-[18%]">
+          <p className="text-[9px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+            Native app
+          </p>
+          <p className="mt-0.5 text-xs font-semibold text-foreground">iOS and Android</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * The device. Modelled on a current iPhone Pro rather than a generic rounded
+ * rectangle: a brushed titanium rim (a gradient border, lit from the top left),
+ * a thin black bezel inside it, the Dynamic Island with a camera lens, metal
+ * side buttons, and a faint glass sheen across the screen. The layered shadow
+ * is what makes it sit on a dark photo band as well as on white.
+ */
+export function PhoneChrome({ children }: { children: ReactNode }) {
+  return (
+    <div className="relative aspect-[9/19] rounded-[2.9rem] bg-[linear-gradient(145deg,#8a8f98_0%,#3a3e46_22%,#1d2027_48%,#3b3f47_76%,#9aa0a9_100%)] p-[3px] shadow-[0_2px_4px_rgba(0,0,0,0.25),0_30px_60px_-18px_rgba(8,17,33,0.6),0_60px_120px_-40px_rgba(8,17,33,0.55)]">
+      <SideButton side="left" top="17%" height="h-6" />
+      <SideButton side="left" top="25%" height="h-11" />
+      <SideButton side="left" top="34%" height="h-11" />
+      <SideButton side="right" top="28%" height="h-16" />
+
+      <div className="relative h-full rounded-[2.72rem] bg-black p-[7px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)]">
+        <div className="relative flex h-full flex-col overflow-hidden rounded-[2.3rem] bg-[#f2f4f7]">
+          <div className="absolute left-1/2 top-[9px] z-30 flex h-[24px] w-[86px] -translate-x-1/2 items-center justify-end rounded-full bg-black pr-2.5">
+            <span className="size-[7px] rounded-full bg-[radial-gradient(circle_at_35%_35%,#3b4a6b,#0b0f1a_70%)]" />
+          </div>
+          {children}
+          <div
+            className="pointer-events-none absolute inset-0 z-40 rounded-[2.3rem] bg-[linear-gradient(118deg,rgba(255,255,255,0.14)_0%,rgba(255,255,255,0.04)_28%,transparent_42%)]"
+            aria-hidden
+          />
+        </div>
       </div>
     </div>
   );
 }
 
-export function PhoneChrome({ children }: { children: ReactNode }) {
+function SideButton({
+  side,
+  top,
+  height,
+}: {
+  side: "left" | "right";
+  top: string;
+  height: string;
+}) {
   return (
-    <div className="relative aspect-[9/18] rounded-[2.6rem] bg-[#0b0c10] p-[10px] shadow-[0_20px_50px_-12px_rgba(16,35,63,0.45),0_0_0_1px_rgba(255,255,255,0.08)_inset]">
-      <div className="absolute -left-[2px] top-[18%] h-7 w-[3px] rounded-l-sm bg-[#2a2d36]" aria-hidden />
-      <div className="absolute -left-[2px] top-[26%] h-12 w-[3px] rounded-l-sm bg-[#2a2d36]" aria-hidden />
-      <div className="absolute -left-[2px] top-[36%] h-12 w-[3px] rounded-l-sm bg-[#2a2d36]" aria-hidden />
-      <div className="absolute -right-[2px] top-[30%] h-16 w-[3px] rounded-r-sm bg-[#2a2d36]" aria-hidden />
-
-      <div className="relative flex h-full flex-col overflow-hidden rounded-[2rem] bg-[#f2f4f7]">
-        <div className="absolute left-1/2 top-2.5 z-30 h-[22px] w-[88px] -translate-x-1/2 rounded-full bg-black" />
-        {children}
-      </div>
-    </div>
+    <span
+      className={cn(
+        "absolute w-[3px] bg-[linear-gradient(90deg,#4a4e57,#8a8f98,#4a4e57)]",
+        height,
+        side === "left" ? "-left-[2px] rounded-l-[2px]" : "-right-[2px] rounded-r-[2px]"
+      )}
+      style={{ top }}
+      aria-hidden
+    />
   );
 }
 
@@ -58,7 +104,7 @@ export const HOME_STATS: HomeStat[] = [
   {
     id: "next",
     label: "Next on schedule",
-    value: "Tue 12:00 AM",
+    value: "Tue, all day",
     hint: "N44TS",
     accent: "primary",
     icon: "plane",
@@ -173,7 +219,7 @@ export function IosHomeScreen({
           <p className="mt-2 text-[15px] font-semibold leading-snug tracking-tight">
             N44TS · Annual inspection
           </p>
-          <p className="mt-2 text-[10px] text-white/80">12:00 AM, 11:59 PM</p>
+          <p className="mt-2 text-[10px] text-white/80">All day</p>
           <p className="mt-0.5 text-[10px] text-white/70">N44TS</p>
         </button>
 
@@ -262,7 +308,7 @@ export function IosHomeScreen({
               N44TS · Annual inspection
             </p>
             <p className="mt-0.5 truncate text-[9px] text-muted-foreground">
-              Tue, Aug 11 · 12:00 AM, 11:59 PM
+              Tue, Aug 11 · All day
             </p>
             <p className="mt-0.5 text-[9px] text-muted-foreground">N44TS</p>
           </div>

@@ -88,211 +88,6 @@ body {
   color: var(--brand-surface);
 }
 
-/* ---------------------------------------------------------------------------
-   Hero sky
-
-   Six pre-authored gradients, one per phase of the day; `HeroAtmosphere` fades
-   the visitor's local one to opacity 1. Brand blue stays dominant throughout.
-   Warmth only enters at dawn and dusk, which is both what the sky actually does
-   and the only two times a warm hero would not fight the product screenshot
-   sitting on top of it.
-
-   Each sky carries its own drift with a different duration and direction, so
-   the layers never realign into a visible loop.
---------------------------------------------------------------------------- */
-.sky {
-  position: absolute;
-  /* Deliberately larger than the window that clips it.
-
-     The drift keyframes translate these layers by up to 2%, and `sky-drift-b`
-     finishes at scale(1), so at the end of its cycle there was no scale-up left
-     to cover the shift: the layer slid off and the white page showed through as
-     roughly 26px of gap on the LEFT and 7px along the BOTTOM. Never the right or
-     the top, because that animation only ever travels one way. The three phases
-     on drift-b (dawn, midday, dusk) showed it and the three on drift-a did not,
-     and since the animation alternates it drifted in and out, which is why it
-     looked intermittent.
-
-     Fixing the keyframe numbers would have worked until somebody changed a
-     keyframe number. An overhang is structural: whatever the motion does inside
-     this box, there is always more gradient than window. */
-  inset: -4%;
-  opacity: 0;
-  transition: opacity var(--dur-slow) var(--ease-out);
-  will-change: opacity;
-}
-
-.sky--active { /* em-dash-ok: BEM modifier */
-  opacity: 1;
-}
-
-/* Every gradient below is anchored in the same four places, and the reason the
-   hero read as a white page with a corner glow is that three of them sat at
-   78%, 92% and 60% across: directly behind the product mock, which is an opaque
-   white card. The colour was being painted and then covered up.
-
-   So each phase now also carries a LEFT wash, low alpha, under the headline
-   where there is nothing on top of it. That is what makes the hero read as a
-   sky rather than as blank space with weather in one corner. Left alphas stay
-   under 0.22 because the headline on top is dark navy and has to keep its
-   contrast; the right-hand stops carry the saturation, where only the mock is.
-
-   The closing `ground` stop tints the very bottom so the hero hands off to the
-   white value strip below instead of just stopping. */
-
-.sky--night { /* em-dash-ok: BEM modifier */
-  background:
-    radial-gradient(ellipse 70% 55% at 78% 18%, rgba(30, 58, 110, 0.62), transparent 58%),
-    radial-gradient(ellipse 55% 50% at 92% 55%, rgba(16, 35, 63, 0.52), transparent 52%),
-    radial-gradient(ellipse 40% 45% at 60% 88%, rgba(12, 24, 46, 0.32), transparent 55%),
-    radial-gradient(ellipse 62% 72% at 6% 76%, rgba(38, 76, 140, 0.18), transparent 62%),
-    linear-gradient(
-      118deg,
-      transparent 32%,
-      rgba(25, 55, 99, 0.34) 46%,
-      rgba(16, 35, 63, 0.46) 56%,
-      rgba(38, 76, 140, 0.36) 64%,
-      rgba(10, 20, 38, 0.26) 76%,
-      transparent 88%
-    ),
-    linear-gradient(to bottom, transparent 72%, rgba(16, 35, 63, 0.1) 100%);
-  animation: sky-drift-a 26s ease-in-out infinite alternate;
-}
-
-.sky--dawn { /* em-dash-ok: BEM modifier */
-  background:
-    radial-gradient(ellipse 70% 55% at 78% 18%, rgba(255, 176, 122, 0.54), transparent 58%),
-    radial-gradient(ellipse 55% 50% at 92% 55%, rgba(120, 150, 220, 0.46), transparent 52%),
-    radial-gradient(ellipse 40% 45% at 60% 88%, rgba(25, 103, 210, 0.26), transparent 55%),
-    radial-gradient(ellipse 62% 72% at 6% 76%, rgba(255, 198, 154, 0.17), transparent 62%),
-    linear-gradient(
-      118deg,
-      transparent 32%,
-      rgba(255, 196, 150, 0.3) 46%,
-      rgba(148, 163, 224, 0.42) 56%,
-      rgba(90, 140, 220, 0.38) 64%,
-      rgba(30, 58, 110, 0.22) 76%,
-      transparent 88%
-    ),
-    linear-gradient(to bottom, transparent 72%, rgba(120, 150, 220, 0.1) 100%);
-  animation: sky-drift-b 21s ease-in-out infinite alternate;
-}
-
-.sky--morning { /* em-dash-ok: BEM modifier */
-  background:
-    radial-gradient(ellipse 70% 55% at 78% 18%, rgba(125, 211, 252, 0.6), transparent 58%),
-    radial-gradient(ellipse 55% 50% at 92% 55%, rgba(56, 160, 235, 0.44), transparent 52%),
-    radial-gradient(ellipse 40% 45% at 60% 88%, rgba(25, 103, 210, 0.22), transparent 55%),
-    radial-gradient(ellipse 62% 72% at 6% 76%, rgba(186, 230, 253, 0.2), transparent 62%),
-    linear-gradient(
-      118deg,
-      transparent 32%,
-      rgba(186, 230, 253, 0.34) 46%,
-      rgba(56, 189, 248, 0.44) 56%,
-      rgba(25, 103, 210, 0.36) 64%,
-      rgba(16, 35, 63, 0.18) 76%,
-      transparent 88%
-    ),
-    linear-gradient(to bottom, transparent 72%, rgba(56, 160, 235, 0.1) 100%);
-  animation: sky-drift-a 18s ease-in-out infinite alternate;
-}
-
-/* The original mesh, kept as the neutral midday state and the SSR default. */
-.sky--midday { /* em-dash-ok: BEM modifier */
-  background:
-    radial-gradient(ellipse 70% 55% at 78% 18%, rgba(56, 189, 248, 0.58), transparent 58%),
-    radial-gradient(ellipse 55% 50% at 92% 55%, rgba(25, 103, 210, 0.44), transparent 52%),
-    radial-gradient(ellipse 40% 45% at 60% 88%, rgba(16, 35, 63, 0.24), transparent 55%),
-    radial-gradient(ellipse 62% 72% at 6% 76%, rgba(147, 213, 250, 0.2), transparent 62%),
-    linear-gradient(
-      118deg,
-      transparent 32%,
-      rgba(14, 165, 233, 0.32) 46%,
-      rgba(25, 103, 210, 0.46) 56%,
-      rgba(56, 189, 248, 0.39) 64%,
-      rgba(16, 35, 63, 0.22) 76%,
-      transparent 88%
-    ),
-    linear-gradient(to bottom, transparent 72%, rgba(25, 103, 210, 0.1) 100%);
-  animation: sky-drift-b 18s ease-in-out infinite alternate;
-}
-
-.sky--evening { /* em-dash-ok: BEM modifier */
-  background:
-    radial-gradient(ellipse 70% 55% at 78% 18%, rgba(255, 205, 140, 0.48), transparent 58%),
-    radial-gradient(ellipse 55% 50% at 92% 55%, rgba(56, 150, 225, 0.46), transparent 52%),
-    radial-gradient(ellipse 40% 45% at 60% 88%, rgba(25, 103, 210, 0.26), transparent 55%),
-    radial-gradient(ellipse 62% 72% at 6% 76%, rgba(255, 216, 168, 0.19), transparent 62%),
-    linear-gradient(
-      118deg,
-      transparent 32%,
-      rgba(255, 216, 168, 0.28) 46%,
-      rgba(96, 170, 232, 0.44) 56%,
-      rgba(25, 103, 210, 0.38) 64%,
-      rgba(16, 35, 63, 0.22) 76%,
-      transparent 88%
-    ),
-    linear-gradient(to bottom, transparent 72%, rgba(56, 150, 225, 0.1) 100%);
-  animation: sky-drift-a 23s ease-in-out infinite alternate;
-}
-
-.sky--dusk { /* em-dash-ok: BEM modifier */
-  background:
-    radial-gradient(ellipse 70% 55% at 78% 18%, rgba(255, 158, 128, 0.52), transparent 58%),
-    radial-gradient(ellipse 55% 50% at 92% 55%, rgba(88, 108, 190, 0.48), transparent 52%),
-    radial-gradient(ellipse 40% 45% at 60% 88%, rgba(16, 35, 63, 0.32), transparent 55%),
-    radial-gradient(ellipse 62% 72% at 6% 76%, rgba(255, 184, 156, 0.19), transparent 62%),
-    linear-gradient(
-      118deg,
-      transparent 32%,
-      rgba(255, 180, 150, 0.28) 46%,
-      rgba(110, 130, 200, 0.44) 56%,
-      rgba(46, 88, 160, 0.38) 64%,
-      rgba(16, 35, 63, 0.26) 76%,
-      transparent 88%
-    ),
-    linear-gradient(to bottom, transparent 72%, rgba(88, 108, 190, 0.1) 100%);
-  animation: sky-drift-b 24s ease-in-out infinite alternate;
-}
-
-/*
-  The time-of-day sky is authored for the desktop hero, where the product mock
-  covers the saturated right-hand wash and the headline sits on a light left
-  edge. On a phone the mock stacks under the copy, so night (and dusk) paint
-  dark colour onto navy type. Keep the midday sky below the stacked-hero
-  breakpoint (lg, 1024px) and drop the drift, which is easy to miss and
-  expensive on a small screen.
-*/
-@media (max-width: 1023px) {
-  .sky {
-    animation: none !important;
-  }
-  .sky:not(.sky--midday) { /* em-dash-ok: BEM modifier */
-    opacity: 0 !important;
-  }
-  .sky--midday { /* em-dash-ok: BEM modifier */
-    opacity: 1 !important;
-  }
-}
-
-@keyframes sky-drift-a {
-  from {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  to {
-    transform: translate3d(-2%, 1.5%, 0) scale(1.04);
-  }
-}
-
-@keyframes sky-drift-b {
-  from {
-    transform: translate3d(0, 0, 0) scale(1.03);
-  }
-  to {
-    transform: translate3d(1.8%, -1.2%, 0) scale(1);
-  }
-}
-
 @keyframes fade-up {
   from {
     opacity: 0;
@@ -424,10 +219,6 @@ body {
     transition: none !important;
   }
 
-  .sky {
-    transition: none !important;
-  }
-
   *,
   *::before,
   *::after {
@@ -457,19 +248,15 @@ body {
    no rule anywhere in the stylesheet, so all of them were rendering an empty
    div and showing plain white where a wash was intended.
 
-   Deliberately NOT the home page's `.sky--midday`, even though sharing it would
-   have been less code. That one is tuned to sit behind an opaque product mock
-   with a two-line headline beside it, so it can afford hot spots and
-   saturation. These 24 sit behind breadcrumbs, an H1 and body copy that runs
-   the full width, and a bloom under a paragraph is how a page ends up hard to
-   read. So this is a broad, calm wash: weight in the top right where the
-   content usually is not, nothing strong on the left, and a soft lift at the
-   top edge so the hero separates from the header above it.
+   These sit behind breadcrumbs, an H1 and body copy that runs the full width,
+   and a bloom under a paragraph is how a page ends up hard to read. So this is
+   a broad, calm wash: weight in the top right where the content usually is
+   not, nothing strong on the left, and a soft lift at the top edge so the hero
+   separates from the header above it.
 
    Call sites scale it between opacity-40 and opacity-70, so the alphas here are
    the ceiling rather than the typical case. Static, with no drift: these are
-   page headers, and it also means there is no transform to slide a layer off
-   its own edge (see the note on `.sky`).
+   page headers.
    ------------------------------------------------------------------------- */
 .hero-mesh {
   background:
@@ -601,61 +388,18 @@ body {
 }
 
 /* ---------------------------------------------------------------------------
-   Statement band sky
+   Statement band scrim
 
-   The dark counterpart to the hero sky above, for a band laid over a
-   photograph. Same six phases, same clock (see `usePhase`), authored for white
-   text on top and a photograph underneath.
+   A dark brand-blue wash for a band laid over a photograph (see `SkyScrim`),
+   authored for white text on top. It runs left to right: dense enough on the
+   left to carry a heading at 4xl, thinning toward the right so the photograph
+   is still a photograph.
 
-   Each one runs left to right: dense enough on the left to carry a heading at
-   4xl, thinning toward the right so the photograph is still a photograph. The
-   hue is what does the work. Midday is brand blue, dawn and dusk let warmth in
-   on the right the way the hero does, night closes down to almost solid.
-
-   No drift animation here, unlike the hero. A gradient sliding across a still
-   photograph reads as a rendering fault, not as weather.
+   This used to be six washes that followed the visitor's local time of day,
+   with a matching animated hero sky. Removed on 2026-09-26 at Tony's request:
+   the site now always shows the day look.
    ------------------------------------------------------------------------- */
 .band-sky {
-  opacity: 0;
-  transition: opacity var(--dur-slow) var(--ease-out);
-  will-change: opacity;
-}
-
-.band-sky--active { /* em-dash-ok: BEM modifier */
-  opacity: 1;
-}
-
-.band-sky--night { /* em-dash-ok: BEM modifier */
-  background: linear-gradient(
-    100deg,
-    rgba(8, 17, 33, 0.97) 0%,
-    rgba(12, 26, 48, 0.92) 34%,
-    rgba(16, 35, 63, 0.78) 62%,
-    rgba(20, 42, 74, 0.55) 100%
-  );
-}
-
-.band-sky--dawn { /* em-dash-ok: BEM modifier */
-  background: linear-gradient(
-    100deg,
-    rgba(18, 32, 60, 0.96) 0%,
-    rgba(38, 52, 92, 0.88) 34%,
-    rgba(92, 74, 96, 0.66) 66%,
-    rgba(168, 108, 88, 0.42) 100%
-  );
-}
-
-.band-sky--morning { /* em-dash-ok: BEM modifier */
-  background: linear-gradient(
-    100deg,
-    rgba(12, 28, 54, 0.96) 0%,
-    rgba(18, 44, 82, 0.88) 34%,
-    rgba(26, 62, 116, 0.66) 66%,
-    rgba(40, 88, 156, 0.4) 100%
-  );
-}
-
-.band-sky--midday { /* em-dash-ok: BEM modifier */
   background: linear-gradient(
     100deg,
     rgba(11, 26, 50, 0.96) 0%,
@@ -665,27 +409,7 @@ body {
   );
 }
 
-.band-sky--evening { /* em-dash-ok: BEM modifier */
-  background: linear-gradient(
-    100deg,
-    rgba(14, 28, 54, 0.96) 0%,
-    rgba(32, 48, 90, 0.88) 34%,
-    rgba(66, 70, 118, 0.66) 66%,
-    rgba(126, 96, 132, 0.4) 100%
-  );
-}
-
-.band-sky--dusk { /* em-dash-ok: BEM modifier */
-  background: linear-gradient(
-    100deg,
-    rgba(16, 26, 50, 0.97) 0%,
-    rgba(42, 44, 82, 0.9) 34%,
-    rgba(96, 70, 100, 0.68) 66%,
-    rgba(186, 110, 84, 0.44) 100%
-  );
-}
-
-/* The seam. Phase-independent, so it stays one layer instead of six. */
+/* The seam: fades the top edge in and darkens the bottom hand-off. */
 .band-horizon {
   background: linear-gradient(
     to bottom,
@@ -696,9 +420,169 @@ body {
   );
 }
 
+/* ---------------------------------------------------------------------------
+   Home page scroll choreography (see the note at the top of src/app/page.tsx).
+   All of it is CSS scroll-driven animation: no JavaScript, and browsers
+   without `animation-timeline` simply show the finished state.
+
+   .hero-window  The hero's product window starts tilted back and slightly
+                 small, and grows flat and a little larger over the first
+                 ~380px of page scroll (it was 700px; Tony: "I have to scroll
+                 down really far for the content to finally be animated") (a `scroll(root)` timeline, so it is
+                 driven by the page, not by when the element entered).
+   .board-in     A booking landing on the hero board, staggered on load.
+   .scroll-grow  Bento cards grow and settle as they scroll into view.
+   ------------------------------------------------------------------------- */
+@supports (animation-timeline: scroll()) {
+  .hero-window {
+    animation: hero-window-grow linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 380px;
+    transform-origin: 50% 0%;
+  }
+}
+
+/* A product composite without its fades to transparent (FeatureSection
+   "side"): in a narrow column they let rows under the front panel show
+   through it. */
+.composite-solid .rise-back,
+.composite-solid .rise-back > div,
+.composite-solid .rise-front {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+/* The mobile view stacked over the hero board drifts up a little faster than
+   the board as the page scrolls, for depth. Same page-scroll timeline. */
+@supports (animation-timeline: scroll()) {
+  .hero-phone {
+    animation: hero-phone-rise linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 380px;
+  }
+}
+
+@keyframes hero-phone-rise {
+  from {
+    transform: translateY(70px);
+  }
+  to {
+    transform: translateY(-40px);
+  }
+}
+
+@keyframes hero-window-grow {
+  from {
+    transform: perspective(2000px) rotateX(18deg) scale(0.9);
+  }
+  to {
+    transform: perspective(2000px) rotateX(0deg) scale(1.04);
+  }
+}
+
+.board-in {
+  animation: board-in 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes board-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* .rise-back / .rise-front: the two panels of a feature composite rise into
+   place at different speeds as the section scrolls in, so the front panel
+   slides up over the back one (Linear's depth). */
+@supports (animation-timeline: view()) {
+  .rise-back {
+    animation: rise-back linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 45%;
+  }
+  .rise-front {
+    animation: rise-front linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 50%;
+  }
+}
+
+@keyframes rise-back {
+  from {
+    opacity: 0;
+    transform: translateY(60px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Opaque by a third of the way, so the back panel never shows through the
+   front one while it is still rising. */
+@keyframes rise-front {
+  0% {
+    opacity: 0;
+    transform: translateY(180px);
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .band-sky {
-    transition: none !important;
+  .hero-window,
+  .hero-phone,
+  .board-in,
+  .rise-back,
+  .rise-front {
+    animation: none !important;
+  }
+}
+
+/* Home page statement: the words fill from dim to white as the block scrolls
+   through the viewport (Apple's product-page move). The text is a gradient
+   clipped to the glyphs; the scroll timeline slides the bright half across.
+   Without scroll-driven animation, or with motion off, it is simply solid. */
+.statement-fill {
+  color: #0b0b0d;
+}
+
+@supports (animation-timeline: view()) {
+  .statement-fill {
+    color: transparent;
+    background: linear-gradient(90deg, #0b0b0d 0 50%, rgba(11, 11, 13, 0.14) 50% 100%);
+    background-size: 200% 100%;
+    background-position: 100% 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: statement-fill linear both;
+    animation-timeline: view();
+    animation-range: entry 35% cover 60%;
+  }
+}
+
+@keyframes statement-fill {
+  to {
+    background-position: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-window {
+    animation: none !important;
+  }
+  .statement-fill {
+    animation: none !important;
+    background-position: 0 0 !important;
   }
 }
 

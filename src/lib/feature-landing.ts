@@ -114,12 +114,12 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
     sections: [
       {
         eyebrow: "The board",
-        title: "Filtering dims. It never hides.",
-        body: "A schedule with rows secretly removed is how somebody books over a flight that was always there. Only Resource and Location take lanes away.",
+        title: "Every aircraft, simulator and classroom on one board",
+        body: "See the whole day at a glance and change it in place. Drag a booking to a new time or another aircraft, and everyone's board updates as bookings are made, moved and cancelled.",
         points: [
           "Day, week, month and list views",
-          "Aircraft, simulators and classrooms as lanes",
-          "Updates hold while somebody is mid-drag",
+          "Drag and drop to reschedule",
+          "Filters highlight bookings without hiding the rest",
         ],
       },
       {
