@@ -211,7 +211,9 @@ on top of the max-pending offers cap.
 ### Quiet hours
 
 Cancel recovery waits through this local window (default 9pm to 7am) before creating an
-offer, so a late-night cancel does not reserve the aircraft overnight. The clock is the
+offer, so a late-night cancel does not reserve the aircraft overnight. The same goes for
+the next member in line: when an offer is declined or expires overnight, the slot is offered
+to the next person when quiet hours end, not at 1am. The clock is the
 **airport time zone**, then the school zone if the airport has none. Desk-created offers
 skip quiet hours and still go out immediately.
 
