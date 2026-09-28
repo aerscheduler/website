@@ -15121,7 +15121,7 @@
           "Resources"
         ],
         "summary": "List aircraft",
-        "description": "Only resources whose type is an aircraft.",
+        "description": "Only resources whose type is an aircraft. Defaults to the aircraft you OPERATE: customer aircraft in your shop are excluded unless you ask for them with `scope`, and asking requires an owner, admin, dispatcher or technician role.",
         "responses": {
           "200": {
             "description": "The aircraft.",
@@ -15203,6 +15203,20 @@
               "type": "string"
             },
             "description": "Comma-separated location ids."
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "fleet",
+                "shop",
+                "all"
+              ]
+            },
+            "description": "`fleet` (default), `shop` for customer aircraft in for maintenance, or `all`. Anything unrecognised reads as `fleet`."
           },
           {
             "name": "limit",
@@ -16050,6 +16064,585 @@
             }
           }
         }
+      }
+    },
+    "/resources/{id}/owners": {
+      "get": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "List an aircraft's owners",
+        "description": "Who owns this aeroplane: nobody (the school's own), a leaseback owner, or the customer whose aircraft is in the shop. Ownership decides who is invoiced for maintenance work; it decides nothing about scheduling, which is `use`. **Owners, admins, dispatchers and technicians only**, because the rows carry a person's private phone number and email.",
+        "responses": {
+          "200": {
+            "description": "The owners, primary first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listResourceOwners",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The resource id."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1,1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row , `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Add an owner to an aircraft",
+        "description": "Send `orgUserId` for somebody who is already a member, or `name` (plus optional `email` and `phone`) for an owner the school has never met. The second form creates a membership for them that is marked external and left unclaimed: they appear on the roster and can be invoiced, they get none of the school's notifications, and they cannot sign in. An invoice you raise for them IS emailed to `email`, by Stripe. `email` must be a real address shape. If somebody already holds that address, the answer is **409** naming them: send their `orgUserId` to use them, or repeat the request with `createAnyway: true` if this really is a different person. The same name at the same address is re-used without a 409, which is one customer's second aircraft. When the owner later signs up with a verified address and the same name, joining the school claims this record rather than creating a second one. Requires the **admin** role.",
+        "responses": {
+          "201": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "That person is already an owner of this aircraft, or the email address is not a real address shape.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Somebody already holds that email address. The body names them in `conflict` (`kind`, `orgUserId`, `name`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "addResourceOwner",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The resource id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Either an existing member, or a new owner's details.",
+                "properties": {
+                  "orgUserId": {
+                    "type": "integer",
+                    "description": "An existing member of this organization."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The owner's name, when they are not a member."
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "Where to reach them, and where Stripe sends their invoices. Never used to sign in."
+                  },
+                  "phone": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string",
+                    "description": "What they are to the aircraft: \"Co-owner\", \"Operator\"."
+                  },
+                  "isPrimary": {
+                    "type": "boolean",
+                    "description": "Who gets the invoice. At most one per aircraft."
+                  },
+                  "createAnyway": {
+                    "type": "boolean",
+                    "description": "After a 409: this is a different person from the one already holding the address. Create them anyway."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resources/{id}/owners/{ownerId}": {
+      "patch": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Change an owner, or correct who they are",
+        "description": "Rename their title, or make them the one who gets the invoice. For an owner who has not signed up, you can also correct `name`, `email` and `phone`: these belong to the PERSON, so a correction applies to every aircraft they own and to invoices raised from now on, and the address on their Stripe customer is corrected too. A member's name and contact details are theirs to change from their own profile, and are refused here. An address somebody else already holds is refused, naming them. Requires the **admin** role.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Owner not found, a member's details, a malformed address, or an address somebody else holds.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "updateResourceOwner",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The resource id."
+          },
+          {
+            "name": "ownerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The owner row's id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "What to change.",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "isPrimary": {
+                    "type": "boolean"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Owners who have not signed up only."
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "Owners who have not signed up only. Must be a real address shape."
+                  },
+                  "phone": {
+                    "type": "string",
+                    "description": "Owners who have not signed up only."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Stop listing somebody as an owner",
+        "description": "Removes the link only. The person stays on the roster with their invoices and history intact, because a mistyped name must not be a way to delete a customer. Requires the **admin** role.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Owner not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "removeResourceOwner",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The resource id."
+          },
+          {
+            "name": "ownerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The owner row's id."
+          }
+        ]
+      }
+    },
+    "/orgUsers/{orgUserId}/ownedAircraft": {
+      "get": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "List the aircraft somebody owns",
+        "description": "The other direction of an aircraft's owners: every aeroplane this person owns at this school, fleet or customer, primary first. **Owners, admins, dispatchers and technicians only**; anybody else is answered 404, because the list can name a customer's aeroplane.",
+        "responses": {
+          "200": {
+            "description": "The aircraft, primary first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listOwnedAircraft",
+        "parameters": [
+          {
+            "name": "orgUserId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The member id."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1,1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row , `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
       }
     },
     "/resources/{id}/files": {
@@ -20718,6 +21311,153 @@
             "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
           }
         ]
+      }
+    },
+    "/standby/suggestions": {
+      "get": {
+        "tags": [
+          "Standby"
+        ],
+        "summary": "Get my slot suggestion setting",
+        "description": "Whether AerScheduler may offer you a cancelled slot that fits how you usually fly, even when you did not stand by for it.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "enabled": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "enabled"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getSlotSuggestions"
+      },
+      "put": {
+        "tags": [
+          "Standby"
+        ],
+        "summary": "Turn slot suggestions on or off",
+        "description": "Turns suggested slot offers on or off for the signed-in member. Offers from your own standby sign-ups are unaffected.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "enabled": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "enabled"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, or a malformed one. Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "setSlotSuggestions",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The new setting.",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "enabled"
+                ]
+              }
+            }
+          }
+        }
       }
     },
     "/standby/{id}": {
@@ -26061,6 +26801,14 @@
                       }
                     }
                   },
+                  "use": {
+                    "type": "string",
+                    "enum": [
+                      "fleet",
+                      "shop"
+                    ],
+                    "description": "`fleet` (default) is one of your own: schedulable, and counted on your per-aircraft plan. `shop` is a customer's aircraft in for maintenance: it takes maintenance bookings only, it is never offered publicly, and it is NOT counted on your plan. Anything unrecognised reads as `fleet`."
+                  },
                   "type": {
                     "type": "object",
                     "properties": {
@@ -26245,7 +26993,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "description": "Fields to change. `type` must be present even when you are only changing a top-level field, and it has to be the kind the resource already is: this cannot turn an aircraft into a room. **Omitting a key leaves the stored value alone, and on most fields `null` does the same. Four rules break that pattern, and each one is silent, because the write answers 200 whether it changed the field, left it alone, or blanked one nobody meant to blank.** On `serialNumber` and `year`, `\"\"` or `null` CLEARS the stored value. That is the only way back to blank once a wrong serial number has been typed in. On the pair `flyingDayStartMinute` and `flyingDayEndMinute`, `null` is taken literally and puts the aircraft back on the organization's hours, which changes the bookings the server will accept. Send both or neither; a half pair is rejected. On `cost.dryRate`, `cost.wetRate` and `cost.overnightMinimumTenths`, `null` is literal too, and it is not `0`: a `null` overnight minimum goes back to inheriting the organization's figure, while `0` exempts this aircraft. `groundedReason` is not independent of `grounded`. Any aircraft or simulator update that does not carry `grounded: true` writes the reason back to `null`, so send the two together. One value is not merely surprising but rejected: `cost.billByHobbsTime` is not nullable, and sending `null` fails the whole request with a 400. Omit the key to leave it alone. On the free-text fields (`tailNumber`, `make`, `model`) an empty string is stored AS an empty string and does not clear them.",
+                "description": "Fields to change. `type` must be present even when you are only changing a top-level field, and it has to be the kind the resource already is: this cannot turn an aircraft into a room. `use` moves an aircraft between your fleet and your shop. Moving one INTO the shop is refused while it still has upcoming bookings that are not maintenance, because those people would be stranded; moving it out simply makes it schedulable and billable again. **Omitting a key leaves the stored value alone, and on most fields `null` does the same. Four rules break that pattern, and each one is silent, because the write answers 200 whether it changed the field, left it alone, or blanked one nobody meant to blank.** On `serialNumber` and `year`, `\"\"` or `null` CLEARS the stored value. That is the only way back to blank once a wrong serial number has been typed in. On the pair `flyingDayStartMinute` and `flyingDayEndMinute`, `null` is taken literally and puts the aircraft back on the organization's hours, which changes the bookings the server will accept. Send both or neither; a half pair is rejected. On `cost.dryRate`, `cost.wetRate` and `cost.overnightMinimumTenths`, `null` is literal too, and it is not `0`: a `null` overnight minimum goes back to inheriting the organization's figure, while `0` exempts this aircraft. `groundedReason` is not independent of `grounded`. Any aircraft or simulator update that does not carry `grounded: true` writes the reason back to `null`, so send the two together. One value is not merely surprising but rejected: `cost.billByHobbsTime` is not nullable, and sending `null` fails the whole request with a 400. Omit the key to leave it alone. On the free-text fields (`tailNumber`, `make`, `model`) an empty string is stored AS an empty string and does not clear them.",
                 "properties": {
                   "name": {
                     "type": "string"
@@ -29748,6 +30496,11 @@
             "description": "Display name.",
             "example": "N12345"
           },
+          "use": {
+            "type": "string",
+            "description": "AN AIRCRAFT IDEA. `fleet` is one of the school's own: schedulable, and counted on its per-aircraft plan. `shop` is a customer's aircraft in for maintenance: it takes maintenance bookings only, it is never offered publicly, and it is not counted on the plan. Lists default to `fleet`; pass `scope=shop` or `scope=all` to see the rest. A room or a simulator always reads `fleet`, because the question does not apply to them, and writes that try to set `shop` on one are refused.",
+            "example": "fleet"
+          },
           "featuredImage": {
             "description": "URL of the resource photo.",
             "type": [
@@ -30157,6 +30910,26 @@
           "approvedForResource": {
             "type": "boolean",
             "description": "Whether this member is checked out on the aircraft named by the request's `approvedForResourceId`. Present only when that filter was passed; absent otherwise."
+          },
+          "external": {
+            "type": "boolean",
+            "description": "True for an outside party rather than one of the school's own people: an aircraft owner whose aeroplane the maintenance shop is looking after. They are on the roster so the work can be invoiced to them, they hold no flying role, and almost every route refuses them. False for every member."
+          },
+          "claimedAt": {
+            "description": "When this person confirmed the membership themselves, by accepting an invitation or entering a join code. Null means the school typed them in and nobody has confirmed: they cannot sign in and receive no notifications. Every membership created the ordinary way is claimed the moment it exists.",
+            "format": "date-time",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "contactEmail": {
+            "description": "The address the school uses to reach an outside party (`external: true`) who has not signed up: an aircraft owner's real email, kept here because their login is a placeholder. Null for every member, and cleared once the person claims the membership, when their own login address takes over. Present on the single-member read.",
+            "format": "email",
+            "type": [
+              "string",
+              "null"
+            ]
           }
         },
         "additionalProperties": true

@@ -1,0 +1,153 @@
+<Summary>
+On the Aircraft page, open the menu beside **Add aircraft** and choose **A customer's
+aircraft**. It gets its own inspections, squawks and history, it can never be booked to fly,
+and it does not count toward what you pay. Then add the owner on its **Owners** panel so the
+work has somebody to bill.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers, Technicians</Roles>
+
+Dispatchers and technicians can see the shop, its aircraft and its owners. **Adding** an
+aircraft or an owner is an admin job, so if you are a technician the list is yours to work
+from and somebody with an admin role sets it up.
+
+## Add the aircraft
+
+<Steps>
+  <Step n={1} title="Open the Aircraft page">
+    <Where app="web">Aircraft</Where>. Once you have a customer's aircraft, the page shows two
+    tabs: **Fleet** for your own aeroplanes and **Customer aircraft** for the ones you are
+    looking after.
+  </Step>
+  <Step n={2} title="Choose A customer's aircraft">
+    Click the arrow on the right of **Add aircraft**, then **A customer's aircraft**. (The main
+    part of the button adds one of your own.) If you are already on the **Customer aircraft**
+    tab, **Add aircraft** adds a customer's aircraft directly.
+  </Step>
+  <Step n={3} title="Fill in the tail, make, model and meters">
+    The same fields as your own aeroplanes, minus the rate and the flying day: you are not
+    renting this one out. Put in the Hobbs and tach readings as they are when it arrives.
+    Everything that comes due later is counted from them.
+  </Step>
+  <Step n={4} title="Click Add aircraft">
+    It appears under **Customer aircraft**, and nowhere your pilots can see.
+  </Step>
+</Steps>
+
+## Add the owner
+
+Open the aircraft, then <Where app="web">Owners → Add owner</Where>. A name is all that is
+required. Add an email and a phone number too: the email is where the invoices you raise for
+them are sent, and the phone number is what you will reach for when the annual turns up
+something. On the owner's row, the phone number is a link you can tap to call.
+
+The owner goes on your roster, marked **Aircraft owner** and **Not signed up**. They cannot
+sign in, and AerScheduler sends them nothing on its own: no notifications, no reminders, no
+marketing. The only thing that reaches them is an invoice you choose to send.
+
+The first owner you add is marked **Billed**: the one the work is invoiced to. If the
+aeroplane is owned by a partnership, add the others too, and click the star on a row to move
+who gets the bill.
+
+### When the email address is already on your roster
+
+If somebody on your roster already uses the address you typed, the form stops and says who,
+instead of quietly creating a second record or merging two people.
+
+| What it says | What to click |
+|---|---|
+| *Name* is already a member with that email address | **Use *Name*** if it is the same person: a member who owns an aeroplane you work on. |
+| *Name* is already on your roster with that email address | **Use *Name*** to add the owner you already recorded, for example on their second aeroplane. |
+| *Name* used that email address and was archived | Restore them from People, or add a new person. |
+
+If it is a different person who shares the address (a partnership's office inbox, a couple
+with one email), click **Add *name* as a new person**. They are kept as two separate people.
+
+## Correct an owner's details
+
+On the aircraft's **Owners** panel, click the pencil on the owner's row. For an owner who has
+not signed up you can change the name, email, phone and role, and the change also updates
+where Stripe sends their invoices.
+
+If the owner is a member of your school, only the role is edited here. Their name and
+contact details belong to them and are changed from their own profile.
+
+You cannot give an owner an address that somebody else on your roster already uses. The form
+says who has it.
+
+## The owner's page
+
+Click the owner's name, on the Owners panel or in People, to open their page. It shows the
+contact details you recorded, when they were added, every aircraft they own with you (and
+which ones they are billed for), and their invoices. It is deliberately short: they have no
+schedule, training or permissions to manage.
+
+## Bill the owner
+
+<Where app="web">Billing → New invoice</Where>, then pick the owner under **Customer**. The
+list shows each person's email, so you can see where the invoice will go. Add the labour and
+parts as line items and click **Create invoice**. Stripe emails it to the address you
+recorded, with a link to pay, the same way it emails a guest.
+
+Things that are different about billing an owner:
+
+- **It is always an invoice.** At a school that uses account balances, a member's charges go
+  on their account. An owner has no account they could see or top up, so their bill is
+  always a Stripe invoice.
+- **No automatic reminders.** The reminder sweep only chases people who have signed up. To
+  chase an owner, send them the payment link, call them, or print the invoice. **Send payment
+  reminder** tells you that nothing was sent, and why.
+- **They are never grounded** for an unpaid bill. They do not fly with you.
+- **Your service fee applies.** It goes on every invoice you raise, and the New invoice form
+  shows it as its own line above the total.
+- **Instructors cannot bill an owner**, even at a school that lets instructors create
+  invoices. Only people who can see the shop can.
+
+<Callout type="note">
+If the owner has no email address recorded, Stripe has nowhere to send the invoice. Add one
+on the Owners panel first, or print it from the invoice.
+</Callout>
+
+## When the owner signs up
+
+If an owner creates an AerScheduler account with **the email address you recorded**,
+confirms it, and joins your school, their record becomes theirs: the aircraft, the invoices
+and the history move with them, and the **Not signed up** mark goes away. Nothing to do on
+your side.
+
+It only happens when **the name on their account matches the name you recorded**, exactly
+(capital letters and extra spaces aside). An address can be shared, and matching on the
+address alone would let somebody who reads the family inbox take over another person's
+aircraft and invoices.
+
+<Callout type="warning">
+If the names differ ("Walt" on their account, "Walter Brenner" on your record), they join as
+a new member and your record of them stays separate. You will see the same person twice in
+People. Before they sign up, correct the name on your record to match theirs, or ask them to
+sign up with the name you have.
+</Callout>
+
+If the owner used to be a member of your school, left, and was recorded as an owner while
+they were away, rejoining brings back their old membership with its flying history, and the
+aircraft and invoices you recorded move onto it. If the record you kept for them holds
+anything more than aircraft and invoices, the two are left side by side, exactly as before.
+
+## What is different about a customer's aircraft
+
+| | |
+|---|---|
+| **Scheduling** | It takes maintenance bookings and nothing else. Nobody can rent it, train in it, or put a checkride on it, and the server refuses those even if somebody has an old page open. |
+| **Your bill** | It is not counted. Your plan is priced per aircraft you operate, and this one is not yours. A hundred customer aeroplanes in a year changes nothing about what you pay. |
+| **Inspections and squawks** | Exactly the same as your own fleet. Annuals, 100-hours, ADs, transponder and static checks: all of it tracks, and all of it reminds. |
+| **Your pilots** | They never see it. Not on the schedule, not in the booking form, not in search, not on the People page, and not on the phone. Students, renters and instructors get nothing back for it, including from the API. |
+
+## Aircraft you own but somebody else paid for
+
+A leaseback is one of yours: it flies, it is booked, and it is billed like the rest of the
+fleet. Add it with **Add aircraft** as usual, and add the owner on the Owners panel anyway.
+That records who owns it without changing anything about how it is scheduled or billed.
+
+## When the aeroplane goes home
+
+Nothing to do. Its history, inspections and invoices stay attached to it, so when the same
+tail comes back next year, everything you did last time is still there.

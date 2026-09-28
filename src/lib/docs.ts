@@ -1055,6 +1055,29 @@ export const DOC_SECTIONS: DocSection[] = [
         seoQuery: "how to track aircraft maintenance and inspections in AerScheduler",
       },
       {
+        slug: "work-on-a-customers-aircraft",
+        title: "Work on a customer's aircraft",
+        description:
+          "Add an aeroplane somebody else owns, record and correct its owner, and bill them for the work. It cannot be booked to fly, and it does not count toward what you pay.",
+        kind: "task",
+        audience: ["Owners", "Admins", "Dispatchers", "Technicians"],
+        seoQuery: "aircraft maintenance shop software customer aircraft work orders",
+        faqs: [
+          {
+            q: "Will AerScheduler email my customer?",
+            a: "No. An owner you add is never sent notifications, reminders or anything else by AerScheduler. The only thing that reaches them is an invoice you raise, which Stripe emails to the address you recorded.",
+          },
+          {
+            q: "What happens when the owner signs up for an account?",
+            a: "If they sign up with the email address you recorded, confirm it, and use the same name, joining your school hands them your record: the aircraft, the invoices and the history. If the name is different they join as a new member and the two records stay separate.",
+          },
+          {
+            q: "Why is my customer not getting payment reminders?",
+            a: "Automatic reminders only go to people who have signed up. Chase an aircraft owner yourself: send the payment link, call them, or print the invoice.",
+          },
+        ],
+      },
+      {
         slug: "use-the-go-no-go-board",
         title: "Use the Go / No-Go board",
         description:

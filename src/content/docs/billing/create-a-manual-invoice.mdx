@@ -29,6 +29,9 @@ email address for someone who is not a member.
 Each line has a Description, a Qty and a unit price. Add as many lines as you need with the
 running total shown underneath.
 
+If your school charges a service fee, it is shown as its own line under the subtotal, and the
+**Total** includes it. That total is exactly what the customer is billed.
+
 <Screenshot id="create-invoice-dialog" />
 </Step>
 
@@ -69,6 +72,14 @@ Optional, same as the web console.
 Turn on <strong>Guest recipient</strong> in the New invoice dialog (or use the same fields on
 the iOS Generate Invoice screen). Type a name and an email address. Stripe creates a guest
 customer and emails them a pay link. You cannot pick both a member and a guest on one invoice.
+
+## Invoicing an aircraft owner
+
+If you run a maintenance shop, the owners of the aeroplanes you work on are in the
+**Customer** list too, with the address you recorded for them. The invoice is emailed to them
+by Stripe with a link to pay. It is always an invoice, even at a school that uses account
+balances, and it is never chased by automatic reminders. See
+[Work on a customer's aircraft](/docs/maintenance/work-on-a-customers-aircraft#bill-the-owner).
 
 ## Limits on line items and memos
 

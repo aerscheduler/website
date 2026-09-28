@@ -9,12 +9,12 @@ import { signupUrl } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Flight School Software Integrations",
   description:
-    "AerScheduler integrates with Stripe, Google Calendar, Apple Calendar, Outlook, and QuickBooks Online. Connect the tools your flight school already uses, on every plan.",
+    "AerScheduler integrates with Stripe, Google Calendar, Apple Calendar, Outlook, QuickBooks Online, the FAA aircraft registry, and aviation weather. Connect the tools your flight school already uses, on every plan.",
   alternates: { canonical: "/integrations" },
   openGraph: {
     title: "Flight School Software Integrations",
     description:
-      "Stripe, Google Calendar, Apple Calendar, Outlook, and QuickBooks Online, available now on every plan.",
+      "Stripe, Google Calendar, Apple Calendar, Outlook, QuickBooks Online, the FAA aircraft registry, and aviation weather, available now on every plan.",
     url: "/integrations",
   },
 };
@@ -78,6 +78,24 @@ const INTEGRATIONS: {
     learnMoreHref: "/resources/quickbooks-integration",
     learnMoreLabel: "How QuickBooks sync works",
   },
+  {
+    name: "FAA Aircraft Registry",
+    status: "available",
+    blurb: "Type a tail number and the aircraft fills itself in.",
+    detail:
+      "When you add an aircraft, start typing its N-number and pick it from the FAA registry. Make, model, year, and serial number are filled in for you. Tails outside the US registry still save exactly as typed.",
+    logo: "/integrations/faa-registry.svg",
+    logoAlt: "Aircraft registry icon",
+  },
+  {
+    name: "Aviation Weather",
+    status: "available",
+    blurb: "Current METAR and daylight on upcoming flights.",
+    detail:
+      "Flights in the next 12 hours show the nearest station's flight category, wind, and visibility from the National Weather Service, plus sunset and civil twilight in the flight's local time. On web and in the iOS and Android apps.",
+    logo: "/integrations/aviation-weather.svg",
+    logoAlt: "Aviation weather icon",
+  },
 ];
 
 export default function IntegrationsPage() {
@@ -92,8 +110,8 @@ export default function IntegrationsPage() {
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
             Stripe payments, Google Calendar, Apple Calendar and Outlook subscriptions,
-            and QuickBooks Online are live today, in the same self-serve product, not
-            as an enterprise add-on.
+            QuickBooks Online, FAA registry lookup, and aviation weather are live today,
+            in the same self-serve product, not as an enterprise add-on.
           </p>
         </div>
       </section>

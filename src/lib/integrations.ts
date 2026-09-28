@@ -31,4 +31,14 @@ export const INTEGRATION_LINKS: IntegrationLink[] = [
     label: "QuickBooks Online",
     description: "Paid invoices sync as Sales Receipts.",
   },
+  {
+    href: "/integrations",
+    label: "FAA Aircraft Registry",
+    description: "Type a tail number and make, model, and year fill in.",
+  },
+  {
+    href: "/integrations",
+    label: "Aviation Weather",
+    description: "Current METAR and sunset on upcoming flights.",
+  },
 ];
