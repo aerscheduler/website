@@ -570,6 +570,14 @@ export const DOC_SECTIONS: DocSection[] = [
             q: "Why did I not get an offer for a dual I was standing by for?",
             a: "Eligibility still applies. Your roles, checkouts, grounding, and schedule clashes filter candidates. On duals the instructor must confirm first. A renter-only account will not receive a dual offer. Slots that start in under 30 minutes are not offered by default.",
           },
+          {
+            q: "Why was I offered a slot I never stood by for?",
+            a: "When nobody on standby can take a cancelled slot, AerScheduler suggests it to the member whose flying fits it best: the same aircraft, instructor, weekday and time. The offer is marked Suggested for you and says why. You get at most 3 a week.",
+          },
+          {
+            q: "How do I stop suggested slots?",
+            a: "Press Stop suggesting slots on any suggested offer, or turn off Suggest open slots to me on the Standby screen. Offers for slots you stand by for yourself keep coming.",
+          },
         ],
       },
       {
