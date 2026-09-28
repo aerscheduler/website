@@ -193,7 +193,19 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
       },
       {
         title: "Cancellations turn back into flying hours",
-        body: "A freed slot goes out as a time-limited offer, accepted straight from the phone notification.",
+        body: "A freed slot goes to whoever stood by for it, or else to the member whose flying fits it best, who accepts straight from the phone notification.",
+      },
+    ],
+    sections: [
+      {
+        eyebrow: "Cancellations",
+        title: "Cancelled lessons offered to the students most likely to fly them",
+        body: "When a booking is cancelled, anyone standing by for that time is offered it first. If nobody is, AerScheduler offers it to the member whose flying fits it best: the same aircraft, instructor, day and time. The offer says why, and one tap books it.",
+        points: [
+          "On a dual, the instructor confirms they can still teach before any student is offered it",
+          "Flights cancelled for weather or maintenance are not offered out automatically",
+          "At most 3 suggested slots a week per member, and each can turn them off",
+        ],
       },
     ],
     docs: [
@@ -206,6 +218,10 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
       {
         q: "Can I stop members booking themselves entirely?",
         a: "You do not have to use it, and the rules narrow it as far as you like: checkouts per tail, a saved card, a cap on upcoming bookings, a cap on length, and how far ahead each tier may go.",
+      },
+      {
+        q: "What happens to the slot when a student cancels?",
+        a: "It is offered to one member at a time, first to anyone standing by for it, then to whoever flies that aircraft and instructor at that day and time. Each offer holds the aircraft for a short window and passes on if it is declined. Nobody is booked until they accept.",
       },
       {
         q: "Can a member cancel at the last minute?",
