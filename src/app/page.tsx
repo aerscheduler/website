@@ -100,7 +100,7 @@ const SECTIONS: FeatureSectionData[] = [
         { label: "Currency checks", href: "/features/compliance" },
       ],
       [
-        { label: "Standby and slot offers", href: "/docs/scheduling/standby-and-slot-offers" },
+        { label: "Standby and suggested slots", href: "/docs/scheduling/standby-and-slot-offers" },
         { label: "Multi-day trips", href: "/resources/overnight-and-multi-day-rentals" },
         { label: "Discovery flight requests", href: "/docs/scheduling/public-booking-requests" },
       ],

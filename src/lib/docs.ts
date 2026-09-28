@@ -547,12 +547,24 @@ export const DOC_SECTIONS: DocSection[] = [
       },
       {
         slug: "standby-and-slot-offers",
-        title: "Stand by for a slot and accept an offer",
+        title: "Standby and suggested slots",
         description:
-          "Join standby on a booking, set standing preferences or an open window, and accept a time-limited offer when a matching slot opens. The desk can offer canceled slots and withdraw pending offers.",
+          "Get offered a cancelled slot: stand by for a booking, set standing preferences or an open window, or be suggested a slot that fits how you fly. Accept the time-limited offer to book it. The desk can offer canceled slots and withdraw pending offers.",
         kind: "task",
         audience: ["Students", "Renters", "Instructors", "Owners", "Admins", "Dispatchers"],
-        seoQuery: "how to join standby and accept an offer in AerScheduler",
+        seoQuery: "how standby and suggested slot offers work in AerScheduler",
+        keywords: [
+          "standby",
+          "suggested slots",
+          "suggested for you",
+          "stop suggesting slots",
+          "slot offers",
+          "first dibs",
+          "cancelled slot",
+          "waitlist",
+          "standing preference",
+          "open window",
+        ],
         faqs: [
           {
             q: "Does AerScheduler rebook me automatically when a slot opens?",
