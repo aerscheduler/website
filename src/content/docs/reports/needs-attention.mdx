@@ -19,7 +19,7 @@ Because it is a tile, you can move it, resize it, or take it off the board entir
 
 ## What each item counts
 
-There are ten possible items. Each is a filter over a real report, and each carries its own time window.
+There are eleven possible items. Each is a filter over a real report, and each carries its own time window.
 
 | Item | What it counts |
 |---|---|
@@ -27,6 +27,7 @@ There are ten possible items. Each is a filter over a real report, and each carr
 | Receivables 90+ days | Debt older than 90 days, whether on an invoice or a ledger |
 | Flown, not invoiced | Flights that were closed out but never turned into an invoice |
 | Awaiting close-out | Flown in the last 60 days and still waiting to be closed out |
+| Awaiting sign-off | Closed out in the last 60 days, but a pilot still owes their sign-off |
 | Grounded resources | Aircraft currently grounded |
 | Open squawks | Squawks reported and not yet resolved |
 | Maintenance overdue | Maintenance past its hours or its date |
@@ -48,7 +49,7 @@ Each item uses whatever window makes it useful:
 
 - **Overdue invoices** and **Flown not invoiced** cover all time. An invoice that went overdue eighteen months ago
   is still overdue.
-- **Awaiting close-out** covers the last 60 days only. Over all time it would count every un-closed flight since
+- **Awaiting close-out** and **Awaiting sign-off** cover the last 60 days only. Over all time it would count every un-closed flight since
   the school opened, which nobody would ever work through.
 
 <Callout type="note">
@@ -59,7 +60,8 @@ what the other tiles are for.
 ## Clicking through opens the matching report
 
 Click a count and AerScheduler opens the report behind it, pre-filtered, over the exact window the count was taken
-on.
+on. On the phone, each row opens the matching screen already filtered: **Awaiting sign-off**, for example, opens
+Reservations on its Awaiting sign-off status.
 
 <Callout type="warning">
 That means the date picker on the report you land on may show dates you never chose. It is deliberate. Without it,
@@ -82,7 +84,7 @@ An item is dropped entirely if you cannot run the report underneath it.
 
 | Role | What the tile can show |
 |---|---|
-| Owner, admin | All ten |
+| Owner, admin | All eleven |
 | Dispatcher | Everything except Overdue invoices and Receivables 90+ days |
 | Technician | Grounded resources, Open squawks, Maintenance overdue |
 
