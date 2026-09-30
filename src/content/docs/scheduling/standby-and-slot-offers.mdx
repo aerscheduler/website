@@ -128,8 +128,8 @@ reservation, so a specific watcher still goes first.
 
 Most members never set up standby, so a cancelled slot often has nobody waiting for it.
 When that happens, AerScheduler looks at who actually flies like that slot and offers it
-to the member most likely to take it. You do not sign up for this; it is on for every
-school that has offers turned on.
+to the few members most likely to take it, all at once. The first to accept books it. You
+do not sign up for this; it is on for every school that has offers turned on.
 
 ### When it happens
 
@@ -138,7 +138,8 @@ Only after a cancellation, and only once everything above has run:
 1. If the booking had an instructor, they confirm they can still teach.
 2. Everyone standing by for that booking, or with a matching standing preference or open
    window, is offered it first, one at a time.
-3. Only when nobody on standby can take it does AerScheduler suggest it to someone else.
+3. Only when nobody on standby can take it does AerScheduler suggest it, once, to up to
+   three members at the same time.
 
 It never suggests a slot that the cancellation reason rules out (weather, maintenance, an
 unavailable instructor, see above), a slot offered by hand from the desk, or idle time
@@ -146,22 +147,20 @@ found by **Fill idle time automatically**.
 
 ### How the member is chosen
 
-AerScheduler looks at the last 90 days of flying and starts with the people closest to
-the slot, widening only if it has to:
+AerScheduler looks at the last 90 days of flying and only ever considers people who
+already fly that aircraft or that instructor:
 
 | Order | Who | Example for a Friday 10 AM dual in N172TS with Jake |
 |---|---|---|
 | 1 | Regulars: fly this aircraft, and with this instructor when there is one | Students who fly N172TS with Jake |
 | 2 | Fly the aircraft or the instructor | Anyone in N172TS, or anyone who flies with Jake |
-| 3 | Recently active | Anyone who flew in the last 90 days or has something booked |
-| 4 | Everyone else at the school | The rest of the roster |
 
-It stops widening as soon as it has five people who can actually take the slot, so a
-school with obvious regulars never has its slot suggested to a stranger. Everyone is
-checked against the same rules as standby: role, checkout approvals, grounding,
-and schedule clashes.
+It looks no further than that, so a slot is never suggested to someone who has never
+flown the aircraft or with the instructor. When nobody fits, nothing is suggested.
+Everyone is checked against the same rules as standby: role, checkout approvals,
+grounding, and schedule clashes.
 
-Among the people it found, the one offered first is whoever fits best: flies at that
+Among the people it found, the three offered it are whoever fits best: flies at that
 weekday and time, flies that aircraft and instructor, often books on short notice, is due
 for a lesson, is behind on training pace, has said yes to offers before, and has nothing
 booked in the next couple of days. Members who cancel a lot, or who have ignored offers,
@@ -174,27 +173,34 @@ same facts are ranked by fixed rules instead and the offer still goes out.
 
 ### What the member sees
 
-The offer arrives like any other, with **A slot that fits you just opened** in the
-notification. In the app and on the web it is marked **Suggested for you** and says why,
-for example "You've flown N172TS 6 times recently and you fly with Jake." It shows the
-reservation type and aircraft, never the cancelled booking's title, which is often another
-student's name.
+The offer arrives with **A slot that fits you just opened** in the notification. In the app
+and on the web it is marked **Suggested for you**, says why, for example "You've flown
+N172TS 6 times recently and you fly with Jake". When it went to more than one member, it
+also says the first to accept books it. It shows the reservation type and aircraft, never
+the cancelled booking's title, which is often another student's name. If someone else got
+there first, **Accept** says so and the offer closes. If your booking is refused for your
+own reason, such as no card on file, you see that reason and the offer stays open while
+you fix it.
 
-On the desk's **Pending offers** list, a suggested offer is labelled **Suggested**, and it
-can be withdrawn like any other.
+A suggested slot does not hold anything. It stays on the board as free time, instructors
+see no hold on their schedule, and the desk or any member can book it at any moment; the
+open suggestions for it then close by themselves. It does not appear on the desk's
+**Pending offers** list, which shows only offers holding a slot.
 
 ### Limits
 
-- A suggested offer holds the aircraft for the same window as any offer, set in the
-  school offer rules below: 30 minutes by default when the slot starts within 24 hours, 2
-  hours when it is further out, and never past the slot start. If it is declined or
-  expires, the next member is offered it.
+- A slot is suggested once, to at most three members. If none of them accepts, nobody
+  else is asked.
+- A suggestion stays open for the same window as any offer, set in the school offer rules
+  below: 30 minutes by default when the slot starts within 24 hours, 2 hours when it is
+  further out, and never past the slot start.
 - Nobody gets more than 3 suggested offers in 7 days.
 - Pass on 3 suggested offers in a row, by declining or letting them expire, and
   suggestions pause for you for 30 days. Accepting any offer resets the count.
 - The member who cancelled, and anyone else on that booking, is never offered it back.
 - The school's offer rules below still apply: quiet hours, decline cooldown, and the
-  pending-offer caps.
+  per-person cap on pending offers. The school-wide cap on pending offers counts only
+  offers that hold a slot, so suggestions never use it up.
 
 ### Turning it off
 

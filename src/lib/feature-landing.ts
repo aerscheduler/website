@@ -200,7 +200,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
       {
         eyebrow: "Cancellations",
         title: "Cancelled lessons offered to the students most likely to fly them",
-        body: "When a booking is cancelled, anyone standing by for that time is offered it first. If nobody is, AerScheduler offers it to the member whose flying fits it best: the same aircraft, instructor, day and time. The offer says why, and one tap books it.",
+        body: "When a booking is cancelled, anyone standing by for that time is offered it first. If nobody is, AerScheduler suggests it to the few members whose flying fits it best: the same aircraft, instructor, day and time. The offer says why, and the first to tap Accept books it.",
         points: [
           "On a dual, the instructor confirms they can still teach before any student is offered it",
           "Flights cancelled for weather or maintenance are not offered out automatically",
@@ -221,7 +221,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
       },
       {
         q: "What happens to the slot when a student cancels?",
-        a: "It is offered to one member at a time, first to anyone standing by for it, then to whoever flies that aircraft and instructor at that day and time. Each offer holds the aircraft for a short window and passes on if it is declined. Nobody is booked until they accept.",
+        a: "Anyone standing by for it is offered it first, one at a time, each offer holding the aircraft for a short window. If none of them takes it, it is suggested at once to up to three members who fly that aircraft or instructor, without holding it, and the first to accept books it. Nobody is booked until they accept.",
       },
       {
         q: "Can a member cancel at the last minute?",

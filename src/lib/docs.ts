@@ -584,7 +584,7 @@ export const DOC_SECTIONS: DocSection[] = [
           },
           {
             q: "Why was I offered a slot I never stood by for?",
-            a: "When nobody on standby can take a cancelled slot, AerScheduler suggests it to the member whose flying fits it best: the same aircraft, instructor, weekday and time. The offer is marked Suggested for you and says why. You get at most 3 a week.",
+            a: "When nobody on standby can take a cancelled slot, AerScheduler suggests it to up to three members whose flying fits it best: the same aircraft, instructor, weekday and time. The first to accept books it. The offer is marked Suggested for you and says why. You get at most 3 a week.",
           },
           {
             q: "How do I stop suggested slots?",
