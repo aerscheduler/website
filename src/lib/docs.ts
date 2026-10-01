@@ -972,6 +972,37 @@ export const DOC_SECTIONS: DocSection[] = [
         seoQuery: "create a custom invoice for a flight school member",
       },
       {
+        slug: "charge-sales-tax",
+        title: "Charge sales tax on an invoice",
+        description:
+          "Add your rate, choose which kinds of line it taxes (parts but not labor, say), and mark customers who are exempt. Each line is taxed by what it is.",
+        kind: "task",
+        audience: ["Owners", "Admins"],
+        seoQuery: "charge sales tax on parts but not labor on an aircraft repair invoice",
+        faqs: [
+          {
+            q: "Are flight rentals taxed?",
+            a: "Close-out bills for flights carry no sales tax. A rental you bill by hand with New invoice, marked Aircraft rental, follows your rules like any other line.",
+          },
+          {
+            q: "Why is labor not taxed when parts are?",
+            a: "Because that is the rule in most states that tax repairs, when the two are on separate lines. Your own rules decide it: choose which kinds of line your rate applies to in Settings, Sales tax.",
+          },
+          {
+            q: "How do I stop charging tax to a reseller or an out-of-state owner?",
+            a: "Open them in People and set Sales tax to exempt, with the reason and the certificate you hold. Their invoices then carry no tax and print why.",
+          },
+          {
+            q: "Can I change a rate that is already on invoices?",
+            a: "Not its percentage: archive it and add the new rate, and old invoices keep the tax they charged. You can still rename it.",
+          },
+          {
+            q: "Do taxed invoices go to QuickBooks?",
+            a: "Not yet. They wait under Needs attention for you to record by hand, then you mark them Handled.",
+          },
+        ],
+      },
+      {
         slug: "mark-an-invoice-paid-void-or-refund-it",
         title: "Mark an invoice paid, void it, or refund it",
         description:
@@ -1061,7 +1092,7 @@ export const DOC_SECTIONS: DocSection[] = [
           "Add an aeroplane somebody else owns, record and correct its owner, and bill them for the work. It cannot be booked to fly, and it does not count toward what you pay.",
         kind: "task",
         audience: ["Owners", "Admins", "Dispatchers", "Technicians"],
-        seoQuery: "aircraft maintenance shop software customer aircraft work orders",
+        seoQuery: "aircraft maintenance shop software customer aircraft",
         faqs: [
           {
             q: "Will AerScheduler email my customer?",
@@ -1074,6 +1105,45 @@ export const DOC_SECTIONS: DocSection[] = [
           {
             q: "Why is my customer not getting payment reminders?",
             a: "Automatic reminders only go to people who have signed up. Chase an aircraft owner yourself: send the payment link, call them, or print the invoice.",
+          },
+        ],
+      },
+      {
+        slug: "run-a-work-order",
+        title: "Run a work order",
+        description:
+          "Open a job when an owner calls or taxis up, record who pays and what they asked for, add the labor and parts, and raise the invoice when the aircraft goes home.",
+        kind: "task",
+        audience: ["Owners", "Admins", "Technicians"],
+        seoQuery: "aircraft maintenance work order software",
+        faqs: [
+          {
+            q: "Who can see work orders?",
+            a: "Owners, admins and technicians. Dispatchers see customer aircraft on the schedule and the hangar bookings, but not the jobs. Instructors, students and renters never see them, even on your own aircraft, because a job carries the owner's details and prices.",
+          },
+          {
+            q: "Can a work order bill two co-owners?",
+            a: "No. One person pays for each job. It starts as the aircraft's owner marked Billed, and you can change it until the job is invoiced.",
+          },
+          {
+            q: "Does the Hobbs I enter on a work order change the aircraft's meter?",
+            a: "No. Hobbs and tach in and out are what the job recorded. The aircraft's own meters are changed where they always are, so nothing is grounded or rescheduled by typing a reading on a job.",
+          },
+          {
+            q: "Can I delete a work order?",
+            a: "An admin can delete a job opened by mistake, as long as it has never been invoiced. A job that has been invoiced stays on the record, even after its invoice is voided; set its stage to Cancelled instead.",
+          },
+          {
+            q: "Can I change a line after the invoice is raised?",
+            a: "Not on that invoice. Raising it freezes the job's lines. Void the invoice in Billing, change the lines, and raise a new one.",
+          },
+          {
+            q: "Can I give a customer a discount?",
+            a: "Yes. An admin puts a percentage in Discount on any line. It comes off the whole line before tax, and the invoice shows the line at its discounted price with the percentage in its name, at $0.00 if it is 100% off.",
+          },
+          {
+            q: "Does the owner see my cost and markup on parts?",
+            a: "No. The invoice shows each line's price and total. The cost and the markup stay on the work order, which only the shop sees.",
           },
         ],
       },

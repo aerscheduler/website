@@ -79,11 +79,20 @@ says who has it.
 
 Click the owner's name, on the Owners panel or in People, to open their page. It shows the
 contact details you recorded, when they were added, every aircraft they own with you (and
-which ones they are billed for), and their invoices. It is deliberately short: they have no
+which ones they are billed for), their work orders, and their invoices. It is deliberately short: they have no
 schedule, training or permissions to manage.
+
+## Track the job
+
+Open a work order for each visit: who pays, what the owner asked for, when you promised it back,
+and where the job stands. Owners, admins and technicians work on jobs; dispatchers see the
+aircraft and its hangar bookings but not the jobs. See
+[Run a work order](/docs/maintenance/run-a-work-order).
 
 ## Bill the owner
 
+For a job, click **Raise invoice** on the work order: it bills the job's labor and parts to
+whoever the job names. For anything else,
 <Where app="web">Billing → New invoice</Where>, then pick the owner under **Customer**. The
 list shows each person's email, so you can see where the invoice will go. Add the labour and
 parts as line items and click **Create invoice**. Stripe emails it to the address you
@@ -100,6 +109,11 @@ Things that are different about billing an owner:
 - **They are never grounded** for an unpaid bill. They do not fly with you.
 - **Your service fee applies.** It goes on every invoice you raise, and the New invoice form
   shows it as its own line above the total.
+- **Sales tax, if you charge it, is line by line.** Mark the labor lines as Labor and the
+  parts as Parts and goods, and your school's rules tax each one (in most states, the parts
+  and not the labor). An owner who is exempt, for example a nonresident whose certificate you
+  hold, can be marked exempt on their page in People. See
+  [Charge sales tax on an invoice](/docs/billing/charge-sales-tax).
 - **Instructors cannot bill an owner**, even at a school that lets instructors create
   invoices. Only people who can see the shop can.
 

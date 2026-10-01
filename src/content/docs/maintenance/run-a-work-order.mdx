@@ -1,0 +1,265 @@
+<Summary>
+<Where app="web">Maintenance → Open jobs → Open a work order</Where>. Pick the aircraft, check
+who pays, write down what the owner asked for, and click **Open work order**. The job gets the
+next number (WO-1001, WO-1002 and so on) and its own page, where you move it through its stages
+until the aircraft goes home.
+</Summary>
+
+<Roles>Owners, Admins, Technicians</Roles>
+
+A work order is one job on one aircraft: who is billed, when it came in and when you promised
+it back, what the owner asked for, and where the job stands. Only owners, admins and technicians
+see work orders. Dispatchers see customer aircraft on the schedule and the hangar bookings, but
+not the jobs, and pilots never do, not even on your own aircraft, because a job carries the
+owner's details and prices.
+
+## Open a work order
+
+<Steps>
+  <Step n={1} title="Start from the board or the aircraft">
+    <Where app="web">Maintenance → Open jobs → Open a work order</Where>, the **+** in the top bar
+    from any page, or open the aircraft and go to <Where app="web">Work orders → Open a work
+    order</Where>. From the aircraft, the tail is already chosen.
+  </Step>
+  <Step n={2} title="Pick the aircraft, or add it">
+    Search the tail. A customer's aircraft that is not on file yet is added from here: type the
+    tail and choose **Add a customer aircraft** at the bottom of the list. The tail you typed is
+    filled in, and once you save it the job picks it. Only admins add aircraft.
+  </Step>
+  <Step n={3} title="Check who pays">
+    **Billed to** fills itself in with the aircraft's owner marked **Billed** on its **Owners**
+    panel. One person pays for each job: co-owners are not billed. Choose **Nobody** for your
+    own aircraft. You can change it later, until the job is invoiced. Only an admin chooses who
+    pays; a job a technician opens goes to the aircraft's owner.
+  </Step>
+  <Step n={4} title="Pick the stage">
+    **Requested** when the owner has asked for the work but no day is agreed, **Scheduled** when a
+    day is agreed for it to come in, **Aircraft received** when it is in the hangar. Each stage
+    says what it means in the menu. Before the aircraft arrives there are no meters to record, so
+    the form does not ask. Choosing **Aircraft received** fills in the Hobbs and tach in from the
+    aircraft; correct them if the meters say something different.
+  </Step>
+  <Step n={5} title="Write down what they asked for">
+    In the owner's words: "Annual inspection. Left brake feels soft." Add **Promised back** if you
+    gave them a day, and assign the technicians doing the work. Only people with the technician
+    role are listed: give an admin who does the work that role too.
+  </Step>
+  <Step n={6} title="Click Open work order">
+    You land on the job's own page.
+  </Step>
+</Steps>
+
+## Move the job along
+
+On the job's page, the **Stage** menu at the top moves it: Requested, Scheduled, Aircraft
+received, In progress, Waiting for owner, Waiting for parts, Ready for pickup, Completed, or
+Cancelled. The dates follow the stage: the first stage that means the aircraft is here records
+when it was **received**, **Completed** records when the work finished, and **Completed** or
+**Cancelled** moves the job to **Finished jobs** with that day. Moving a finished job back to an
+open stage puts it back on the board. Moving a job back to **Requested** or **Scheduled** clears
+the received date and the Hobbs and tach in and out, so the day the aircraft really arrives, and
+its meters then, are the ones recorded.
+
+When a job moves to **Aircraft received** (or straight to a later stage in the hangar) with no
+Hobbs or tach in recorded, the meters open under **Details** with them filled in from the
+aircraft. Check them against the meters and click **Save**, or **Cancel** to leave them empty.
+
+<Callout type="note">
+A reading lower than the one the aircraft last had, or a Hobbs or tach out lower than in, asks
+you to check it before it saves. Save it anyway only if that is what the meters say, for example
+after a meter was replaced.
+</Callout>
+
+There is no Edit button: each detail is changed where it is shown. Click a value under
+**Details** to change it: **Billed to**, **Promised back**, **Technicians**, the **Hobbs** and
+**tach** in and out, and the **Hangar slot**, which is the maintenance booking holding the
+aircraft and the hangar on the schedule (choose **None** when the job has no booking). Click the
+pencil on a notes card to write in it, then **Save** (or Cmd+Enter); Esc puts it back. **What the
+owner asked for** is the request in their words, **Notes for the owner** are what you would tell
+them, and **Shop notes** are for the shop only.
+
+<Callout type="note">
+The Hobbs and tach on a work order are what the job recorded. They never change the aircraft's
+own meters, so typing a reading on a job cannot ground the aircraft or move an inspection.
+</Callout>
+
+## The work on the job
+
+The job's page keeps the work and what it charges in one list, **Work and charges**. What the
+owner asked for and what you found are separate groups, because they are different conversations
+with the owner, and each item has the labor and parts done for it listed underneath, with its
+total. Click **Add** and choose **Owner's request** or **Finding**, or type to search the menu.
+Hover a group's header and click its **+** to add straight into that group: an owner's request,
+a finding, or a charge not for any item.
+
+- **Each item's ring says where it stands:** a green tick when it is done, a blue dot when the
+  owner approved it, a dashed ring when nobody has asked the owner yet, a half-filled ring while
+  its inspection or squawk is open.
+- **Fold** a group or an item by clicking it. With the keyboard, the arrow keys move down the
+  list, Enter opens a line, and Left and Right fold an item.
+
+- **Attach an inspection or a squawk** that is open on this aircraft, and the item is done when it
+  is signed off or resolved, whether that happens here or on the phone. Its **Sign off** or
+  **Resolve** button opens the same form as everywhere else, so the next due date is worked out
+  as it always is.
+- **A plain item** (a brake adjustment, a wash) you tick done yourself.
+- A found item nobody has asked the owner about says **Owner not asked yet**. Click that tag to
+  record the answer straight from the list: **Approved**, **Declined** or **Deferred**, or
+  **Record a call with notes…** for the full record below.
+- An item's **⋯** menu adds labor or a part for it, marks it done, renames it or removes it.
+
+## Record the owner's answer
+
+When you have spoken to the owner, click **Record owner's answer**, beside the count of findings
+waiting at the top of **Work and charges**. Put who you spoke to, when,
+the most they said you can spend without calling again, and notes. Then choose **Approve**,
+**Decline** or **Defer** for each item you discussed. Only the items you answer are changed, and
+an item answered again on a later call shows the later answer.
+
+<Callout type="note">
+The owner never logs in or signs anything. This is your record of the call: who you spoke to,
+when, what they agreed to, and who took the call. Every call is listed under **Owner's answers**
+on the job.
+</Callout>
+
+## Labor and parts
+
+The lines are everything the job will charge. Anyone in the shop adds lines as the work is done:
+a technician enters their own hours and the parts they fitted. Click **Add** and choose the kind
+under **Charges**, or use an item's menu, **Add labor or a part for it**, to add a line already
+under that item. Click a line to change it.
+
+The form asks only for what the line is: what was done, and its hours and rate or its quantity
+and price. Everything else is a row of buttons under it, each showing its value, and a line that
+keeps the usual values never needs them: the **kind**, the **item** it is for, the
+**technician** and **day** (labor), the part's **status** and **expected** date, a **discount**,
+**sales tax**, and whether it is **billed**. Click one to change it.
+
+<Callout type="note">
+Only an admin prices. Technicians enter work at the shop's rates: their labor
+takes the shop's labor rate and their parts and outside work the shop's markup. They type a
+price only on Shop supplies, Freight, Fee and Other lines. An admin changes a line's rate,
+markup, price or kind, decides its tax and whether it is billed, and changes lines somebody
+else entered. Everyone else changes only the lines they entered, and a line an admin prices
+becomes the admin's. An admin sees every line in the invoice preview before raising it.
+</Callout>
+
+- **Labor** is hours at a rate. Type clock time: 1.5 is an hour and a half, 0.25 a quarter.
+  **Rate per hour** fills in from the shop's labor rate; an admin can change it on the entry.
+  Until the shop has a labor rate, only an admin can enter labor.
+  Pick the **Technician** and the **Day** the work was done.
+- **Part** and **Outside work** are what the shop paid (**Cost each**) plus the shop's markup for
+  that kind. **Price each** shows the result, greyed, and says the markup under it. An admin can
+  type a price there to charge that instead; empty the field to go back to cost plus the markup.
+  A part also takes its part number, serial number and vendor, and a status (ordered, received,
+  installed, returned, unused) with the day it is expected.
+- **Shop supplies**, **Freight and shipping**, **Fee** and **Other** are a quantity at a price.
+- **Discount** takes a percentage off a whole line: 10 takes 10% off. Only an admin gives one. The
+  card and the invoice show the line at its discounted price, with "(10% off)" in its name, and a
+  line 100% off stays on the invoice at $0.00 so the owner sees the work you gave them.
+
+Each line can point at one of the job's items with **For item**, and the list shows it under that
+item, so you can check the charges against the work the owner approved. A line for no item, or
+for an item since removed, is listed under **Not for a specific item**.
+
+- **Billed** is the default. Choose **No charge** for warranty work or shop time you are not
+  billing: the line stays on the job as a record of the work, and never reaches the invoice.
+- **Sales tax** follows your organization's rule for that kind of line. Choose **Taxable** or **Not
+  taxable** on a line to decide it yourself. See
+  [Charge sales tax](/docs/billing/charge-sales-tax) for the rules.
+
+<Callout type="note">
+The customer never sees your cost or your markup. The invoice shows the price each and the
+total, with the part number and "(4 x $12.50)" in the line's name when there is more than one.
+All of a job's labor lines stay separate, each saying its hours, and its rate when the line is
+charged at that rate.
+</Callout>
+
+## Raise the invoice
+
+<Roles>Owners, Admins</Roles>
+
+When the work is done, click **Raise invoice** at the bottom of **Work and charges**, beside the
+total. The dialog prices
+the bill exactly as it will be raised: each line with its tax, your service fee, and the total.
+Under **Also on the invoice** it shows what the bill carries besides the lines: the work order
+number, the aircraft (tail, make and model), the Hobbs and tach in and out, and a description
+listing the work completed (the items marked done that the owner did not decline) followed by
+your **Notes for the owner**. Your notes always keep their room: a long list of finished work ends
+"and 3 more", and the dialog says when anything was shortened. Pick when it is **Due**: on
+receipt, in 15 or 30 days, or **On a date…** to pick the day on a calendar (up to a year out; it
+is due at the end of that day). Then click the button that names the total. The person billed
+gets it by email with a link to pay online: an owner who is not a member
+of your organization gets Stripe's email
+at the address on the aircraft's **Owners** panel, and a member gets it by email and in the app.
+Or you record cash or a check the usual way.
+
+- **Billed to** must name somebody. A job billed to **Nobody** cannot be invoiced: choose who
+  pays under **Details**.
+- An owner who is not a member is reached only at the email on the aircraft's **Owners** panel.
+  With no address there, the invoice is refused until you add one.
+- If a line or a rate changed while the dialog was open, the invoice is not raised. The dialog
+  shows the new total to check, and you raise it again. The same goes for the notes for the owner
+  and the finished work: the owner is never sent text you did not see. The same happens if somebody added a line
+  in the moment the invoice was being made: that invoice is voided at once, so the bill always
+  matches the job.
+- An invoice can be at most $999,999.99, and so can a line.
+
+Once the invoice is raised, the job's lines are frozen, the job cannot be cancelled, and who
+pays cannot change. To correct anything, void the invoice in
+<Where app="web">Billing</Where>, change the lines, and raise a new one. The job's **Billing**
+card links to its invoice, and the invoice links back to the job.
+
+<Callout type="warning">
+Voiding the invoice does not let you delete the job. A bill happened, so the job stays on the
+record: set it to **Cancelled** if the work is not going ahead.
+</Callout>
+
+## Shop rates
+
+<Roles>Owners, Admins</Roles>
+
+<Where app="web">Settings → Shop rates</Where> sets the **Labor rate per hour**, the **Markup on
+parts**, and the **Markup on outside work** (a propeller overhaul, a radio repair sent out).
+Markups are percentages: 15 adds 15% to what the shop paid.
+
+These price NEW lines only. Each line keeps the rate and markup it was entered with, so changing
+the shop's rates never changes a job already in progress. Only owners and admins see this page; a
+technician sees the rate filled in on each labor line, and only an admin changes it there.
+
+## Find a job
+
+- <Where app="web">Maintenance → Open jobs</Where> groups the open jobs by where the aircraft is:
+  **In the hangar**, **Waiting** (on the owner or a part), **Ready for pickup**, **Scheduled** and
+  **Requested**, oldest first in each, with who pays, the technicians, the promised day (amber
+  once it has passed) and what the job has charged so far. Click a column's name to sort by it,
+  inside each group; click again to reverse it, and a third time to go back. Click a job to see it
+  beside the list, or double-click it to open its page. **Finished jobs** lists completed and
+  cancelled ones, newest first.
+- The filter button beside the search narrows either list by **Aircraft**, **Location** (where
+  the aircraft is based), **Owner** (anybody on the aircraft's Owners panel, billed or not),
+  **Billed to**, and **Technician**. Each takes several at once.
+- On an aircraft, <Where app="web">Work orders</Where> shows its open jobs and its past ones.
+- On a person in <Where app="web">People</Where>, **Work orders** lists the jobs billed to
+  them, open first. It is always there for an aircraft owner who is not a member, and on a
+  member once they have been billed for a job. Past the five most recent finished jobs, a link
+  opens the rest on **Finished jobs**.
+- Search with ⌘K for the job number (1042 or WO-1042), the tail, or the owner's name. Type
+  `jobs:` first to search work orders only.
+
+On the Aircraft page's **Customer aircraft** tab, each aircraft says **In the shop** while it has
+an open job and is here, **Expected in** when its job is requested or scheduled, and **Not in
+the shop** otherwise.
+
+## Delete a job opened by mistake
+
+An admin can delete a job from the menu on its page, as long as it has never been invoiced. A
+job that has been invoiced stays on the record: set its stage to **Cancelled** instead.
+Deleting leaves a line in the audit log saying the job existed and who deleted it.
+
+## Every change is recorded
+
+Opening a job, changing its stage, editing it, adding or changing a line, recording the owner's
+answer, and raising the invoice each leave a line in the audit log, naming the job, the aircraft
+and the person billed. Admins can find them under <Where app="web">Audit log → Work orders</Where>.
+Changing the shop's rates is recorded too, under <Where app="web">Audit log → Settings</Where>.

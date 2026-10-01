@@ -1,0 +1,126 @@
+<Summary>
+<Where app="web">Settings → Sales tax</Where>. Add your rate, then choose which kinds of line
+it applies to, for example parts and goods but not labor. From then on, every invoice you
+raise with **New invoice** taxes each line by that rule, and whoever raises it can tick or
+untick a single line. Flight bills from close-out are not taxed.
+</Summary>
+
+<Roles>Owners (set it up), Admins (see it, mark customers exempt)</Roles>
+
+Sales tax is decided line by line, because it depends on what the line is. In most states
+that tax repairs, the parts are taxed and the labor is not, as long as the two are on
+separate lines. Shop supplies are usually not taxed at all. So each line on a bill you raise
+by hand says what it is, and your school's rules say which of those are taxed.
+
+<Callout type="important">
+AerScheduler charges the rate you enter on the lines you choose. It does not know your
+state's rules. Check which sales are taxable with your accountant or your state's tax
+department before you turn this on.
+</Callout>
+
+## Set it up
+
+<Steps>
+<Step n={1} title="Add your rate">
+<Where app="web">Settings → Sales tax → Add rate</Where>. If all your airports are in one
+state, the form starts filled in from their address: the state, a name like Idaho sales tax,
+and the state's statewide rate. Check it before you add it. The statewide rate is the floor:
+add any city or county tax on top. The rate takes up to four decimal places, so a New Mexico
+rate like 8.1875 is fine. Pick a different state and the name and rate follow it.
+</Step>
+
+<Step n={2} title="Choose what gets taxed">
+Your first rate offers **Apply it to Parts and goods**, ticked, because that is the usual
+rule. To change it later, go to **What gets taxed**: pick the rate for each kind of line your
+state taxes, leave the rest on **Not taxed**, and click **Save**. A shop in Idaho taxes
+**Parts and goods** and leaves **Labor**, **Shop supplies**, and **Freight and shipping**
+untaxed.
+</Step>
+</Steps>
+
+Adding a rate on its own taxes nothing automatically: it puts a **Taxable** tick on every line of New
+invoice, and only the kinds of line you choose in step 2 are ticked for you.
+
+Only the owner can change these settings. Admins can see them.
+
+### Outside the US
+
+Choose **Outside the US** as the state, pick the **Country**, name the rate what your customers
+expect to see (VAT or GST), and type a region if you want one printed, such as British Columbia.
+The form starts on **Outside the US** when all your airports have an address outside the US. Two things to know: the
+rate is added on top of the prices you type (it does not include tax already), and invoices
+are raised in US dollars today.
+
+## Raise a taxed invoice
+
+<Where app="web">Billing → New invoice</Where>. Each line now has a second row: what the line
+is (Labor, Parts and goods, Shop supplies, Outside service, Freight and shipping, Fees,
+Aircraft rental, Instruction, or Other) and, once your school has a rate, a **Taxable** tick.
+
+- The tick starts from your rule for that kind of line, and shows the tax it adds.
+- Untick it for an exception, like a part replaced under warranty. Tick it for the opposite
+  exception.
+- If your school charges a service fee, its line under the subtotal has its own **Taxable** tick,
+  which starts from your rule for **Fees**.
+- The tax appears under the subtotal, one row per rate, and the **Total** is what the customer
+  is charged. If your own Stripe account is set to round tax on each line rather than on the
+  invoice total, Stripe's figure can be a cent different; the invoice records Stripe's.
+- **Create invoice** waits until the total on screen has been priced for exactly the lines you
+  typed. If something changes in between, for example somebody edits a rate, you are asked to
+  check the new total first.
+
+List labor and parts on separate lines. In many states a single line that mixes the two
+makes the whole amount taxable.
+
+Quantities are whole numbers. For 1.5 hours of labor, put the hours in the description and
+the amount in the price.
+
+## Customers who do not pay tax
+
+Some customers are exempt: a reseller, a government agency, a charter or ag operator, or the
+owner of an out-of-state aircraft, depending on your state. Open them in
+<Where app="web">People</Where>, find **Sales tax** on their Overview, click the pencil, and
+choose why they are exempt. Add a note naming the certificate you hold, for example ST-101 on
+file.
+
+From then on, invoices you raise for them carry no sales tax, and print why, for example
+"Tax exempt: Resale (ST-101 on file)".
+
+<Callout type="warning">
+Keep the certificate. If a state auditor finds an exemption you accepted without one, it is
+your school that owes the tax, not the customer.
+</Callout>
+
+## What is not taxed
+
+- **Flight bills from close-out.** Aircraft rental is taxed in some states, but AerScheduler
+  does not add tax to close-out bills yet. If your state taxes rentals, talk to us before you
+  rely on this.
+- **Membership dues, join fees, tuition and prepaid packages.**
+- **Invoices raised from the mobile app** (iPhone and Android), which does not yet ask what each
+  line is. Their service fee line is not taxed either.
+- **A charge to a member's account balance**, at a school that bills through account
+  balances. AerScheduler refuses a taxed line there rather than post it without its tax: untick
+  **Taxable** on those lines, including the service fee line if your **Fees** rule ticks it.
+
+## When a rate changes
+
+Once a rate is on an invoice, only its name can change: its percentage, state, and country are
+fixed, because an old invoice has to keep saying what it charged and where. To charge a new
+percentage, archive it and add the new rate, then choose it under **What gets taxed** again. Invoices you already raised keep the tax they charged. The same goes for
+exemptions and rules: a change only affects invoices raised after it.
+
+## Reports and QuickBooks
+
+<Where app="web">Reports → Tax collected</Where> lists every line in the period with its gross,
+taxable, exempt, and non-taxable amounts and the tax charged, grouped by rate. It is windowed
+on the date each invoice was raised, even when you filter to paid invoices. If you file on
+cash received, use **Payments received**, which is windowed on the payment date and has a Tax
+column. Charges posted to members' account balances are not listed.
+
+Revenue reports show revenue before sales tax; the payments and aging reports include it,
+because it is money the customer paid or owes.
+
+Invoices that carry sales tax are not sent to QuickBooks yet. They wait under
+**Needs attention** marked **Carries sales tax**. Record them in QuickBooks yourself, then
+choose **Handled**.

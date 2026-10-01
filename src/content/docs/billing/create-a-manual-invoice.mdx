@@ -26,11 +26,15 @@ email address for someone who is not a member.
 </Step>
 
 <Step n={3} title="Add line items">
-Each line has a Description, a Qty and a unit price. Add as many lines as you need with the
-running total shown underneath.
+Each line has a Description, a whole-number Qty and a unit price, and says what it is:
+Labor, Parts and goods, Shop supplies, Outside service, Freight and shipping, Fees, Aircraft
+rental, Instruction, or Other. What you pick also decides where the line lands in QuickBooks.
+Add as many lines as you need with the running total shown underneath.
 
-If your school charges a service fee, it is shown as its own line under the subtotal, and the
-**Total** includes it. That total is exactly what the customer is billed.
+If your school charges a service fee, it is shown as its own line under the subtotal. If it
+charges sales tax, each line has a **Taxable** tick that starts from your school's rule, and
+the tax is shown under the subtotal. The **Total** includes both, and it is what the customer
+is billed. See [Charge sales tax on an invoice](/docs/billing/charge-sales-tax).
 
 <Screenshot id="create-invoice-dialog" />
 </Step>
@@ -57,7 +61,9 @@ Either search for a member, or enter a guest recipient with a name and an email 
 </Step>
 
 <Step n={2} title="Add invoice items">
-Tap Add + for each line: a name, a quantity and a price.
+Tap Add + for each line: a name, a quantity and a price. Invoices raised in the app (iPhone or
+Android) carry no sales tax, because the app does not yet ask what each line is. Raise taxed
+invoices in the web console.
 </Step>
 
 <Step n={3} title="Add a memo and a due date">
@@ -85,8 +91,8 @@ balances, and it is never chased by automatic reminders. See
 
 | Field | Limit |
 |---|---|
-| Line item name | 60 characters |
-| Quantity | Between 1 and 99 |
+| Line item name | 200 characters |
+| Quantity | A whole number between 1 and 99 |
 | Memo | 100 characters |
 | Invoice total | More than 50 cents |
 

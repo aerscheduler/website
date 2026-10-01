@@ -101,14 +101,17 @@ the invoice failed, the recovery action is **Create invoice** on the reservation
 surface. Full walkthrough in
 [Why a flight was not invoiced](/docs/billing/why-a-flight-was-not-invoiced).
 
-## The Tax collected report is empty
+## The Tax collected report shows no tax
 
-AerScheduler does not calculate sales tax on invoices, so there is nothing for that report
-to show.
+The report lists every invoice line in the period. Until your school has a rate and has chosen
+which kinds of line it applies to, every line is under **No tax**, as a non-taxable sale.
+Flight bills from close-out are never taxed. See
+[Charge sales tax on an invoice](/docs/billing/charge-sales-tax).
 
-If you have to charge tax, add it as its own line item on a
-[manual invoice](/docs/billing/create-a-manual-invoice), or handle it in your accounting
-software.
+If you used to type tax as its own line on a manual invoice, those old lines show as
+non-taxable sales and are counted in revenue. Back them out of gross and non-taxable sales by
+hand for those periods (search the Line column), and stop typing tax as a line once a rate is
+set up, or the customer is charged tax twice.
 
 ## Membership dues are mixed into flight revenue
 
@@ -169,7 +172,7 @@ Worth knowing before you plan a process around one of them.
 | Refund prepaid ledger credit via Stripe alone | Use **Refund** on the member's ledger (owners and admins). That reverses prepaid balance in AerScheduler. |
 | Issue a Stripe credit note | Invoice mode has no credit-note workflow. Account ledger holds prepaid credit as a balance instead. |
 | Edit an invoice after it is raised | The only actions are mark paid and void. Ledger rows are never edited in place either; post a reversing row. |
-| Calculate sales tax | Add it as a line item if you need it. |
+| Tax flight bills from close-out | Sales tax applies to invoices raised with New invoice. See [Charge sales tax on an invoice](/docs/billing/charge-sales-tax). |
 | Bill fuel on a dry rate | There is no fuel line. Invoice fuel separately (or post a desk charge on the ledger). |
 | Set a rate for one instructor | Rates are per rating, plus the organization default. Every instructor on a rating bills the same figure. |
 | Exempt one aircraft from the overnight minimum | There is nowhere to set a per-aircraft figure, so the organization's applies to every tail. |
