@@ -48,7 +48,7 @@ const EXPLORE: { icon: React.ReactNode; title: string; body: string }[] = [
   {
     icon: <Users className="size-5" />,
     title: "Every role, one click apart",
-    body: "Switch between owner, dispatcher, instructor, student, renter, and technician to see each person's view.",
+    body: "Switch between owner, dispatcher, instructor, student, renter, technician, and aircraft owner to see each person's view.",
   },
   {
     icon: <BarChart3 className="size-5" />,
@@ -75,7 +75,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Can I try it as an instructor or a student, not just an admin?",
-    a: "Yes. A role switcher in the demo lets you view the school as an owner, dispatcher, instructor, student, renter, or technician, so you can see exactly what each person on your team would see.",
+    a: "Yes. A role switcher in the demo lets you view the school as an owner, dispatcher, instructor, student, renter, or technician, so you can see exactly what each person on your team would see. You can also be an aircraft owner whose plane the sample shop maintains, to see what your customers would see.",
   },
   {
     q: "Will I break anything?",
