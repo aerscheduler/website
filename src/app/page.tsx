@@ -239,7 +239,7 @@ const SUBHEADS: { v: string; text: string }[] = [
   },
   {
     v: "maintenance",
-    text: `Every inspection counts down by tach, Hobbs or calendar month, and an overdue annual grounds the aircraft until it is signed off. Squawks and work orders sit beside the schedule, so nobody books an airplane that cannot fly. $${PRICE_PER_AIRCRAFT} per aircraft.`,
+    text: `Every inspection counts down by tach, Hobbs or calendar month. An overdue annual or a grounding squawk grounds the aircraft, so nobody books an airplane that cannot fly. $${PRICE_PER_AIRCRAFT} per aircraft.`,
   },
 ];
 
