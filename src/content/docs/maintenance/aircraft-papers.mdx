@@ -1,7 +1,8 @@
 <Summary>
-Open the aircraft, then <Where app="web">Papers</Where>. Staff upload the current POH and
-weight and balance. Anyone who can book the tail can open the ones marked for bookers.
-Unlike a squawk photo, a stale paper can be removed.
+Open the aircraft, then <Where app="web">Papers</Where>. Staff upload a copy of the
+airworthiness certificate and the registration, and the current POH and weight and balance.
+Anyone who can book the tail can open the ones marked for bookers. Unlike a squawk photo, a
+stale paper can be removed.
 </Summary>
 
 <Roles>Owners, Admins, Dispatchers, Technicians, Instructors, Students, Renters</Roles>
@@ -19,7 +20,8 @@ Unlike a squawk photo, a stale paper can be removed.
     they can open.
   </Step>
   <Step n={3} title="Add the file">
-    Category first: start with POH or Weight and balance. On the phone, Category and Who
+    Category first. The form opens on whichever of **Airworthiness certificate** and
+    **Registration certificate** is still missing, else on POH. On the phone, Category and Who
     can open it each open a picker in the same sheet. Attach a jpg, png, or pdf, up to
     25 MB. You can keep up to five files in each category. On the iPhone, use **Take photo**,
     **Choose from Photos**, or **Browse Files**. The photo shows on the aircraft once it
@@ -28,14 +30,37 @@ Unlike a squawk photo, a stale paper can be removed.
   </Step>
 </Steps>
 
+## The certificate and the registration
+
+Every US aircraft has to carry an airworthiness certificate and a registration certificate
+(14 CFR 91.203). Until the aircraft has a copy of both on file, staff see a line at the top of
+Papers saying which is missing: "No airworthiness certificate or registration on file", or just
+the one. It is a reminder, not a block: nothing stops the aircraft being booked.
+
+| Category | What goes in it |
+|---|---|
+| Airworthiness certificate | A photo or scan of the certificate, FAA Form 8100-2 (standard) or 8130-7 (special). |
+| Registration certificate | The current certificate of aircraft registration. Track when it expires with the [Registration renewal](/docs/maintenance/add-the-standard-airworthiness-inspections) inspection. |
+| Operating limitations | The separate operating limitations some aircraft carry, such as an experimental or light-sport aircraft. On most aircraft they are in the POH. |
+| POH, Weight and balance | The current ones, not a history. |
+| Insurance, Form 337, Logbook, Other | Whatever else the shop keeps for the tail. |
+
 ## Who can open what
 
 POH and weight and balance default to **Bookers**, so a student opening that aircraft (or
-booking it) can read them. Insurance, 337s, and logbook scans default to **Staff**. Staff
-can flip either one.
+booking it) can read them. The certificates, operating limitations, insurance, 337s and
+logbook scans default to **Staff**. Staff can flip any of them.
 
 Owners, admins, dispatchers, and technicians can add or remove files. Instructors,
 students, and renters can only open the booker-visible ones.
+
+## On a customer's aircraft
+
+Nobody books a customer's aircraft, so its papers ask **Keep to the shop** or **Show to the
+owner** instead. A paper shown to the owner is on their aircraft's page when they sign in, and
+**Keep to the shop** on the paper hides it again. Your own aircraft have no owners to show
+papers to, so the choice is not offered there. See
+[Work on a customer's aircraft](/docs/maintenance/work-on-a-customers-aircraft).
 
 ## Booking
 

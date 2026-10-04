@@ -1,7 +1,8 @@
 <Summary>
-Open the invoice from <Where app="web">Billing</Where> and click Send payment reminder. A
-daily sweep already chases unpaid member invoices for up to four weeks, then hands further
-chase back to you. If you want teeth, set Ground members with unpaid invoices on
+An unpaid invoice past its due date shows **Past due**. Open it from
+<Where app="web">Billing</Where> and click Send payment reminder. A daily sweep already chases
+unpaid invoices, members' and aircraft owners' alike, for up to four weeks, then hands further
+chase back to you. If you want teeth for members, set Ground members with unpaid invoices on
 <Where app="web">Settings → Billing</Where>.
 </Summary>
 
@@ -11,7 +12,8 @@ chase back to you. If you want teeth, set Ground members with unpaid invoices on
 
 <Steps>
 <Step n={1} title="Open the invoice on Billing">
-Set the Status filter to Outstanding to see only what is owed.
+Set the Status filter to Outstanding to see everything owed, or to Past due to see only what
+is late.
 </Step>
 
 <Step n={2} title="Click Send payment reminder">
@@ -25,11 +27,22 @@ The member gets a Payment reminder email and a push notification, both carrying 
 pay. The send is stamped on the invoice, so the automatic sweep will not immediately send a
 second one on top of yours.
 
-Reminders are for members. A guest invoice cannot be reminded from here.
+Reminders are for members and for aircraft owners billed for shop work. A guest invoice cannot
+be reminded from here.
+
+## Past due
+
+An invoice is **Past due** when it is unpaid, not voided, and its due date has gone by. It shows
+on every status badge: on Billing, on the invoice, on the person's own Invoices page, and on an
+aircraft owner's job. An invoice with no due date is never past due, however old it is.
+
+The Status filter on Billing has **Past due**: unpaid invoices whose due date has gone by, and
+nothing else.
 
 ## The automatic reminders
 
-A daily sweep chases unpaid member invoices on its own. An invoice is picked up when:
+A daily sweep chases unpaid invoices on its own: members' bills of every kind, and the bills
+for shop work you send aircraft owners. An invoice is picked up when:
 
 - it is past its due date, or
 - it is 7 or more days old and has no due date.
@@ -43,6 +56,18 @@ Sending a reminder by hand does not count toward that four, and you can keep usi
 payment reminder after the automatic sweep has stopped.
 
 Voided invoices and paid invoices are never chased.
+
+## Reminders to aircraft owners
+
+An owner who has signed in is reminded like a member, by their own settings, and pays from
+their Invoices page. An owner the shop added who has not signed up is emailed at the address
+you keep for them, with the invoice's own payment link, which needs no account.
+
+<Callout type="warning">
+An owner with no email address on file is never reminded automatically. Add their address on
+their Contact card, or print the invoice and chase it yourself. Shop bills never ground
+anybody: grounding is about flying, and the owner does not fly here.
+</Callout>
 
 ## Why flight invoices show no due date
 

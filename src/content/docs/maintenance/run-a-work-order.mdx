@@ -63,6 +63,8 @@ its meters then, are the ones recorded.
 When a job moves to **Aircraft received** (or straight to a later stage in the hangar) with no
 Hobbs or tach in recorded, the meters open under **Details** with them filled in from the
 aircraft. Check them against the meters and click **Save**, or **Cancel** to leave them empty.
+When it moves to **Ready for pickup** or **Completed** with no Hobbs or tach out, the meters open
+again for the readings out, the aircraft's return to service.
 
 Moving a job to **Ready for pickup** or **Completed** while an inspection on it is not signed off
 (and the owner did not decline or put it off) asks first. Sign it off, or choose **Complete
@@ -71,8 +73,9 @@ finished they start getting its reminders.
 
 <Callout type="note">
 A reading lower than the one the aircraft last had, or a Hobbs or tach out lower than in, asks
-you to check it before it saves. Save it anyway only if that is what the meters say, for example
-after a meter was replaced.
+you to check it before it saves. Save it as a correction only if that is what the meters say, for
+example after a meter was replaced. A reading that would bring another inspection due and ground
+the aircraft asks too, before anything is saved.
 </Callout>
 
 There is no Edit button: each detail is changed where it is shown. Click a value under
@@ -86,8 +89,12 @@ owner asked for** is the request in their words, **Notes for the owner** are wha
 them, and **Shop notes** are for the shop only.
 
 <Callout type="note">
-The Hobbs and tach on a work order are what the job recorded. They never change the aircraft's
-own meters, so typing a reading on a job cannot ground the aircraft or move an inspection.
+The Hobbs and tach in and out on a job are the aircraft's readings too. Each one you save goes on
+the aircraft's meter log, marked **Arrival** or **Return to service** with the job's number, and
+moves the aircraft's own times, so hour-based inspections and the owner's "times last read" stay
+current without typing the same reading twice. A reading dated before the aircraft's newest one
+(an arrival entered after a later reading) is kept in the log and leaves the aircraft's times as
+they are.
 </Callout>
 
 ## The work on the job

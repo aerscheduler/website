@@ -30,9 +30,10 @@ An aircraft in for maintenance (one your shop looks after for an owner) works di
   themselves. The exception: an organization with no technicians signed in sends these to its
   admins, so somebody always hears, and their setting shows **All customer aircraft** until they
   change it.
-- **The aircraft's owners are reminded too**: 30 days and 7 days before an inspection is due,
-  when it is due, and when it is overdue; for one counted in hours, 10 hours before and when it
-  is due. One message lists everything that crossed a step at once, the most urgent first, and
+- **The aircraft's owners are reminded too**: by default 30 days and 7 days before an inspection
+  is due, when it is due, and when it is overdue; for one counted in hours, 10 hours before and
+  when it is due. You can change those steps on the inspection, or for one aircraft (see
+  **Choose when reminders go out**, below). One message lists everything that crossed a step at once, the most urgent first, and
   an inspection counted both ways ("100 hours or 12 months") gives both figures, whichever comes
   first. An owner who has not signed up is emailed at the address on the aircraft. Calendar
   steps go out in the working day where the organization is.
@@ -46,10 +47,10 @@ An aircraft in for maintenance (one your shop looks after for an owner) works di
   owner emails are on hold, its reminder waits, still owed, and follows the rules above once you
   lift the hold.
 - **Somebody who owns a customer aircraft and works here** gets the due and overdue notices once,
-  from the shop side by their own setting, and the earlier owner reminders (30 days, 7 days, 10
-  hours) as an owner.
+  from the shop side by their own setting, and the earlier owner reminders as an owner.
 
-How each person hears (email, push) still follows their **Maintenance reminders** switch.
+How each person hears (email, push, and text for somebody who has turned texts on) follows their
+**Maintenance reminders** switch.
 
 ## Turn maintenance reminders off for yourself
 
@@ -85,15 +86,34 @@ can hold a narrower role instead.
 
 ## When a reminder is actually sent
 
-Each inspection sends up to two: a warning when it enters its **Due soon** band, and one
-when it comes due.
+Each inspection warns the shop at each of its **reminder steps**, tells everybody when it comes
+due, and tells the shop once more if it is still not signed off a day later.
 
-The **Due soon** band is exactly the warning lead you set on the inspection. "Warn me 10
-hours out" means the warning goes at 10 hours remaining, not at some separate idea of soon.
+An inspection starts with one step: the warning lead you set when you added it ("Warn me 10
+hours out" warns at 10 hours remaining). Add more steps to warn earlier and again closer in, for
+example 90, 30 and 7 days before an annual, or 25, 10 and 5 hours before a 100-hour.
 
-An inspection with no warning lead at all sends no warning, only the due notification. The
-Add inspections form forces a lead of at least 1 hour or 1 day, so this only shows up on
-inspections created another way.
+Each step goes once per cycle, and only the nearest one: an inspection first noticed 5 days out
+sends the 7-day reminder, not the 90, 30 and 7 at once. A step further out than one already sent
+is never sent after it. Signing the inspection off starts the steps again for the next cycle.
+
+An inspection with no steps sends no early warning, only the due notification.
+
+## Choose when reminders go out
+
+<Steps>
+  <Step n={1} title="For every aircraft an inspection covers">
+    On <Where app="web">Maintenance → Inspection rules</Where>, open the inspection's menu and
+    choose **Edit name, source and reminders**. Under **Reminders**, add or remove steps for the
+    shop and for the owners of customer aircraft, in days before it is due and, for one counted
+    in hours, hours before. A list you have not changed shows its default and follows it.
+  </Step>
+  <Step n={2} title="For one aircraft">
+    Open the inspection on that aircraft and click the pencil on **Reminders**. Steps set here
+    apply to this aircraft only and carry on to the next cycle when it is signed off. **Use the
+    rule's** puts a list back on the inspection's.
+  </Step>
+</Steps>
 
 ## Hour-based inspections only notify after a close-out
 

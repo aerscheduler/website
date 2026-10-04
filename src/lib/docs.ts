@@ -1037,6 +1037,15 @@ export const DOC_SECTIONS: DocSection[] = [
         seoQuery: "how to refund or void a flight school invoice",
       },
       {
+        slug: "attach-files-to-an-invoice",
+        title: "Attach files to an invoice",
+        description:
+          "Put the vendor's invoice, a receipt or an 8130-3 on the bill, and choose which ones the person billed can see. On a shop bill, add the job's files in one click.",
+        kind: "task",
+        audience: ["Admins", "Owners"],
+        seoQuery: "attach a receipt or vendor invoice to a customer invoice",
+      },
+      {
         slug: "chase-unpaid-invoices",
         title: "Chase an unpaid invoice",
         description:
@@ -1161,6 +1170,25 @@ export const DOC_SECTIONS: DocSection[] = [
         ],
       },
       {
+        slug: "aircraft-history-and-invoices",
+        title: "An aircraft's history and invoices",
+        description:
+          "Everything done to one aircraft in one list, newest first: inspections signed off, squawks resolved and jobs completed. And every invoice for it, for the bookings that flew it and the shop's work on it.",
+        kind: "task",
+        audience: ["Owners", "Admins", "Dispatchers", "Technicians"],
+        seoQuery: "aircraft maintenance history logbook and invoice history",
+        faqs: [
+          {
+            q: "Why is a one-time inspection in the history but not on the Maintenance tab?",
+            a: "The Maintenance tab lists what is still coming due. A one-time inspection drops off it once signed off, but the sign-off is kept for the life of the aircraft and stays in its history.",
+          },
+          {
+            q: "Why can't I see the Invoices tab?",
+            a: "It lists what members and customers paid, so it is for owners and admins only, like the rest of Billing.",
+          },
+        ],
+      },
+      {
         slug: "run-a-work-order",
         title: "Run a work order",
         description:
@@ -1216,6 +1244,12 @@ export const DOC_SECTIONS: DocSection[] = [
         kind: "task",
         audience: ["Owners", "Admins", "Technicians"],
         seoQuery: "set up annual and 100 hour inspection tracking for a flight school",
+        faqs: [
+          {
+            q: "Can AerScheduler remind us when an aircraft's registration expires?",
+            a: "Yes. Registration renewal, under Also common in the standard set, tracks the 7-year expiry of a US registration (14 CFR 47.40) as 84 calendar months from the issue date on the certificate, warned 180, 60 and 30 days out, to the owners of a customer aircraft too. It does not ground the aircraft unless you turn that on.",
+          },
+        ],
       },
       {
         slug: "add-your-own-inspection",
@@ -1254,6 +1288,29 @@ export const DOC_SECTIONS: DocSection[] = [
         seoQuery: "track airworthiness directive AD compliance for a flight school aircraft",
       },
       {
+        slug: "track-life-limited-components",
+        title: "Track life-limited components",
+        description:
+          "Record a magneto, a propeller or any part with a life limit on the aircraft's Maintenance tab: when it went on, its hours since new or overhaul, and its limit in hours, months or both. The card shows its time now and the life left, and each limit is tracked as an inspection that warns, reminds owners and grounds the aircraft.",
+        kind: "task",
+        audience: ["Owners", "Admins", "Technicians"],
+        seoQuery: "track life limited parts time since overhaul on an aircraft",
+        faqs: [
+          {
+            q: "Where does a component's time come from?",
+            a: "The aircraft's tach: the hours the part had when it went on, plus every hour the tach has moved since. Keep the aircraft's times current and the card stays current. A part whose limit counts Hobbs time can count on the Hobbs instead.",
+          },
+          {
+            q: "Can I delete the life-limit inspection on its own?",
+            a: "No. It belongs to the component: change the component's limit or time and the inspection moves, record that the part came off and the inspection goes. Deleting it alone would leave the part claiming a limit nothing tracks.",
+          },
+          {
+            q: "The part was replaced. What do I do?",
+            a: "Record that it came off (the row's menu, then Record it came off), then add the new part. For a part overhauled and refitted, edit its time since overhaul and the overhaul date instead.",
+          },
+        ],
+      },
+      {
         slug: "sign-off-an-inspection",
         title: "Sign off a completed inspection",
         description:
@@ -1276,6 +1333,29 @@ export const DOC_SECTIONS: DocSection[] = [
         kind: "task",
         audience: ["Owners", "Admins", "Technicians"],
         seoQuery: "remove an aircraft from an inspection reminder or delete the reminder",
+      },
+      {
+        slug: "mark-an-inspection-not-applicable",
+        title: "Mark an inspection not applicable to one aircraft",
+        description:
+          "Open the inspection and click Mark not applicable on the Applies to this aircraft card, with a reason. It is never reminded about, counted overdue or grounds that aircraft, and it stays marked after a sign-off. Also: what Scheduled and In progress mean on an inspection.",
+        kind: "task",
+        audience: ["Owners", "Admins", "Technicians"],
+        seoQuery: "inspection does not apply to this aircraft, VOR check on a VFR only aircraft",
+        faqs: [
+          {
+            q: "Does marking it not applicable change the rule for my other aircraft?",
+            a: "No. It is one inspection on one aircraft. The rule, and every other aircraft it covers, are unchanged.",
+          },
+          {
+            q: "The aircraft was grounded for this inspection. Will marking it not applicable put it back on the line?",
+            a: "Yes, unless something else still holds it, such as another overdue inspection that grounds or a grounding squawk.",
+          },
+          {
+            q: "What does Scheduled or In progress on an inspection mean?",
+            a: "An open work order carries it. Scheduled while the job is requested or scheduled, In progress while the aircraft is at the shop. It is worked out from the job, so it goes away when the job is completed or cancelled.",
+          },
+        ],
       },
       {
         slug: "when-aerscheduler-grounds-an-aircraft",
@@ -1320,9 +1400,9 @@ export const DOC_SECTIONS: DocSection[] = [
       },
       {
         slug: "aircraft-papers",
-        title: "Aircraft papers (POH and weight and balance)",
+        title: "Aircraft papers (certificates, POH and weight and balance)",
         description:
-          "Put the current POH and weight and balance on the aircraft. Members who book it can open the ones marked for bookers. Staff can replace a stale file.",
+          "Keep a copy of the airworthiness certificate and the registration, and the current POH and weight and balance, on the aircraft. Staff are told which certificate is missing. Members who book it can open the ones marked for bookers. Staff can replace a stale file.",
         kind: "task",
         audience: ["Owners", "Admins", "Dispatchers", "Technicians", "Instructors", "Students", "Renters"],
         seoQuery: "upload POH weight and balance PDF on aircraft in flight school software",
@@ -1342,6 +1422,10 @@ export const DOC_SECTIONS: DocSection[] = [
           {
             q: "Can I delete a paper after I upload it?",
             a: "Yes. Papers are the current documents on the tail. A stale weight and balance should come down. Squawk photos cannot be deleted; papers can.",
+          },
+          {
+            q: "Why does Papers say no airworthiness certificate or registration on file?",
+            a: "Every US aircraft has to carry both, and the organization has no copy of one or both on this aircraft. Add a photo or scan under Airworthiness certificate and Registration certificate and the line goes away. It never stops the aircraft being booked.",
           },
         ],
       },

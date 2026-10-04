@@ -17334,7 +17334,7 @@
           "Resources"
         ],
         "summary": "Read an aircraft's meter log",
-        "description": "Every recorded Hobbs and tach reading (`kind: reading`, with who, when, a note, a 15-minute photo link and the values it replaced) beside the readings close-outs took (`kind: close-out`, with the booking), newest first, the last 100 of each. All hours are tenths. `meterMode` says which meters the aircraft has. `stale` is true for a customer's aircraft with meters not read in over 30 days. **Owners, admins, dispatchers and technicians only**; anybody else is answered 403 for any id.",
+        "description": "Every recorded Hobbs and tach reading (`kind: reading`, with who, when, a note, a 15-minute photo link, the values it replaced, and `workOrder` when it was a job's reading in or out) beside the readings close-outs took (`kind: close-out`, with the booking), newest first, the last 100 of each. All hours are tenths. `meterMode` says which meters the aircraft has. `stale` is true for a customer's aircraft with meters not read in over 30 days. **Owners, admins, dispatchers and technicians only**; anybody else is answered 403 for any id.",
         "responses": {
           "200": {
             "description": "The meter log.",
@@ -17656,7 +17656,7 @@
           "Aircraft owners"
         ],
         "summary": "Read one of my aircraft",
-        "description": "Its jobs (newest first), every open inspection, and its recent Hobbs and tach readings. `mayRecordTimes` is true for a customer's aircraft with meters.",
+        "description": "Its jobs (newest first), every open inspection, its recent Hobbs and tach readings, `papers`, the aircraft's papers the shop shows its owners (each with a 15-minute `url`; a customer's aircraft only), and `components`, its life-limited components on it now with their life left (`id`, `name`, `position`, `partNumber`, `serialNumber`, `installedOn`, `timeSince`, `limitHours`, `limitMonths` and `life`, as `GET /resources/{id}/components` reads them, without the shop's notes; a customer's aircraft only). `mayRecordTimes` is true for a customer's aircraft with meters.",
         "responses": {
           "200": {
             "description": "The aircraft.",
@@ -17734,10 +17734,10 @@
           "Aircraft owners"
         ],
         "summary": "Request work on my aircraft",
-        "description": "Opens a Requested job on the shop's board, billed to the aircraft's billed owner. `wantedBy` (a real date, today or later, within two years) is added to the request; the shop sets the promised date.",
+        "description": "Opens a Requested job on the shop's board, billed to the aircraft's billed owner, and tells the shop. Only `request` is needed. `wantedBy` (a real date, today or later, within two years) is added to the request in words; the shop sets the promised date. `preferredFrom` (and `preferredTo`, for a range), `grounded` and `location` are kept on the job as said, and shown to the shop as the owner's wish, not its plan. `hobbsTime` and `tachTime` (tenths; a customer's aircraft only, 403 otherwise) are recorded on the aircraft's meter log as `POST /owner/aircraft/{id}/meters` would, linked to the job; a reading lower than on record, or one that would ground the aircraft, answers 409 BEFORE anything is opened, until sent again with `confirmLower` / `confirmMaintenanceTrigger`. Name up to five photos or PDFs in `fileNames` and upload them to the returned `signedUrlData`, as when attaching to a job; refused in the public demo.",
         "responses": {
           "201": {
-            "description": "The job's id and label.",
+            "description": "The job's id, label and `aircraftTimes` (`updated`, `logged`, or null), with `signedUrlData` beside `data` for the files.",
             "content": {
               "application/json": {
                 "schema": {
@@ -17772,7 +17772,7 @@
             }
           },
           "403": {
-            "description": "Authenticated, but not allowed to do this.",
+            "description": "Times on one of the organization's own aircraft, or files in the demo.",
             "content": {
               "application/json": {
                 "schema": {
@@ -17783,6 +17783,16 @@
           },
           "404": {
             "description": "Not one of yours.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The times are lower than the aircraft's, or would ground it: confirm and send again. Nothing was opened.",
             "content": {
               "application/json": {
                 "schema": {
@@ -17834,6 +17844,70 @@
                     ],
                     "format": "date",
                     "description": "When you would like it back."
+                  },
+                  "preferredFrom": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date",
+                    "description": "When it can come in: the day, or the first day of a range."
+                  },
+                  "preferredTo": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date",
+                    "description": "The last day it can come in. Needs `preferredFrom`, and is not before it."
+                  },
+                  "grounded": {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ],
+                    "description": "True: it cannot fly as it is. False: it can fly in. Null or absent: not said."
+                  },
+                  "location": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 120,
+                    "description": "Where the aircraft is now, such as the airport and hangar."
+                  },
+                  "hobbsTime": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "description": "Its Hobbs now, in tenths."
+                  },
+                  "tachTime": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "description": "Its tach now, in tenths."
+                  },
+                  "confirmLower": {
+                    "type": "boolean"
+                  },
+                  "meterReplaced": {
+                    "type": "boolean"
+                  },
+                  "confirmMaintenanceTrigger": {
+                    "type": "boolean"
+                  },
+                  "fileNames": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 5,
+                    "description": "Photos or PDFs to upload with it."
                   }
                 }
               }
@@ -17996,13 +18070,428 @@
         }
       }
     },
+    "/owner/aircraft/{id}/history": {
+      "get": {
+        "tags": [
+          "Aircraft owners"
+        ],
+        "summary": "List what has been done to my aircraft",
+        "description": "One of the caller's aircraft, newest first: its inspection sign-offs and the shop's completed jobs (no squawks, no technicians, no certificate numbers, nothing the shop keeps to itself). Paged, at most 250 a page. Filter with `kind` (`inspection`, `work_order`).",
+        "responses": {
+          "200": {
+            "description": "A page of the history.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AircraftHistoryEntry"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not one of yours.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listMyAircraftHistory",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The resource id."
+          },
+          {
+            "name": "kind",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "inspection"
+            },
+            "description": "Only these kinds, comma separated."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "date"
+              ]
+            },
+            "description": "`date` to order by date."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            },
+            "description": "`desc` (default) or `asc`."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250
+            },
+            "description": "Rows to return, 1 to 250."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          }
+        ]
+      }
+    },
+    "/owner/files": {
+      "get": {
+        "tags": [
+          "Aircraft owners"
+        ],
+        "summary": "List the files on my account",
+        "description": "What the shop shows you on your account, and the documents you added yourself (`yours`), newest first. Never a file the shop keeps to itself.",
+        "responses": {
+          "200": {
+            "description": "Your files.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/OwnFile"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listMyFiles",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1,1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row , `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Aircraft owners"
+        ],
+        "summary": "Add documents to my account",
+        "description": "Name up to 5 files and upload each to the returned `signedUrlData`. The shop always sees them, and so do you. You can keep up to 20 of your own files. Turned off in the public demo.",
+        "responses": {
+          "201": {
+            "description": "The files, with `signedUrlData` beside `data`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/OwnFile"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "No files, or too many.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The public demo.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "addMyFiles",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The files.",
+                "properties": {
+                  "fileNames": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 5
+                  },
+                  "label": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 120
+                  }
+                },
+                "required": [
+                  "fileNames"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/owner/files/{fileId}": {
+      "delete": {
+        "tags": [
+          "Aircraft owners"
+        ],
+        "summary": "Remove a document I added",
+        "description": "Only a file you added yourself; any other id answers 404, the same as one that does not exist.",
+        "responses": {
+          "204": {
+            "description": "Success. No body."
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not a file you added.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "deleteMyFile",
+        "parameters": [
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The file id."
+          }
+        ]
+      }
+    },
     "/owner/work-orders/{id}": {
       "get": {
         "tags": [
           "Aircraft owners"
         ],
         "summary": "Read a job on my aircraft",
-        "description": "The owner's view of a job: where it stands, the items (and which found ones wait on an answer), the files shared with the owner, and, only for the person billed, the charges and the invoice (`refunded` when handed back in full). A finding the shop has not sent is not shown, nor anything priced against it. `lines` and `chargesCents` leave out the lines of findings the owner has not agreed to (still waiting, declined or deferred); once the job is invoiced they are the bill's, every billable line, so `chargesCents` is the invoice's subtotal, and no item `needsAnswer`. Each item carries `estimateCents`, what its billable lines come to (null for anybody but the person billed), `answeredByYou`, true when the caller gave its answer here, and `askedAt`, when the shop sent it (null if never), which an answer sends back. `mayAnswer` is true while the job is open and not invoiced; `ownsAircraft` says whether the caller owns the aircraft. No shop notes, costs, markups or rates.",
+        "description": "The owner's view of a job: where it stands, the items (and which found ones wait on an answer), the files shared with the owner, and, only for the person billed, the charges and the invoice (`refunded` when handed back in full, `pastDue` when unpaid past its `dueAt`). A finding the shop has not sent is not shown, nor anything priced against it. `lines` and `chargesCents` leave out the lines of findings the owner has not agreed to (still waiting, declined or deferred); once the job is invoiced they are the bill's, every billable line, so `chargesCents` is the invoice's subtotal, and no item `needsAnswer`. Each item carries `estimateCents`, what its billable lines come to (null for anybody but the person billed), `answeredByYou`, true when the caller gave its answer here, and `askedAt`, when the shop sent it (null if never), which an answer sends back. `mayAnswer` is true while the job is open and not invoiced; `ownsAircraft` says whether the caller owns the aircraft. No shop notes, costs, markups or rates.",
         "responses": {
           "200": {
             "description": "The job.",
@@ -18323,6 +18812,1345 @@
             }
           }
         }
+      }
+    },
+    "/resources/{id}/components": {
+      "get": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "List an aircraft's life-limited components",
+        "description": "Each component on the aircraft with `life`: its time since new or overhaul now (from the aircraft's meter on the clock it counts on, tach unless said), the life left on each limit, and `status` (amber `dueSoon` inside 10% of a limit or 10 hours, or 10% of a calendar limit or 30 days; `overdue` at or past it). Components that came off only with `removed=true`. All hours are TENTHS. Works on the organization's own aircraft and customer aircraft alike. **Owners, admins, dispatchers and technicians only**; anybody else is answered 403 for any id. Another organization's aircraft answers exactly as an absent one.",
+        "responses": {
+          "200": {
+            "description": "The components.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AircraftComponent"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not a shop role.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Aircraft not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listAircraftComponents",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The resource id."
+          },
+          {
+            "name": "removed",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "`true` to include components that came off."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1,1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row , `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Add a life-limited component",
+        "description": "Only `name` is required. Not given, it went on today (`installedOn`) at the aircraft's reading now (`installedAtMeter`, on `meter`: the tach, or the Hobbs on a Hobbs-only aircraft), new (`timeSince`) with no time (`timeAtInstall: 0`). A limit (`limitHours` in tenths, `limitMonths`, or both, whichever comes first) is tracked by a linked one-off inspection per clock, due where the limit is reached, so it warns, reminds the owners of a customer aircraft and, with `groundAtLimit` (default true), grounds the aircraft like any inspection. An aircraft with no meters takes a calendar limit only. **Owners, admins and technicians only.**",
+        "responses": {
+          "201": {
+            "description": "The component.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AircraftComponent"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A field is not valid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Aircraft not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "createAircraftComponent",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The resource id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The component.",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 60,
+                    "example": "Left magneto"
+                  },
+                  "position": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 60,
+                    "example": "Engine"
+                  },
+                  "partNumber": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 40
+                  },
+                  "serialNumber": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 40
+                  },
+                  "installedOn": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "YYYY-MM-DD, not in the future."
+                  },
+                  "installedAtMeter": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "description": "The aircraft's reading on `meter` when it went on, in tenths."
+                  },
+                  "meter": {
+                    "type": "string",
+                    "enum": [
+                      "tach",
+                      "hobbs"
+                    ]
+                  },
+                  "timeAtInstall": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Its own time when it went on, in tenths."
+                  },
+                  "timeSince": {
+                    "type": "string",
+                    "enum": [
+                      "new",
+                      "overhaul"
+                    ]
+                  },
+                  "sinceOn": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date",
+                    "description": "When it was new or last overhauled; the calendar limit counts from here. Not after `installedOn`. Null means `installedOn`."
+                  },
+                  "limitHours": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 1,
+                    "description": "Tenths of an hour of its own time."
+                  },
+                  "limitMonths": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 1,
+                    "maximum": 600
+                  },
+                  "groundAtLimit": {
+                    "type": "boolean"
+                  },
+                  "notes": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 2000
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resources/{id}/components/{componentId}": {
+      "get": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Get a life-limited component",
+        "description": "One component, as the list reads it. **Owners, admins, dispatchers and technicians only.**",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AircraftComponent"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not a shop role.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Component not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getAircraftComponent",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The resource id."
+          },
+          {
+            "name": "componentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The component id."
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Change a component, or record that it came off",
+        "description": "Send only what changes; null clears. A changed limit or time MOVES its linked inspections' due point (the same inspections, with the notices the new point has not earned sent again when it is reached; one signed off gets a new open cycle), and releases the aircraft if that was all that held it. `removedOn` (with `removedAtMeter`, else the meter now) records that it came off: its time stops there and its inspections are retired, so nothing stays due. `removedOn: null` puts it back on. **Owners, admins and technicians only.**",
+        "responses": {
+          "200": {
+            "description": "The component.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AircraftComponent"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A field is not valid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Component not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "updateAircraftComponent",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The resource id."
+          },
+          {
+            "name": "componentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The component id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The fields to change: any of those `POST` takes, and `removedOn` (YYYY-MM-DD) and `removedAtMeter` (tenths).",
+                "properties": {
+                  "removedOn": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date"
+                  },
+                  "removedAtMeter": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Delete a component entered by mistake",
+        "description": "It stops listing and its inspections are retired (signed-off cycles are kept). For a part that came off, record `removedOn` instead. **Owners, admins and technicians only.**",
+        "responses": {
+          "204": {
+            "description": "Success. No body."
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Component not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "deleteAircraftComponent",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The resource id."
+          },
+          {
+            "name": "componentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The component id."
+          }
+        ]
+      }
+    },
+    "/resources/{id}/history": {
+      "get": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "List an aircraft's maintenance history",
+        "description": "Everything done to the aircraft, newest first: inspection sign-offs (including one-time inspections no longer on the active list), resolved squawks, and completed work orders, each with the date, what it was, who signed it off or did it, and the Hobbs and tach at the time in tenths where known. Paged in the database, at most 250 rows a page; `pagination.limit` is the limit applied. Filter with `kind` (comma separated: `inspection`, `squawk`, `work_order`); `sort=date` with `order=asc` reverses it. **Owners, admins, dispatchers and technicians only**, answered 403 for any id otherwise; work orders only for owners, admins and technicians.",
+        "responses": {
+          "200": {
+            "description": "A page of the history.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AircraftHistoryEntry"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not a shop role.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Aircraft not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listAircraftHistory",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The resource id."
+          },
+          {
+            "name": "kind",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "inspection,work_order"
+            },
+            "description": "Only these kinds, comma separated."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "date"
+              ]
+            },
+            "description": "`date` to order by date."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            },
+            "description": "`desc` (default) or `asc`."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250
+            },
+            "description": "Rows to return, 1 to 250."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          }
+        ]
+      }
+    },
+    "/resources/{id}/invoices": {
+      "get": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "List an aircraft's invoices",
+        "description": "Every bill tied to the aircraft: for a booking that flew it (`flight`, `prepaid_package`), and for a shop job on it (`work_order`), newest first unless sorted. `sort` is a dot path into the row (`id`, `createdAt`, `totalCents`, `number`, `status`, `billedTo.name`). **Admins only**, like every organization-wide invoice list.",
+        "responses": {
+          "200": {
+            "description": "The invoices.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AircraftInvoice"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not an admin.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Aircraft not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listAircraftInvoices",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The resource id."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1,1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row , `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
+      }
+    },
+    "/orgUsers/{orgUserId}/files": {
+      "get": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "List the files on a customer's account",
+        "description": "Signed authorizations, insurance, correspondence: every file on the account, newest first, each kept to the shop (`shop`) or shown to the customer (`owner`), and those the customer added themselves (`fromCustomer`). **Owners, admins and technicians only**, and never about yourself; anybody else is answered 403 for any id.",
+        "responses": {
+          "200": {
+            "description": "The files.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/CustomerFile"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listCustomerFiles",
+        "parameters": [
+          {
+            "name": "orgUserId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The member id."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1,1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row , `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Add files to a customer's account",
+        "description": "Name up to 5 files (jpg, png, heic or pdf) and upload each to the returned `signedUrlData`. `visibility` is `shop` (default) or `owner`; `label` names a single file. An account holds up to 60 files. Turned off in the public demo. **Owners, admins and technicians only.**",
+        "responses": {
+          "201": {
+            "description": "The files, with `signedUrlData` beside `data`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/CustomerFile"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "No files, too many, or not a photo or PDF.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed, or the public demo.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User does not exist.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "addCustomerFiles",
+        "parameters": [
+          {
+            "name": "orgUserId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The member id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The files.",
+                "properties": {
+                  "fileNames": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 5
+                  },
+                  "visibility": {
+                    "type": "string",
+                    "enum": [
+                      "shop",
+                      "owner"
+                    ]
+                  },
+                  "label": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 120
+                  }
+                },
+                "required": [
+                  "fileNames"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orgUsers/{orgUserId}/files/{fileId}": {
+      "patch": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Rename a customer's file, or show or hide it",
+        "description": "Send `label` and/or `visibility` (`shop` or `owner`). A file the customer added themselves stays visible to them: making it `shop` is refused with 400. **Owners, admins and technicians only.**",
+        "responses": {
+          "200": {
+            "description": "The file.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CustomerFile"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Not a change.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "That file is not on this account.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "updateCustomerFile",
+        "parameters": [
+          {
+            "name": "orgUserId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The member id."
+          },
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The file id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "What to change.",
+                "properties": {
+                  "label": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 120
+                  },
+                  "visibility": {
+                    "type": "string",
+                    "enum": [
+                      "shop",
+                      "owner"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Remove a file from a customer's account",
+        "description": "It stops listing. **Owners, admins and technicians only.**",
+        "responses": {
+          "204": {
+            "description": "Success. No body."
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "That file is not on this account.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "deleteCustomerFile",
+        "parameters": [
+          {
+            "name": "orgUserId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The member id."
+          },
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The file id."
+          }
+        ]
       }
     },
     "/resources/{id}/meters/{readingId}/photo": {
@@ -18920,7 +20748,10 @@
                   "category": {
                     "type": "string",
                     "enum": [
+                      "airworthiness_certificate",
+                      "registration",
                       "poh",
+                      "operating_limitations",
                       "weight_and_balance",
                       "insurance",
                       "form_337",
@@ -18935,6 +20766,10 @@
                       "staff"
                     ],
                     "description": "Defaults: POH and weight and balance are bookers; the rest are staff."
+                  },
+                  "ownerVisible": {
+                    "type": "boolean",
+                    "description": "Show it to the aircraft's owners in their portal. A customer's aircraft only; refused with 400 on the organization's own."
                   },
                   "label": {
                     "type": "string",
@@ -19055,7 +20890,10 @@
                   "category": {
                     "type": "string",
                     "enum": [
+                      "airworthiness_certificate",
+                      "registration",
                       "poh",
+                      "operating_limitations",
                       "weight_and_balance",
                       "insurance",
                       "form_337",
@@ -19069,6 +20907,10 @@
                       "bookers",
                       "staff"
                     ]
+                  },
+                  "ownerVisible": {
+                    "type": "boolean",
+                    "description": "Show it to the aircraft's owners, or stop. A customer's aircraft only."
                   },
                   "label": {
                     "type": "string",
@@ -20238,7 +22080,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Filter on the computed band: `overdue`, `dueSoon`, `ok` or `resolved`. Repeat or comma-separate for several."
+            "description": "Filter on the computed band: `overdue`, `dueSoon`, `ok`, `resolved` or `notApplicable`. Repeat or comma-separate for several."
           },
           {
             "name": "resolved",
@@ -20313,7 +22155,7 @@
           "Maintenance"
         ],
         "summary": "List inspection presets",
-        "description": "The AVIATES airworthiness inspections , annual, VOR, 100-hour, AD review, transponder, ELT and static/altimeter , plus the shop intervals that come up as often.\n\nReference data, not records: nothing exists until you POST a preset's `payload` to `/maintenance/reminders/templates` like any other template. The intervals are the common case and are editable afterwards; `caveat` says where a default doesn't apply to every aircraft.",
+        "description": "The AVIATES airworthiness inspections , annual, VOR, 100-hour, AD review, transponder, ELT and static/altimeter , plus the shop intervals that come up as often, and the registration renewal (84 calendar months from the issue date, 14 CFR 47.40, warned 180, 60 and 30 days out to the shop and the owners, never grounding by default).\n\nReference data, not records: nothing exists until you POST a preset's `payload` to `/maintenance/reminders/templates` like any other template. The intervals are the common case and are editable afterwards; `caveat` says where a default doesn't apply to every aircraft.",
         "responses": {
           "200": {
             "description": "The presets.",
@@ -20692,12 +22534,147 @@
           }
         ]
       },
+      "patch": {
+        "tags": [
+          "Maintenance"
+        ],
+        "summary": "Set this aircraft's reminder steps, or mark it not applicable",
+        "description": "**Technicians and admins.** Send either or both.\n\n`reminderSteps`: this inspection's reminder steps on this one aircraft, when they should differ from the rule's: the same shape as the rule's `reminderSteps`, each key present here winning over the rule's. Null follows the rule again. Carried to the next cycle when it is signed off. Steps further out than one already sent this cycle are not sent after it. The reminder's `steps` is what applies; `ownSteps` is what this aircraft sets itself.\n\n`notApplicable`: true marks the inspection as not applying to this aircraft (a VOR check on a VFR-only aircraft), with an optional `notApplicableReason`. While marked it is never warned, reminded, counted overdue or grounded, and an aircraft grounded for it alone goes back on the line. False puts it back: it is checked at once, so one already overdue grounds the aircraft and notifies straight away. Carried to the next cycle when it is signed off.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/MaintenanceReminder"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Neither field sent, a field not valid, or the inspection is signed off.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not a technician or admin here.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "updateReminderSteps",
+        "parameters": [
+          {
+            "name": "maintenanceReminderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The reminder id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The steps, whether it applies, or both.",
+                "properties": {
+                  "reminderSteps": {
+                    "type": [
+                      "object",
+                      "null"
+                    ],
+                    "description": "When it is said, and to whom (Murray spec 6): `shopDays` and `ownerDays`, days before a calendar due date; `shopHours` and `ownerHours`, TENTHS of an hour before an hour one. Each a list of up to 6 whole numbers (days 1 to 365; tenths 1 to 10000). An absent key is the default: the shop's single `remindDaysBefore` / `remindHoursBefore`, the owners' 30 and 7 days and 10 hours. An empty list is none before it is due. Due always goes out, and the shop hears once more a day after it is overdue. Setting the shop's lists also sets `remindDaysBefore` / `remindHoursBefore` to their furthest step. Null puts every list back on its default.",
+                    "properties": {
+                      "shopDays": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        }
+                      },
+                      "shopHours": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        }
+                      },
+                      "ownerDays": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        }
+                      },
+                      "ownerHours": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  },
+                  "notApplicable": {
+                    "type": "boolean",
+                    "description": "True: this inspection does not apply to this aircraft. False: it applies again."
+                  },
+                  "notApplicableReason": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 500,
+                    "description": "Why it does not apply, kept with the mark. Ignored when `notApplicable` is false.",
+                    "example": "VFR only, no VOR receiver"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "tags": [
           "Maintenance"
         ],
         "summary": "Sign off a maintenance reminder",
-        "description": "Marks the work done, which starts the next interval if the template repeats. POST rather than PATCH for historical reasons.\n\nSend `methodOfCompliance` and `mechanicName` to also write a permanent compliance record, which is what 14 CFR 91.417 asks for on an Airworthiness Directive. That record is append-only and cannot be edited or removed afterwards, and it snapshots the rule's number and revision as they stood at signature. Omit them and the reminder simply rolls forward as before, keeping no history.\n\nPhotos and PDFs already on the open inspection (`POST /maintenance/reminders/{id}/files`) are copied onto that compliance record, then cleared so they do not follow the next cycle. Do not send `fileUrls`.",
+        "description": "Marks the work done, which starts the next interval if the template repeats. POST rather than PATCH for historical reasons.\n\nSend `methodOfCompliance` and `mechanicName` to also write a permanent compliance record, which is what 14 CFR 91.417 asks for on an Airworthiness Directive. That record is append-only and cannot be edited or removed afterwards, and it snapshots the rule's number and revision as they stood at signature. Omit them and the reminder simply rolls forward as before, keeping no history.\n\nPhotos and PDFs already on the open inspection (`POST /maintenance/reminders/{id}/files`) are copied onto that compliance record, then cleared so they do not follow the next cycle. Do not send `fileUrls`.\n\n`tachAtCompliance` and `hobbsAtCompliance` higher than the aircraft's own (and lower on neither) are also recorded on the aircraft's meter log and move its meters; the response's `aircraftTimes` says so (`updated`, or `logged` for a reading older than its newest). If those readings pass another inspection that grounds the aircraft, the sign-off answers 409 `MAINTENANCE_TRIGGER` before anything is signed; send again with `confirmMaintenanceTrigger: true`.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -20736,6 +22713,16 @@
           },
           "403": {
             "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The readings at sign-off pass an inspection that grounds the aircraft: `code` is `MAINTENANCE_TRIGGER`. Nothing was signed.",
             "content": {
               "application/json": {
                 "schema": {
@@ -20811,6 +22798,10 @@
                   "hobbsAtCompliance": {
                     "type": "integer",
                     "description": "Hobbs reading at compliance, NOT time in service as 14 CFR 1.1 defines it, in tenths. Defaults to the aircraft's current reading."
+                  },
+                  "confirmMaintenanceTrigger": {
+                    "type": "boolean",
+                    "description": "Accept that the readings at sign-off ground the aircraft (see the 409)."
                   }
                 },
                 "required": [
@@ -21914,6 +23905,16 @@
               }
             }
           },
+          "409": {
+            "description": "The readings in need confirming first: `code` is `METER_LOWER` or `MAINTENANCE_TRIGGER`. Nothing was saved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
           "429": {
             "description": "Rate limited. `Retry-After` says how long to wait.",
             "content": {
@@ -21990,7 +23991,7 @@
                     ],
                     "minimum": 0,
                     "maximum": 999999,
-                    "description": "Hobbs at arrival, in TENTHS of an hour (1234.5 hours is 12345). A snapshot: never writes the aircraft's own meter."
+                    "description": "Hobbs at arrival, in TENTHS of an hour (1234.5 hours is 12345). A changed reading in or out is also recorded on the aircraft's meter log (`GET /resources/{id}/meters`), linked to the job, and moves the aircraft's own meters as recording it there would; one dated before the aircraft's newest reading is kept as history only. See `confirmLower`."
                   },
                   "tachIn": {
                     "type": [
@@ -22008,7 +24009,7 @@
                     ],
                     "minimum": 0,
                     "maximum": 999999,
-                    "description": "Hobbs at return to service, in tenths."
+                    "description": "Hobbs at return to service, in tenths. Recorded on the aircraft's meter log as its return to service, like `hobbsIn`."
                   },
                   "tachOut": {
                     "type": [
@@ -22060,6 +24061,14 @@
                     },
                     "maxItems": 20,
                     "description": "People with the technician role assigned. Replaces the whole list; somebody already on the job who lost the role may stay."
+                  },
+                  "confirmLower": {
+                    "type": "boolean",
+                    "description": "A reading in or out lower than the aircraft's own answers 409 `METER_LOWER` before anything saves; send again with this to record it as a correction."
+                  },
+                  "confirmMaintenanceTrigger": {
+                    "type": "boolean",
+                    "description": "A reading that passes an inspection that grounds the aircraft answers 409 `MAINTENANCE_TRIGGER` (with `details.triggers`) before anything saves; send again with this to save it and ground the aircraft."
                   }
                 },
                 "required": [
@@ -22210,6 +24219,16 @@
               }
             }
           },
+          "409": {
+            "description": "The readings need confirming first: `code` is `METER_LOWER` or `MAINTENANCE_TRIGGER`. Nothing was saved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
           "429": {
             "description": "Rate limited. `Retry-After` says how long to wait.",
             "content": {
@@ -22295,7 +24314,7 @@
                     ],
                     "minimum": 0,
                     "maximum": 999999,
-                    "description": "Hobbs at arrival, in TENTHS of an hour (1234.5 hours is 12345). A snapshot: never writes the aircraft's own meter."
+                    "description": "Hobbs at arrival, in TENTHS of an hour (1234.5 hours is 12345). A changed reading in or out is also recorded on the aircraft's meter log (`GET /resources/{id}/meters`), linked to the job, and moves the aircraft's own meters as recording it there would; one dated before the aircraft's newest reading is kept as history only. See `confirmLower`."
                   },
                   "tachIn": {
                     "type": [
@@ -22313,7 +24332,7 @@
                     ],
                     "minimum": 0,
                     "maximum": 999999,
-                    "description": "Hobbs at return to service, in tenths."
+                    "description": "Hobbs at return to service, in tenths. Recorded on the aircraft's meter log as its return to service, like `hobbsIn`."
                   },
                   "tachOut": {
                     "type": [
@@ -22365,6 +24384,14 @@
                     },
                     "maxItems": 20,
                     "description": "People with the technician role assigned. Replaces the whole list; somebody already on the job who lost the role may stay."
+                  },
+                  "confirmLower": {
+                    "type": "boolean",
+                    "description": "A reading in or out lower than the aircraft's own answers 409 `METER_LOWER` before anything saves; send again with this to record it as a correction."
+                  },
+                  "confirmMaintenanceTrigger": {
+                    "type": "boolean",
+                    "description": "A reading that passes an inspection that grounds the aircraft answers 409 `MAINTENANCE_TRIGGER` (with `details.triggers`) before anything saves; send again with this to save it and ground the aircraft."
                   }
                 }
               }
@@ -25299,7 +27326,7 @@
           "Invoices"
         ],
         "summary": "Get an invoice",
-        "description": "One invoice with its line items. An aircraft owner from outside the organization reads only their own bills, and gets what they need to read and pay one: its number, dates, status, memo, lines with their tax, totals, the payment and PDF links, and the work order it is for. Not the organization's QuickBooks sync state, or which of its staff raised, voided or marked it paid.",
+        "description": "One invoice with its line items. An aircraft owner from outside the organization reads only their own bills, and gets what they need to read and pay one: its number, dates, status, memo, lines with their tax, totals, how a desk payment came in (`paymentMethod`, `checkNumber`, `paymentReceivedOn`), the payment and PDF links, and the work order it is for. Not the organization's QuickBooks sync state, its note about the payment, or which of its staff raised, voided or marked it paid. `billTo` (name, billing address, phone, email) is on the bill for the person billed and for administrators.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -25374,8 +27401,8 @@
         "tags": [
           "Invoices"
         ],
-        "summary": "Update an invoice",
-        "description": "Adjusts line items or marks it paid. Requires the **admin** role.",
+        "summary": "Mark an invoice paid, or void it",
+        "description": "Send `markPaid: true` to record a payment taken outside the card flow, optionally saying how: `paymentMethod`, `checkNumber` (only with `check`), `paymentReceivedOn` (the day it arrived, `YYYY-MM-DD`; today in the organization's calendar when left out, never in the future) and `paymentNote`. Stripe is told the invoice was paid outside it, and the person billed is sent a receipt. Or send `markVoided: true`. Payment fields without `markPaid` are refused. Requires the **admin** role.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -25393,7 +27420,7 @@
             }
           },
           "400": {
-            "description": "Validation failed.",
+            "description": "Already voided, a field is not valid, or payment fields without markPaid.",
             "content": {
               "application/json": {
                 "schema": {
@@ -25451,12 +27478,576 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "description": "Fields to change.",
-                "properties": {}
+                "description": "What to do.",
+                "properties": {
+                  "markPaid": {
+                    "type": "boolean",
+                    "description": "Record it paid."
+                  },
+                  "markVoided": {
+                    "type": "boolean",
+                    "description": "Void it."
+                  },
+                  "paymentMethod": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "enum": [
+                      "cash",
+                      "check",
+                      "card_in_person",
+                      "bank_transfer",
+                      "other",
+                      null
+                    ]
+                  },
+                  "checkNumber": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 30,
+                    "description": "Only with `paymentMethod: check`."
+                  },
+                  "paymentReceivedOn": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date",
+                    "description": "The day the money arrived. Not in the future."
+                  },
+                  "paymentNote": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 300
+                  }
+                }
               }
             }
           }
         }
+      }
+    },
+    "/invoices/{invoiceId}/files": {
+      "get": {
+        "tags": [
+          "Invoices"
+        ],
+        "summary": "List an invoice's files",
+        "description": "The vendor's invoice, a receipt, an 8130-3 attached to the bill. `url` works for 15 minutes. Administrators read every file; the person billed reads only the ones shown to them (`visibility: owner`). Anybody else is answered 403, as for an id that is not this organization's.",
+        "responses": {
+          "200": {
+            "description": "The files, oldest first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/InvoiceFile"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not yours, or not this organization's.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listInvoiceFiles",
+        "parameters": [
+          {
+            "name": "invoiceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The invoice id."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1,1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row , `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Invoices"
+        ],
+        "summary": "Attach files to an invoice",
+        "description": "Send `fileNames` (up to 5 per request; jpg, png, heic or pdf), `visibility` (`shop` by default, `owner` to show them to the person billed) and a `label` for a single file. The answer has the new rows in `data` and, in the same order, `signedUrlData`: a presigned POST for each file, which the client posts the bytes to. An invoice holds up to 30 files. Requires the **admin** role. Refused in the demo.",
+        "responses": {
+          "201": {
+            "description": "The rows and where to upload each file."
+          },
+          "400": {
+            "description": "A file name or the count is not valid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed, not this organization's, or the demo.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "createInvoiceFiles",
+        "parameters": [
+          {
+            "name": "invoiceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The invoice id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The files to attach.",
+                "properties": {
+                  "fileNames": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 5
+                  },
+                  "visibility": {
+                    "type": "string",
+                    "enum": [
+                      "shop",
+                      "owner"
+                    ]
+                  },
+                  "label": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 120
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/invoices/{invoiceId}/files/from-job": {
+      "post": {
+        "tags": [
+          "Invoices"
+        ],
+        "summary": "Add a job's files to its invoice",
+        "description": "Copies the work order's files onto the invoice raised for it: every one not already there, or those named in `fileIds`. Each keeps its label and who it is shown to. Nothing is uploaded. Requires the **admin** role. Refused in the demo.",
+        "responses": {
+          "201": {
+            "description": "The files added; empty when every one was already there.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/InvoiceFile"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Not a work order's invoice, or a file is not on its job.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed, or not this organization's.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "addInvoiceFilesFromJob",
+        "parameters": [
+          {
+            "name": "invoiceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The invoice id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Which files, or none for all.",
+                "properties": {
+                  "fileIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/invoices/{invoiceId}/files/{fileId}": {
+      "patch": {
+        "tags": [
+          "Invoices"
+        ],
+        "summary": "Change an invoice's file",
+        "description": "Its `label`, or who it is shown to (`visibility`). Requires the **admin** role.",
+        "responses": {
+          "200": {
+            "description": "The file.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/InvoiceFile"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A field is not valid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "File not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "updateInvoiceFile",
+        "parameters": [
+          {
+            "name": "invoiceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The invoice id."
+          },
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The file id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The fields to change.",
+                "properties": {
+                  "label": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 120
+                  },
+                  "visibility": {
+                    "type": "string",
+                    "enum": [
+                      "shop",
+                      "owner"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Invoices"
+        ],
+        "summary": "Remove an invoice's file",
+        "description": "It stops listing; the stored object is kept. Requires the **admin** role.",
+        "responses": {
+          "204": {
+            "description": "Success. No body."
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "File not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "deleteInvoiceFile",
+        "parameters": [
+          {
+            "name": "invoiceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The invoice id."
+          },
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The file id."
+          }
+        ]
       }
     },
     "/invoices/{invoiceId}/remind": {
@@ -34866,6 +37457,39 @@
                         }
                       }
                     }
+                  },
+                  "reminderSteps": {
+                    "type": [
+                      "object",
+                      "null"
+                    ],
+                    "description": "When it is said, and to whom (Murray spec 6): `shopDays` and `ownerDays`, days before a calendar due date; `shopHours` and `ownerHours`, TENTHS of an hour before an hour one. Each a list of up to 6 whole numbers (days 1 to 365; tenths 1 to 10000). An absent key is the default: the shop's single `remindDaysBefore` / `remindHoursBefore`, the owners' 30 and 7 days and 10 hours. An empty list is none before it is due. Due always goes out, and the shop hears once more a day after it is overdue. Setting the shop's lists also sets `remindDaysBefore` / `remindHoursBefore` to their furthest step. Null puts every list back on its default.",
+                    "properties": {
+                      "shopDays": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        }
+                      },
+                      "shopHours": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        }
+                      },
+                      "ownerDays": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        }
+                      },
+                      "ownerHours": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        }
+                      }
+                    }
                   }
                 },
                 "required": [
@@ -35046,6 +37670,39 @@
                   },
                   "repeat": {
                     "type": "boolean"
+                  },
+                  "reminderSteps": {
+                    "type": [
+                      "object",
+                      "null"
+                    ],
+                    "description": "When it is said, and to whom (Murray spec 6): `shopDays` and `ownerDays`, days before a calendar due date; `shopHours` and `ownerHours`, TENTHS of an hour before an hour one. Each a list of up to 6 whole numbers (days 1 to 365; tenths 1 to 10000). An absent key is the default: the shop's single `remindDaysBefore` / `remindHoursBefore`, the owners' 30 and 7 days and 10 hours. An empty list is none before it is due. Due always goes out, and the shop hears once more a day after it is overdue. Setting the shop's lists also sets `remindDaysBefore` / `remindHoursBefore` to their furthest step. Null puts every list back on its default.",
+                    "properties": {
+                      "shopDays": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        }
+                      },
+                      "shopHours": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        }
+                      },
+                      "ownerDays": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        }
+                      },
+                      "ownerHours": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        }
+                      }
+                    }
                   }
                 }
               }
@@ -36302,7 +38959,7 @@
           },
           "category": {
             "type": "string",
-            "description": "poh, weight_and_balance, insurance, form_337, logbook_scan, or other."
+            "description": "airworthiness_certificate, registration, poh, operating_limitations, weight_and_balance, insurance, form_337, logbook_scan, or other."
           },
           "visibility": {
             "type": "string",
@@ -36318,6 +38975,10 @@
               "string",
               "null"
             ]
+          },
+          "ownerVisible": {
+            "type": "boolean",
+            "description": "Shown to the aircraft's owners in their portal. Only ever true on a customer's aircraft (`use: shop`)."
           },
           "fileUrls": {
             "type": "array",
@@ -36339,7 +39000,7 @@
           },
           "category": {
             "type": "string",
-            "description": "poh, weight_and_balance, insurance, form_337, logbook_scan, or other."
+            "description": "airworthiness_certificate, registration, poh, operating_limitations, weight_and_balance, insurance, form_337, logbook_scan, or other."
           },
           "label": {
             "description": "Display name.",
@@ -37029,12 +39690,13 @@
           },
           "status": {
             "type": "string",
-            "description": "Which band it is in. `dueSoon` is the template's own warning period, the same threshold that sends the warning notification.",
+            "description": "Which band it is in. `dueSoon` is the template's own warning period, the same threshold that sends the warning notification. `notApplicable`: marked as not applying to this aircraft, so it is never overdue or due soon whatever its clocks say (the figures below are still computed).",
             "enum": [
               "overdue",
               "dueSoon",
               "ok",
-              "resolved"
+              "resolved",
+              "notApplicable"
             ]
           },
           "name": {
@@ -37251,6 +39913,46 @@
           "due": {
             "$ref": "#/components/schemas/MaintenanceDue"
           },
+          "steps": {
+            "type": "object",
+            "description": "The reminder steps that apply on this aircraft: its own, else the rule's, else the defaults. Days; hours in TENTHS.",
+            "properties": {
+              "shopDays": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                }
+              },
+              "shopHours": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                }
+              },
+              "ownerDays": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                }
+              },
+              "ownerHours": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                }
+              }
+            },
+            "additionalProperties": true
+          },
+          "ownSteps": {
+            "description": "The steps this aircraft sets itself, key by key. Null when it follows the rule.",
+            "properties": {},
+            "additionalProperties": true,
+            "type": [
+              "object",
+              "null"
+            ]
+          },
           "resource": {
             "$ref": "#/components/schemas/Resource"
           },
@@ -37278,6 +39980,84 @@
               "type": "object"
             },
             "description": "The work order items carrying this inspection, each with its work order's id, number and status. On the single-reminder read only, and only for admins and technicians."
+          },
+          "work": {
+            "description": "Whether an open work order has this inspection booked in: `scheduled` while the job is requested or scheduled, `inProgress` while the aircraft is at the shop. Derived from the job, never stored. Null when no open job carries it (an item the owner declined or put off does not count), and always null for a caller who may not open work orders (a dispatcher).",
+            "properties": {
+              "status": {
+                "type": "string",
+                "description": "Where the job stands.",
+                "enum": [
+                  "scheduled",
+                  "inProgress"
+                ]
+              },
+              "job": {
+                "type": "object",
+                "description": "The job carrying it.",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "description": "The work order."
+                  },
+                  "label": {
+                    "type": "string",
+                    "description": "The job's number as shown.",
+                    "example": "WO-1042"
+                  },
+                  "status": {
+                    "type": "string",
+                    "description": "The work order's stage."
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "additionalProperties": true,
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "notApplicableAt": {
+            "format": "date-time",
+            "description": "When this inspection was marked not applicable on this aircraft. While set, it is never warned, reminded or grounded, and `due.status` reads `notApplicable`. Carried to the next cycle at sign-off.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "notApplicableReason": {
+            "description": "Why it does not apply, as the shop wrote it (for example, VFR only).",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "notApplicableBy": {
+            "description": "Who marked it not applicable. On the single-reminder read only.",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "The member."
+              },
+              "user": {
+                "type": "object",
+                "description": "Their account.",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Their name."
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "additionalProperties": true,
+            "type": [
+              "object",
+              "null"
+            ]
           }
         },
         "additionalProperties": true
@@ -37359,6 +40139,15 @@
               "null"
             ]
           },
+          "reminderSteps": {
+            "description": "The rule's own reminder steps (`shopDays`, `shopHours`, `ownerDays`, `ownerHours`); a key not set is the default. See `PATCH /maintenance/reminders/templates/{id}`.",
+            "properties": {},
+            "additionalProperties": true,
+            "type": [
+              "object",
+              "null"
+            ]
+          },
           "hourBasedOn": {
             "description": "Which meter drives it.",
             "enum": [
@@ -37421,6 +40210,18 @@
           "revision": {
             "description": "The revision currently in force. The revision actually complied with is snapshotted onto each compliance record.",
             "example": "2",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "componentClock": {
+            "description": "Set on an inspection a life-limited component keeps (`/resources/{id}/components`): `hours` when it tracks the component's hour limit (a one-off `remindAtHours`), `date` for its calendar limit (a one-off `remindDate`). Its due point, aircraft and clock are the component's: change them there. Deleting it, or changing its aircraft, is refused with 400. Null on every other inspection.",
+            "enum": [
+              "hours",
+              "date",
+              null
+            ],
             "type": [
               "string",
               "null"
@@ -37696,6 +40497,84 @@
             "description": "Why this invoice carries no sales tax, printed on it, e.g. `Tax exempt: Resale (ST-101 on file)`. Null when the customer is not exempt.",
             "type": [
               "string",
+              "null"
+            ]
+          },
+          "paymentMethod": {
+            "description": "How a payment recorded outside the card flow came in: `cash`, `check`, `card_in_person`, `bank_transfer` or `other` (recorded with Mark paid), or `manual` (marked paid in the organization's own Stripe dashboard). Null for a card or bank payment through Stripe, and for a payment marked at the desk before methods were recorded (2026-10-05).",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "checkNumber": {
+            "description": "The check's number, when it was paid by check and somebody wrote it down.",
+            "example": "1234",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "paymentReceivedOn": {
+            "description": "The day the organization says the money arrived, for a payment recorded with Mark paid. A calendar day: midnight UTC, so read the first ten characters (`2026-10-03`) and never shift it into a zone.",
+            "format": "date-time",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "paymentNote": {
+            "description": "The organization's note about the payment, e.g. `Deposited with the Oct 4 batch`. Not shown to an aircraft owner from outside the organization.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "billTo": {
+            "description": "Who the bill is to, as it prints: on `GET /invoices/{invoiceId}` for the person billed and for administrators only. The billing address is the one the organization keeps for a shop customer; the phone is stored E.164 with its country.",
+            "properties": {
+              "name": {
+                "description": "Their name.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "email": {
+                "description": "Where the bill goes: the address on file for an owner the organization recorded, otherwise their sign-in address.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "phone": {
+                "description": "Their phone, E.164.",
+                "example": "+12085550141",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "phoneCountry": {
+                "description": "ISO 3166-1 alpha-2 of the phone, for printing it nationally.",
+                "example": "US",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "billingAddress": {
+                "description": "The billing address as written, one line per line.",
+                "example": "Whitcomb Aviation LLC\n12 Taxiway B\nIdaho Falls, ID 83402",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": true,
+            "type": [
+              "object",
               "null"
             ]
           },
@@ -38371,6 +41250,14 @@
             "type": "boolean",
             "description": "The owners are not told about this job's stages until somebody lifts the hold (or sends findings). On the single job only."
           },
+          "aircraftTimes": {
+            "type": "string",
+            "description": "Only on the answer to a create or change that set readings in or out: `updated` when they moved the aircraft's own meters, `logged` when they were older than its newest reading and went in its log as history.",
+            "enum": [
+              "updated",
+              "logged"
+            ]
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time",
@@ -38996,6 +41883,691 @@
               "object",
               "null"
             ]
+          }
+        },
+        "additionalProperties": true
+      },
+      "InvoiceFile": {
+        "type": "object",
+        "description": "A file on an invoice: the vendor's invoice for an outside service, a receipt, an 8130-3. The person billed reads only the files shown to them, without `uploadedBy` or `workOrderFileId`.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "The file id."
+          },
+          "label": {
+            "description": "What it is, when somebody named it.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "visibility": {
+            "type": "string",
+            "description": "`shop` (the organization's own) or `owner` (shown to the person billed).",
+            "enum": [
+              "shop",
+              "owner"
+            ]
+          },
+          "url": {
+            "description": "A link to the file that works for 15 minutes. Null when the stored object is missing.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "fileName": {
+            "type": "string",
+            "description": "The name it was uploaded with."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When it was attached.",
+            "format": "date-time"
+          },
+          "uploadedBy": {
+            "description": "Who attached it. Administrators only.",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "Member id."
+              },
+              "name": {
+                "description": "Their name.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": true,
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "workOrderFileId": {
+            "description": "The job file it was copied from with Add from the job. Administrators only.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": true
+      },
+      "AircraftHistoryEntry": {
+        "type": "object",
+        "description": "One thing done to an aircraft: an inspection signed off, a squawk resolved, or a job completed. Read side by side from their own records, never stored as one.",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "`<kind>-<recordId>`: unique across the kinds."
+          },
+          "kind": {
+            "type": "string",
+            "description": "What it is.",
+            "enum": [
+              "inspection",
+              "squawk",
+              "work_order"
+            ]
+          },
+          "recordId": {
+            "type": "integer",
+            "description": "The compliance record, squawk or work order id."
+          },
+          "date": {
+            "type": "string",
+            "description": "When it was signed off, resolved or finished.",
+            "format": "date-time"
+          },
+          "title": {
+            "type": "string",
+            "description": "The inspection's name, the squawk's title, or the job's request."
+          },
+          "reference": {
+            "description": "What a mechanic would quote: an AD number not already in the title, or the job's `WO-` number.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "detail": {
+            "description": "The method of compliance, the resolution note, or what the shop wrote for the owner. At most 400 characters.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "by": {
+            "description": "Who signed it off (with the certificate, for the shop), resolved it, or did the work. Never on an owner's job row.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "hobbs": {
+            "description": "Hobbs at the time, in tenths of an hour. Null when unknown.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "tach": {
+            "description": "Tach at the time, in tenths of an hour. Null when unknown.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "link": {
+            "type": "object",
+            "description": "The record to open: one of these, or none on the owner's inspection rows.",
+            "properties": {
+              "inspectionId": {
+                "type": "integer",
+                "description": "The inspection (maintenance reminder) the sign-off was for."
+              },
+              "squawkId": {
+                "type": "integer",
+                "description": "The squawk."
+              },
+              "workOrderId": {
+                "type": "integer",
+                "description": "The work order."
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "AircraftInvoice": {
+        "type": "object",
+        "description": "A bill tied to an aircraft: for a booking that flew it, or for a shop job on it.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "The invoice id."
+          },
+          "number": {
+            "description": "The invoice number.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When it was raised.",
+            "format": "date-time"
+          },
+          "dueAt": {
+            "description": "When it is due.",
+            "format": "date-time",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "paidAt": {
+            "description": "When it was paid.",
+            "format": "date-time",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "description": "What the bill is now.",
+            "enum": [
+              "paid",
+              "open",
+              "overdue",
+              "void",
+              "refunded"
+            ]
+          },
+          "totalCents": {
+            "type": "integer",
+            "description": "The total, in cents."
+          },
+          "purpose": {
+            "type": "string",
+            "description": "`flight` or `prepaid_package` for a booking's bill, `work_order` for a shop job's."
+          },
+          "billedTo": {
+            "type": "object",
+            "description": "Who it is billed to.",
+            "properties": {
+              "orgUserId": {
+                "description": "Their member id; null for a guest.",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "name": {
+                "description": "Their name.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": true
+          },
+          "for": {
+            "description": "What it is for: `{kind: reservation, id, title, start}` or `{kind: work_order, id, label}`.",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "description": "The booking or the job.",
+                "enum": [
+                  "reservation",
+                  "work_order"
+                ]
+              },
+              "id": {
+                "type": "integer",
+                "description": "The reservation or work order id."
+              },
+              "title": {
+                "description": "The booking's title.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "start": {
+                "description": "When the booking started.",
+                "format": "date-time",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "label": {
+                "type": "string",
+                "description": "The job's `WO-` number."
+              }
+            },
+            "additionalProperties": true,
+            "type": [
+              "object",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": true
+      },
+      "ComponentLife": {
+        "type": "object",
+        "description": "How much of a component's life is used and left, computed on read from the aircraft's meter. All hours are TENTHS.",
+        "properties": {
+          "meter": {
+            "type": "string",
+            "description": "The aircraft meter its time counts on.",
+            "enum": [
+              "tach",
+              "hobbs"
+            ]
+          },
+          "meterNow": {
+            "description": "That meter now, or when it came off. Null when the aircraft has no such meter.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "timeNow": {
+            "description": "Its own time now (or when it came off), since new or overhaul: `timeAtInstall` plus what the meter has moved since it went on, never less.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "hours": {
+            "description": "The hour limit, when it has one.",
+            "properties": {
+              "limit": {
+                "type": "integer",
+                "description": "The limit."
+              },
+              "left": {
+                "description": "Time left before the limit; zero or below is past it.",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "dueAtMeter": {
+                "description": "The aircraft reading at which the limit is reached: the linked inspection's `remindAtHours`.",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "warnWithin": {
+                "type": "integer",
+                "description": "Amber inside this: 10% of the limit or 100 (10.0 hours), whichever is more. The linked inspection's warning."
+              },
+              "status": {
+                "description": "ok, inside the warning, or at or past the limit.",
+                "enum": [
+                  "ok",
+                  "dueSoon",
+                  "overdue",
+                  null
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": true,
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "calendar": {
+            "description": "The calendar limit, when it has one: counted from `sinceOn` (else `installedOn`) to the same day that many months later.",
+            "properties": {
+              "limitMonths": {
+                "type": "integer",
+                "description": "The limit in months."
+              },
+              "dueOn": {
+                "type": "string",
+                "description": "The day the limit is reached, YYYY-MM-DD; past it on that day.",
+                "format": "date"
+              },
+              "daysLeft": {
+                "type": "integer",
+                "description": "Whole days until `dueOn`."
+              },
+              "warnWithin": {
+                "type": "integer",
+                "description": "Amber inside this many days: 10% of its calendar life or 30, whichever is more."
+              },
+              "status": {
+                "type": "string",
+                "description": "ok, inside the warning, or at or past the limit.",
+                "enum": [
+                  "ok",
+                  "dueSoon",
+                  "overdue"
+                ]
+              }
+            },
+            "additionalProperties": true,
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "description": "Where it stands: the clock nearer its limit decides. `none` without a limit that can be counted; `removed` once it came off.",
+            "enum": [
+              "ok",
+              "dueSoon",
+              "overdue",
+              "none",
+              "removed"
+            ]
+          },
+          "binding": {
+            "description": "Which clock decided `status`.",
+            "enum": [
+              "hours",
+              "calendar",
+              null
+            ],
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": true
+      },
+      "AircraftComponent": {
+        "type": "object",
+        "description": "A life-limited part on an aircraft (a magneto, a propeller, an engine): the time it had when it went on and the limit it may not pass. Each limit is tracked by a linked one-off inspection (see `componentClock` on an inspection), so it warns, reminds owners and grounds like any other inspection.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier, stable for the life of the record."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the record was created."
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the record last changed."
+          },
+          "name": {
+            "type": "string",
+            "description": "What it is.",
+            "example": "Left magneto",
+            "maxLength": 60
+          },
+          "position": {
+            "description": "Where it is: Engine, Propeller, or free text.",
+            "maxLength": 60,
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "partNumber": {
+            "description": "Part number.",
+            "maxLength": 40,
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "serialNumber": {
+            "description": "Serial number.",
+            "maxLength": 40,
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "installedOn": {
+            "type": "string",
+            "description": "The day it went on, YYYY-MM-DD.",
+            "format": "date"
+          },
+          "installedAtMeter": {
+            "description": "The aircraft's reading on `meter` when it went on, in tenths. Null on an aircraft with no meters.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "meter": {
+            "type": "string",
+            "description": "The aircraft meter its time counts on.",
+            "enum": [
+              "tach",
+              "hobbs"
+            ]
+          },
+          "timeAtInstall": {
+            "type": "integer",
+            "description": "Its own time when it went on, in tenths, since new or overhaul."
+          },
+          "timeSince": {
+            "type": "string",
+            "description": "What `timeAtInstall` counts from.",
+            "enum": [
+              "new",
+              "overhaul"
+            ]
+          },
+          "sinceOn": {
+            "description": "The day it was new or last overhauled; the calendar limit counts from here. Null means `installedOn`.",
+            "format": "date",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "limitHours": {
+            "description": "The limit on its own time, in tenths.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "limitMonths": {
+            "description": "The calendar limit, in months.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "groundAtLimit": {
+            "type": "boolean",
+            "description": "Whether reaching a limit grounds the aircraft (copied onto the linked inspections)."
+          },
+          "notes": {
+            "description": "The shop's notes. Never shown to the aircraft's owner.",
+            "maxLength": 2000,
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "removedOn": {
+            "description": "The day it came off. Its time stops there and its inspections are retired.",
+            "format": "date",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "removedAtMeter": {
+            "description": "The aircraft's reading when it came off, in tenths.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "life": {
+            "$ref": "#/components/schemas/ComponentLife"
+          },
+          "inspections": {
+            "type": "array",
+            "description": "The inspections tracking its limits: `reminderId` while open, `signedOffAt` once signed off.",
+            "items": {
+              "type": "object",
+              "description": "A linked inspection.",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "description": "The inspection (template) id."
+                },
+                "clock": {
+                  "type": "string",
+                  "description": "Which limit.",
+                  "enum": [
+                    "hours",
+                    "date"
+                  ]
+                },
+                "reminderId": {
+                  "description": "Its open cycle on the aircraft.",
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "signedOffAt": {
+                  "format": "date-time",
+                  "description": "When its latest cycle was signed off.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "additionalProperties": true
+            }
+          }
+        },
+        "additionalProperties": true
+      },
+      "CustomerFile": {
+        "type": "object",
+        "description": "A file on a customer's account: a signed authorization, insurance, correspondence.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "The file id."
+          },
+          "label": {
+            "description": "What it is, when somebody named it.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "visibility": {
+            "type": "string",
+            "description": "`shop` (the shop's own) or `owner` (shown to the customer).",
+            "enum": [
+              "shop",
+              "owner"
+            ]
+          },
+          "url": {
+            "description": "A link to the file that works for 15 minutes. Null when the stored object is missing.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "fileName": {
+            "type": "string",
+            "description": "The name it was uploaded with."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When it was added.",
+            "format": "date-time"
+          },
+          "uploadedBy": {
+            "description": "Who added it.",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "Member id."
+              },
+              "name": {
+                "description": "Their name.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": true,
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "fromCustomer": {
+            "type": "boolean",
+            "description": "The customer added it to their own account. It stays visible to them."
+          }
+        },
+        "additionalProperties": true
+      },
+      "OwnFile": {
+        "type": "object",
+        "description": "A file on the caller's own account, as they see it.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "The file id."
+          },
+          "name": {
+            "type": "string",
+            "description": "Its label, or the name it was uploaded with."
+          },
+          "fileName": {
+            "type": "string",
+            "description": "The name it was uploaded with."
+          },
+          "url": {
+            "description": "A link to the file that works for 15 minutes. Null when the stored object is missing.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "When it was added.",
+            "format": "date-time"
+          },
+          "yours": {
+            "type": "boolean",
+            "description": "You added it; you may remove it."
           }
         },
         "additionalProperties": true

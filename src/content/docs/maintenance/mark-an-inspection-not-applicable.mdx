@@ -1,0 +1,89 @@
+<Summary>
+Open the inspection, find **Applies to this aircraft**, click **Mark not applicable** and say
+why. That one inspection on that one aircraft stops being reminded about, counted overdue or
+grounding the aircraft. The rule and every other aircraft it covers are unchanged. Click
+**It applies again** to put it back.
+</Summary>
+
+<Roles>Owners, Admins, Technicians</Roles>
+
+## When to use it
+
+Some inspections a rule puts on every aircraft do not apply to one of them:
+
+- a VOR check on a VFR-only aircraft with no VOR receiver,
+- a 100-hour inspection on an aircraft that is never flown for hire,
+- a transponder check on an aircraft with no transponder fitted.
+
+Marking it not applicable keeps it on the aircraft's list, with your reason beside it, so
+anybody reading the list can see it was considered and why it does not apply. Deleting it
+instead would leave no trace, and removing the aircraft from the rule changes the rule.
+
+## Mark it
+
+<Steps>
+  <Step n={1} title="Open the inspection">
+    <Where app="web">Maintenance → Inspections</Where>, then double-click the inspection, or
+    open the aircraft and click it on the Inspections card.
+  </Step>
+  <Step n={2} title="Click Mark not applicable on the Applies to this aircraft card">
+    The card is in the right-hand column of the inspection's page.
+  </Step>
+  <Step n={3} title="Say why, then click Mark not applicable">
+    The reason is optional, and it is shown wherever the inspection is listed, the aircraft
+    owner's own view included. "VFR only, no VOR receiver" says enough.
+  </Step>
+</Steps>
+
+From then on the inspection reads **Not applicable** with your reason in every list, sorts
+to the bottom, and has its own group when the list is grouped by status. The card says who
+marked it and when.
+
+## What it stops
+
+While an inspection is marked not applicable:
+
+- No warning, due or overdue notice goes to the shop, and no reminder goes to the aircraft's
+  owners.
+- It never grounds the aircraft, whatever its dates or meter readings say.
+- It is not counted as overdue or due soon anywhere: the aircraft's row, the fleet counts,
+  the dashboard and the Maintenance due report.
+
+<Callout type="important">
+If the aircraft is grounded because this inspection came due, marking it not applicable
+returns the aircraft to service, unless something else is still holding it: another overdue
+inspection that grounds, or a grounding squawk. That is the same check signing an inspection
+off makes.
+</Callout>
+
+## It stays marked after a sign-off
+
+If you sign the inspection off anyway, the next cycle of the rule starts on the same aircraft
+already marked not applicable, with the same reason. It stays that way until somebody says it
+applies again.
+
+## Put it back
+
+Click **It applies again** on the same card. The inspection is checked straight away, the way
+a new inspection is:
+
+- If it is already overdue and its rule grounds the aircraft, the aircraft comes off the line
+  as soon as you save, and the shop is told it is due.
+- Warnings start again from where its clocks stand now.
+
+## Scheduled and In progress
+
+An inspection that is an item on an open work order shows which job has it booked in:
+
+| Tag | Means |
+|---|---|
+| **Scheduled** | The job is Requested or Scheduled: the aircraft is coming in for it. |
+| **In progress** | The job has the aircraft at the shop: received, in progress, waiting for the owner or parts, or ready for pickup. |
+
+The tag names the job, and clicking it opens the job. It is worked out from the job, so
+nothing has to be kept in step: when the job is completed or cancelled, or the owner declines
+or defers that item, the tag goes away. An inspection can be **Scheduled** and still be
+overdue; the tag never hides that.
+
+Dispatchers see the inspection's status but not the job, the same as everywhere else work
+orders appear. Aircraft owners see the tag on their own aircraft.

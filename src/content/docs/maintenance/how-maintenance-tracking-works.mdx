@@ -74,7 +74,7 @@ The left rail holds these views.
 
 | View | What it is for |
 |---|---|
-| **Inspections** | Every open inspection in the fleet, the default view. **Group by Aircraft** shows one row per tail with its inspections underneath, grouped Grounded, Overdue, Due soon, Needs a reading or date, Current and Not tracked; current tails start folded. **Group by Status** is the work queue, worst first. **Group by Inspection** shows each rule with every tail's countdown on it. Signed-off work is deliberately not here. |
+| **Inspections** | Every open inspection in the fleet, the default view. **Group by Aircraft** shows one row per tail with its inspections underneath, grouped Grounded, Overdue, Due soon, Needs a reading or date, Current and Not tracked; current tails start folded. **Group by Status** is the work queue, worst first, with inspections marked [not applicable](/docs/maintenance/mark-an-inspection-not-applicable) in a group of their own at the bottom. An inspection a work order has booked in carries a **Scheduled** or **In progress** tag naming the job. **Group by Inspection** shows each rule with every tail's countdown on it. Signed-off work is deliberately not here. |
 | **Inspection rules** | The rules rather than their instances, grouped into On the meter, Whichever comes first, On the calendar and One-off. Unfold a rule to see the aircraft it covers. |
 | **Compliance log** | Every signed-off inspection, kept for the life of the aircraft. |
 | **Squawks → Open** | Every outstanding discrepancy, newest first, grouped into grounding squawks and the rest, or by aircraft. |
@@ -82,7 +82,7 @@ The left rail holds these views.
 
 A search box and filter chips sit above the content. On **Inspections** the Status filter
 follows the grouping: grouped by Aircraft it filters tails, otherwise it filters inspections
-(Overdue, Due soon, Needs a reading or date, Not yet due).
+(Overdue, Due soon, Needs a reading or date, Not yet due, Not applicable).
 
 ## Open one inspection
 

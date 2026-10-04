@@ -1,0 +1,100 @@
+<Summary>
+Open the aircraft, then <Where app="web">Maintenance → Components → Add</Where>. Enter the part,
+when it went on, the aircraft's tach then, its own hours since new or overhaul then, and its limit
+in hours, months, or both. The card shows its time now and the life left, and each limit is
+tracked as an inspection, so it warns, reminds owners and grounds like the rest.
+</Summary>
+
+<Roles>Owners, Admins, Technicians</Roles>
+
+Dispatchers can read the card. Instructors, students and renters do not see it. It works the
+same on your own aircraft and on a customer's aircraft in the shop.
+
+## Add a component
+
+<Steps>
+  <Step n={1} title="Open the aircraft's Maintenance tab">
+    <Where app="web">Aircraft → the tail → Maintenance</Where>. **Components** sits under
+    **Inspections**. Click **Add**.
+  </Step>
+  <Step n={2} title="Name it and say where it is">
+    **Name** is what you call it ("Left magneto", "Propeller"). **Position** is where it sits:
+    pick Engine, Propeller, Airframe or Avionics, or type your own. **Part number** and **Serial
+    number** go on the inspection, so whoever signs it off knows which part it is.
+  </Step>
+  <Step n={3} title="Say when it went on, and its time then">
+    **Installed on** is the day it went on. **Aircraft tach when installed** is the aircraft's
+    reading that day; it starts at today's reading, so change it for a part that went on
+    earlier. **Its time when installed** is the part's own hours then. Use the **Since new**
+    chip to switch to **Since overhaul** for an overhauled part.
+  </Step>
+  <Step n={4} title="Give the limit">
+    **Life limit, hours** counts its own time. **Life limit, months** counts the calendar. Give
+    one or both: with both, whichever comes first. Months count from the day it was new or last
+    overhauled, so set that with the **Overhaul date** chip when it is not the day it went on.
+  </Step>
+  <Step n={5} title="Click Save">
+    The part appears with its time now and the life it has left, and an inspection named
+    **Life limit:** and the part's name appears under **Inspections**.
+  </Step>
+</Steps>
+
+## Reading the card
+
+Each row shows the part, where it is, its part and serial numbers, and on the right the life
+left on whichever limit is nearer: "40.0 h left", "60 days left", or "Until Mar 14, 2027" when it
+is further out. Underneath is its time now ("460.0 h since overhaul of 500.0, on the tach") and
+the calendar limit's date.
+
+- **Amber** inside 10% of a limit or 10 hours, whichever is more. On a calendar limit, inside
+  10% of its life or 30 days.
+- **Past limit** once it is reached, with how far past.
+- **Inspection** on the right opens the inspection that tracks its limit.
+
+Its time is worked out from the aircraft's tach: the hours it had when it went on, plus every hour
+the tach has moved since. Keep the aircraft's times current and the card stays current. Choose
+the **On the Hobbs** chip for a part whose limit counts Hobbs time instead.
+
+## It is tracked like any inspection
+
+Each limit is kept as a one-off inspection on the aircraft, due at the tach reading (or on the day)
+the part reaches it. That is what makes it work with everything else:
+
+- the shop is warned as it gets close, at the steps set on the inspection, and on a customer's
+  aircraft the owners are reminded too;
+- it shows in the inspection lists with the rest, and on a customer's aircraft in the owner's
+  **Coming due**;
+- when it is reached, the aircraft is grounded, unless you chose **Does not ground** with the
+  **Grounds at the limit** chip.
+
+Change the part, not the inspection. Editing the component's times or limit moves its inspection's
+due point; deleting that inspection on its own is refused, because the part would then claim a
+limit nothing tracks.
+
+<Callout type="warning">
+When the part is replaced or overhauled, **record it**: use **Record it came off** in the row's
+**…** menu, then add the new one (or edit the time and the overhaul date for a part overhauled and
+refitted). Signing off its inspection on its own clears that inspection, but the card still counts
+the old part's time.
+</Callout>
+
+## A part comes off
+
+**…** on the row, then **Record it came off**. Give the day and the aircraft's tach then. Its time
+stops there, its inspection is removed (one already signed off stays in the history), and it moves
+under **Show components that came off**. **Put back on** in the same menu brings it back, with its
+tracking.
+
+**Delete** is only for a part entered by mistake. It takes the record with it.
+
+## On a customer's aircraft
+
+The aircraft's owners see the parts and the life they have left on their aircraft's page, without
+your notes. See [See your aircraft and approve work](/docs/maintenance/see-your-aircraft-and-approve-work).
+
+## What it does not do
+
+- It does not know any manufacturer's limits. Enter the limit from the part's documentation.
+- An aircraft with no meters, a glider for instance, can only carry a limit in months.
+- A replaced tach is not caught: if the aircraft's tach was replaced since the part went on, edit
+  the part's time and the tach reading it went on at.

@@ -1,0 +1,51 @@
+<Summary>
+Open the aircraft, then **History**: every inspection signed off, squawk resolved and work order
+completed on it, newest first, each opening its own record. **Invoices**, beside it, lists every
+bill for the aircraft. Both work the same for your own aircraft and a customer's.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers, Technicians</Roles>
+
+## The history
+
+<Where app="web">Aircraft → the aircraft → History</Where>. One row per thing done to it:
+
+| Row | Date | Signed or done by | Hobbs and tach |
+|---|---|---|---|
+| An inspection signed off | The compliance date | The mechanic who signed, with their certificate | As recorded at the sign-off |
+| A squawk resolved | When it was resolved | Who resolved it | Not recorded on a squawk |
+| A work order completed | When it was completed | The job's technicians | Out, or in when nobody recorded out |
+
+Click a row to open the inspection, the squawk or the work order. Filter by kind with the filter
+button. The list pages like every table in AerScheduler, so a tail with twenty years of
+records is still quick to open.
+
+A **one-time inspection** (a single AD compliance, say) leaves the Maintenance tab once it is
+signed off, because nothing is coming due any more. Its sign-off is kept for the life of the
+aircraft, so it is here.
+
+<Callout type="note">
+Work orders in the history show only to owners, admins and technicians, the people who work on
+jobs. A dispatcher's History tab lists the sign-offs and squawks.
+</Callout>
+
+Instructors, students and renters do not see the History tab. They see the open squawks on an
+aircraft of yours they can book.
+
+## Invoices
+
+<Where app="web">Aircraft → the aircraft → Invoices</Where>. Every bill tied to the aircraft:
+for the bookings that flew it (each payer's share of a split booking is its own invoice), and
+for the shop's work orders on it. Each row says who it is billed to, what it is for (the booking
+or the job's WO number), the amount and whether it is paid, outstanding, overdue, refunded or
+void. Click a column header to sort, and a row to open the invoice on Billing.
+
+Only owners and admins see this tab, the same people who see Billing: it lists what your
+members and customers paid.
+
+## What the aircraft's owner sees
+
+An owner who has signed in sees a shorter history on their aircraft's page: the inspections
+signed off and the jobs the shop finished. Not squawks, not who on your side did the work, and
+nothing you keep to the shop. See
+[See your aircraft and approve work](/docs/maintenance/see-your-aircraft-and-approve-work).

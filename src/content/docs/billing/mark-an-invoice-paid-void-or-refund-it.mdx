@@ -1,8 +1,9 @@
 <Summary>
 Open the invoice from <Where app="web">Billing</Where>. Mark paid records money that
-arrived some other way. Void cancels an invoice that should never have been raised, and
-only works while it is still unpaid. There is no refund in AerScheduler: a refund is done
-in your own Stripe dashboard.
+arrived some other way: choose how it was paid (cash, check, card in person, bank transfer
+or other), the check number, and the day it arrived. Void cancels an invoice that should
+never have been raised, and only works while it is still unpaid. There is no refund in
+AerScheduler: a refund is done in your own Stripe dashboard.
 </Summary>
 
 <Roles>Owners, Admins, Dispatchers, Instructors</Roles>
@@ -20,25 +21,54 @@ It is in the row menu on the invoice table, and on the invoice detail panel itse
 
 <Screenshot id="invoice-detail-panel" />
 </Step>
+
+<Step n={3} title="Say how it was paid">
+Choose **How it was paid**: Cash, Check, Card in person, Bank transfer or Other. For a check,
+type the **Check number** if you want it on the record. **Date received** starts at today, in
+your organization's own time zone; change it to the day the money actually arrived. It
+cannot be a day in the future. **Note** is for your own records, such as which deposit it went
+in with.
+</Step>
+
+<Step n={4} title="Click Mark paid" />
 </Steps>
 
 What that does:
 
 - The invoice flips to Paid here, and in Stripe it is recorded as paid out of band.
-- Who marked it paid is recorded on the invoice's audit trail.
-- The member gets a Payment received email and push notification.
+- The invoice says how it was paid, on your side and on the payer's: "Paid by check #1234 on
+  Oct 3". The date is the date received, not the day you clicked.
+- Who marked it paid, and how, is recorded on the invoice's audit trail.
+- The person billed gets a Payment received email that says how they paid, and a push
+  notification if they use the app. An aircraft owner who has not signed up gets the email
+  too, at the address you keep for them.
+- Your note stays with you. The person billed never sees it.
 - If QuickBooks sync is on, a Sales Receipt is created. See
   [Send paid invoices to QuickBooks Online](/docs/billing/send-paid-invoices-to-quickbooks).
 - If the member was grounded for unpaid invoices and this takes them under the threshold,
   they are released automatically.
+- The **Payments received** report shows the method, and has **Received**, **Check #** and
+  **Payment note** columns you can turn on. Its date window is still the day you recorded
+  the payment.
 
-Two things can stop you:
+<Callout type="note">
+The iOS app's Mark as Paid does not ask how it was paid yet. A payment marked there is
+recorded as received today, with no method. Mark it from the web console when you want the
+method and check number on the record.
+</Callout>
+
+Things that can stop you:
 
 - **"You cannot pay an invoice that has already been voided."** A voided invoice is
   finished. Raise a new one instead.
+- **"The date received cannot be in the future."** The day the money arrived is today or
+  earlier, in your organization's time zone.
+- **"A check number goes with a payment by check."** Choose Check, or leave the number out.
 - **Stripe could not be reached.** You get a warning rather than an error, saying the
   invoice was marked paid here but Stripe could not be updated. The invoice is correct in
   AerScheduler; go and mark it paid in Stripe too, or the two will not agree.
+- **Stripe shows it already paid by card.** If the person paid online a moment before you
+  clicked, the invoice is recorded as a card payment, and what you typed is not kept.
 
 ## Record check or cash on a package booking
 
