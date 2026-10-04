@@ -109,7 +109,7 @@
 </table>
 </div>
 
-<p>On our marketing website only, and only with your consent, we also use Google Ads and the Meta Pixel to measure advertising performance. These are not used inside the web console or the mobile app.</p>
+<p>We also use Google Ads on our marketing website and in the web console, and the Meta Pixel on our marketing website with your consent, to measure which advertising brings organizations to us. Neither is used in the mobile app. Section 6 explains what each one receives.</p>
 
 <h3>For legal reasons</h3>
 
@@ -121,9 +121,11 @@
 
 <h2 id="cookies">6. COOKIES AND TRACKING</h2>
 
-<p><strong>Marketing website.</strong> We show a cookie banner on your first visit. Until you accept, we set only the cookies necessary for the site to function. If you accept, we load PostHog, the Google Ads tag, and the Meta Pixel to understand which campaigns bring people to us. If you decline, none of those load. You can change your mind by clearing your cookies for the site.</p>
+<p><strong>Marketing website.</strong> We show a cookie banner on your first visit. Until you accept, we set only the cookies necessary for the site to function. If you accept, we load PostHog and the Meta Pixel, and the Google Ads tag may set its cookies, to understand which campaigns bring people to us. If you decline, PostHog and the Meta Pixel do not load. The Google Ads tag still loads in Google's consent mode with every signal denied: it sets no cookies and sends no identifiers, only a cookieless signal that a page was viewed or a conversion happened. You can change your mind by clearing your cookies for the site.</p>
 
-<p><strong>Web console and mobile app.</strong> We use cookies and local storage that are strictly necessary to keep you signed in and to remember your preferences. We use PostHog for product analytics inside the console. There is no advertising tracking in the console or in the app.</p>
+<p><strong>Advertising conversions.</strong> When you create an account or start a subscription in the web console, we tell Google Ads that a conversion happened, so we can learn which ads lead to customers. If you accepted cookies, this includes your email address, which the Google tag converts in your browser into a one-way hash (SHA-256) before it is sent. Google uses that hash only to match the conversion to an ad click from a signed-in Google account, a feature Google calls enhanced conversions, and does not receive your email address in readable form. If you declined cookies, Google does not use this information. We never send Google the contents of your account, your organization's records, or anything about the people you fly with.</p>
+
+<p><strong>Web console and mobile app.</strong> We use cookies and local storage that are strictly necessary to keep you signed in and to remember your preferences. We use PostHog for product analytics inside the console and the app. In the console, the Google Ads tag runs only as described above, to report sign-ups and subscriptions. There is no advertising tracking in the mobile app.</p>
 
 <p><strong>Do Not Track.</strong> There is still no agreed standard for how services should respond to browser DNT signals, so we do not respond to them. We do honour the Global Privacy Control signal on our marketing website as a request to decline non-essential cookies.</p>
 
