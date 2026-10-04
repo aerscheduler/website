@@ -231,7 +231,7 @@ const SUBHEADS: { v: string; text: string }[] = [
   },
   {
     v: "shop",
-    text: "Work orders on your customers' aircraft, from the first finding to a paid invoice. Owners approve each item online, labor bills at your shop rate, parts at cost plus your markup, and the owner pays by card or bank transfer.",
+    text: "Work orders on your customers' aircraft, from the first finding to a paid invoice. Owners approve each item online, labor bills at your shop rate, parts at cost plus your markup, and the owner pays the invoice online by card.",
   },
   {
     v: "club",
