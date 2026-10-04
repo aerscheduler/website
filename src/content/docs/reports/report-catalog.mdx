@@ -5,7 +5,7 @@ to pick the right report the first time.
 
 ## How to read this list
 
-Every report lives in one of five categories, and the category decides who can run it. If a category is missing
+Every report lives in one of six categories, and the category decides who can run it. If a category is missing
 from your left rail, your roles do not grant it. See
 [Who can see which reports](/docs/reports/who-can-see-which-reports).
 
@@ -69,7 +69,7 @@ Worth knowing:
 
 ## Fleet
 
-Owners, admins, dispatchers and technicians. This is the only category a technician gets.
+Owners, admins, dispatchers and technicians. Technicians also get Maintenance shop, below.
 
 | Report | Opens on | Opens grouped by |
 |---|---|---|
@@ -88,6 +88,31 @@ Worth knowing:
   always reads its true current age.
 - On **Maintenance due**, the date range is when the reminder was raised, not when it comes due. Widen the range,
   or filter Status to Overdue, to see everything outstanding.
+
+## Maintenance shop
+
+Owners, admins and technicians, and only at an organization that runs a shop: it has a work order or a
+customer's aircraft. Dispatchers do not get these, because they do not see jobs anywhere else either.
+
+| Report | Opens on | Opens grouped by |
+|---|---|---|
+| Work orders | Last 30 days | Ungrouped |
+| Labor and parts | Last 30 days | Ungrouped |
+
+Worth knowing:
+
+- **Work orders** holds every job that was open at any point in the window, so a job that came in two months ago
+  and is still in the hangar is in "Last 30 days". Group by Status for the shop's board in one table, or by Billed
+  to for what each customer has outstanding.
+- **Charges** is the job's billable lines as they stand now, the same total the job page shows. **Invoiced** leaves
+  out voided and fully refunded invoices, **Owed** is invoiced and not yet paid, and **Not yet invoiced** is charges
+  beyond what has been invoiced. A cancelled job has nothing left to invoice.
+- For labor hours per technician use **Labor and parts**: a job worked by two people would count in neither
+  person's total here.
+- On **Labor and parts**, group by Technician for labor hours per person. Filter Part status to Ordered for what
+  the shop is waiting on, and widen the range to catch parts ordered long ago: a part is dated by the day it was
+  ordered.
+- Click a row in either report to open its job.
 
 ## People
 
@@ -174,7 +199,7 @@ They will disagree with the window heading above them, and that is the intended 
 
 ## There is no new report button, and there does not need to be
 
-Every number in this area comes from these 18 reports: the dashboard tiles, the Needs attention counts, the
+Every number in this area comes from these reports: the dashboard tiles, the Needs attention counts, the
 scheduled emails and the CSV exports all run one of them. That is why a tile and the report you click into always
 agree.
 
@@ -186,6 +211,6 @@ columns, and save it as a view.
     The toolbar, the conditions, and the date basis caption.
   </DocCard>
   <DocCard href="/docs/reports/save-a-report-view" title="Save a report as a view">
-    Turn 18 reports into the thirty your school asks for.
+    Turn a handful of reports into the thirty your organization asks for.
   </DocCard>
 </CardGrid>

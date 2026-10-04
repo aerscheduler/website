@@ -11,3 +11,4 @@ export { ReportsLiveDemo } from "@/components/mocks/living/reports-live-demo";
 export { IntegrationsLiveDemo } from "@/components/mocks/living/integrations-live-demo";
 export { MobileLiveDemo } from "@/components/mocks/living/mobile-live-demo";
 export { SchedulingLiveDemo } from "@/components/mocks/living/scheduling-live-demo";
+export { WorkOrdersLiveDemo } from "@/components/mocks/living/work-orders-live-demo";

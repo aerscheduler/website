@@ -1,6 +1,6 @@
 <Summary>
 Email and push switches all live on <Where app="web">Notification settings</Where>,
-reached from the account menu at the foot of the left rail, and on
+reached from the menu under your organization's name at the top of the left rail, and on
 <Where app="mobile">Settings → Notifications</Where> in the app. Channels are per school and
 save as you touch them.
 </Summary>
@@ -10,9 +10,11 @@ save as you touch them.
 | | Where | What it holds |
 |---|---|---|
 | **Notifications** (the bell) | Topbar in the console, the Inbox bubble in the app | Everything that has happened to you, with an unread count. Paged and searchable |
-| **Notification settings** | Account menu → Notification settings | Which of those things also reach you by email or push |
+| **Notification settings** | Your organization's name → Notification settings | Which of those things also reach you by email or push |
 
-In the iOS or Android app, tapping a notification takes you to the thing it is about.
+In the iOS or Android app, tapping a notification takes you to the thing it is about. The
+maintenance shop's notices (requests, jobs, findings, an owner's aircraft) open in the web
+console; the app does not have those pages yet.
 
 In the web console, the bell and unread count update live when something new lands,
 without refreshing the page.
@@ -21,7 +23,7 @@ without refreshing the page.
 ## Choose which emails and push alerts you get
 
 <Steps>
-  <Step n={1} title="Open the account menu at the foot of the left rail and choose Notification settings">
+  <Step n={1} title="Open the menu under your organization's name at the top of the left rail and choose Notification settings">
     Or go straight to app.aerscheduler.com/me/notifications.
   </Step>
   <Step n={2} title="Leave Email notifications and Push notifications on">
@@ -46,15 +48,26 @@ without refreshing the page.
 | Currency | A currency about to expire | Everyone |
 | Endorsements | An endorsement about to expire | Instructors and admins |
 | Maintenance | Inspection reminders | Admins and technicians |
+| Maintenance shop | **New requests** from aircraft owners, and **Activity on my jobs** (put on a job; its owner answers, adds photos or updates the times). A **Customer aircraft inspections** setting above the cards picks which customers' aircraft you hear about; until you choose, it shows what you get by default | Technicians and admins, where your organization runs a maintenance shop |
+| Your aircraft | **Work on my aircraft** (what the shop sends you, booked in, arrived, ready, the date moved) and **Inspection reminders** | Anyone who owns an aircraft the organization looks after |
 | Status | Being grounded | Everyone |
 | Announcements | School-wide notices from admins | Everyone |
 
 Groups you would never receive anything from are hidden rather than shown greyed out, which
-is why two people at the same school see different pages.
+is why two people at the same school see different pages. An aircraft owner from outside the
+organization sees only Billing and Your aircraft.
 
 <Callout type="note">
-Every category starts **on**. A switch you have never touched behaves as on, so a quiet
-category means nothing is happening, not that it is off.
+Every category starts **on**, with one exception: **New requests** starts on for technicians
+and off for admins, who turn it on if they want it. In an organization with no technicians signed
+in, it starts on for admins too, so a request always reaches somebody; the switch says so. The
+**Customer aircraft inspections** setting works the same way: **Aircraft I've worked on** for
+technicians, **Off** for admins until they pick one. A switch you have never touched behaves as
+its default, so a quiet category means nothing is happening, not that it is off.
+
+Notices from the maintenance shop land in the bell whatever the email and push switches say,
+with two exceptions: **New requests**, and inspections coming due on customer aircraft, reach
+you (bell included) only while the email or push switch for them is on.
 </Callout>
 
 <Screenshot id="notification-preferences-maintenance" />

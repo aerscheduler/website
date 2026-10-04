@@ -64,6 +64,11 @@ When a job moves to **Aircraft received** (or straight to a later stage in the h
 Hobbs or tach in recorded, the meters open under **Details** with them filled in from the
 aircraft. Check them against the meters and click **Save**, or **Cancel** to leave them empty.
 
+Moving a job to **Ready for pickup** or **Completed** while an inspection on it is not signed off
+(and the owner did not decline or put it off) asks first. Sign it off, or choose **Complete
+anyway**: while the job is open the owner hears nothing about that inspection, and once it is
+finished they start getting its reminders.
+
 <Callout type="note">
 A reading lower than the one the aircraft last had, or a Hobbs or tach out lower than in, asks
 you to check it before it saves. Save it anyway only if that is what the meters say, for example
@@ -72,8 +77,10 @@ after a meter was replaced.
 
 There is no Edit button: each detail is changed where it is shown. Click a value under
 **Details** to change it: **Billed to**, **Promised back**, **Technicians**, the **Hobbs** and
-**tach** in and out, and the **Hangar slot**, which is the maintenance booking holding the
-aircraft and the hangar on the schedule (choose **None** when the job has no booking). Click the
+**tach** in and out, and **Booked for**, the maintenance booking on the schedule that holds the
+aircraft and the hangar for the job (choose **Not booked** when it has none). It works from the
+other side too: a maintenance booking has a **Work order** field that links an open job or
+opens a new one with its technicians. Click the
 pencil on a notes card to write in it, then **Save** (or Cmd+Enter); Esc puts it back. **What the
 owner asked for** is the request in their words, **Notes for the owner** are what you would tell
 them, and **Shop notes** are for the shop only.
@@ -93,7 +100,7 @@ Hover a group's header and click its **+** to add straight into that group: an o
 a finding, or a charge not for any item.
 
 - **Each item's ring says where it stands:** a green tick when it is done, a blue dot when the
-  owner approved it, a dashed ring when nobody has asked the owner yet, a half-filled ring while
+  owner approved it, a dashed ring when the owner has not answered yet, a half-filled ring while
   its inspection or squawk is open.
 - **Fold** a group or an item by clicking it. With the keyboard, the arrow keys move down the
   list, Enter opens a line, and Left and Right fold an item.
@@ -103,10 +110,50 @@ a finding, or a charge not for any item.
   **Resolve** button opens the same form as everywhere else, so the next due date is worked out
   as it always is.
 - **A plain item** (a brake adjustment, a wash) you tick done yourself.
-- A found item nobody has asked the owner about says **Owner not asked yet**. Click that tag to
-  record the answer straight from the list: **Approved**, **Declined** or **Deferred**, or
-  **Record a call with notes…** for the full record below.
-- An item's **⋯** menu adds labor or a part for it, marks it done, renames it or removes it.
+- A found item you have not sent to the owner says **Not sent yet**; once sent it says **Sent,
+  waiting** until they answer. Click that tag to record an answer you took on the phone straight
+  from the list: **Approved**, **Declined** or **Deferred**, or **Record a call with notes…** for
+  the full record below. A finding done before anybody answered says **Done, not asked**, or
+  **Done, no answer** if it had been sent.
+- **Rewording a finding the owner was asked about asks again.** Their answer was for the old
+  words, so it is cleared and the finding reads **Not sent yet**: send it again. A finding not
+  sent yet, an owner's request, or a finding already done rewords freely. On a job that is
+  invoiced or closed nothing can be asked again, so rewording only corrects the words and the
+  owner's answer stands, as the bill does.
+- An item's **⋯** menu adds labor or a part for it, marks it done, renames it or removes it. A
+  finding you never sent that still has charges on it cannot be removed: its lines would stay on
+  the bill for something the owner never heard of. Take its lines off first, or send it.
+
+## Send findings to the owner
+
+When you have written up what you found, and priced it if you can, click **Send to owner** at the
+top of **Work and charges**. Every owner of the aircraft is told in one message and asked to
+approve, decline or put off each finding. Prices and the total go only to the person the job is
+billed to.
+
+- **Until you send a finding, the owners do not see it.** Write it up and price it first; send
+  when it is ready. Adding a finding to an open job that is not invoiced also offers **Notify
+  owner** in the message that confirms it, for when it is ready as it stands; it sends every
+  finding not sent yet.
+- **Only what is new is sent.** Findings already sent, answered or done are left out, so pressing
+  it again later sends just the ones added since.
+- **A job opened while you set up your shop starts with owner emails held.** The line at the top
+  of the job says so; **Tell the owner** sends the owner where the job stands (booked in, arrived
+  or ready), and sending findings releases the hold too. From then on the owners hear each stage
+  as usual.
+- **The job moves to Waiting for owner** if it was at Aircraft received or In progress, and back
+  to In progress by itself once every finding sent has an answer or is done: the owner answers in
+  AerScheduler, you record their call, you tick it done, or you sign off its inspection or
+  resolve its squawk (here or on the phone). Only answering or finishing a finding that was
+  waiting moves it back: a job you set to **Waiting for owner** yourself, for something else,
+  stays there. Unticking a finding sent and not answered moves the job back to Waiting for owner.
+- **Only on a customer's aircraft.** On your organization's own aircraft there is no owner to
+  send to or call. The tag on a finding reads **Not decided**, and its menu, **Decision**, records
+  your choice under your name. **Record owner's answer** and the **Owner's answers** card are not
+  shown.
+- **An owner who has not signed up** is emailed at the address on the aircraft, with a way to
+  sign up and answer. One with no address is listed as not reached, and if nobody can be reached
+  nothing is marked sent.
 
 ## Record the owner's answer
 
@@ -116,11 +163,33 @@ the most they said you can spend without calling again, and notes. Then choose *
 **Decline** or **Defer** for each item you discussed. Only the items you answer are changed, and
 an item answered again on a later call shows the later answer.
 
+Leave **When** as it is and the call is recorded at the moment you save it. Change it to write up
+an earlier call: if the owner answered an item later than that (on another call, or themselves in
+AerScheduler), their later answer stands, and the message after saving says which items kept it.
+
+Once the job is invoiced, its answers are the bill's too. Each finding's tag shows its answer but
+no longer opens, **Record owner's answer** is gone, and the top of **Work and charges** says
+**Invoiced: void the invoice to change the work.** The same holds on a closed job: reopen it
+first.
+
 <Callout type="note">
-The owner never logs in or signs anything. This is your record of the call: who you spoke to,
-when, what they agreed to, and who took the call. Every call is listed under **Owner's answers**
-on the job.
+An owner who has signed in can answer what you sent them themselves, until the job is invoiced,
+and the technicians on the job are told when they do. When they call instead, this is
+your record of the call: who you spoke to, when, what they agreed to, and who took the call. Every
+answer is listed under **Owner's answers** on the job.
 </Callout>
+
+## Photos and documents
+
+**Files and photos** on the job keeps the pictures and the paperwork: the crack you found, the
+logbook entry, the 8130-3 for a part. Click **Attach** and choose up to five photos or PDFs at
+a time. To put a photo on one finding, use that item's menu, **Attach a photo or file**; the
+item's row shows how many it has.
+
+Every file is the shop's own until you choose **Show to the owner** from its menu (and **Keep
+to the shop** puts it back). Its menu also moves it onto a different item or the job itself,
+and removes it. Files can still be added after the job is invoiced, since the logbook entry
+is often the last thing that happens.
 
 ## Labor and parts
 
@@ -152,7 +221,7 @@ becomes the admin's. An admin sees every line in the invoice preview before rais
   that kind. **Price each** shows the result, greyed, and says the markup under it. An admin can
   type a price there to charge that instead; empty the field to go back to cost plus the markup.
   A part also takes its part number, serial number and vendor, and a status (ordered, received,
-  installed, returned, unused) with the day it is expected.
+  installed, returned, unused) with the day it was ordered and the day it is expected.
 - **Shop supplies**, **Freight and shipping**, **Fee** and **Other** are a quantity at a price.
 - **Discount** takes a percentage off a whole line: 10 takes 10% off. Only an admin gives one. The
   card and the invoice show the line at its discounted price, with "(10% off)" in its name, and a
@@ -196,8 +265,17 @@ Or you record cash or a check the usual way.
 
 - **Billed to** must name somebody. A job billed to **Nobody** cannot be invoiced: choose who
   pays under **Details**.
-- An owner who is not a member is reached only at the email on the aircraft's **Owners** panel.
-  With no address there, the invoice is refused until you add one.
+- An owner who is not a member is reached only at the email on the aircraft's **Owners** panel,
+  until they sign in: then the invoice reaches them at their own login, like a member. With
+  neither, the invoice is refused until you add an address.
+- **Findings the owner never heard about are named first.** A finding with charges that was never
+  sent to the owner, answered or done is listed in an amber box, and the invoice is not raised
+  until you tick **Bill them anyway**. Send it first, record the owner's answer, mark it done, or
+  take its lines off if the owner should not pay for it yet.
+- **So are findings still waiting on the owner's answer.** Once the job is invoiced the owner can
+  no longer answer them, so they get an amber box of their own and the same tick. Record the
+  owner's answer if they told you on the phone, mark them done, or take their lines off.
+- Findings the owner declined or put off that still have charges are listed too, as a reminder.
 - If a line or a rate changed while the dialog was open, the invoice is not raised. The dialog
   shows the new total to check, and you raise it again. The same goes for the notes for the owner
   and the finished work: the owner is never sent text you did not see. The same happens if somebody added a line
@@ -205,8 +283,9 @@ Or you record cash or a check the usual way.
   matches the job.
 - An invoice can be at most $999,999.99, and so can a line.
 
-Once the invoice is raised, the job's lines are frozen, the job cannot be cancelled, and who
-pays cannot change. To correct anything, void the invoice in
+Once the invoice is raised, the job's lines and the owner's answers are frozen, the job cannot be
+cancelled, and who pays cannot change. The owner's page shows the bill from then on: every line
+on it, and nothing left for them to answer. To correct anything, void the invoice in
 <Where app="web">Billing</Where>, change the lines, and raise a new one. The job's **Billing**
 card links to its invoice, and the invoice links back to the job.
 
@@ -236,9 +315,11 @@ technician sees the rate filled in on each labor line, and only an admin changes
   inside each group; click again to reverse it, and a third time to go back. Click a job to see it
   beside the list, or double-click it to open its page. **Finished jobs** lists completed and
   cancelled ones, newest first.
-- The filter button beside the search narrows either list by **Aircraft**, **Location** (where
-  the aircraft is based), **Owner** (anybody on the aircraft's Owners panel, billed or not),
-  **Billed to**, and **Technician**. Each takes several at once.
+- The filter button beside the search narrows either list by **Assigned: To me**,
+  **Aircraft**, **Location** (where the aircraft is based), **Owner** (anybody on the
+  aircraft's Owners panel, billed or not), **Billed to**, and **Technician**. Each takes
+  several at once. A technician's boards open on their own jobs; clear the filter to see
+  everyone's.
 - On an aircraft, <Where app="web">Work orders</Where> shows its open jobs and its past ones.
 - On a person in <Where app="web">People</Where>, **Work orders** lists the jobs billed to
   them, open first. It is always there for an aircraft owner who is not a member, and on a
@@ -254,7 +335,8 @@ the shop** otherwise.
 ## Delete a job opened by mistake
 
 An admin can delete a job from the menu on its page, as long as it has never been invoiced. A
-job that has been invoiced stays on the record: set its stage to **Cancelled** instead.
+job that has been invoiced stays on the record: set its stage to **Cancelled** instead. The
+notifications about a deleted job go with it, the shop's and the owners'.
 Deleting leaves a line in the audit log saying the job existed and who deleted it.
 
 ## Every change is recorded

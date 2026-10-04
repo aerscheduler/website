@@ -14,8 +14,8 @@ on, the day that inspection comes due:
 
 - The aircraft is grounded with the reason **Maintenance**.
 - Every booking type except maintenance is refused on it with "Resource is grounded."
-- The tail sorts to the top of <Where app="web">Maintenance → By aircraft</Where> with a Grounded badge.
-- The inspection row itself carries a red **Grounds** flag in the work queue.
+- The tail moves to the **Grounded** group at the top of <Where app="web">Maintenance → Inspections</Where>.
+- The overdue inspection itself carries an amber **Grounds** tag.
 
 With it off, the inspection still comes due, still shows as overdue, and still notifies your
 admins and technicians. The aircraft simply stays bookable.
@@ -23,9 +23,9 @@ admins and technicians. The aircraft simply stays bookable.
 ## Turn it on for an inspection
 
 The switch is on the Recurring and One-off forms in
-<Where app="web">Maintenance → Add inspections</Where>. Afterwards it shows as a red
-**Grounds** badge on the rule's row under
-<Where app="web">Maintenance → Set up</Where>.
+<Where app="web">Maintenance → Add inspections</Where>. Afterwards it shows as an amber
+**Grounds** tag on the rule's row under
+<Where app="web">Maintenance → Inspection rules</Where>.
 
 <Screenshot id="add-inspections-recurring" />
 
@@ -86,8 +86,8 @@ The maintenance step offered while you are setting the school up creates every r
 a grounding one, including the oil change.
 
 If you set your fleet up that way, open
-<Where app="web">Maintenance → Set up</Where> afterwards and look at which rows carry the
-red **Grounds** badge. An oil change taking a trainer off the line mid-morning is the
+<Where app="web">Maintenance → Inspection rules</Where> afterwards and look at which rows carry the
+**Grounds** tag. An oil change taking a trainer off the line mid-morning is the
 support email this causes.
 
 ## The switch defaults differently on web and on the phone

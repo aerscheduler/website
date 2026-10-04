@@ -1,0 +1,89 @@
+<Summary>
+On signup, choose <strong>I run a maintenance shop</strong>. Name the shop and pick its
+airport, set your labor rate and markups, add the aircraft in your hangar with its owner,
+and open its first work order. You land on that job with four steps to take it to an
+invoice.
+</Summary>
+
+<Roles>Owners</Roles>
+
+## Before you start
+
+Nothing. Same account as any other signup. The card you pick on the first screen is what
+sets you up as a shop rather than a flight school. Have the aircraft in front of you if you
+can: its Hobbs and tach as it arrived, and the owner's email.
+
+## Set up the shop
+
+<Steps>
+  <Step n={1} title="Choose I run a maintenance shop">
+    The other cards are for joining someone else's organization, owning one airplane,
+    teaching independently, or running a school, club or FBO.
+  </Step>
+  <Step n={2} title="Name the shop and pick its airport">
+    The name goes on your work orders and invoices. Search the airport by identifier or name:
+    its time zone is the clock your jobs, promised-back dates and inspection reminders run on.
+  </Step>
+  <Step n={3} title="Set your shop rates">
+    Your labor rate per hour, and your markup on parts and on outside work (both start at
+    15%). Every labor line starts at your rate, and parts at cost plus your markup. Skip it if
+    you are not sure; it is under <Where app="web">Settings → Shop rates</Where> later.
+  </Step>
+  <Step n={4} title="Add the aircraft in your hangar">
+    Type the tail and pick it from the list to fill in the make, model and year from the FAA
+    registry. Put in the Hobbs and tach as it arrived, and the owner's name, email and phone.
+    The owner is who the work is billed to.
+  </Step>
+  <Step n={5} title="Open its first work order">
+    Tap what the owner asked for (Annual inspection, Squawk and so on) or type it, and say
+    whether the aircraft is in the hangar or still coming in. Click **Open work order**. Nothing
+    is emailed to the owner yet: the job says so at the top, and **Tell the owner** sends them
+    a short note that the aircraft has arrived (or is booked in) when you are ready.
+  </Step>
+</Steps>
+
+## Your first job, start to finish
+
+Setup ends on the work order you just opened, with four steps across the top. Each one is
+ticked from the job itself, so doing it from the job's own **Add** menu counts too:
+
+1. **Write up what you found**, for example a worn brake pad.
+2. **Add your labor and a part.** Labor fills in at your rate, and the total updates as you
+   go.
+3. **Send it to the owner.** Every owner is emailed to approve, decline or put off each
+   finding; prices go only to the person billed.
+4. **Raise the invoice.** Labor and parts go on one invoice with the work order number, the
+   tail and the meters. This needs billing connected first, under
+   <Where app="web">Settings → Billing</Where>.
+
+Close the steps with the **×** whenever you like. See
+[Run a work order](/docs/maintenance/run-a-work-order) for everything a job can do.
+
+## What a shop gets that a school does not
+
+- **Technician, not instructor.** You become owner, admin and technician. Only technicians
+  can be put on a job or a labor line, so you can assign your first one to yourself.
+- **A shop's checklist.** The dashboard's setup list asks for customer aircraft, a first work
+  order, shop rates, technicians and a job invoice, and leaves out the flight school's jobs
+  (booking a flight, instruction rates, students, training).
+- **Customer aircraft are never on your plan.** They do not count toward what you pay.
+
+<Callout type="tip">
+Nothing in the hangar today? On the aircraft step, **Look around a sample shop** opens the
+live demo's shop in a new tab: customer aircraft and jobs in every stage, without putting
+sample data in your own shop.
+</Callout>
+
+## What to do next
+
+<CardGrid>
+  <DocCard href="/docs/maintenance/run-a-work-order" title="Run a work order">
+    Stages, findings, the owner's answer, labor, parts and the invoice.
+  </DocCard>
+  <DocCard href="/docs/maintenance/work-on-a-customers-aircraft" title="Work on a customer's aircraft">
+    Owners, meters and billing someone outside your organization.
+  </DocCard>
+  <DocCard href="/docs/getting-started/invite-people" title="Invite people">
+    Invite your technicians.
+  </DocCard>
+</CardGrid>

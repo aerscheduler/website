@@ -58,7 +58,9 @@ export type CampaignSource =
   | "clubs"
   | "scheduling"
   | "training"
-  | "reports";
+  | "reports"
+  /** Maintenance shops (work orders, customer aircraft): opens on the shop's own setup. */
+  | "shop";
 
 /**
  * A signup link that tells the app which conversation this visitor was already

@@ -10,8 +10,8 @@ inspection starts counting again immediately, from exactly those two numbers.
 
 <Steps>
   <Step n={1} title="Find the inspection">
-    <Where app="web">Maintenance → All inspections</Where> is the work queue for the whole
-    school, worst first. Or open the tail and use its Inspections card at
+    <Where app="web">Maintenance → Inspections</Where>, grouped by Status, is the work queue for
+    the whole school, worst first. Or open the tail and use its Inspections card at
     <Where app="web">Aircraft → the tail → Maintenance</Where>. On the phone:
     <Where app="mobile">Maintenance → Inspections</Where>, which is where technicians
     usually work.
@@ -84,9 +84,9 @@ what goes in each field and where to read the history back.
 
 ## What happens next
 
-- The item leaves **All inspections**. That view is a work queue and only holds outstanding work.
+- The item leaves **Inspections**. That view is a work queue and only holds outstanding work.
 - If the rule repeats, a fresh inspection is created straight away, counting from your completed date and completed meter reading.
-- A one-off does not come back. Once it is signed off on every tail it covers, the rule disappears from the Set up list entirely.
+- A one-off does not come back. Once it is signed off on every tail it covers, the rule disappears from Inspection rules entirely.
 - An "Inspection signed off" line is written to the audit log with your name on it.
 
 ## When the aircraft comes back on the line automatically
@@ -129,8 +129,9 @@ To correct a sign-off, add a new one. See
 
 It stays on the aircraft's record and in the audit log. It just leaves the queue.
 
-The console's **All inspections** view can never show completed work, and the Status filter
-there (Overdue, Due soon, Not yet due) has no "Signed off" option on purpose. The app's
+The console's **Inspections** view can never show completed work, and the Status filter
+there (Overdue, Due soon, Needs a reading or date, Not yet due) has no "Signed off" option on
+purpose. The app's
 Inspections board does have one, behind the filter glyph, so reach for the phone when
 somebody asks you to prove a 100-hour was signed off.
 

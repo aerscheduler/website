@@ -1,6 +1,6 @@
 <Summary>
 Reporting permissions come from one thing: the category a report sits in. Financial is owners and admins only.
-Dispatchers get everything else. Technicians get Fleet. Instructors, students and renters do not get the Reports
+Dispatchers get everything else except the maintenance shop's reports. Technicians get Fleet and Maintenance shop. Instructors, students and renters do not get the Reports
 page at all.
 </Summary>
 
@@ -14,7 +14,7 @@ permission](/docs/getting-started/permissions-and-grants).
 
 ## Category decides access, nothing else does
 
-There are five categories: Financial, Operations, Fleet, People, Compliance. Every report sits in exactly one of
+There are six categories: Financial, Operations, Fleet, Maintenance shop, People, Compliance. Every report sits in exactly one of
 them, and your roles decide which categories you get.
 
 There is no per-report switch, no per-person override, and no setting to change any of this. If somebody needs a
@@ -25,12 +25,13 @@ report they cannot see, they need a different role.
 | Financial | Yes | Yes | No | No | No |
 | Operations | Yes | Yes | Yes | No | No |
 | Fleet | Yes | Yes | Yes | Yes | No |
+| Maintenance shop | Yes | Yes | No | Yes | No |
 | People | Yes | Yes | Yes | No | No |
 | Compliance | Yes | Yes | Yes | No | No |
 
 ## Owners and admins
 
-All five categories, all 18 reports, and everything built on them.
+Every category, every report, and everything built on them.
 
 Owners and admins can also:
 

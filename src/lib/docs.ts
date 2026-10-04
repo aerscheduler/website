@@ -28,7 +28,9 @@ export type DocAudience =
   | "Instructors"
   | "Students"
   | "Renters"
-  | "Technicians";
+  | "Technicians"
+  /** Owners of an aircraft in a maintenance shop, signed in from outside the organization. */
+  | "Aircraft owners";
 
 export type DocArticle = {
   slug: string;
@@ -106,6 +108,29 @@ export const DOC_SECTIONS: DocSection[] = [
           {
             q: "Do I have to enter an hourly rate?",
             a: "No. Leave it at zero if you do not bill hours. You can fill it in later on Aircraft.",
+          },
+        ],
+      },
+      {
+        slug: "set-up-a-maintenance-shop",
+        title: "Set up a maintenance shop",
+        description:
+          "Choose I run a maintenance shop, name the shop, set your labor rate and markups, add the aircraft in your hangar with its owner, and open its first work order. You get owner, admin and technician.",
+        kind: "task",
+        audience: ["Owners"],
+        seoQuery: "aircraft maintenance shop software setup",
+        faqs: [
+          {
+            q: "Do customer aircraft count toward what I pay?",
+            a: "No. A customer's aircraft is never counted on your plan. Only aircraft your organization operates itself are.",
+          },
+          {
+            q: "Why am I a technician and not an instructor?",
+            a: "Only people with the technician role can be put on a work order or a labor line. A shop signup gets it so you can assign your first job to yourself. Instructor is not given, because a shop teaches nobody.",
+          },
+          {
+            q: "Does the owner hear from AerScheduler when I add them?",
+            a: "Not when you add them. Once there is a job on their aircraft, they get a short email when it is booked in, when it arrives and when it is ready, plus the findings you send them to approve and the invoice. An owner who has not signed up gets these at the email you recorded.",
           },
         ],
       },
@@ -1096,15 +1121,42 @@ export const DOC_SECTIONS: DocSection[] = [
         faqs: [
           {
             q: "Will AerScheduler email my customer?",
-            a: "No. An owner you add is never sent notifications, reminders or anything else by AerScheduler. The only thing that reaches them is an invoice you raise, which Stripe emails to the address you recorded.",
+            a: "Only about their aircraft, at the address you recorded: when a job on it is booked in, arrives, is ready or its promised date moves, the findings you send them, inspections coming due, the invoices you raise, and the note on how to sign in when you click Email how to sign in. Every one can be turned off from the email itself, and none of it is marketing.",
           },
           {
             q: "What happens when the owner signs up for an account?",
-            a: "If they sign up with the email address you recorded, confirm it, and use the same name, joining your school hands them your record: the aircraft, the invoices and the history. If the name is different they join as a new member and the two records stay separate.",
+            a: "If they sign up with the email address you recorded, confirm it, and join your organization with its code, they are handed your record: the aircraft, the invoices and the history. They then see their own aircraft, jobs and bills, and nothing else of yours. Any name will do when yours is the only record at that address; when you recorded several people at one address, the name on their account has to match the one you recorded, or the records stay separate.",
           },
           {
             q: "Why is my customer not getting payment reminders?",
             a: "Automatic reminders only go to people who have signed up. Chase an aircraft owner yourself: send the payment link, call them, or print the invoice.",
+          },
+          {
+            q: "How do I keep a customer's aircraft's Hobbs and tach current?",
+            a: "Record a reading whenever it comes in: Record a reading under Hobbs and tach on the aircraft's Overview. Hour-based due dates are worked out from the last reading, and the card warns you when a customer's aircraft has not been read in over 30 days.",
+          },
+        ],
+      },
+      {
+        slug: "see-your-aircraft-and-approve-work",
+        title: "See your aircraft and approve work",
+        description:
+          "For aircraft owners: sign in to see the work on your aircraft, answer what the shop found, ask for work, keep your times current, and pay the bill.",
+        kind: "task",
+        audience: ["Aircraft owners"],
+        seoQuery: "aircraft owner portal maintenance shop approve work",
+        faqs: [
+          {
+            q: "Why can't I see the flight school's schedule?",
+            a: "An aircraft owner sees their own aircraft, the jobs on them and their bills, and nothing else of the organization's. If you also fly there, ask them to give you a flying role.",
+          },
+          {
+            q: "Can I change an answer I already gave?",
+            a: "Not from your page. Once you approve or decline something the shop may already have ordered the part or done the work, so call the shop to change it.",
+          },
+          {
+            q: "Why don't I see the charges on a job?",
+            a: "Charges and invoices show only to the owner the job is billed to. A co-owner sees the work but not somebody else's bill.",
           },
         ],
       },
@@ -1656,7 +1708,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "save-a-report-view",
         title: "Save a report as a view, and share it with the school",
         description:
-          "A saved view remembers the filters, grouping, columns, sort, and dates that were on screen. It is how a school turns 18 reports into the thirty it actually asks for.",
+          "A saved view remembers the filters, grouping, columns, sort, and dates that were on screen. It is how a school turns a handful of reports into the thirty it actually asks for.",
         kind: "task",
         audience: ["Owners", "Admins", "Dispatchers", "Technicians"],
         seoQuery: "save a custom report in AerScheduler",
@@ -1728,7 +1780,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "who-can-see-which-reports",
         title: "Who can see which reports",
         description:
-          "Reporting permissions come from one thing: the category a report sits in. Financial is owner and admin only. Dispatchers get everything else. Technicians get Fleet.",
+          "Reporting permissions come from one thing: the category a report sits in. Financial is owner and admin only. Dispatchers get everything else except the maintenance shop's reports. Technicians get Fleet and Maintenance shop.",
         kind: "reference",
         audience: ["Owners", "Admins", "Dispatchers", "Instructors", "Students", "Renters", "Technicians"],
         seoQuery: "can a dispatcher see revenue reports flight school",

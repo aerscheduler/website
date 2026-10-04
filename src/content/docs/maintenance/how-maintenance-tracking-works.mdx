@@ -70,18 +70,34 @@ email and push go out. There is no separate cosmetic idea of "soon".
 
 ## The Maintenance page, view by view
 
-The left rail holds five views in two groups.
+The left rail holds these views.
 
 | View | What it is for |
 |---|---|
-| **By aircraft** | One card per tail, grounded first, then worst-due first. Shows the current tach and the single most urgent item. The default view. |
-| **All inspections** | The work queue for the whole school, worst first. Signed-off work is deliberately not here. |
-| **Set up** | The rules rather than their instances, grouped into On the meter, On the calendar and One-off. |
-| **Squawks → Open** | Every outstanding discrepancy, newest first. |
+| **Inspections** | Every open inspection in the fleet, the default view. **Group by Aircraft** shows one row per tail with its inspections underneath, grouped Grounded, Overdue, Due soon, Needs a reading or date, Current and Not tracked; current tails start folded. **Group by Status** is the work queue, worst first. **Group by Inspection** shows each rule with every tail's countdown on it. Signed-off work is deliberately not here. |
+| **Inspection rules** | The rules rather than their instances, grouped into On the meter, Whichever comes first, On the calendar and One-off. Unfold a rule to see the aircraft it covers. |
+| **Compliance log** | Every signed-off inspection, kept for the life of the aircraft. |
+| **Squawks → Open** | Every outstanding discrepancy, newest first, grouped into grounding squawks and the rest, or by aircraft. |
 | **Squawks → Resolved** | The ones already closed out. |
 
-A search box and filter chips sit above the content. On **All inspections** you also get a
-Status filter with Overdue, Due soon and Not yet due.
+A search box and filter chips sit above the content. On **Inspections** the Status filter
+follows the grouping: grouped by Aircraft it filters tails, otherwise it filters inspections
+(Overdue, Due soon, Needs a reading or date, Not yet due).
+
+## Open one inspection
+
+Click an inspection in the list to see it in a panel beside the list: where it stands, the
+rule it comes from, and **Sign off**. Double-click it, or press **Open the full inspection**,
+for its own page. The page adds:
+
+- **History**: every earlier sign-off of the same rule on that aircraft, newest first, with
+  the mechanic, certificate and method from its compliance record when one was written.
+- **Files**: the working files for this inspection.
+- **Work order**: the job that carries it, if one does. Signing the inspection off completes
+  that job's item. Administrators and technicians see this; dispatchers do not.
+- **Activity**: when it was opened and when it was signed off, for administrators.
+
+Inspection notifications in the console open this page too.
 
 Each aircraft carries the same information for its own tail under
 <Where app="web">Aircraft → the tail → Maintenance</Where>: an Inspections card and an
@@ -98,7 +114,7 @@ the console cannot do:
   one from the console, because the Maintenance section of an aircraft's page is hidden
   from them.
 - A **Signed off** filter on the Inspections board, behind the filter glyph in the header.
-  The console's All inspections view never shows completed work.
+  The console's Inspections view never shows completed work.
 
 
 ## Where to go next

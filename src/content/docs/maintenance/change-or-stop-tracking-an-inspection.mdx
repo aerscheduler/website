@@ -1,7 +1,7 @@
 <Summary>
 To put an inspection on one more tail, open that aircraft and use
-<Where app="web">Maintenance → Add</Where>. To rework the whole list at once, use the
-aircraft button on the rule under <Where app="web">Maintenance → Set up</Where>. To stop
+<Where app="web">Maintenance → Add</Where>. To rework the whole list at once, use
+**Choose aircraft** in the rule's **…** menu under <Where app="web">Maintenance → Inspection rules</Where>. To stop
 tracking something altogether, delete the rule, which stops tracking it on every aircraft it
 covers.
 </Summary>
@@ -30,12 +30,12 @@ From the console, work from the aircraft rather than from the rule.
 ## Change the whole list at once
 
 <Steps>
-  <Step n={1} title="Open Maintenance, then Set up">
-    Find the rule. Rules are grouped into On the meter, On the calendar and One-off.
+  <Step n={1} title="Open Maintenance, then Inspection rules">
+    Find the rule. Rules are grouped into On the meter, Whichever comes first, On the calendar
+    and One-off.
   </Step>
-  <Step n={2} title="Click the aircraft button on the row">
-    It is labelled **Which aircraft this covers**. Tail numbers are chips: click one to
-    attach it, click an attached one to detach it.
+  <Step n={2} title="Open the rule's … menu and pick Choose aircraft">
+    Tail numbers are chips: click one to attach it, click an attached one to detach it.
   </Step>
   <Step n={3} title="Set a starting point for any tail you just added">
     A **When was it last done?** box appears per newly added tail, for a meter reading or a
@@ -71,16 +71,16 @@ the aircraft is returned to service at the same time.
 ## Stop tracking an inspection entirely
 
 <Steps>
-  <Step n={1} title="Open Maintenance, then Set up">
-    Rules are grouped into On the meter, On the calendar and One-off.
+  <Step n={1} title="Open Maintenance, then Inspection rules">
+    Rules are grouped into On the meter, Whichever comes first, On the calendar and One-off.
 
     <Screenshot id="maintenance-set-up" />
   </Step>
-  <Step n={2} title="Expand the aircraft chips first">
-    Click the "N aircraft" chip on the row and read the list. This is the one number that
-    tells you how big the delete is.
+  <Step n={2} title="Unfold the rule first">
+    Click the arrow beside the rule to list the aircraft it covers; the Aircraft column has the
+    count. This is the one number that tells you how big the delete is.
   </Step>
-  <Step n={3} title="Click the trash icon and read the confirmation">
+  <Step n={3} title="Choose Delete from the rule's … menu and read the confirmation">
     It reads "This stops tracking it on N aircraft. Work already signed off stays on the
     record."
   </Step>
@@ -103,10 +103,10 @@ confirmation is easy to skim past.
 
 ## A rule on no aircraft never comes due
 
-A rule with no tails attached looks completely normal in the Set up list except for one
-line: "Not on any aircraft, so it never comes due." Nothing will ever fire from it and
+A rule with no tails attached is easy to miss under Inspection rules: it carries an amber
+**On no aircraft** tag and a **Choose** button where the aircraft count would be. Nothing will ever fire from it and
 nobody will ever be emailed about it.
 
 The usual way to end up with one is on the phone, where **Add inspection** creates the rule
 first and then sends you on to pick the aircraft. Abandon that second step and the rule
-survives with no tails. Attach them with the aircraft button on the row, as above.
+survives with no tails. Attach them with the **Choose** button on its row, as above.

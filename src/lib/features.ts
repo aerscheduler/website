@@ -11,6 +11,7 @@ export type FeatureSlug =
   | "memberships"
   | "maintenance"
   | "inspections"
+  | "work-orders"
   | "mobile"
   | "reports"
   | "utilization"
@@ -247,9 +248,10 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
     eyebrow: "Airworthiness",
     headline: "Squawks next to the schedule. Inspections that ground when they lapse.",
     summary:
-      "Track AVIATES inspections and squawks on each tail, triage with the tech, and keep grounded airplanes off the bookable board.",
+      "Track AVIATES inspections and squawks on each tail, triage with the tech, keep grounded airplanes off the bookable board, and run a work order for every job, on your own fleet or a customer's aircraft.",
     bullets: [
       "Log, triage, and resolve squawks, optionally grounding the aircraft",
+      "Work orders on your own fleet and customers' aircraft, from request to sign-off and, for a customer, a paid invoice",
       "Photos and PDFs on a squawk, from the ramp or the desk",
       "Photos and PDFs on an open inspection, copied onto the signed record",
       "POH and weight and balance on the aircraft, readable when you book",
@@ -259,7 +261,7 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
       "Log issues from the native app on the ramp",
     ],
     personas: ["Technicians", "Admins", "Dispatchers"],
-    related: ["inspections", "fleet", "scheduling", "compliance"],
+    related: ["inspections", "work-orders", "fleet", "scheduling"],
   },
   inspections: {
     slug: "inspections",
@@ -289,6 +291,32 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
       "/resources/airworthiness-directive-tracking",
       "/resources/aircraft-maintenance-records",
     ],
+  },
+  "work-orders": {
+    slug: "work-orders",
+    title: "Work Orders",
+    navLabel: "Work Orders",
+    eyebrow: "Shop",
+    headline: "From the owner's call to a paid invoice.",
+    summary:
+      "A work order for every job in the hangar, on your own fleet or a customer's aircraft: findings the owner approves, labor and parts at your rates, and for a customer, one invoice they pay by card or ACH.",
+    bullets: [
+      "Work orders on your own fleet too: billed to nobody, or to a leaseback owner",
+      "Customers' aircraft with their owners, never bookable and never counted on your plan",
+      "A numbered work order per job, from Requested to Ready for pickup",
+      "Owner's requests and the shop's findings kept apart, each with its own labor and parts",
+      "Send findings to the owners to approve, decline or put off, or log the answer from a call",
+      "Labor at the shop rate, parts and outside work at cost plus your markup, discounts per line",
+      "Hobbs and tach in and out recorded on the job, never written to the aircraft",
+      "Link an open inspection or squawk to an item, and it is done when it is signed off",
+      "Raise one invoice for the job, with the work order number, tail and meters on it",
+      "Sales tax line by line: parts taxed, labor not, where your state works that way",
+      "Owners hear when the aircraft arrives and when it is ready, and can sign in to see their own jobs",
+      "Technicians log their own hours and parts; only an admin changes a price or who pays",
+      "Job invoices sync to QuickBooks Online",
+    ],
+    personas: ["Technicians", "Admins", "Aircraft owners"],
+    related: ["maintenance", "inspections", "billing", "integrations"],
   },
   mobile: {
     slug: "mobile",

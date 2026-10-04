@@ -110,9 +110,9 @@ export const MODULES: ProductModule[] = [
   {
     slug: "maintenance",
     title: "Maintenance",
-    tagline: "Nothing unairworthy leaves the ramp, and nobody has to remember why.",
+    tagline: "Inspections, squawks and work orders, for your aircraft and your customers'.",
     hub: "maintenance",
-    supporting: ["inspections"],
+    supporting: ["inspections", "work-orders"],
     docsSection: "maintenance",
     photo: {
       src: "/photos/maintenance-hangar.jpg",

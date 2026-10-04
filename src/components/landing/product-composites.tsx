@@ -13,7 +13,6 @@ import {
   ListFilter,
   Mail,
   Menu,
-  MessageSquare,
   Monitor,
   Paperclip,
   Plane,
@@ -561,7 +560,7 @@ export function TrainingComposite() {
 }
 
 /* ------------------------------------------------------------------ */
-/* Maintenance: the fleet's inspections + a squawk thread              */
+/* Maintenance: the fleet's inspections + a customer's work order      */
 /* ------------------------------------------------------------------ */
 
 const FLEET = [
@@ -598,30 +597,45 @@ export function MaintenanceComposite() {
         </Panel>
       }
       front={
-        <Panel title="Squawk · N472DP" icon={<MessageSquare className="size-3.5 text-black/45" />} right={<Tag color={STATUS.yellow}>Open</Tag>}>
-          <div className="space-y-3.5 p-4 text-[12px]">
+        /* A customer's aircraft on a work order (2026-10-03, when work orders shipped; it
+           was a squawk thread before). The finding the owner approved, its labor at the
+           shop rate and a part at cost plus 15%, and Raise invoice. Figures add up:
+           1.5 h x $135.00 = $202.50; a $75.00 kit at 15% = $86.25. */
+        <Panel title="WO-1042 · N826PA" icon={<Wrench className="size-3.5 text-black/45" />} right={<Tag color={STATUS.green}>Approved</Tag>}>
+          {/* Bottom padding so the panel's fade lands on empty space, not on Raise invoice. */}
+          <div className="space-y-3 p-4 pb-12 text-[12px]">
+            <Enter delay={250} from="left">
+              <div className="flex items-center justify-between gap-3">
+                <span className="flex min-w-0 items-center gap-2">
+                  <span className="size-3 shrink-0 rounded-full" style={{ background: STATUS.blue }} />
+                  <span className="truncate font-medium">Left brake pad worn below limits</span>
+                </span>
+                <span className="shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium" style={{ background: hex(STATUS.green, 0.12), color: STATUS.green }}>
+                  Approved
+                </span>
+              </div>
+            </Enter>
             {[
-              ["DH", "Dana Holloway", "8:42 AM", "Nav light flickers on taxi. Steady once airborne.", "#9b87f5"],
-              ["WA", "Wes Abbott, A&P", "11:15 AM", "Loose connector at the left wingtip. Reseated and tested on the ramp.", "#4cb782"],
-            ].map(([ini, who, when, note, tone], i) => (
-              <Enter key={who} delay={250 + i * 300} from="left">
-                <div className="flex gap-2.5">
-                  <span className="flex size-6 shrink-0 items-center justify-center rounded-full text-[9px] font-semibold text-white" style={{ background: tone }}>{ini}</span>
-                  <div>
-                    <p><span className="font-medium">{who}</span> <span className="text-black/35">{when}</span></p>
-                    <p className="text-black/60">{note}</p>
-                  </div>
+              ["Labor", "1.5 h × $135.00", "$202.50"],
+              ["Part", "Brake lining kit", "$86.25"],
+            ].map(([kind, what, amount], i) => (
+              <Enter key={kind} delay={550 + i * 250} from="left">
+                <div className="grid grid-cols-[44px_1fr_auto] items-center gap-3 pl-5 text-black/60">
+                  <span className="text-black/40">{kind}</span>
+                  <span className="truncate">{what}</span>
+                  <span className="tabular-nums text-[#1b1c1f]">{amount}</span>
                 </div>
               </Enter>
             ))}
-            <Enter delay={900}>
-              <div className="flex items-center gap-2 rounded-md border border-black/[0.07] bg-black/[0.02] px-2.5 py-1.5 text-black/45">
-                <Paperclip className="size-3.5" /> wingtip-connector.jpg
-              </div>
+            <Enter delay={1050}>
+              <p className="flex items-center gap-2 rounded-md border border-black/[0.07] bg-black/[0.02] px-2.5 py-1.5 text-black/50">
+                <Mail className="size-3.5" /> Dana Whitfield approved it from the email
+              </p>
             </Enter>
-            <Enter delay={1200}>
-              <div className="flex items-center gap-2 rounded-md px-2.5 py-2" style={{ background: hex(STATUS.green, 0.1), color: STATUS.green }}>
-                <Check className="size-3.5" strokeWidth={2.5} /> Resolve squawk
+            <Enter delay={1300}>
+              <div className="flex items-center justify-between rounded-md px-2.5 py-2" style={{ background: hex(STATUS.blue, 0.1), color: STATUS.blue }}>
+                <span className="flex items-center gap-2"><Receipt className="size-3.5" /> Raise invoice</span>
+                <span className="tabular-nums font-medium">$1,392.90</span>
               </div>
             </Enter>
           </div>

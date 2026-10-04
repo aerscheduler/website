@@ -67,7 +67,13 @@ const FEATURE_SEO: Record<
   maintenance: {
     title: "Aircraft Maintenance & Squawk Tracking Software",
     description:
-      "Log squawks against a tail, ground an aircraft so nobody can book it, schedule downtime on the dispatch board, and give your mechanic access without showing them a single invoice.",
+      "Log squawks against a tail, ground an aircraft so nobody can book it, schedule downtime on the dispatch board, and run work orders on your own and customers' aircraft.",
+  },
+  "work-orders": {
+    // Commercial intent. The help article "Run a work order" keeps the how-to query.
+    title: "Aircraft Maintenance Work Order Software",
+    description:
+      "Work orders for your own fleet and for customers' aircraft: findings the owner approves, labor and parts at your rates, and one invoice paid by card or ACH.",
   },
   inspections: {
     // Commercial intent ("software", "tracking"). The three airworthiness guides

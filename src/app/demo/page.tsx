@@ -131,9 +131,10 @@ export default function DemoPage() {
               Try AerScheduler live, with no signup
             </h1>
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground">
-              One click opens a fully-loaded sample flight school in your browser. Move
-              flights, run the reports, and see the whole operation from every seat.
-              No account, no credit card, nothing to install.
+              One click opens a fully-loaded sample flight school in your browser,
+              with a maintenance shop working on customers&apos; aircraft. Move
+              flights, run the reports, open a work order, and see the whole operation
+              from every seat. No account, no credit card, nothing to install.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button href={DEMO_URL} size="lg">
@@ -148,6 +149,16 @@ export default function DemoPage() {
             <p className="mt-4 text-sm text-muted-foreground">
               Opens instantly · Nothing here is real · Resets itself, so poke around
               freely
+            </p>
+            {/* Mechanics land on the shop's job board, not the dispatch board. The
+                console's /demo takes an allowlisted `to`, so this cannot point anywhere
+                else. */}
+            <p className="mt-3 text-sm text-muted-foreground">
+              Run a maintenance shop?{" "}
+              <a href={`${DEMO_URL}?to=work-orders`} className="font-semibold text-primary hover:underline">
+                Open the sample shop&apos;s work orders
+              </a>
+              .
             </p>
             {/* The white-glove path. Most visitors want the sandbox, but a school
                 migrating off another platform wants a person, and this page is

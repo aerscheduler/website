@@ -1,8 +1,9 @@
 <Summary>
 On the Aircraft page, open the menu beside **Add aircraft** and choose **A customer's
-aircraft**. It gets its own inspections, squawks and history, it can never be booked to fly,
-and it does not count toward what you pay. Then add the owner on its **Owners** panel so the
-work has somebody to bill.
+aircraft**, and put its owner in the same form. It gets its own inspections, squawks and
+history, it can never be booked to fly, and it does not count toward what you pay. When the
+owner is on the phone and the aircraft is not on file yet, add it straight from
+**Open a work order**: type the tail and choose **Add a customer aircraft**.
 </Summary>
 
 <Roles>Owners, Admins, Dispatchers, Technicians</Roles>
@@ -29,12 +30,19 @@ from and somebody with an admin role sets it up.
     renting this one out. Put in the Hobbs and tach readings as they are when it arrives.
     Everything that comes due later is counted from them.
   </Step>
-  <Step n={4} title="Click Add aircraft">
+  <Step n={4} title="Say who owns it">
+    **Owner** lists everybody on your roster: pick them, or choose **Add a new person** and
+    type their name, email and phone. They are the one billed for the work. It is optional,
+    for the call where you do not know yet; co-owners go on the Owners panel afterwards. If
+    the email address is already somebody's, the aircraft is added and the form asks whether
+    it is the same person, as described below.
+  </Step>
+  <Step n={5} title="Click Add aircraft">
     It appears under **Customer aircraft**, and nowhere your pilots can see.
   </Step>
 </Steps>
 
-## Add the owner
+## Add another owner
 
 Open the aircraft, then <Where app="web">Owners → Add owner</Where>. A name is all that is
 required. Add an email and a phone number too: the email is where the invoices you raise for
@@ -42,8 +50,18 @@ them are sent, and the phone number is what you will reach for when the annual t
 something. On the owner's row, the phone number is a link you can tap to call.
 
 The owner goes on your roster, marked **Aircraft owner** and **Not signed up**. They cannot
-sign in, and AerScheduler sends them nothing on its own: no notifications, no reminders, no
-marketing. The only thing that reaches them is an invoice you choose to send.
+sign in yet. If you record an email address, AerScheduler writes to them there about their
+aircraft, and nothing else (no marketing):
+
+- when a job on it is booked in, arrives, is ready, or its promised date moves;
+- when you click **Send to owner** on a job;
+- when an inspection on it is coming due;
+- the invoices you raise for them;
+- when you click **Email how to sign in** on their page (below).
+
+Each of those emails says how to sign up with that address and join, after which they see their
+aircraft and answer in AerScheduler. Every one can be turned off from the email itself. See
+[See your aircraft and approve work](/docs/maintenance/see-your-aircraft-and-approve-work).
 
 The first owner you add is marked **Billed**: the one the work is invoiced to. If the
 aeroplane is owned by a partnership, add the others too, and click the star on a row to move
@@ -77,10 +95,68 @@ says who has it.
 
 ## The owner's page
 
-Click the owner's name, on the Owners panel or in People, to open their page. It shows the
-contact details you recorded, when they were added, every aircraft they own with you (and
-which ones they are billed for), their work orders, and their invoices. It is deliberately short: they have no
-schedule, training or permissions to manage.
+Click the owner's name, on the Owners panel or in People, to open their page. It is
+deliberately short, because they have no schedule, training or permissions to manage:
+
+- **Overview**: their contact details, and **Customer details**: the billing address,
+  whether they would rather get a call, a text or an email, and the shop's notes about them.
+  Owners and admins click any of these to change it; technicians can read them. The owner
+  never sees the customer details.
+- **Aircraft**: what they own with you, which ones they are billed for, and where each one's
+  current job stands.
+- **Work orders**: the jobs billed to them, open first, with **Open a work order**.
+- **Invoices**.
+
+## The aircraft's details
+
+On a customer's aircraft (and your own), **Airframe, engine and propeller** on its Overview
+keeps the airframe's total time, the engine and propeller models and serial numbers, and
+notes. Enter the total time once, with the Hobbs reading it was taken at (the tach, on an
+aircraft that has only a tach): it is carried forward by the hours flown since, so it stays
+current without being typed again. Copy both from the same logbook entry. If the Hobbs on
+record is old, the hours flown elsewhere since would otherwise be counted twice. Owners,
+admins and technicians change these in place; dispatchers can read them.
+
+## Record the Hobbs and tach
+
+A customer's aircraft flies somewhere else, so its hour-based inspections are only as current
+as the last time somebody read its meters. **Hobbs and tach** on the aircraft's Overview lists
+every reading: the ones your people recorded, with who, when, a note and a photo of the
+meter, and the ones close-outs took.
+
+<Steps>
+  <Step n={1} title="Click Record a reading">
+    On the aircraft's Overview, in **Hobbs and tach**. Owners, admins and technicians can
+    record one; dispatchers can read the list.
+  </Step>
+  <Step n={2} title="Enter what the meters say">
+    The Hobbs, the tach, or both, in hours (for example 2461.2). Leave one empty if you only
+    read the other. Change **Read** if you are entering a reading from another day, add a
+    note, and attach a photo of the meter if you took one. A reading dated before the newest
+    one on record goes into the list as history and leaves the aircraft's times alone.
+  </Step>
+  <Step n={3} title="Click Record">
+    The aircraft's times change to what you entered, and its hour-based due dates move with
+    them.
+  </Step>
+</Steps>
+
+Two readings stop and ask first:
+
+- **Lower than the times on record.** The form asks why. **The last reading was mistyped**
+  puts the meters back to this reading and leaves the airframe's total time alone. **The
+  meter was replaced** also carries the total time on from the new meter, and the activity
+  log records the total before and after. Either way the list marks the reading
+  **Correction** and keeps what it replaced. Pick the right one: choosing "replaced" for a
+  typo adds the typo's hours to the total time.
+- **Past an inspection that grounds the aircraft.** Saving it grounds the aircraft and emails
+  your organization, the same as a flight that reaches the due point.
+
+<Callout type="warning">
+  When a customer's aircraft has not been read in over 30 days, the card says so. Its due
+  dates are worked out from the last reading, so an aircraft that has flown 80 hours since
+  can show a 100-hour inspection as comfortably in the future.
+</Callout>
 
 ## Track the job
 
@@ -124,26 +200,52 @@ on the Owners panel first, or print it from the invoice.
 
 ## When the owner signs up
 
-If an owner creates an AerScheduler account with **the email address you recorded**,
-confirms it, and joins your school, their record becomes theirs: the aircraft, the invoices
-and the history move with them, and the **Not signed up** mark goes away. Nothing to do on
-your side.
+To let an owner see their aircraft for themselves, open their page and click **Email how to sign
+in** on **Contact** (owners and admins). AerScheduler sends a short note from your organization
+to the address on their record: sign in to AerScheduler, or create an account, with that
+address, then join your organization with its code. The button shows while they have not signed
+up, you have an email address for them, and they have something to see: an aircraft they own
+here, or a job or bill of theirs. Somebody you bill who owns no aircraft here gets a note about
+their jobs and bills rather than their aircraft, and their page is marked **Customer** rather
+than **Aircraft owner**.
 
-It only happens when **the name on their account matches the name you recorded**, exactly
-(capital letters and extra spaces aside). An address can be shared, and matching on the
-address alone would let somebody who reads the family inbox take over another person's
-aircraft and invoices.
+It is not an invitation, and nothing is kept waiting on your side. If you correct their address
+later, click it again: it always goes to the address on the record at that moment. One owner can
+be sent it twice an hour. If they turned off the emails about their aircraft, nothing is sent and
+you are told so; give them the code another way.
+
+If an owner creates an AerScheduler account with **the email address you recorded**,
+confirms it, and joins your organization, their record becomes theirs: the aircraft, the
+invoices and the history move with them, and the **Not signed up** mark goes away. Nothing to
+do on your side, and nobody has to approve them, even if your organization approves the people
+who join with its code.
+
+Signed in, they see their own aircraft, the jobs on them and their bills, and nothing else of
+yours: not the schedule, your people or your fleet. They can answer what you found, ask for
+work, update a customer aircraft's times, attach photos, and pay. They never see your shop
+notes, your costs or your markups. See
+[See your aircraft and approve work](/docs/maintenance/see-your-aircraft-and-approve-work).
+An answer they give shows on the job as a call from them, recorded by AerScheduler.
+
+When yours is the only record at that address, the name on their account does not matter
+("Walt" for "Walter Brenner" is fine): you chose the address, and you write to it. When you
+recorded two or more people at one address (a family inbox, say), **the name on their account
+has to match the name you recorded**, exactly (capital letters and extra spaces aside), so one
+of them cannot take over another's aircraft and invoices. Archived owners at that address count
+too, and an archived record is never handed over: restore it first.
 
 <Callout type="warning">
-If the names differ ("Walt" on their account, "Walter Brenner" on your record), they join as
-a new member and your record of them stays separate. You will see the same person twice in
+If the address is shared and the names differ, nothing is handed over. They join with nothing of
+yours to see, your record of them stays separate, and you will see the same person twice in
 People. Before they sign up, correct the name on your record to match theirs, or ask them to
 sign up with the name you have.
 </Callout>
 
-If the owner used to be a member of your school, left, and was recorded as an owner while
-they were away, rejoining brings back their old membership with its flying history, and the
-aircraft and invoices you recorded move onto it. If the record you kept for them holds
+If the owner used to be one of your organization's people, left, and was recorded as an owner
+while they were away, joining with the code is a return, not a claim: if your organization
+approves the people who join, they wait for approval like anybody else. Rejoining brings back
+their old membership with its flying history, and when the name on their account matches the
+name you recorded, the aircraft and invoices move onto it. If the record you kept for them holds
 anything more than aircraft and invoices, the two are left side by side, exactly as before.
 
 ## What is different about a customer's aircraft

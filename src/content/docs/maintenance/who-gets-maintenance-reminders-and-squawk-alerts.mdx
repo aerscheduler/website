@@ -1,26 +1,61 @@
 <Summary>
-Only admins and technicians ever receive maintenance reminders or squawk alerts. You can
-turn maintenance reminders off for yourself under
-<Where app="web">You → Notification settings</Where>. Squawk alerts have no switch and
+On your own aircraft, only admins and technicians receive maintenance reminders or squawk
+alerts. On a customer's aircraft, technicians hear by their own setting and the aircraft's
+owners get reminders too. You can turn maintenance reminders off for yourself under
+<Where app="web">your organization's name → Notification settings</Where>. Squawk alerts have no switch and
 cannot be turned off.
 </Summary>
 
 <Roles>Owners, Admins, Technicians</Roles>
 
-## Only admins and technicians are notified
+## On your own aircraft, only admins and technicians are notified
 
-There is no way to send maintenance reminders to anybody else. Dispatchers, instructors,
-students and renters are never emailed or pushed about an inspection or a squawk, whatever
-their notification settings say.
+On your organization's own aircraft there is no way to send maintenance reminders to anybody
+else. Dispatchers, instructors, students and renters are never emailed or pushed about an
+inspection or a squawk, whatever their notification settings say. A customer's aircraft is
+different, below: its owners are reminded whatever their role.
 
 If the person who needs to know about the fleet is not getting anything, the fix is their
 role, not their preferences.
+
+## Customer aircraft are different
+
+An aircraft in for maintenance (one your shop looks after for an owner) works differently:
+
+- **Technicians choose which ones they hear about**, under **Customer aircraft inspections** in
+  their notification settings: **Aircraft I've worked on** (the default: aircraft you were
+  assigned to on a past job), **All customer aircraft**, or **Off**. An aircraft nobody here has
+  worked on yet goes to everybody whose setting is not **Off**, so nothing falls through.
+- **Admins hear nothing about customer aircraft** unless they pick one of those settings
+  themselves. The exception: an organization with no technicians signed in sends these to its
+  admins, so somebody always hears, and their setting shows **All customer aircraft** until they
+  change it.
+- **The aircraft's owners are reminded too**: 30 days and 7 days before an inspection is due,
+  when it is due, and when it is overdue; for one counted in hours, 10 hours before and when it
+  is due. One message lists everything that crossed a step at once, the most urgent first, and
+  an inspection counted both ways ("100 hours or 12 months") gives both figures, whichever comes
+  first. An owner who has not signed up is emailed at the address on the aircraft. Calendar
+  steps go out in the working day where the organization is.
+- **Owners are not reminded about what they already know.** Nothing goes out while the
+  inspection is on a job the owner has been told about (booked in or further), nor for a week
+  after that job is closed out as completed, while the sign-off is entered. On a job that is only
+  requested, the reminder still goes, and names the job instead of asking them to call. When the
+  aircraft is at the shop on another job, the reminder says so and asks them to have you add the
+  inspection to it. A cancelled job hands the inspection back at once.
+- **Nothing goes out about a job held from the owner.** While an inspection is on a job whose
+  owner emails are on hold, its reminder waits, still owed, and follows the rules above once you
+  lift the hold.
+- **Somebody who owns a customer aircraft and works here** gets the due and overdue notices once,
+  from the shop side by their own setting, and the earlier owner reminders (30 days, 7 days, 10
+  hours) as an owner.
+
+How each person hears (email, push) still follows their **Maintenance reminders** switch.
 
 ## Turn maintenance reminders off for yourself
 
 <Steps>
   <Step n={1} title="Open your notification preferences">
-    <Where app="web">You → Notification settings</Where>, or
+    <Where app="web">your organization's name → Notification settings</Where>, or
     <Where app="mobile">Settings → Notifications</Where> in the app.
   </Step>
   <Step n={2} title="Find the Maintenance section">
@@ -30,7 +65,7 @@ role, not their preferences.
   </Step>
   <Step n={3} title="Toggle Maintenance reminders">
     One switch, covering aircraft inspection and due-item reminders. Email switches live on
-    the console. Push categories are managed in the app, as the footer of the page says.
+    the console, as are push.
   </Step>
 </Steps>
 
@@ -39,7 +74,7 @@ notified.
 
 ## Squawk alerts cannot be turned off
 
-Every squawk filed sends an email and a push to every admin and technician in the school,
+Every squawk filed sends an email and a push to every admin and technician in the organization,
 except the person who filed it. There is no switch for it on either surface.
 
 <Callout type="note">
@@ -80,7 +115,8 @@ everything back into line. See
 ## Where the email link takes you
 
 A maintenance reminder links straight to the inspection it is about, which opens properly in
-the iOS app.
+the iOS app. An owner's reminder opens their aircraft, or their **Home** when it lists more than
+one aircraft.
 
 A squawk alert's button lands on that squawk's own page, on both surfaces. Searching its
 title from anywhere in the console opens the same page.

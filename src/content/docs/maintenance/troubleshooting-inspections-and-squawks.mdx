@@ -89,7 +89,7 @@ fails, so trim the notes if you are on the phone.
 
 Look at the grounding reason on the aircraft's page.
 
-- If it reads exactly "Maintenance", something else is still holding it. Check <Where app="web">Maintenance → All inspections</Where> filtered to that tail for anything still overdue. Any overdue inspection holds the grounding, not only the ones that ground.
+- If it reads exactly "Maintenance", something else is still holding it. Check <Where app="web">Maintenance → Inspections</Where> filtered to that tail for anything still overdue. Any overdue inspection holds the grounding, not only the ones that ground.
 - If it reads anything a person wrote ("Prop strike", "Annual in progress"), that is a hand grounding and no sign-off will ever lift it. An admin has to click **Return to service**.
 
 That second case is by design: AerScheduler will not overrule somebody who took an aircraft
@@ -106,10 +106,10 @@ grounding squawk from the console is limited to the roles that can reach the Log
 grounding by hand is admin only. See
 [Ground an aircraft](/docs/maintenance/ground-an-aircraft).
 
-## Signed-off inspections are missing from All inspections
+## Signed-off inspections are missing from Inspections
 
-They are meant to be. **All inspections** is the work queue, so it holds outstanding items
-only, and the Status filter there has no "Signed off" option.
+They are meant to be. **Inspections** is the work queue, so it holds outstanding items only,
+and the Status filter there has no "Signed off" option.
 
 Completed work is still on the record in three places: the aircraft's own Maintenance tab,
 the **Maintenance due** report with a Resolved status filter, and the audit log. The iOS
@@ -118,8 +118,8 @@ prove a 100-hour was closed out.
 
 ## I set up an inspection and it never comes due
 
-Open <Where app="web">Maintenance → Set up</Where> and find the rule. If it reads "Not on any
-aircraft, so it never comes due", it is attached to nothing and will never fire.
+Open <Where app="web">Maintenance → Inspection rules</Where> and find the rule. If it carries an **On no aircraft**
+tag, it is attached to nothing and will never fire. Press **Choose** on its row to add tails.
 
 <Screenshot id="maintenance-set-up" />
 

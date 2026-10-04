@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/button";
 import { FeatureSection, type FeatureSectionData } from "@/components/landing/feature-sections";
+import { HeroHeadline } from "@/components/landing/hero-headline";
 import { STATUS } from "@/components/landing/product-tokens";
 import { PhoneMock } from "@/components/phone-mock";
 import { StoreBadges } from "@/components/store-badges";
@@ -152,20 +153,20 @@ const SECTIONS: FeatureSectionData[] = [
     id: "maintenance",
     color: STATUS.orange,
     layout: "readouts",
-    title: <>Maintenance<br />tracking</>,
-    body: "Every inspection counts down by tach, Hobbs or calendar month, and squawks come in from the ramp with photos. An overdue annual or 100-hour grounds the aircraft until it is signed off.",
+    title: <>Maintenance<br />and work orders</>,
+    body: "Every inspection counts down by tach, Hobbs or calendar month, and an overdue annual grounds the aircraft until it is signed off. Each job gets a work order, on your own fleet or a customer's aircraft, and a customer's job goes all the way to a paid invoice with the owner approving what you find.",
     href: "/features/maintenance",
     visual: <MaintenanceComposite />,
     features: [
       [
         { label: "Inspection tracking", href: "/features/inspections" },
-        { label: "Squawks", href: "/features/maintenance" },
-        { label: "Automatic grounding", href: "/features/maintenance" },
+        { label: "Squawks and grounding", href: "/features/maintenance" },
+        { label: "AD compliance", href: "/resources/airworthiness-directive-tracking" },
       ],
       [
-        { label: "AD compliance", href: "/resources/airworthiness-directive-tracking" },
-        { label: "Go / No-Go board", href: "/docs/maintenance/use-the-go-no-go-board" },
-        { label: "Mechanic access", href: "/docs/maintenance/who-can-do-what-in-maintenance" },
+        { label: "Work orders", href: "/features/work-orders" },
+        { label: "Owner approvals", href: "/docs/maintenance/see-your-aircraft-and-approve-work" },
+        { label: "Customer aircraft", href: "/docs/maintenance/work-on-a-customers-aircraft" },
       ],
     ],
   },
@@ -231,28 +232,20 @@ export default function HomePage() {
           aria-hidden
         />
         <div className="relative mx-auto max-w-7xl px-4 pt-16 text-center sm:px-6 lg:pt-24">
-          {/* The category phrase is the first line of the H1, styled as a pill.
-              Every paid click on the generic ad group lands here, and somebody
-              who searched "flight school management software" should read those
-              words first. Keeping it INSIDE the h1 puts the exact search phrase
-              in the page's main heading. */}
-          <h1 className="animate-fade-up">
-            <span className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-3.5 py-1.5 text-xs font-semibold tracking-tight text-[#1b1c1f] shadow-sm sm:text-sm">
-              <span className="size-1.5 rounded-full bg-primary" aria-hidden />
-              Flight school management software
-            </span>
-            <span className="sr-only">: </span>
-            <span className="mx-auto mt-6 block max-w-4xl text-balance text-[2.6rem] font-semibold leading-[1.02] tracking-[-0.035em] text-[#0b0b0d] sm:text-6xl lg:text-[5rem]">
-              The command deck for your flight school.
-            </span>
-          </h1>
+          {/* The category phrase is the first line of the H1, styled as a pill
+              that crossfades between flight school, maintenance and flying club
+              software without changing width. The headline stays still. The
+              server renders "flight school management software" first, because
+              every paid click on the generic ad group lands here. See HeroHeadline. */}
+          <HeroHeadline />
           {/* Calls to action directly under the promise, where the eye already
               is. They used to sit alone on the far right, which read as an
               afterthought. */}
           <p className="animate-fade-up-delay-2 mx-auto mt-6 max-w-xl text-lg leading-relaxed text-black/55 sm:text-xl">
-            Scheduling, billing, training records and maintenance tracking in
-            one system, with iOS and Android apps. ${PRICE_PER_AIRCRAFT} per
-            aircraft, with every instructor, student and renter included.
+            Scheduling, billing, training records, maintenance tracking and shop
+            work orders in one system, with iOS and Android apps.
+            ${PRICE_PER_AIRCRAFT} per aircraft, with every instructor, student
+            and renter included.
           </p>
           <div className="animate-fade-up-delay-3 mt-8 flex flex-wrap items-center justify-center gap-3">
             <Button href={SIGNUP_URL} size="lg">
@@ -293,9 +286,9 @@ export default function HomePage() {
             id="home-audience-heading"
             className="text-[11px] font-semibold uppercase tracking-[0.16em] text-black/40"
           >
-            Built for every kind of flying operation
+            Built for flying operations and the shops that maintain them
           </h2>
-          <RevealGroup className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-0">
+          <RevealGroup className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-5 lg:gap-0">
             <AudiencePoint
               href="/features/scheduling"
               title="Part 61 flight schools"
@@ -318,6 +311,13 @@ export default function HomePage() {
               title="Aircraft rental"
               body="Checkouts and currency checked before every booking, billed off the meters."
               rule
+            />
+            <AudiencePoint
+              href="/features/work-orders"
+              title="Maintenance shops"
+              body="Work orders on customers' aircraft, approved by the owner, billed at your rates."
+              rule
+              className="sm:col-span-2 lg:col-span-1"
             />
           </RevealGroup>
         </div>
@@ -567,20 +567,22 @@ function AudiencePoint({
   title,
   body,
   rule,
+  className = "",
 }: {
   href: string;
   title: string;
   body: string;
   rule?: boolean;
+  className?: string;
 }) {
   return (
     <Link
       href={href}
-      className={`group relative block lg:px-8 lg:first:pl-0 ${
+      className={`group relative block lg:px-6 lg:first:pl-0 ${
         rule
           ? "lg:before:absolute lg:before:inset-y-1 lg:before:left-0 lg:before:w-px lg:before:bg-black/10"
           : ""
-      }`}
+      } ${className}`}
     >
       <h3 className="flex items-center gap-1 text-lg font-semibold tracking-tight text-[#0b0b0d] transition-colors duration-150 group-hover:text-primary">
         {title}

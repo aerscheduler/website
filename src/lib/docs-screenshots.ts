@@ -936,29 +936,30 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
   },
   {
     id: "maintenance-by-aircraft",
-    screen: "Maintenance, By aircraft",
+    screen: "Maintenance, Inspections grouped by aircraft",
     route: "/maintenance?view=aircraft",
-    alt: "Maintenance, By aircraft",
+    alt: "Maintenance, Inspections grouped by aircraft",
     dataState:
-      "At least four aircraft. One grounded with a typed reason, one with an overdue grounding inspection, one with an item due soon, and one with nothing tracked yet, so all four badge states appear.",
+      "At least four aircraft. One grounded with a typed reason, one with an overdue grounding inspection, one with an item due soon, and one with nothing tracked yet, so the Grounded, Overdue, Due soon and Not tracked groups all appear.",
     crop: '[data-doc-shot="maintenance-by-aircraft"]',
   },
   {
     id: "maintenance-all-inspections",
-    screen: "Maintenance, All inspections",
-    route: "/maintenance?view=reminders",
-    alt: "Maintenance, All inspections",
+    screen: "Maintenance, Inspections grouped by status",
+    route: "/maintenance?view=aircraft&group=status",
+    alt: "Maintenance, Inspections grouped by status",
     dataState:
-      "At least six live inspections across two tails: one overdue carrying the red Grounds flag, one due soon counted in hours, one due soon counted in days, and one comfortably not yet due, so the progress bars differ.",
+      "At least six live inspections across two tails: one overdue carrying the amber Grounds tag, one due soon counted in hours, one due soon counted in days, and one comfortably not yet due, so the progress bars differ.",
     crop: '[data-doc-shot="maintenance-all-inspections"]',
   },
   {
     id: "maintenance-set-up",
-    screen: "Maintenance, Set up",
+    screen: "Maintenance, Inspection rules",
     route: "/maintenance?view=templates",
-    alt: "Maintenance, Set up",
+    alt: "Maintenance, Inspection rules",
     dataState:
-      "Rules in all three groups (On the meter, On the calendar, One-off). One rule attached to three or more aircraft with its chip list expanded, one carrying the Grounds badge, and one attached to no aircraft so the inert warning line shows.",
+      "Rules in at least three groups (On the meter, On the calendar, One-off). One rule attached to three or more aircraft, unfolded to show them, one carrying the Grounds tag, and one attached to no aircraft so its On no aircraft tag and Choose button show.",
+    open: ['[data-doc-shot="maintenance-set-up"] button[aria-label="Show its aircraft"]'],
     crop: '[data-doc-shot="maintenance-set-up"]',
   },
   {
@@ -1099,7 +1100,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     alt: "Sign off",
     dataState:
       "An overdue hour-based inspection that carries the Grounds flag, on an aircraft currently auto-grounded with the reason Maintenance, so the modal shows the tach reading field and the return-to-service line.",
-    // All inspections is sorted worst-first by the server, so the first Sign off
+    // Inspections grouped by status lists the worst band first, so the first Sign off
     // on the page belongs to the most urgent row, which is where the overdue
     // hour-based item lives.
     open: ['[data-doc-shot="maintenance-all-inspections"] button:has-text("Sign off")'],
@@ -1387,7 +1388,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     // and only one row is the mid-course Part 141 record these shots are of.
     route: "/training?tab=students",
     alt: "Training record, Overview tab",
-    open: ['a:has-text("Test Student"):has-text("Part 141")'],
+    open: ['[role="row"][aria-label^="Test Student, "][aria-label*="Part 141"]'],
     dataState:
       "A Part 141 student mid course: lessons bar part filled, pace badge showing At risk, the amber Not ready to graduate card naming two or more unmet requirements, an unbilled Course fee card, and one endorsement on the Endorsements card.",
     crop: '[data-doc-shot="enrollment-overview"]',
@@ -1398,7 +1399,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/training?tab=students",
     alt: "Training record, Requirements tab",
     open: [
-      'a:has-text("Test Student"):has-text("Part 141")',
+      '[role="row"][aria-label^="Test Student, "][aria-label*="Part 141"]',
       'nav[aria-label="Enrollment"] button:has-text("Requirements")',
     ],
     dataState:
@@ -1411,7 +1412,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/training?tab=students",
     alt: "Training record, Lessons tab",
     open: [
-      'a:has-text("Test Student"):has-text("Part 141")',
+      '[role="row"][aria-label^="Test Student, "][aria-label*="Part 141"]',
       'nav[aria-label="Enrollment"] button:has-text("Lessons")',
     ],
     dataState:
@@ -1424,7 +1425,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/training?tab=students",
     alt: "Training record, Ledger tab",
     open: [
-      'a:has-text("Test Student"):has-text("Part 141")',
+      '[role="row"][aria-label^="Test Student, "][aria-label*="Part 141"]',
       'nav[aria-label="Enrollment"] button:has-text("Ledger")',
     ],
     dataState:
@@ -1437,7 +1438,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/training?tab=students",
     alt: "Grade lesson dialog on the training record",
     open: [
-      'a:has-text("Test Student"):has-text("Part 141")',
+      '[role="row"][aria-label^="Test Student, "][aria-label*="Part 141"]',
       'nav[aria-label="Enrollment"] button:has-text("Lessons")',
       // This lesson and not the first one on the page: it is the flight lesson carrying
       // both minimums and three credited requirements, which is what the dialog is of.
@@ -1453,7 +1454,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/training?tab=students",
     alt: "Amend dialog",
     open: [
-      'a:has-text("Test Student"):has-text("Part 141")',
+      '[role="row"][aria-label^="Test Student, "][aria-label*="Part 141"]',
       'nav[aria-label="Enrollment"] button:has-text("Lessons")',
       // A record that is both signed and countersigned, so the dialog is offered at all.
       'div:has(> div > span:has-text("Basic instrument manoeuvres")) button:has-text("Amend")',
@@ -1469,7 +1470,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/training?tab=students",
     alt: "Add credit dialog",
     open: [
-      'a:has-text("Test Student"):has-text("Part 141")',
+      '[role="row"][aria-label^="Test Student, "][aria-label*="Part 141"]',
       'nav[aria-label="Enrollment"] button:has-text("Requirements")',
       'button:has-text("Add credit")',
       // Pick a requirement, so the dialog is not photographed on its placeholder. The
@@ -1537,7 +1538,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     // A different student from the other enrollment shots: this is the one whose every
     // requirement is met and whose record is certified, so the button is not disabled.
     open: [
-      'a:has-text("Alex Active"):has-text("Part 141")',
+      '[role="row"][aria-label^="Alex Active, "][aria-label*="Part 141"]',
       'button:has-text("Graduate")',
     ],
     dataState:
@@ -1552,7 +1553,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/training?tab=students",
     alt: "Sign an endorsement dialog",
     open: [
-      'a:has-text("Test Student"):has-text("Part 141")',
+      '[role="row"][aria-label^="Test Student, "][aria-label*="Part 141"]',
       'button:has-text("Sign one")',
       'button:has-text("Solo flight (first 90-day period)")',
     ],

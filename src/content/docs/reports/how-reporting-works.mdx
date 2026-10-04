@@ -9,17 +9,18 @@ everything else: report, category, saved view, and date basis.
 Open <Where app="web">Reports</Where>. A left rail lists everything that exists, and the pane beside it renders
 whichever item you pick.
 
-The rail is always in the same order. Overview and Scheduled reports sit at the top on their own, then five
-category headings: Financial, Operations, Fleet, People, Compliance.
+The rail is always in the same order. Overview and Scheduled reports sit at the top on their own, then the
+category headings: Financial, Operations, Fleet, Maintenance shop (at an organization that runs a shop), People,
+Compliance.
 
 On a narrow screen the rail collapses into a "Choose a report" select at the top of the page. Nothing is missing,
 it just moves.
 
 <Screenshot id="reports-rail-owner" />
 
-## The 18 reports are fixed, saved views are yours
+## The reports are fixed, saved views are yours
 
-There is no "new report" button, and you do not need one. Each of the 18 reports declares what its rows are, which
+There is no "new report" button, and you do not need one. Each report declares what its rows are, which
 columns exist, which filters it offers, and what it can be grouped by. You shape one of them, then save that shape
 as a view.
 
@@ -27,14 +28,14 @@ So the answer to "we need a report of X" is almost always: pick the nearest repo
 columns, save it. "Month-end revenue", "Lapsed students" and "Grounding squawks" are saved views, not separate
 reports. See [Save a report as a view](/docs/reports/save-a-report-view).
 
-Everything else in this area runs those same 18 reports underneath: the dashboard tiles, the Needs attention
+Everything else in this area runs those same reports underneath: the dashboard tiles, the Needs attention
 counts, the scheduled emails, and the CSV exports. That is why a tile and the report you click into always show the
 same number.
 
 ## Category decides who sees what
 
 Every report sits in one category, and the category is the whole permission model. Financial is owners and admins
-only. Dispatchers get Operations, Fleet, People and Compliance. Technicians get Fleet.
+only. Dispatchers get Operations, Fleet, People and Compliance. Technicians get Fleet and Maintenance shop.
 
 Reports you cannot run are absent, not greyed out. A dispatcher opening Reports sees no Financial heading at all,
 so there is nothing to click and no upgrade prompt to misread. Full detail is in
@@ -78,7 +79,7 @@ Reports is not the only place with figures on it, and the other places do not al
 
 | Where | What it is |
 |---|---|
-| <Where app="web">Reports</Where> | The 18 reports, Overview, and Scheduled reports. |
+| <Where app="web">Reports</Where> | Every report, Overview, and Scheduled reports. |
 | A member's Activity tab | One person's hours, flights and spend over a window you pick. |
 | An aircraft's Utilization tab | One tail's hours, flights and open squawks. |
 | <Where app="web">Dashboard</Where> | The console home page: fleet and people counts, the next seven days, and for admins an Outstanding card. |

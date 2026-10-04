@@ -64,6 +64,7 @@ export default function AboutPage() {
             <li>Flight schools and Part 141 / Part 61 training organizations</li>
             <li>Flying clubs and FBOs that rent aircraft</li>
             <li>Independent instructors who need a shared schedule</li>
+            <li>Maintenance shops and repair stations that work on customers&apos; aircraft</li>
           </ul>
 
           <div className="mt-12 flex flex-wrap gap-3">

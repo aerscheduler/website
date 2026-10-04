@@ -641,8 +641,8 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
         body: "Filed against a tail from the aircraft page or the close-out prompt, where the tech will actually look.",
       },
       {
-        title: "Money stays out of the hangar",
-        body: "A technician gets maintenance and the fleet, and reaches no invoice, rate or balance anywhere in the product.",
+        title: "Every job gets a work order",
+        body: "Your own fleet's annuals and a customer's aircraft alike, and a customer's job ends in a paid invoice.",
       },
     ],
     stepsTitle: "Soft brake to return to service",
@@ -682,7 +682,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
       },
       {
         q: "Can my mechanic have access without seeing the money?",
-        a: "Yes. The technician role opens maintenance and the fleet and reaches no invoice, rate or balance. It is why the role exists.",
+        a: "Mostly. The technician role opens maintenance and the fleet, and reaches no member's invoices or balances and no flight billing. On a work order a technician sees the shop's labor rate and the lines on the job, logs their own hours and parts, and cannot change a price. Only an admin does that.",
       },
       {
         q: "Does it stop somebody booking a grounded aircraft?",
@@ -760,6 +760,81 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
     ],
     ctaTitle: "See what your fleet actually owes",
     ctaBody: "Add the set, give each tail a last-done date, and the countdown is already running.",
+  },
+
+  "work-orders": {
+    h1: "Aircraft maintenance work order software",
+    statement: "Every job in the hangar on one record, from the request to sign-off.",
+    proof: [
+      { value: "Approved before you start", label: "The owner approves, declines or puts off each finding, on the record" },
+      { value: "Your rates, filled in", label: "Labor at the shop rate, parts at cost plus your markup" },
+      { value: "Never on your plan", label: "A customer's aircraft does not count toward what you pay" },
+    ],
+    outcomesTitle: "What changes",
+    outcomes: [
+      {
+        title: "The owner says yes before you do the work",
+        body: "Send what you found and every owner is asked to approve, decline or put off each item. Answers taken on the phone are logged too.",
+      },
+      {
+        title: "The invoice is already written",
+        body: "Labor, parts and outside work go on one invoice with the work order number, the tail and the meters, paid by card or ACH.",
+      },
+      {
+        title: "Nobody calls to ask where the aircraft is",
+        body: "Each job moves from Requested to Ready for pickup, and the owner is told when it arrives and when it is ready.",
+      },
+    ],
+    stepsTitle: "One visit, start to finish",
+    steps: [
+      { title: "Open the job", body: "Pick any tail, yours or a customer's, or add a customer's aircraft on the spot." },
+      { title: "Write up what you find", body: "Findings sit apart from what the owner asked for, each with its labor and parts." },
+      { title: "Get the owner's answer", body: "Send the findings, or record what they said on the phone." },
+      { title: "Close it out", body: "Raise one bill for a customer's job; your own aircraft's job just completes." },
+    ],
+    sections: [
+      {
+        eyebrow: "Who sees what",
+        title: "Prices stay with the people who set them",
+        body: "A technician works the job without running the money, and an owner sees their own aircraft and nothing else.",
+        points: [
+          "Technicians log their own hours and parts at the shop's rates",
+          "Only an admin changes a price or who pays",
+          "Co-owners see the work; only the person billed sees the charges",
+        ],
+      },
+    ],
+    docs: [
+      "/docs/getting-started/set-up-a-maintenance-shop",
+      "/docs/maintenance/run-a-work-order",
+      "/docs/maintenance/work-on-a-customers-aircraft",
+      "/docs/maintenance/see-your-aircraft-and-approve-work",
+      "/docs/billing/charge-sales-tax",
+    ],
+    faqs: [
+      {
+        q: "Can we use work orders on our own aircraft?",
+        a: "Yes. A job on your own fleet is billed to nobody, or to a leaseback owner if you set one. It tracks the same findings, labor, parts and sign-offs, and customers' aircraft sit beside your fleet in the same organization without ever being bookable to fly.",
+      },
+      {
+        q: "Do customer aircraft count toward what I pay?",
+        a: "No. Only aircraft your organization operates itself are counted on the plan.",
+      },
+      {
+        q: "Can the owner see the job?",
+        a: "Yes, once they sign in. An owner sees their own aircraft and jobs and answers the findings you send them. Only the person the job is billed to sees the prices and the invoice.",
+      },
+      {
+        q: "Can a job bill two co-owners?",
+        a: "Not yet. One person pays for each job; co-owners can see the work but are not billed.",
+      },
+      {
+        q: "Does it write my logbook entries?",
+        a: "No. It records the job, the sign-offs on linked inspections and squawks, and the meters, but the logbook entry is still yours to write and sign.",
+      },
+    ],
+    ctaTitle: "Open your first work order",
+    ctaBody: "Sign up as a maintenance shop, add the aircraft in your hangar and its owner, and open its job.",
   },
 
   /* ================================================================== */

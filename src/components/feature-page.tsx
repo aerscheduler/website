@@ -18,6 +18,7 @@ import {
   IntegrationsLiveDemo,
   TrainingLiveDemo,
   MobileLiveDemo,
+  WorkOrdersLiveDemo,
 } from "@/components/mocks/living";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { JsonLd } from "@/components/json-ld";
@@ -56,6 +57,7 @@ const FEATURE_SOURCE: Partial<Record<FeatureSlug, CampaignSource>> = {
   utilization: "reports",
   maintenance: "maintenance",
   inspections: "maintenance",
+  "work-orders": "shop",
   integrations: "quickbooks",
   training: "training",
   instruction: "training",
@@ -557,6 +559,8 @@ function FeatureVisual({ slug }: { slug: FeatureSlug }) {
       return <MaintenanceLiveDemo />;
     case "inspections":
       return <MaintenanceLiveDemo />;
+    case "work-orders":
+      return <WorkOrdersLiveDemo />;
     case "reports":
       return <ReportsLiveDemo />;
     case "utilization":

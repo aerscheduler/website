@@ -1,7 +1,8 @@
 <Summary>
-<Where app="web">Aircraft → Add aircraft</Where>. Tail number, make and model, year,
-category and class, current Hobbs and tach, fuel capacity, the hourly rate and its basis,
-and a home base. Save, and the tail is on the schedule and billable.
+<Where app="web">Aircraft → Add aircraft</Where>, or **Add aircraft** in the **+** at the top
+of any page. Tail number, make and model, category and class, current Hobbs and tach, the
+hourly rate and a home base. Everything else sits in a row of buttons under the form and can
+be left as it is. Save, and the tail is on the schedule and billable.
 </Summary>
 
 <Roles>Owners, Admins</Roles>
@@ -40,11 +41,11 @@ location, come back, and the picker works. You only do this once per airport.
     [Categories, classes and meters](/docs/getting-started/aircraft-categories-and-meters).
   </Step>
   <Step n={4} title="Fill in anything the lookup could not">
-    Make and model are required. Year, engine, fuel, gear and seats are optional and can
-    wait.
+    Make and model are required. Year is optional. Engine, fuel, gear, seats and fuel
+    capacity are buttons in the row at the bottom of the form, each showing what it is set
+    to: click one to change it, or leave it.
 
-    So is the **Serial number**, near the bottom of the form, above **Flying day** and
-    **Home base**. Choose a US tail number from the lookup and it arrives already filled:
+    The **Serial number** is optional too, above **Home base**. Choose a US tail number from the lookup and it arrives already filled:
     every row in the federal file carries a serial. What the file does not carry is a
     non-US registration, so a G-, D- or LV- aeroplane is typed off the data plate like
     everything else about it. It is the
@@ -57,32 +58,28 @@ location, come back, and the picker works. You only do this once per airport.
     starting point for billing and for every hour-based maintenance inspection, so get them
     off the actual aircraft rather than off a spreadsheet.
   </Step>
-  <Step n={6} title="Enter fuel capacity and its unit">
-    Optional. Gallons or liters.
-  </Step>
-  <Step n={7} title="Set the hourly rate and the rate basis">
-    **Wet** means the rate includes fuel. **Dry** means it does not.
-  </Step>
-  <Step n={8} title="Decide Bill by Hobbs time">
-    On bills from Hobbs time. Off bills from tach time.
+  <Step n={6} title="Set the hourly rate">
+    Under it the form says how it is charged: **Wet rate** (fuel included) or **Dry rate**,
+    and **Billed on Hobbs** or **Billed on tach**. Change either from its button in the row at
+    the bottom.
 
     <Screenshot id="aircraft-rate-fields" />
   </Step>
-  <Step n={9} title="Choose the Home base and press Add aircraft">
+  <Step n={7} title="Choose the Home base and press Add aircraft">
     The home base is the airport the aircraft lives at, and it is what the schedule's time
-    zone resolves against.
+    zone resolves against. With only one location it is chosen for you.
   </Step>
 </Steps>
 
-## Rate basis and Bill by Hobbs are two different questions
+## Wet or dry, and Hobbs or tach, are two different questions
 
 They sit next to each other and both sound like "how is this billed", which is why they get
 confused.
 
 | Control | The question it answers |
 |---|---|
-| Rate basis (wet or dry) | Does the hourly rate include fuel? |
-| Bill by Hobbs time | Which meter do the billed hours come from, Hobbs or tach? |
+| Wet rate or Dry rate | Does the hourly rate include fuel? |
+| Billed on Hobbs or Billed on tach | Which meter do the billed hours come from? |
 
 A wet rate billed on tach time is a perfectly normal combination, and so is a dry rate
 billed on Hobbs. Pick each one on its own merits.
@@ -102,6 +99,9 @@ More on what happens to those numbers at close-out in
 Open the tail and press **Edit**. It is the same form, filled in with what is already on
 record. The tail-number lookup still works if you need it, but nothing is overwritten
 unless you pick a match yourself.
+
+To add or change the aircraft's photo, click the picture (or the airplane icon) at the top
+of its page and choose an image. Owners and admins can change it; everyone else sees it.
 
 ## After the tail is in
 

@@ -36,7 +36,7 @@ export default function FeaturesIndexPage() {
         <div className="relative mx-auto max-w-6xl px-4 pb-14 pt-12 sm:px-6 lg:pt-16">
           <Breadcrumbs items={[{ name: "Features", href: "/features" }]} />
           <h1 className="mt-6 max-w-3xl text-4xl font-semibold tracking-tight text-brand-surface sm:text-5xl">
-            Five modules, one flight school
+            Five modules, one operation
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
             Scheduling, billing, training records, maintenance and reporting.
