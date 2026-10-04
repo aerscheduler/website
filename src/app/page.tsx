@@ -216,9 +216,37 @@ const INCLUDED = [
 type Testimonial = { quote: string; name: string; role: string; school: string };
 const TESTIMONIALS: Testimonial[] = [];
 
+/**
+ * Reads `?for=` and marks <html> before anything below it paints, so the matching headline,
+ * subhead and section order are there on the first frame. Allowlisted: anything else is the
+ * default flight school page. Inline because a bundled script would run after first paint.
+ */
+const AUDIENCE_SCRIPT = `try{var f=new URLSearchParams(location.search).get("for");if(f==="shop"||f==="club"||f==="maintenance")document.documentElement.dataset.for=f;else delete document.documentElement.dataset.for}catch(e){}`;
+
+/** Hero subhead per `?for=` audience. Every claim is true of the shipped product. */
+const SUBHEADS: { v: string; text: string }[] = [
+  {
+    v: "default",
+    text: `Scheduling, billing, training records, maintenance tracking and shop work orders in one system, with iOS and Android apps. $${PRICE_PER_AIRCRAFT} per aircraft, with every instructor, student and renter included.`,
+  },
+  {
+    v: "shop",
+    text: "Work orders on your customers' aircraft, from the first finding to a paid invoice. Owners approve each item online, labor bills at your shop rate, parts at cost plus your markup, and the owner pays by card or bank transfer.",
+  },
+  {
+    v: "club",
+    text: `Members book the aircraft themselves, dues bill every month, and each flight bills off the Hobbs to the member's card or account balance. $${PRICE_PER_AIRCRAFT} per aircraft, with every member included.`,
+  },
+  {
+    v: "maintenance",
+    text: `Every inspection counts down by tach, Hobbs or calendar month, and an overdue annual grounds the aircraft until it is signed off. Squawks and work orders sit beside the schedule, so nobody books an airplane that cannot fly. $${PRICE_PER_AIRCRAFT} per aircraft.`,
+  },
+];
+
 export default function HomePage() {
   return (
     <div className={`${PAGE_BG} text-[#0b0b0d]`}>
+      <script dangerouslySetInnerHTML={{ __html: AUDIENCE_SCRIPT }} />
       {/* Hero: the headline, subhead and calls to action centered over still
           column lines, then the dispatch board with the mobile app
           stacked over it, growing flat as the page scrolls. */}
@@ -241,12 +269,15 @@ export default function HomePage() {
           {/* Calls to action directly under the promise, where the eye already
               is. They used to sit alone on the far right, which read as an
               afterthought. */}
-          <p className="animate-fade-up-delay-2 mx-auto mt-6 max-w-xl text-lg leading-relaxed text-black/55 sm:text-xl">
-            Scheduling, billing, training records, maintenance tracking and shop
-            work orders in one system, with iOS and Android apps.
-            ${PRICE_PER_AIRCRAFT} per aircraft, with every instructor, student
-            and renter included.
-          </p>
+          {SUBHEADS.map(({ v, text }) => (
+            <p
+              key={v}
+              data-v={v}
+              className="for-v animate-fade-up-delay-2 mx-auto mt-6 max-w-xl text-lg leading-relaxed text-black/55 sm:text-xl"
+            >
+              {text}
+            </p>
+          ))}
           <div className="animate-fade-up-delay-3 mt-8 flex flex-wrap items-center justify-center gap-3">
             <Button href={SIGNUP_URL} size="lg">
               Start free trial
@@ -395,9 +426,15 @@ export default function HomePage() {
 
       {/* The five feature sections, each laid out differently so they don't
           read as one block five times (see FeatureSection). Each composite's panels rise as it scrolls in. */}
-      {SECTIONS.map((section) => (
-        <FeatureSection key={section.id} section={section} />
-      ))}
+      {/* A flex column so `?for=` can move the searched-for section to the top with CSS
+          `order` (globals.css), without client code or a layout shift. */}
+      <div className="flex flex-col">
+        {SECTIONS.map((section) => (
+          <div key={section.id} data-sec={section.id}>
+            <FeatureSection section={section} />
+          </div>
+        ))}
+      </div>
 
       {/* The statement: one fact, huge, filling in as it scrolls into view
           (`.statement-fill`). With motion off it is simply filled. */}

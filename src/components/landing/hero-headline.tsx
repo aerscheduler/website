@@ -14,38 +14,35 @@ import { useEffect, useState } from "react";
  *
  * The headline itself never moves. It says "flight school", which is what paid search for
  * "flight school management software" must read first (and what the server renders), except
- * for a visitor who arrives with `?for=shop` (the maintenance ad group), who reads "maintenance
- * shop" from the start. That swap happens once, on load, before anything is animated.
+ * for a visitor who arrives with `?for=shop`, `?for=club` or `?for=maintenance` (the ad groups
+ * that land here), who reads "maintenance shop", "flying club" or "fleet" from the first paint:
+ * every noun is server-rendered and CSS shows the one matching `<html data-for>`.
  *
  * Reduced motion: the pill stays on its first label.
  */
 
 const LABELS = ["Flight school management software", "Aircraft maintenance software", "Flying club software"] as const;
 
-const NOUN_FOR: Record<string, { noun: string; label: number }> = {
-  shop: { noun: "maintenance shop", label: 1 },
-  club: { noun: "flying club", label: 2 },
-};
+/** Which pill label a `?for=` audience starts on. The headline noun itself is CSS (see globals.css). */
+const START_LABEL: Record<string, number> = { shop: 1, maintenance: 1, club: 2 };
+
+/** The headline's last word per audience, all rendered; `.for-v` shows the one that matches. */
+const NOUNS: { v: string; noun: string }[] = [
+  { v: "default", noun: "flight school" },
+  { v: "shop", noun: "maintenance shop" },
+  { v: "club", noun: "flying club" },
+  { v: "maintenance", noun: "fleet" },
+];
 
 const HOLD_MS = 3600;
 
 export function HeroHeadline() {
   const [label, setLabel] = useState(0);
-  const [noun, setNoun] = useState("flight school");
 
   useEffect(() => {
-    let start = 0;
-    try {
-      const want = new URLSearchParams(window.location.search).get("for");
-      const pick = want ? NOUN_FOR[want] : undefined;
-      if (pick) {
-        setNoun(pick.noun);
-        setLabel(pick.label);
-        start = pick.label;
-      }
-    } catch {
-      // No readable URL: keep what the server rendered.
-    }
+    // Set on <html> by the inline script in app/page.tsx before the hero painted.
+    const start = START_LABEL[document.documentElement.dataset.for ?? ""] ?? 0;
+    setLabel(start);
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     let i = start;
     const id = window.setInterval(() => {
@@ -75,7 +72,13 @@ export function HeroHeadline() {
       </span>
       <span className="sr-only">: </span>
       <span className="mx-auto mt-6 block max-w-4xl text-balance text-[2.6rem] font-semibold leading-[1.02] tracking-[-0.035em] text-[#0b0b0d] sm:text-6xl lg:text-[5rem]">
-        The command deck for your {noun}.
+        The command deck for your{" "}
+        {NOUNS.map(({ v, noun }) => (
+          <span key={v} className="for-v" data-v={v}>
+            {noun}
+          </span>
+        ))}
+        .
       </span>
     </h1>
   );

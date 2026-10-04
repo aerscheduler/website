@@ -597,3 +597,23 @@ body {
     display: none;
   }
 }
+
+/*
+ * Home page audience variants (`?for=shop|club|maintenance`, set on <html> as data-for by
+ * the inline script at the top of app/page.tsx, before the hero paints). Every variant is
+ * server-rendered and CSS picks one, so the page stays static and nothing swaps after load.
+ */
+.for-v { display: none; }
+html:not([data-for]) .for-v[data-v="default"],
+html[data-for="shop"] .for-v[data-v="shop"],
+html[data-for="club"] .for-v[data-v="club"],
+html[data-for="maintenance"] .for-v[data-v="maintenance"] { display: inline; }
+html:not([data-for]) p.for-v[data-v="default"],
+html[data-for="shop"] p.for-v[data-v="shop"],
+html[data-for="club"] p.for-v[data-v="club"],
+html[data-for="maintenance"] p.for-v[data-v="maintenance"] { display: block; }
+
+/* The section the visitor searched for moves to the top of the feature sections. */
+html[data-for="shop"] [data-sec="maintenance"],
+html[data-for="maintenance"] [data-sec="maintenance"],
+html[data-for="club"] [data-sec="billing"] { order: -1; }

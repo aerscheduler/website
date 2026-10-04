@@ -102,7 +102,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    // suppressHydrationWarning: the home page marks <html data-for> from ?for= before hydration.
+    <html lang="en" suppressHydrationWarning>
       <head>
         {/* Reveals start hidden in the stylesheet, so the server HTML and the
             first client paint already agree: no class to add, nothing for
