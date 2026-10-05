@@ -37,7 +37,10 @@ owner's details and prices.
     day is agreed for it to come in, **Aircraft received** when it is in the hangar. Each stage
     says what it means in the menu. Before the aircraft arrives there are no meters to record, so
     the form does not ask. Choosing **Aircraft received** fills in the Hobbs and tach in from the
-    aircraft; correct them if the meters say something different.
+    aircraft; correct them if the meters say something different. On a customer's aircraft,
+    a job opened at **Scheduled** or later, or with a **Promised back** date, emails the owners
+    straight away, at the address you recorded if they have not signed up. Try your first job on one of your own aircraft, which has
+    no owner to email.
   </Step>
   <Step n={5} title="Write down what they asked for">
     In the owner's words: "Annual inspection. Left brake feels soft." Add **Promised back** if you
@@ -48,6 +51,51 @@ owner's details and prices.
     You land on the job's own page.
   </Step>
 </Steps>
+
+## When an owner asks for work
+
+An aircraft owner who has signed in can ask for work on their aircraft from their own page.
+The request opens a job by itself at **Requested**, billed to the aircraft's billed owner, and
+it waits under **Requested** on <Where app="web">Maintenance → Open jobs</Where>. Nobody on the
+owner's side is emailed about a Requested job; the owner sees it on their page.
+
+What they sent is on the job:
+
+- **What the owner asked for** is their request in their words, ending with the day they would
+  like it back ("Wanted back by Thu, Oct 15"). **Promised back** stays yours to set.
+- Under it: whether they say it is **Grounded**, when it **Can come in** (a day, or from one day
+  to another), **Where it is**, and the **Times given** for Hobbs and tach. Those times also go on
+  the aircraft's meter log, linked to the job.
+- Their photos and documents, up to five, are under **Files and photos**, shown to the owner.
+
+Who is told: everybody whose **New requests** switch is on, in the bell, by email and by push.
+It starts on for technicians and off for admins, who turn it on if they want it; in an
+organization with no technicians signed in, it starts on for admins too. Each person changes it
+under **Maintenance shop** in their notification settings. See
+[Notifications and emails](/docs/getting-started/notifications-and-emails).
+
+<Steps>
+  <Step n={1} title="Put a technician on it">
+    Open the job and click **Technicians** under **Details**. Each technician you add is told.
+  </Step>
+  <Step n={2} title="Book the hangar time">
+    When you have agreed a day with the owner, make a Maintenance booking for the aircraft on the
+    schedule and choose this job in its **Work order** field. If the booking already exists,
+    pick it under **Booked for** on the job instead. See
+    [Book an aircraft in for maintenance](/docs/maintenance/book-an-aircraft-in-for-maintenance).
+  </Step>
+  <Step n={3} title="Move it to Scheduled">
+    Every owner of the aircraft is told it is booked in, with the day to bring it in when the
+    job holds a booking. Set **Promised back** if you gave them a day; they are told that too.
+  </Step>
+  <Step n={4} title="Receive it">
+    When the aircraft arrives, move the job to **Aircraft received** and check the Hobbs and tach
+    in.
+  </Step>
+</Steps>
+
+If you are not taking the job, set it to **Cancelled** and tell the owner yourself: nobody is
+emailed about a cancelled job.
 
 ## Move the job along
 
@@ -268,7 +316,10 @@ is due at the end of that day). Then click the button that names the total. The 
 gets it by email with a link to pay online: an owner who is not a member
 of your organization gets Stripe's email
 at the address on the aircraft's **Owners** panel, and a member gets it by email and in the app.
-Or you record cash or a check the usual way.
+When they pay by cash or check instead, open the invoice in <Where app="web">Billing</Where> and
+click **Mark paid**. It marks the whole invoice paid, because a part payment cannot be
+recorded: mark it once all of the money has arrived. See
+[Mark an invoice paid, void it, or refund it](/docs/billing/mark-an-invoice-paid-void-or-refund-it).
 
 - **Billed to** must name somebody. A job billed to **Nobody** cannot be invoiced: choose who
   pays under **Details**.
@@ -315,7 +366,8 @@ technician sees the rate filled in on each labor line, and only an admin changes
 
 ## Find a job
 
-- <Where app="web">Maintenance → Open jobs</Where> groups the open jobs by where the aircraft is:
+- <Where app="web">Maintenance → Open jobs</Where> is the shop's job board. It groups the open
+  jobs by where the aircraft is:
   **In the hangar**, **Waiting** (on the owner or a part), **Ready for pickup**, **Scheduled** and
   **Requested**, oldest first in each, with who pays, the technicians, the promised day (amber
   once it has passed) and what the job has charged so far. Click a column's name to sort by it,

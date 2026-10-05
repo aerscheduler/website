@@ -1,7 +1,8 @@
 <Summary>
 Start a booking, set the type to **Maintenance**, pick the aircraft and the window, and
 save. Nobody is assigned to it, it blocks the whole window on the dispatch board, and it is
-never invoiced.
+never invoiced. To book a job, pick it under **Work order**: the technicians, the work and the
+bill live on the job.
 </Summary>
 
 <Roles>Owners, Admins, Dispatchers, Technicians</Roles>
@@ -23,9 +24,10 @@ never invoiced.
     Book the whole time the aircraft will be unavailable, including the ferry out and back
     if it is going to another field.
   </Step>
-  <Step n={4} title="Put what is being done in the notes">
-    There is nobody to assign, so the notes are the only place the shift on the other end
-    can read what this block is for.
+  <Step n={4} title="Say what it is for">
+    If you open work orders, choose the job under **Work order** (below). Otherwise put what is
+    being done in the notes: with nobody to assign and no job, they are the only place the
+    shift on the other end can read what this block is for.
   </Step>
   <Step n={5} title="Save">
     The aircraft is blocked for the whole window on the dispatch board.
@@ -36,7 +38,32 @@ never invoiced.
 
 A maintenance booking carries no people by design. Try to add one and it is refused: a
 maintenance booking cannot have anybody assigned to it, because it takes the aircraft off
-the line rather than putting somebody in it.
+the line rather than putting somebody in it. The technicians doing the work go on the work
+order the booking holds.
+
+## Book a customer's aircraft in for a job
+
+<Roles>Owners, Admins, Technicians</Roles>
+
+A maintenance booking holds the aircraft and the hangar for a work order. The job carries who
+is doing the work, what is being done and the bill; the booking carries only the time.
+
+- **Link the job from the booking.** On a Maintenance booking, **Work order** lists the open
+  jobs on that aircraft. Pick one, or choose **Open a new work order** and add its
+  **Technicians**: the job opens with the booking, with your notes as its request, at
+  **Scheduled** (or **Aircraft received** for a booking that has already started). A new job on
+  a customer's aircraft at either stage emails its owners straight away. A repeating booking
+  cannot hold a job: one job is one visit.
+- **Or link it from the job.** On the job's page, **Booked for** under **Details** picks one of
+  the aircraft's maintenance bookings. See
+  [Run a work order](/docs/maintenance/run-a-work-order).
+- **The block says whose it is.** On the schedule, a booking that holds a job shows the
+  customer it is billed to and, for owners, admins and technicians, what they asked for. A
+  grounded aircraft's block carries a small grounded mark. Dispatchers see the customer and the
+  mark but not the request, and pilots never see a customer's aircraft at all.
+- **Drag the booking to move the dates.** The job stays linked to it. Owners, admins and
+  dispatchers can drag it. The aircraft's owner is not emailed about the move, so if the day
+  you promised it back changes, change **Promised back** on the job: that tells them.
 
 ## It works on a grounded aircraft
 
@@ -81,7 +108,7 @@ clear while it is being worked on, block the window with an ordinary booking ins
 
 <Callout type="tip">
 Booking maintenance is not the same as grounding. A booking blocks one window. Grounding
-stops every booking on the tail until an admin lifts it. If the aircraft is not airworthy,
+stops every booking on the tail until an admin or a technician lifts it. If the aircraft is not airworthy,
 do both: ground it, then book the shop time. See
 [Ground an aircraft](/docs/maintenance/ground-an-aircraft).
 </Callout>

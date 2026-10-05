@@ -49,8 +49,9 @@ An aircraft in for maintenance (one your shop looks after for an owner) works di
 - **Somebody who owns a customer aircraft and works here** gets the due and overdue notices once,
   from the shop side by their own setting, and the earlier owner reminders as an owner.
 
-How each person hears (email, push, and text for somebody who has turned texts on) follows their
-**Maintenance reminders** switch.
+How each person hears (email, push, or both) follows their **Maintenance reminders** switch; an
+owner's is called **Inspection reminders**, under **Your aircraft**. An owner who has not signed up
+is reached by email only.
 
 ## Turn maintenance reminders off for yourself
 
@@ -115,20 +116,28 @@ An inspection with no steps sends no early warning, only the due notification.
   </Step>
 </Steps>
 
-## Hour-based inspections only notify after a close-out
+## Hour-based inspections are checked when a reading is recorded
 
 Calendar inspections are checked automatically through the day, so a 12-month annual will
 warn you on its own.
 
-Hour-based inspections work differently. Their countdown, their notification and their
-automatic grounding all happen at one moment: when somebody closes out a flight on that
-aircraft and enters the meters.
+Hour-based inspections move only when the aircraft's meters do. Their notification and their
+automatic grounding are checked each time a new Hobbs or tach reading reaches the aircraft:
+
+- a flight closed out on that aircraft;
+- **Record a reading** under **Hobbs and tach** on the aircraft's Overview;
+- a work order's Hobbs and tach in or out;
+- an inspection signed off with meter readings newer than the aircraft's;
+- on a customer's aircraft, the owner's **Update times**, or the times they give with a request.
+
+A reading dated before the newest one on record is kept as history and checks nothing.
 
 <Callout type="warning">
-That means an aircraft flown on somebody else's paperwork, or a tach corrected by hand under
-<Where app="web">Aircraft → the tail → Edit</Where>, can sit at Overdue on screen with nobody
-emailed and the aircraft still bookable. A single closed-out flight on that tail brings
-everything back into line. See
+A tach corrected by hand under <Where app="web">Aircraft → the tail → Edit</Where> moves the
+countdown on screen but checks nothing, so the aircraft can sit at Overdue with nobody emailed and
+still bookable. Record the reading with **Record a reading** instead, or the next close-out on that
+tail brings everything back into line. A customer's aircraft that flies somewhere else is only as
+current as its last reading. See
 [Troubleshooting inspections and squawks](/docs/maintenance/troubleshooting-inspections-and-squawks).
 </Callout>
 

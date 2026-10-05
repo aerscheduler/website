@@ -17,8 +17,8 @@ on, the day that inspection comes due:
 - The tail moves to the **Grounded** group at the top of <Where app="web">Maintenance → Inspections</Where>.
 - The overdue inspection itself carries an amber **Grounds** tag.
 
-With it off, the inspection still comes due, still shows as overdue, and still notifies your
-admins and technicians. The aircraft simply stays bookable.
+With it off, the inspection still comes due, still shows as overdue, and still sends its
+reminders. The aircraft simply stays bookable.
 
 ## Turn it on for an inspection
 
@@ -53,16 +53,19 @@ which is a bad moment to find out. When a tail grounds itself, check the board f
 of the day and move those flights.
 </Callout>
 
-## An hour-based grounding waits for a close-out
+## An hour-based grounding waits for a meter reading
 
-Calendar inspections come due on their own, around the clock. Hour-based ones do not: the
-countdown only moves when a flight is closed out on that aircraft, and the grounding happens
-at the same moment.
+Calendar inspections come due on their own, around the clock. Hour-based ones do not: they
+are checked when a new Hobbs or tach reading reaches the aircraft, and the grounding happens at
+that moment. That is a flight closed out on it, **Record a reading** on its Overview, a work
+order's Hobbs and tach in or out, or, on a customer's aircraft, the owner's **Update times**.
+**Record a reading** and a job's meters ask you to confirm a reading that would ground the
+aircraft before they save it.
 
-So a 100-hour that is already past due on screen will not have grounded the aircraft yet if
-nobody has closed out a flight on it since. Correcting the tach by hand under
-<Where app="web">Aircraft → the tail → Edit</Where> does not trigger it either. More on
-this in
+So a 100-hour that is already past due on screen will not have grounded the aircraft yet if no
+reading has been recorded since. Correcting the tach by hand under
+<Where app="web">Aircraft → the tail → Edit</Where> does not trigger it; **Record a reading**
+does. More on this in
 [Troubleshooting inspections and squawks](/docs/maintenance/troubleshooting-inspections-and-squawks).
 
 ## Coming back off the ground
@@ -77,7 +80,7 @@ Deleting the rule, or detaching that tail from it, clears the grounding the same
 <Callout type="important">
 This only works when the grounding reason is exactly "Maintenance", which only the automatic
 grounding writes. If somebody grounded the aircraft by hand and typed a reason, no amount of
-signing off will lift it. An admin has to click **Return to service**.
+signing off will lift it. An admin or a technician has to click **Return to service**.
 </Callout>
 
 ## Reminders created during setup all ground

@@ -25,8 +25,8 @@ overdue annual is still bookable unless somebody or something grounded it.
 ## An inspection rule is not an inspection
 
 The **rule** lives once for the whole school. "100-hour, every 100 tach hours, warn 10
-hours out" is one rule, and you will find it under <Where app="web">Maintenance → Set
-up</Where>.
+hours out" is one rule, and you will find it under <Where app="web">Maintenance → Inspection
+rules</Where> (**Set up** in the app).
 
 Attaching that rule to a tail creates one live **inspection** per aircraft. That is what
 counts down, what shows up in the work queue, and what you sign off.
@@ -74,6 +74,7 @@ The left rail holds these views.
 
 | View | What it is for |
 |---|---|
+| **Work orders → Open jobs** and **Finished jobs** | The shop's jobs, for owners, admins and technicians only. See [Run a work order](/docs/maintenance/run-a-work-order). |
 | **Inspections** | Every open inspection in the fleet, the default view. **Group by Aircraft** shows one row per tail with its inspections underneath, grouped Grounded, Overdue, Due soon, Needs a reading or date, Current and Not tracked; current tails start folded. **Group by Status** is the work queue, worst first, with inspections marked [not applicable](/docs/maintenance/mark-an-inspection-not-applicable) in a group of their own at the bottom. An inspection a work order has booked in carries a **Scheduled** or **In progress** tag naming the job. **Group by Inspection** shows each rule with every tail's countdown on it. Signed-off work is deliberately not here. |
 | **Inspection rules** | The rules rather than their instances, grouped into On the meter, Whichever comes first, On the calendar and One-off. Unfold a rule to see the aircraft it covers. |
 | **Compliance log** | Every signed-off inspection, kept for the life of the aircraft. |

@@ -16,6 +16,10 @@ everything else your shop tracks.
 | Recurring | Oil changes, 50-hour checks, gear inspections, anything on a clock | Yes, immediately |
 | One-off | "Prop back from the shop", a single ferry permit expiry | No |
 
+Your own inspections work the same on a customer's aircraft: its tail is in the **Applies to**
+list, and its owners are reminded too. See
+[Choose when reminders go out](/docs/maintenance/who-gets-maintenance-reminders-and-squawk-alerts#choose-when-reminders-go-out).
+
 ## Add a recurring inspection
 
 <Steps>
@@ -104,7 +108,11 @@ during a month it does not.
 ## Set the warning lead
 
 **Warn me** is not decoration. It is exactly when the row turns to **Due soon** and exactly
-when the warning email and push are sent to your admins and technicians.
+when the shop's warning email and push are sent: to your admins and technicians on your own
+aircraft, and on a customer's aircraft to the people whose **Customer aircraft inspections**
+setting covers it (technicians, by default). That aircraft's owners are reminded on their own
+steps: unless you change them, 30 and 7 days (or 10 hours) before it is due, and when it is
+due.
 
 The form never lets the lead reach zero, so you cannot create an inspection through it that
 comes due with no warning at all. A calendar lead cannot go below 1 day, and a meter lead

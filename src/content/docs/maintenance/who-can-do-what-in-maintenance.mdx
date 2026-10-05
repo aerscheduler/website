@@ -1,7 +1,8 @@
 <Summary>
 Admins, owners and technicians do the work. Dispatchers can read every board but cannot sign
-anything off. Instructors, students and renters cannot open the Maintenance board, but they
-can open a single squawk write-up and see open squawks on the aircraft page.
+anything off, and do not see work orders. Instructors, students and renters cannot open the
+Maintenance board, but they can open a single squawk write-up and see open squawks on the
+aircraft page.
 </Summary>
 
 <Callout type="note">
@@ -24,25 +25,53 @@ permission](/docs/getting-started/permissions-and-grants).
 | Add or remove aircraft papers | Yes | Yes | Yes | No, can open booker files |
 | Resolve a squawk | Yes | Yes | No | No |
 | Verify a squawk | Yes | Yes | No | No |
-| Ground an aircraft or return it to service | Yes | No | No | No |
-| Edit an aircraft's meters or rates | Yes | No | No | No |
+| Ground an aircraft or return it to service | Yes | Yes | No | No |
+| Record a Hobbs and tach reading | Yes | Yes | No, can read them | No |
+| Edit an aircraft's details, meters or rates (Aircraft → Edit) | Yes | No | No | No |
 | Book maintenance | Yes | Yes | Yes | No |
 | Maintenance due and Squawks &amp; downtime reports | Yes | Yes | Yes | No |
+| Maintenance shop reports (Work orders, Labor and parts) | Yes | Yes | No | No |
 | Audit log | Yes | No | No | No |
+| **Work orders and customer aircraft** | | | | |
+| See customer aircraft and their owners | Yes | Yes | Yes | No |
+| Add a customer's aircraft or an owner | Yes | No | No | No |
+| Change an owner's customer details (billing address, notes) | Yes | No, can read them | No | No |
+| Email an owner how to sign in | Yes | No | No | No |
+| See work orders (Maintenance → Open jobs, Finished jobs) | Yes | Yes | No | No |
+| Open a work order, and move it through its stages | Yes | Yes | No | No |
+| Choose who a job is billed to | Yes | No: a job they open goes to the billed owner | No | No |
+| Add findings, labor and parts | Yes | Yes, at the shop's rates | No | No |
+| Change a line's price, rate, markup, discount, tax or billing | Yes | No | No | No |
+| Change a line somebody else entered | Yes | No | No | No |
+| Send findings to the owner, record the owner's answer | Yes | Yes | No | No |
+| Raise the job's invoice | Yes | No | No | No |
+| Delete a job opened by mistake | Yes | No | No | No |
+| Set the shop's rates (Settings → Shop rates) | Yes | No | No | No |
+| Set sales tax rates (Settings → Sales tax) | Owners only; admins can read them | No | No | No |
 
 Roles add up rather than ranking. A technician who is also an instructor gets both sets.
 
 ## Technicians
 
 The technician role is built around the shop. A technician can open every maintenance board,
-add and sign off inspections, resolve and verify squawks, and book an aircraft in for
-maintenance, which is the only booking type they can create.
+add and sign off inspections, resolve and verify squawks, ground an aircraft and return it to
+service, record a Hobbs and tach reading, and book an aircraft in for maintenance, which is the
+only booking type they can create.
+
+On work orders, a technician opens jobs, moves them along, adds findings, sends them to the
+owner and records the owner's answer. They enter their own labor and parts at the shop's rates,
+so they see those rates and what each job charges, and they change only the lines they entered.
+Only people with the technician role can be put on a job or a labor line, so give an admin who
+works on aircraft that role too. See
+[Run a work order](/docs/maintenance/run-a-work-order).
 
 What a technician cannot do:
 
-- **Ground an aircraft, or return one to service.** That is admin and owner only.
-- Edit an aircraft's meters, rates or details.
-- See revenue anywhere on an aircraft's page.
+- Edit an aircraft's details, meters or rates under **Aircraft → Edit**. They record a reading
+  instead, on the aircraft's Overview or as a job's Hobbs and tach.
+- Add a customer's aircraft or an owner, choose who a job is billed to, price a line, or raise
+  the invoice.
+- See revenue or the **Invoices** tab on an aircraft's page, or open **Billing**.
 - Open the audit log.
 - See simulator or classroom lanes on the dispatch board.
 
@@ -62,6 +91,10 @@ dispatcher's job. Declaring it fixed is a technician's. A dispatcher who has bee
 
 Dispatchers can still file a squawk, book maintenance, and run the fleet reports. They are
 not sent maintenance or squawk notifications.
+
+Dispatchers see customer aircraft, their owners and their hangar bookings, but not the work
+orders behind them: no **Open jobs**, no prices and no shop reports. A maintenance booking that
+holds a job shows them the customer and a grounded mark, not the request.
 
 ## Instructors, students, and renters
 
@@ -89,19 +122,10 @@ close-out. See [Report a squawk](/docs/maintenance/report-a-squawk).
 
 ## Admins and owners
 
-Everything above, plus the two things nobody else can do: grounding an aircraft by hand and
-returning it to service, and editing an aircraft's meters. Owners get everything an admin
-gets.
-
-## Why the technician role hint mentions grounding
-
-When you invite somebody, the technician role is described as covering maintenance, squawks
-and grounding. Take that as the automatic kind. A technician's route to a grounded aircraft
-is an inspection that carries **Grounds the aircraft**: when it comes due, the tail comes off
-the line by itself.
-
-Grounding a tail on the spot, by hand, runs through the aircraft's own settings and stays
-admin only.
+Everything above, plus what nobody else can do: editing an aircraft's details and meters,
+adding customer aircraft and owners, choosing who a job is billed to, pricing lines, raising
+the invoice and setting the shop's rates. Owners get everything an admin gets, and only an
+owner saves sales tax rates.
 
 ## Verify and resolve are two different stamps
 

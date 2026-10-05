@@ -115,9 +115,9 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "set-up-a-maintenance-shop",
         title: "Set up a maintenance shop",
         description:
-          "Choose I run a maintenance shop, name the shop, set your labor rate and markups, add the aircraft in your hangar with its owner, and open its first work order. You get owner, admin and technician.",
+          "Already on AerScheduler: set your shop rates, sales tax and technicians, then open a job on a customer's aircraft. New: choose I run a maintenance shop at signup, set your rates, add the aircraft with its owner, and open its first work order.",
         kind: "task",
-        audience: ["Owners"],
+        audience: ["Owners", "Admins"],
         seoQuery: "aircraft maintenance shop software setup",
         faqs: [
           {
@@ -1138,7 +1138,7 @@ export const DOC_SECTIONS: DocSection[] = [
           },
           {
             q: "Why is my customer not getting payment reminders?",
-            a: "Automatic reminders only go to people who have signed up. Chase an aircraft owner yourself: send the payment link, call them, or print the invoice.",
+            a: "Check that they have an email address on file. An owner who has not signed up is emailed at the address you recorded, with a link to pay that needs no account: by the daily sweep, at most once a week and four times in all, and whenever you click Send payment reminder on the invoice. An owner with no email address is never reminded, and neither is one who turned those emails off; print the invoice and chase it yourself.",
           },
           {
             q: "How do I keep a customer's aircraft's Hobbs and tach current?",
@@ -1370,9 +1370,9 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "ground-an-aircraft",
         title: "Ground an aircraft, and return it to service",
         description:
-          "Open the aircraft and click Ground, or use the overflow menu on the Aircraft list. Type a reason. The aircraft cannot be booked for anything except maintenance until an admin returns it to service.",
+          "Open the aircraft and click Ground, or use the overflow menu on the Aircraft list. Type a reason. The aircraft cannot be booked for anything except maintenance until an admin or a technician returns it to service.",
         kind: "task",
-        audience: ["Owners", "Admins"],
+        audience: ["Owners", "Admins", "Technicians"],
         seoQuery: "how to ground an aircraft so it cannot be booked",
       },
       {
@@ -1490,7 +1490,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "why-cant-i-book-this-aircraft",
         title: "Why can't I book this aircraft?",
         description:
-          "If the booking is refused with \"Resource is grounded\", the aircraft has been taken off the line and only an admin can put it back. Open squawks are a warning and never block a booking.",
+          "If the booking is refused with \"Resource is grounded\", the aircraft has been taken off the line and only an admin or a technician can put it back. Open squawks are a warning and never block a booking.",
         kind: "troubleshooting",
         audience: ["Instructors", "Students", "Renters", "Dispatchers"],
         seoQuery: "resource is grounded cannot book aircraft flight school",
@@ -1499,7 +1499,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "who-can-do-what-in-maintenance",
         title: "Who can do what in maintenance",
         description:
-          "Admins, owners and technicians do the work. Dispatchers can read every board but cannot sign anything off. Instructors, students and renters cannot open the Maintenance board, but they can open a single squawk write-up and see open squawks on the aircraft page.",
+          "Admins, owners and technicians do the work, work orders included; only admins price lines and raise the invoice. Dispatchers can read every board but cannot sign anything off, and do not see work orders. Instructors, students and renters cannot open the Maintenance board, but they can open a single squawk write-up and see open squawks on the aircraft page.",
         kind: "reference",
         audience: ["Owners", "Admins", "Dispatchers", "Technicians", "Instructors", "Students", "Renters"],
         seoQuery: "flight school technician and dispatcher permissions for maintenance",
@@ -1508,7 +1508,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "who-gets-maintenance-reminders-and-squawk-alerts",
         title: "Who gets maintenance reminders and squawk alerts",
         description:
-          "Only admins and technicians ever receive maintenance reminders or squawk alerts. You can turn maintenance reminders off for yourself under Notifications. Squawk alerts cannot be turned off.",
+          "On your own aircraft, only admins and technicians receive maintenance reminders and squawk alerts. On a customer's aircraft, technicians hear by their own setting and the aircraft's owners are reminded too. You can turn maintenance reminders off for yourself under Notifications. Squawk alerts cannot be turned off.",
         kind: "reference",
         audience: ["Owners", "Admins", "Technicians"],
         seoQuery: "turn off maintenance reminder emails for a flight school",
@@ -1517,7 +1517,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "troubleshooting-inspections-and-squawks",
         title: "Troubleshooting inspections and squawks",
         description:
-          "Most maintenance surprises come down to four things: hour-based reminders only fire at close-out, a countdown that started from the wrong point, a character limit the form does not show you, and a grounding reason that was typed by hand.",
+          "Most maintenance surprises come down to four things: hour-based reminders only fire when a meter reading is recorded, a countdown that started from the wrong point, a character limit the form does not show you, and a grounding reason that was typed by hand.",
         kind: "troubleshooting",
         audience: ["Owners", "Admins", "Technicians", "Dispatchers"],
         seoQuery: "aircraft maintenance reminder not sending email or notification",

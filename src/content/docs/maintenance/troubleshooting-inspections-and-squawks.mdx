@@ -1,7 +1,7 @@
 <Summary>
 Most maintenance surprises come down to four things: hour-based reminders only move when a
-flight is closed out, a countdown that started from the wrong point, a length limit the form
-does not show you, and a grounding reason that was typed by hand.
+meter reading is recorded, a countdown that started from the wrong point, a length limit the
+form does not show you, and a grounding reason that was typed by hand.
 </Summary>
 
 <Roles>Owners, Admins, Technicians, Dispatchers</Roles>
@@ -12,10 +12,14 @@ Almost always an hour-based inspection.
 
 The countdown you are looking at is calculated live from the aircraft's current meters, so
 the screen is right. The notification, and the automatic grounding that goes with it, only
-fire when somebody closes out a flight on that aircraft and enters the Hobbs and tach.
+fire when a new reading reaches the aircraft: a flight closed out on it, **Record a reading**
+on its Overview, a work order's Hobbs and tach in or out, or, on a customer's aircraft, the
+owner's **Update times**. Meters changed under <Where app="web">Aircraft → the tail → Edit</Where>
+do not count.
 
-Close out the next flight on that tail and everything catches up in one go: the email, the
-push, and the grounding if the inspection carries the flag.
+Click **Record a reading** under **Hobbs and tach** on the aircraft's Overview and enter the
+meters as they are now, or close out the next flight on that tail. Everything catches up in one
+go: the email, the push, and the grounding if the inspection carries the flag.
 
 <Screenshot id="maintenance-all-inspections" />
 
@@ -37,9 +41,11 @@ Editing Hobbs or tach under <Where app="web">Aircraft → the tail → Edit</Whe
 hour-based countdown with it, and notifies nobody.
 
 The correction is recorded in the audit log as "Meters corrected", with both readings before
-and after. But no reminder is sent and no aircraft is grounded until the next close-out on
-that tail. If the correction has just made a 100-hour due, tell the shop yourself rather
-than waiting for the email.
+and after. But no reminder is sent and no aircraft is grounded until the next reading is
+recorded on that tail. To correct the meters and have them checked, use **Record a reading**
+under **Hobbs and tach** on the aircraft's Overview instead: a reading lower than the one on
+record asks whether it was mistyped or the meter was replaced, and keeps the old one marked
+**Correction**.
 
 ## The first reminder arrived late
 
@@ -90,7 +96,7 @@ fails, so trim the notes if you are on the phone.
 Look at the grounding reason on the aircraft's page.
 
 - If it reads exactly "Maintenance", something else is still holding it. Check <Where app="web">Maintenance → Inspections</Where> filtered to that tail for anything still overdue. Any overdue inspection holds the grounding, not only the ones that ground.
-- If it reads anything a person wrote ("Prop strike", "Annual in progress"), that is a hand grounding and no sign-off will ever lift it. An admin has to click **Return to service**.
+- If it reads anything a person wrote ("Prop strike", "Annual in progress"), that is a hand grounding and no sign-off will ever lift it. An admin or a technician has to click **Return to service**.
 
 That second case is by design: AerScheduler will not overrule somebody who took an aircraft
 off the line on purpose.
@@ -103,7 +109,7 @@ as an amber warning on the booking form and never block the booking.
 If the aircraft should not fly, either file the squawk with **Grounds the aircraft** switched
 on, or ground the tail from its own page. Both need somebody who can ground: filing a
 grounding squawk from the console is limited to the roles that can reach the Log button, and
-grounding by hand is admin only. See
+grounding by hand is for owners, admins and technicians. See
 [Ground an aircraft](/docs/maintenance/ground-an-aircraft).
 
 ## Signed-off inspections are missing from Inspections

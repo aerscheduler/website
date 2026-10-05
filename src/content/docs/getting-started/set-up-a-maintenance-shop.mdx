@@ -1,11 +1,49 @@
 <Summary>
-On signup, choose <strong>I run a maintenance shop</strong>. Name the shop and pick its
+Already flying on AerScheduler? Set your shop rates, sales tax and technicians, then open a job
+on a customer's aircraft. New to AerScheduler? On signup, choose <strong>I run a maintenance shop</strong>. Name the shop and pick its
 airport, set your labor rate and markups, add the aircraft in your hangar with its owner,
 and open its first work order. You land on that job with four steps to take it to an
 invoice.
 </Summary>
 
-<Roles>Owners</Roles>
+<Roles>Owners, Admins</Roles>
+
+## Already on AerScheduler? Add a shop to your organization
+
+A flight school, club or FBO with its own hangar runs the shop inside the organization it
+already has. There is no second organization: customer aircraft and their owners sit beside
+your fleet, your pilots never see them, and each owner sees only their own aircraft, jobs and
+invoices. Shop invoices go out under your organization's name, through the Stripe account you
+already use.
+
+Open <Where app="web">Maintenance → Open jobs</Where>. Until the shop has a labor rate, a line
+at the top says **Set up your shop**; **Set up** takes you to the first setting.
+
+<Steps>
+  <Step n={1} title="Set your shop rates">
+    <Where app="web">Settings → Shop rates</Where>: your labor rate per hour, and your markup on
+    parts and on outside work. A technician cannot log hours until there is a labor rate. Owners
+    and admins can set it.
+  </Step>
+  <Step n={2} title="Charge sales tax on parts, if your state does">
+    <Where app="web">Settings → Sales tax</Where>: add your rate and tick the kinds of line it
+    taxes (most states tax parts and supplies, not labor). Owners and admins can set it. See [Charge sales tax](/docs/billing/charge-sales-tax).
+  </Step>
+  <Step n={3} title="Choose who works in the shop">
+    Only people with the Technician role can be put on a job or a labor line, and each one is
+    told about every owner request. Give the role to the people who work on aircraft, and take
+    it off anyone who only needed it for something else: in <Where app="web">People</Where>, open
+    the menu on their row and choose **Edit roles**.
+  </Step>
+  <Step n={4} title="Add a customer's aircraft and open its first job">
+    <Where app="web">Maintenance → Open jobs → Open a work order</Where>, type the tail, and add
+    the aircraft and its owner in the same form. Opening a job at **Scheduled** or later emails
+    the owner straight away, so try your first one on one of your own aircraft, or open it as
+    **Requested**. See [Work on a customer's aircraft](/docs/maintenance/work-on-a-customers-aircraft).
+  </Step>
+</Steps>
+
+Everything below this section is the new-signup path, for a shop that is not on AerScheduler yet.
 
 ## Before you start
 

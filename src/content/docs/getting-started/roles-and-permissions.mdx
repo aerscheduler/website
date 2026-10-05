@@ -31,14 +31,15 @@ next.
 | Instructor | Teaches, signs off flights and lessons |
 | Student | Books training flights for themselves |
 | Renter | Rents aircraft solo |
-| Technician | Logs maintenance and squawks |
+| Technician | Works on aircraft: inspections, squawks and work orders |
 
 Two words appear throughout the product and are worth learning:
 
 - **Staff** means owner, admin and dispatcher together: the people who run the operation
   day to day. Staff land on the Dashboard, see the whole board, and can book on other
   people's behalf.
-- Staff is **not** the set that can see money. Money is admin and owner only.
+- Staff is **not** the set that can see money. Money is admin and owner only, with one
+  exception: technicians see the maintenance shop's rates and what its jobs charge.
 
 A brand-new operation does not receive every role. The founder is owner and admin,
 plus instructor (school, club, rental, solo CFI), renter (I own an airplane) or
@@ -184,13 +185,18 @@ resources** on, they can book only the aircraft they have been checked out on. S
 
 ## Technician
 
-Reaches Maintenance and the fleet reports. Books maintenance blocks, which take an aircraft
-off the line. Logs squawks and signs them off as resolved or verified. Sees maintenance
-reminders and inspections across the fleet, and can ground an aircraft.
+Reaches Maintenance, and the Fleet and Maintenance shop reports. Books maintenance blocks, which take an aircraft off the line. Logs squawks and signs them off as
+resolved or verified. Sees maintenance reminders and inspections across the fleet, and can
+ground an aircraft and return it to service. Opens work orders and enters labor and parts at
+the shop's rates.
 
-A technician sees no money anywhere, cannot book any flying reservation, never sees
-simulator or classroom lanes, and cannot open the Dashboard, Billing, Settings, Facilities,
-Training, Go / No-Go or Audit Logs.
+A technician sees the shop's money and none of the organization's other money: the labor rate
+and markups on the lines they enter, what each job charges, a job's invoice total and whether
+it is paid, and the Maintenance shop reports. Only an admin prices a line or raises the
+invoice. A technician never sees Billing, other people's invoices or balances, or an
+aircraft's revenue, cannot book any flying reservation, never sees simulator or classroom
+lanes, and cannot open the Dashboard, Settings, Facilities, Training, Go / No-Go or Audit
+Logs.
 
 ## Somebody with no role
 
@@ -231,7 +237,7 @@ Three refusals you may meet:
 
 Reports are open to dispatchers and technicians, but each sees only the categories their
 role grants. A dispatcher gets operations, fleet, people and compliance reports and no
-financial section at all. A technician gets fleet reports only. See
+financial section at all. A technician gets Fleet and Maintenance shop reports. See
 [Who can see which reports](/docs/reports/who-can-see-which-reports).
 
 Search is scoped by role too, and training is scoped differently from everything else. A

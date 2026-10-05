@@ -1,10 +1,10 @@
 <Summary>
 Open the aircraft and click the red **Ground** button, or use the overflow menu on the
 Aircraft list. Type a reason. The aircraft cannot be booked for anything except maintenance
-until an admin clicks **Return to service**.
+until an admin or a technician clicks **Return to service**.
 </Summary>
 
-<Roles>Owners, Admins</Roles>
+<Roles>Owners, Admins, Technicians</Roles>
 
 ## Ground it
 
@@ -15,7 +15,8 @@ until an admin clicks **Return to service**.
   </Step>
   <Step n={2} title="Click Ground">
     On the detail page it is the red **Ground** button in the header. In the list it is
-    **Ground aircraft** in the overflow menu. Both are visible to admins and owners only.
+    **Ground aircraft** in the overflow menu. Both are visible to owners, admins and
+    technicians.
   </Step>
   <Step n={3} title="Type a reason">
     The placeholder suggests the shape of it: annual inspection, oil leak, prop strike. Up
@@ -69,8 +70,8 @@ board yourself and move or cancel what is on it.
 
 <Steps>
   <Step n={1} title="Click Return to service">
-    On the aircraft's page, or from the overflow menu on the Aircraft list. Admins and
-    owners only.
+    On the aircraft's page, or from the overflow menu on the Aircraft list. Owners, admins
+    and technicians.
   </Step>
   <Step n={2} title="Confirm">
     The dialog asks to return the tail to service and warns that it will be schedulable
@@ -90,12 +91,9 @@ ever writes, and the last inspection holding it has been signed off.
 Anything a person typed is treated as a human decision and left alone. See
 [When AerScheduler grounds an aircraft by itself](/docs/maintenance/when-aerscheduler-grounds-an-aircraft).
 
-## Technicians cannot ground an aircraft
+## Technicians ground and release aircraft too
 
-Grounding and returning to service are admin and owner actions. A technician can add and
-sign off inspections, resolve squawks and book maintenance, but the **Ground** button is not
-shown to them at all.
-
-A technician who needs a tail off the line right now has two routes: ask an admin, or book
-it in for maintenance, which blocks the aircraft for that window. See
+A technician can ground an aircraft and return it to service, the same as an admin, so the
+mechanic who signs the work off can also put the tail back on the line without finding an
+admin. Dispatchers, instructors, students and renters cannot. See
 [Who can do what in maintenance](/docs/maintenance/who-can-do-what-in-maintenance).

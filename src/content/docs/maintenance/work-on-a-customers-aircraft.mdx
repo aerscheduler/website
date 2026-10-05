@@ -67,6 +67,10 @@ The first owner you add is marked **Billed**: the one the work is invoiced to. I
 aeroplane is owned by a partnership, add the others too, and click the star on a row to move
 who gets the bill.
 
+For an aeroplane owned by a business or a flying club, record the business as the owner (as the
+owner's name, or on the billing address under **Customer details** on their page), and add each
+person you deal with as a co-owner, so they hear about the work too.
+
 ### When the email address is already on your roster
 
 If somebody on your roster already uses the address you typed, the form stops and says who,
@@ -214,9 +218,12 @@ Things that are different about billing an owner:
 - **It is always an invoice.** At a school that uses account balances, a member's charges go
   on their account. An owner has no account they could see or top up, so their bill is
   always a Stripe invoice.
-- **No automatic reminders.** The reminder sweep only chases people who have signed up. To
-  chase an owner, send them the payment link, call them, or print the invoice. **Send payment
-  reminder** tells you that nothing was sent, and why.
+- **Reminders go to the address you recorded.** The daily sweep chases an unpaid shop bill like
+  any other, at most once a week and four times in all, and **Send payment reminder** on the
+  invoice sends one straight away. An owner who has not signed up is emailed at the address on
+  their record, with the invoice's own payment link, which needs no account. An owner with no
+  email address on file is never reminded: add one, or print the invoice and chase it yourself.
+  See [Chase unpaid invoices](/docs/billing/chase-unpaid-invoices).
 - **They are never grounded** for an unpaid bill. They do not fly with you.
 - **Your service fee applies.** It goes on every invoice you raise, and the New invoice form
   shows it as its own line above the total.

@@ -26550,7 +26550,7 @@
           "Organizations"
         ],
         "summary": "Add a sales tax rate",
-        "description": "**Owner only.** Adding a rate taxes nothing by itself: point a category at it with `PUT /organizations/salesTax/rules`.",
+        "description": "**Owners and admins.** Adding a rate taxes nothing by itself: point a category at it with `PUT /organizations/salesTax/rules`.",
         "responses": {
           "201": {
             "description": "The new rate's id.",
@@ -26658,7 +26658,7 @@
           "Organizations"
         ],
         "summary": "Change a sales tax rate",
-        "description": "**Owner only.** Rename freely. The percentage, country and state change only while no invoice line has been charged at the rate; after that, archive it and add the new rate, so old invoices keep saying what they charged and where it is owed.",
+        "description": "**Owners and admins.** Rename freely. The percentage, country and state change only while no invoice line has been charged at the rate; after that, archive it and add the new rate, so old invoices keep saying what they charged and where it is owed.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -26782,7 +26782,7 @@
           "Organizations"
         ],
         "summary": "Archive a sales tax rate",
-        "description": "**Owner only.** Stops the rate applying to new invoices, and removes it from every category that used it, so those categories stop being taxed. Invoices already raised keep the rate they were charged.",
+        "description": "**Owners and admins.** Stops the rate applying to new invoices, and removes it from every category that used it, so those categories stop being taxed. Invoices already raised keep the rate they were charged.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -26865,7 +26865,7 @@
           "Organizations"
         ],
         "summary": "Set which lines are taxed",
-        "description": "**Owner only.** Replaces the whole table in one save: `{ rules: { part: 3, supply: null } }` taxes parts at rate 3 and nothing else. Categories: `labor`, `part`, `supply`, `outside_service`, `freight`, `fee` (the organization's service fee line is a fee), `rental`, `instruction`, `other`.",
+        "description": "**Owners and admins.** Replaces the whole table in one save: `{ rules: { part: 3, supply: null } }` taxes parts at rate 3 and nothing else. Categories: `labor`, `part`, `supply`, `outside_service`, `freight`, `fee` (the organization's service fee line is a fee), `rental`, `instruction`, `other`.",
         "responses": {
           "200": {
             "description": "Success.",
