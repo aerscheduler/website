@@ -96,14 +96,14 @@ export default async function ChangelogPage() {
 function Block({ block }: { block: ChangelogBlock }) {
   switch (block.type) {
     case "lede":
-      return <p className="mt-5 text-base leading-relaxed text-muted-foreground">{block.text}</p>;
+      return <p className="mt-5 text-[17px] leading-relaxed text-muted-foreground">{block.text}</p>;
     case "features":
       return (
         <ul className="mt-6 grid gap-x-8 gap-y-5 sm:grid-cols-2">
           {block.items.map((f) => (
             <li key={f.title}>
               <p className="font-medium text-brand-surface">{f.title}</p>
-              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{f.body}</p>
+              <p className="mt-1 text-[15px] leading-relaxed text-muted-foreground">{f.body}</p>
             </li>
           ))}
         </ul>
@@ -119,8 +119,8 @@ function Block({ block }: { block: ChangelogBlock }) {
     case "steps":
       return (
         <div className="mt-7">
-          {block.title && <p className="font-medium text-brand-surface">{block.title}</p>}
-          <ol className="mt-3 list-decimal space-y-1.5 pl-5 text-sm leading-relaxed text-muted-foreground">
+          {block.title && <p className="text-lg font-medium text-brand-surface">{block.title}</p>}
+          <ol className="mt-3 list-decimal space-y-1.5 pl-5 text-base leading-relaxed text-muted-foreground">
             {block.items.map((s) => (
               <li key={s}>{s}</li>
             ))}
@@ -129,7 +129,7 @@ function Block({ block }: { block: ChangelogBlock }) {
       );
     case "note":
       return (
-        <p className="mt-6 flex gap-2 rounded-lg bg-[#f5f7fa] px-4 py-3 text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-6 flex gap-2 rounded-lg bg-[#f5f7fa] px-4 py-3 text-[15px] leading-relaxed text-muted-foreground">
           <Info className="mt-0.5 size-4 shrink-0" />
           {block.text}
         </p>
@@ -137,15 +137,15 @@ function Block({ block }: { block: ChangelogBlock }) {
     case "section":
       return (
         <div className="mt-7">
-          <h3 className="font-medium text-brand-surface">{block.title}</h3>
-          <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{block.body}</p>
+          <h3 className="text-lg font-medium text-brand-surface">{block.title}</h3>
+          <p className="mt-1.5 text-base leading-relaxed text-muted-foreground">{block.body}</p>
         </div>
       );
     case "list":
       return (
         <ul className="mt-6 space-y-2.5">
           {block.items.map((item) => (
-            <li key={item} className="flex gap-2.5 text-sm leading-relaxed text-muted-foreground">
+            <li key={item} className="flex gap-2.5 text-base leading-relaxed text-muted-foreground">
               <Check className="mt-0.5 size-4 shrink-0 text-brand" strokeWidth={2.5} />
               {item}
             </li>
