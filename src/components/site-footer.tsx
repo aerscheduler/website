@@ -9,6 +9,7 @@ const PRODUCT = [
   { href: "/pricing", label: "Pricing" },
   { href: "/integrations", label: "Integrations" },
   { href: "/docs", label: "Docs" },
+  { href: "/changelog", label: "Changelog" },
   { href: "/product", label: "Product overview" },
   { href: "/app", label: "iOS and Android" },
 ];

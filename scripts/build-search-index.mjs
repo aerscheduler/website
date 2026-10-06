@@ -408,6 +408,7 @@ const PAGE_META = {
   "/demo": { group: "Pages", title: "Live demo" },
   "/book-a-demo": { group: "Pages", title: "Book a demo" },
   "/about": { group: "Pages", title: "About" },
+  "/changelog": { group: "Pages", title: "Changelog" },
   "/contact": { group: "Pages", title: "Contact" },
   "/login": { group: "Pages", title: "Log in" },
   "/resources": { group: "Guides", title: "All guides" },

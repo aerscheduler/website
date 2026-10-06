@@ -262,6 +262,15 @@ export const DOC_SECTIONS: DocSection[] = [
         seoQuery: "turn off flight school software email notifications",
       },
       {
+        slug: "whats-new",
+        title: "See what's new in AerScheduler",
+        description:
+          "New features show up as a What's new card in the console's left rail and on Home in the app, chosen for your roles. Open it for the whole story, or close it and it stays closed on every device.",
+        kind: "task",
+        audience: ["Owners", "Admins", "Dispatchers", "Instructors", "Students", "Renters", "Technicians"],
+        seoQuery: "AerScheduler new features",
+      },
+      {
         slug: "find-anything",
         title: "Find anything with search",
         description:

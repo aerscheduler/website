@@ -92,6 +92,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     { path: "/migrating/my-fbo", priority: 0.85, changeFrequency: "monthly" },
     { path: "/about", priority: 0.7, changeFrequency: "monthly" },
+    { path: "/changelog", priority: 0.6, changeFrequency: "weekly" },
     { path: "/contact", priority: 0.8, changeFrequency: "monthly" },
     { path: "/privacy", priority: 0.3, changeFrequency: "monthly" },
     { path: "/delete-account", priority: 0.3, changeFrequency: "monthly" },
