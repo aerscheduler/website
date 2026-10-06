@@ -174,7 +174,7 @@ function WorkOrderBoard({
       />
       <div className="flex items-center justify-between gap-2 border-b border-border px-4 py-2">
         <p className="text-[10px] text-muted-foreground">
-          {unsent ? "1 finding not sent to the owner yet." : "What the owner asked for, what the shop found, and what each one charges."}
+          {unsent ? "1 finding not sent to the owner yet." : "Work and charges"}
         </p>
         <div className="flex shrink-0 gap-1.5">
           <span

@@ -105,8 +105,9 @@ Cancelled. The dates follow the stage: the first stage that means the aircraft i
 when it was **received**, **Completed** records when the work finished, and **Completed** or
 **Cancelled** moves the job to **Finished jobs** with that day. Moving a finished job back to an
 open stage puts it back on the board. Moving a job back to **Requested** or **Scheduled** clears
-the received date and the Hobbs and tach in and out, so the day the aircraft really arrives, and
-its meters then, are the ones recorded.
+the received date, so the day the aircraft really arrives is the one recorded. The Hobbs and tach
+readings stay on the job: a stage move never clears them, and never changes the aircraft's own
+times. Change them under **Details** if they are wrong.
 
 When a job moves to **Aircraft received** (or straight to a later stage in the hangar) with no
 Hobbs or tach in recorded, the meters open under **Details** with them filled in from the
@@ -207,13 +208,17 @@ billed to.
   your choice under your name. **Record owner's answer** and the **Owner's answers** card are not
   shown.
 - **An owner who has not signed up** is emailed at the address on the aircraft, with a way to
-  sign up and answer. One with no address is listed as not reached, and if nobody can be reached
-  nothing is marked sent.
+  sign up and answer. One with no address is listed as not reached.
+- **Hover over Send to owner to see who it asks.** When nobody can be reached, the button is
+  turned off and the same card says why and what to do: add an owner or an email address on the
+  aircraft's **Owners** panel, or call the owner and click **Record owner's answer**. If you own
+  the aircraft yourself, there is nobody else to ask: decide the findings with **Record owner's
+  answer**. **Notify owner** is not offered in those cases either.
 
 ## Record the owner's answer
 
-When you have spoken to the owner, click **Record owner's answer**, beside the count of findings
-waiting at the top of **Work and charges**. Put who you spoke to, when,
+When you have spoken to the owner, click **Record owner's answer**, beside **Add** at the top of
+**Work and charges**. Put who you spoke to, when,
 the most they said you can spend without calling again, and notes. Then choose **Approve**,
 **Decline** or **Defer** for each item you discussed. Only the items you answer are changed, and
 an item answered again on a later call shows the later answer.
@@ -289,8 +294,14 @@ for an item since removed, is listed under **Not for a specific item**.
 - **Billed** is the default. Choose **No charge** for warranty work or shop time you are not
   billing: the line stays on the job as a record of the work, and never reaches the invoice.
 - **Sales tax** follows your organization's rule for that kind of line. Choose **Taxable** or **Not
-  taxable** on a line to decide it yourself. See
+  taxable** on a line to decide it yourself. A taxable line needs a sales tax rate to charge it
+  at: until your organization has one, the line form says so with a link to set it, and
+  **Raise invoice** is turned off, with the reason when you hover over it. See
   [Charge sales tax](/docs/billing/charge-sales-tax) for the rules.
+- **What the owner declined or put off is not billed.** Its lines stay on the job, struck through
+  and marked **Not billed**, and are left out of the total and off the invoice. That goes for
+  what the owner asked for as much as for what you found. To bill one after all, record their new
+  answer for it.
 
 <Callout type="note">
 The customer never sees your cost or your markup. The invoice shows the price each and the
@@ -333,7 +344,8 @@ recorded: mark it once all of the money has arrived. See
 - **So are findings still waiting on the owner's answer.** Once the job is invoiced the owner can
   no longer answer them, so they get an amber box of their own and the same tick. Record the
   owner's answer if they told you on the phone, mark them done, or take their lines off.
-- Findings the owner declined or put off that still have charges are listed too, as a reminder.
+- What the owner declined or put off is listed under **Left off this bill**, with what it would
+  have cost. It is not charged.
 - If a line or a rate changed while the dialog was open, the invoice is not raised. The dialog
   shows the new total to check, and you raise it again. The same goes for the notes for the owner
   and the finished work: the owner is never sent text you did not see. The same happens if somebody added a line
