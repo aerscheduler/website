@@ -510,6 +510,13 @@ export function SiteHeader() {
                           Product documentation
                         </Link>
                         <Link
+                          href="/changelog"
+                          className="inline-flex items-center gap-1 text-sm font-semibold text-foreground hover:text-primary"
+                          onClick={closeMega}
+                        >
+                          Changelog
+                        </Link>
+                        <Link
                           href="/resources"
                           className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
                           onClick={closeMega}
@@ -696,6 +703,13 @@ export function SiteHeader() {
                 ))}
               </div>
             ))}
+            <Link
+              href="/changelog"
+              onClick={() => setOpen(false)}
+              className="block rounded-lg px-2 py-2 text-sm text-foreground hover:bg-muted"
+            >
+              Changelog
+            </Link>
             <Link
               href="/resources"
               onClick={() => setOpen(false)}
