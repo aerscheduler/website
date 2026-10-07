@@ -87,7 +87,7 @@ export function MockHeader({
   onAction?: () => void;
 }) {
   return (
-    <div className="flex items-center justify-between border-b border-border px-4 py-3">
+    <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
       <div className="min-w-0">
         <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
           {eyebrow}
@@ -100,7 +100,8 @@ export function MockHeader({
           type="button"
           data-demo="action"
           onClick={onAction}
-          className="rounded-full bg-primary px-3 py-1 text-[11px] font-semibold text-white transition-all duration-150 hover:bg-primary/90 active:scale-95"
+          // shrink-0 + nowrap: on a phone a long meta line squeezed "+ Book" onto two lines.
+          className="shrink-0 whitespace-nowrap rounded-full bg-primary px-3 py-1 text-[11px] font-semibold text-white transition-all duration-150 hover:bg-primary/90 active:scale-95"
         >
           {action}
         </button>

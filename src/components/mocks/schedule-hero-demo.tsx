@@ -747,7 +747,10 @@ function DemoContextMenu({
   return (
     <div
       className="pointer-events-none absolute z-50 min-w-[148px] overflow-hidden rounded-md border border-border bg-white py-1 text-[11px] shadow-lg animate-demo-pop"
-      style={{ left: `${x}%`, top: `${y}%` }}
+      // Held inside the board: on a phone the click lands near the right edge and
+      // the menu ran off the screen. The cursor aims at the item's measured box,
+      // so it still finds Cancel booking after the shift.
+      style={{ left: `min(${x}%, calc(100% - 152px))`, top: `${y}%` }}
       aria-hidden
     >
       <div className="px-3 py-1.5 text-foreground/80">Open</div>
@@ -793,7 +796,14 @@ function DemoCursor({ x, y, visible, pressing, label }: CursorState) {
           strokeLinejoin="round"
         />
       </svg>
-      <span className="absolute top-[18px] left-[10px] whitespace-nowrap rounded-full bg-[#1967d2] px-2.5 py-1 text-[11px] font-semibold tracking-tight text-white shadow-lg">
+      {/* Past two thirds of the way across, the name tag hangs to the left of
+          the tip, or on a phone it runs off the screen. */}
+      <span
+        className={cn(
+          "absolute top-[18px] whitespace-nowrap rounded-full bg-[#1967d2] px-2.5 py-1 text-[11px] font-semibold tracking-tight text-white shadow-lg",
+          x > 66 ? "right-[12px]" : "left-[10px]"
+        )}
+      >
         {label}
       </span>
     </div>

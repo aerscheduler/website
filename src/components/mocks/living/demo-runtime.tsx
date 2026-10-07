@@ -289,7 +289,14 @@ export function DemoCursor({ x, y, visible, pressing, label }: CursorState) {
           strokeLinejoin="round"
         />
       </svg>
-      <span className="absolute top-[18px] left-[10px] whitespace-nowrap rounded-full bg-[#1967d2] px-2.5 py-1 text-[11px] font-semibold tracking-tight text-white shadow-lg">
+      {/* Past two thirds of the way across, the name tag hangs to the left of
+          the tip, or on a phone it runs off the screen. */}
+      <span
+        className={cn(
+          "absolute top-[18px] whitespace-nowrap rounded-full bg-[#1967d2] px-2.5 py-1 text-[11px] font-semibold tracking-tight text-white shadow-lg",
+          x > 66 ? "right-[12px]" : "left-[10px]"
+        )}
+      >
         {label}
       </span>
     </div>

@@ -295,8 +295,15 @@ export default function HomePage() {
 
         <div className="relative mx-auto mt-16 max-w-[1280px] px-4 sm:px-6 lg:mt-20">
           <div className="hero-window animate-fade-up-delay-3 relative">
-            <div className="lg:mr-[190px]">
+            <div className="hidden md:block lg:mr-[190px]">
               <HeroConsole />
+            </div>
+            {/* Phones get the app's Home instead of the board. Squeezed to 343px
+                the board's eleven hours left each booking a sliver ("P J.",
+                "Cr...") and clipped New reservation, and a visitor on a phone
+                is looking at the screen they would actually use. */}
+            <div className="flex justify-center pb-10 md:hidden">
+              <MobileHome />
             </div>
             {/* The mobile app, stacked over the board (see MobileHome). It rises
                 a little faster than the window as the page scrolls. */}

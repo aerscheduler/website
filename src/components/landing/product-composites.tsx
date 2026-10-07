@@ -221,7 +221,9 @@ export function HeroConsole() {
   return (
     <div className={cn("overflow-hidden rounded-[16px] border shadow-[0_40px_100px_-40px_rgba(16,24,40,0.35),0_2px_8px_-2px_rgba(16,24,40,0.06)]", INK.panel, INK.line, INK.text)}>
       <div className="flex">
-        <aside className={cn("hidden w-[190px] shrink-0 border-r px-3 py-4 md:block", INK.line)}>
+        {/* From lg only: on a tablet the sidebar took 190px from the timeline
+            and shrank every booking to a letter or two. */}
+        <aside className={cn("hidden w-[190px] shrink-0 border-r px-3 py-4 lg:block", INK.line)}>
           <div className="flex items-center gap-2 px-2 pb-4">
             <span className="flex size-5 items-center justify-center rounded-md bg-[#1967d2] text-[10px] font-bold text-white">F</span>
             <span className="truncate text-[13px] font-medium">Fieldstone Aviation</span>
