@@ -222,7 +222,7 @@ export default function Page() {
             Try it on your own schedule
           </h2>
           <p className="mt-2 text-muted-foreground">
-            {TRIAL_DAYS} days, no card. Put a class on the board and close it out. You will see
+            {TRIAL_DAYS} days free. Put a class on the board and close it out. You will see
             an invoice per student.
           </p>
           <div className="mt-4 flex flex-wrap gap-3">

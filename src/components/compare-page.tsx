@@ -277,8 +277,7 @@ export function ComparePage({ competitor }: { competitor: Competitor }) {
           </p>
           <p className="mx-auto mt-2 max-w-xl text-sm text-muted-foreground">
             Add a tail, put a flight on the board, ramp it in and watch the
-            invoice draft itself. {TRIAL_DAYS} days, no credit card, no sales
-            call.
+            invoice draft itself. {TRIAL_DAYS} days free, no sales call.
           </p>
           <div className="mt-5 flex flex-wrap justify-center gap-3">
             <Button href={SIGNUP_URL} size="lg">

@@ -201,7 +201,7 @@ export default function ContactPage() {
                 <h2 className="text-sm font-semibold text-foreground">Don&apos;t wait on us</h2>
                 <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
                   You can start a {TRIAL_DAYS}-day trial and have your fleet on
-                  the schedule before we even reply. No card required.
+                  the schedule before we even reply.
                 </p>
                 <a
                   href={SIGNUP_URL}

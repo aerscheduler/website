@@ -260,7 +260,7 @@ export default function Page() {
         <section className="mt-12 rounded-lg border bg-muted/30 p-6">
           <h2 className="text-xl font-semibold tracking-tight">Try it on one student</h2>
           <p className="mt-2 text-muted-foreground">
-            {TRIAL_DAYS} days, no card. Start from the Private Pilot syllabus, enroll somebody,
+            {TRIAL_DAYS} days free. Start from the Private Pilot syllabus, enroll somebody,
             record a lesson against a flight you already booked, and sign it.
           </p>
           <div className="mt-4 flex flex-wrap gap-3">

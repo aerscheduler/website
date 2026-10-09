@@ -70,7 +70,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Do I have to book a call to use AerScheduler?",
-    a: `No. AerScheduler is self-serve: you can open the live demo without an account, or start a ${TRIAL_DAYS}-day trial without a card, and never speak to anyone. The call is there for schools that want a person alongside them.`,
+    a: `No. AerScheduler is self-serve: you can open the live demo without an account, or start a ${TRIAL_DAYS}-day free trial yourself, and never speak to anyone. The call is there for schools that want a person alongside them.`,
   },
   {
     q: "Who will I be talking to?",

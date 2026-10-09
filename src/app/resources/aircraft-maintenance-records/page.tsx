@@ -187,7 +187,7 @@ export default function Page() {
         <section className="mt-12 rounded-lg border bg-muted/30 p-6">
           <h2 className="text-xl font-semibold tracking-tight">See what your fleet owes</h2>
           <p className="mt-2 text-muted-foreground">
-            {TRIAL_DAYS} days, no card. Add an aeroplane, apply the standard airworthiness set,
+            {TRIAL_DAYS} days free. Add an aeroplane, apply the standard airworthiness set,
             and the countdown starts from the dates you already have.
           </p>
           <div className="mt-4 flex flex-wrap gap-3">

@@ -282,7 +282,7 @@ export default function Page() {
         <section className="mt-12 rounded-lg border bg-muted/30 p-6">
           <h2 className="text-xl font-semibold tracking-tight">Set your tiers up in an evening</h2>
           <p className="mt-2 text-muted-foreground">
-            {TRIAL_DAYS} days, no card. Add your plans, put your members on them, and let the
+            {TRIAL_DAYS} days free. Add your plans, put your members on them, and let the
             1st of the month look after itself.
           </p>
           <div className="mt-4 flex flex-wrap gap-3">

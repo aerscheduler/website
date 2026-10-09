@@ -218,7 +218,7 @@ export default function Page() {
         <section className="mt-12 rounded-lg border bg-muted/30 p-6">
           <h2 className="text-xl font-semibold tracking-tight">Check your own fleet</h2>
           <p className="mt-2 text-muted-foreground">
-            {TRIAL_DAYS} days, no card. Add one aeroplane, apply the standard airworthiness set,
+            {TRIAL_DAYS} days free. Add one aeroplane, apply the standard airworthiness set,
             and compare the due dates against what you have today.
           </p>
           <div className="mt-4 flex flex-wrap gap-3">

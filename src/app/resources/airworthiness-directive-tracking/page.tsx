@@ -215,7 +215,7 @@ export default function Page() {
         <section className="mt-12 rounded-lg border bg-muted/30 p-6">
           <h2 className="text-xl font-semibold tracking-tight">Try it on one aeroplane</h2>
           <p className="mt-2 text-muted-foreground">
-            {TRIAL_DAYS} days, no card. Add the directive you are already tracking somewhere else,
+            {TRIAL_DAYS} days free. Add the directive you are already tracking somewhere else,
             set it to ground the tail, and sign it off from the phone at the aircraft.
           </p>
           <div className="mt-4 flex flex-wrap gap-3">

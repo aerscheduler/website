@@ -491,7 +491,7 @@ export function FeaturePage({ feature }: { feature: Feature }) {
             </h2>
             <p className="mt-4 text-lg leading-relaxed text-white/65">
               {landing?.closingBody ??
-                `Add a tail, put a flight on the board, and see it work on your own operation. ${TRIAL_DAYS} days, no credit card, no sales call.`}
+                `Add a tail, put a flight on the board, and see it work on your own operation. ${TRIAL_DAYS} days free, no sales call.`}
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <Button href={cta} size="lg" className="bg-white text-brand-surface hover:bg-white/90">

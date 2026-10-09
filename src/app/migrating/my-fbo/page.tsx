@@ -33,7 +33,7 @@ const STEPS = [
   {
     n: "2",
     title: "Create your AerScheduler account",
-    body: `Self-serve signup takes minutes. Add your fleet, invite your team, and put something on the schedule. ${TRIAL_DAYS}-day trial, no credit card.`,
+    body: `Self-serve signup takes minutes. Add your fleet, invite your team, and put something on the schedule. ${TRIAL_DAYS}-day free trial, cancel anytime.`,
   },
   {
     n: "3",
@@ -94,7 +94,7 @@ export default function MigratingMyFboPage() {
           </div>
           <p className="mt-4 text-sm text-muted-foreground">
             ${PRICE_PER_AIRCRAFT}/aircraft/mo · Unlimited users · Simulators and
-            classrooms free · {TRIAL_DAYS}-day trial · No credit card
+            classrooms free · {TRIAL_DAYS}-day free trial · Cancel anytime
           </p>
         </div>
       </section>

@@ -14,7 +14,7 @@ import {
 
 export const metadata: Metadata = {
   title: "Flight School Software Pricing",
-  description: `Simple flight school software pricing at $${PRICE_PER_AIRCRAFT}/mo per aircraft. Simulators and classrooms free. ${TRIAL_DAYS}-day free trial, no credit card. Enterprise available for larger operations.`,
+  description: `Simple flight school software pricing at $${PRICE_PER_AIRCRAFT}/mo per aircraft. Simulators and classrooms free. ${TRIAL_DAYS}-day free trial, cancel anytime. Enterprise available for larger operations.`,
   alternates: { canonical: "/pricing" },
   openGraph: {
     title: "Flight School Software Pricing",
@@ -151,7 +151,7 @@ export default function PricingPage() {
             </div>
             <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
               Simulators and ground-school rooms are free. Start with a{" "}
-              {TRIAL_DAYS}-day trial. No credit card to begin. {NOT_INCLUDED}
+              {TRIAL_DAYS}-day free trial. Nothing is charged until it ends. {NOT_INCLUDED}
             </p>
             <Button href={SIGNUP_URL} size="lg" className="mt-8">
               Start free trial

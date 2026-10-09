@@ -231,7 +231,7 @@ export default function Page() {
         <section className="mt-12 rounded-lg border bg-muted/30 p-6">
           <h2 className="text-xl font-semibold tracking-tight">Try it on your own fleet</h2>
           <p className="mt-2 text-muted-foreground">
-            {TRIAL_DAYS} days, no card. Put a weekend trip on the board and close it out. You
+            {TRIAL_DAYS} days free. Put a weekend trip on the board and close it out. You
             will see the minimum on the booking screen before you save it, and on the invoice
             after.
           </p>

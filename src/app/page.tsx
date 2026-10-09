@@ -289,7 +289,7 @@ export default function HomePage() {
             </Button>
           </div>
           <p className="animate-fade-up-delay-3 mt-4 text-sm text-black/45">
-            {TRIAL_DAYS}-day free trial · No credit card · No sales call
+            {TRIAL_DAYS}-day free trial · Cancel anytime · No sales call
           </p>
         </div>
 
@@ -563,7 +563,7 @@ export default function HomePage() {
             </h2>
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-white/70">
               A ten-aircraft school pays ${PRICE_PER_AIRCRAFT * 10} a month.
-              Start with a {TRIAL_DAYS}-day free trial, no credit card required.
+              Start with a {TRIAL_DAYS}-day free trial. Nothing is charged until it ends.
             </p>
             <div className="mt-9 flex flex-wrap items-center gap-3">
               <Button href={SIGNUP_URL} size="lg" className="bg-white text-brand-surface hover:bg-white/90">

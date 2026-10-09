@@ -124,7 +124,7 @@ export function faqJsonLd(faqs: { q: string; a: string }[]) {
 export const PRICING_FAQS = [
   {
     q: "When does billing start?",
-    a: `After your ${TRIAL_DAYS}-day trial. We'll remind you before it ends. No card is required to start.`,
+    a: `After your ${TRIAL_DAYS}-day free trial. You add a card to start it, nothing is charged until it ends, and we email you three days before. Cancel before then and you pay nothing.`,
   },
   {
     q: "Do simulators count toward the bill?",

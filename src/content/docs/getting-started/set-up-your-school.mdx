@@ -8,8 +8,9 @@ billing connection. Everything can be changed later, so do not stall on a decisi
 
 ## Before you start
 
-Nothing. No credit card and no sales call. A 14-day free trial starts the moment you sign
-up.
+A card, and no sales call. Adding the card is the last step of setup and starts your
+14-day free trial. Nothing is charged that day, and if you cancel before the trial ends you
+pay nothing at all.
 
 Whoever creates the operation becomes its **owner** and **admin** automatically. A
 flight school, club, rental or independent instructor also gets **instructor**. A
@@ -43,7 +44,7 @@ A maintenance shop signup (<Where app="web">I run a maintenance shop</Where>) ge
 
 ## What setup asks for
 
-Three wizard steps, plus a short question about where to start.
+Four wizard steps, plus a short question about where to start.
 
 **Your operation.** Whether you are a flight school, a flying club or a rental operation,
 what it is called, and the airport you fly from. That airport becomes your first location,
@@ -74,6 +75,15 @@ what is working.
 **Your first aircraft.** Tail number, year, current Hobbs and tach, and an hourly rate.
 You can skip it and add aircraft later from
 [Add an aircraft](/docs/getting-started/add-an-aircraft).
+
+**Your card.** Adding a card starts the free trial. The page shows the date the trial
+ends and what your fleet costs after it: $20 a month per aircraft, with simulators and rooms
+free. If you skipped the aircraft, nothing is charged until you add one. Owners and admins
+get an email three days before the first charge, and you can cancel any time before then
+from <Where app="web">Settings → Plan → Manage billing</Where>. The card is entered on
+Stripe's secure page, so it never passes through AerScheduler. This step has no Skip: until
+a card is on file, the rest of AerScheduler stays closed. A maintenance shop is not asked
+for a card.
 
 **Billing.** Connecting Stripe is what turns a closed-out flight into a bill your members
 can settle: either a Stripe invoice per visit, or (if you choose Account ledger) a charge
