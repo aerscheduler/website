@@ -209,12 +209,45 @@ const INCLUDED = [
 ];
 
 /**
- * Real customer words only. The section renders nothing while this is empty, so
- * adding the first quote is the whole job. Never paraphrase a customer or invent
- * an attribution to fill it.
+ * Real customer words only. Never paraphrase a customer or invent an
+ * attribution: `lead`, `quote` and `short` are whole sentences copied from what
+ * they sent. The quote is credited to the school, not the person (Tony's call).
+ *
+ * Shown twice, on purpose. PostHog scroll depth (60 days to 2026-10-08): about
+ * half of home page visitors reach the audience strip, where `short` sits, and
+ * only about 1 in 9 reach the pricing band, where the full quote sits. Proof up
+ * top for everyone, the whole story where people decide.
+ *
+ * `lead` is the "before" sentence, set dimmer so the quote reads from where
+ * they were to where they are, the same move as the price statement.
  */
-type Testimonial = { quote: string; name: string; role: string; school: string };
-const TESTIMONIALS: Testimonial[] = [];
+type Testimonial = {
+  lead?: string;
+  quote: string;
+  /** One sentence of `quote` for the audience strip. */
+  short: string;
+  /** The school only: no person's name, and no town (it made Murray read small). */
+  school: string;
+  /**
+   * In `public/customers/`: the logo's line art lifted onto transparency in our
+   * ink colour, so it sits on the page like type rather than as a pasted sticker.
+   */
+  logo: { src: string; width: number; height: number };
+  since: number;
+};
+const TESTIMONIALS: Testimonial[] = [
+  {
+    // Dylan Freiberg, texted to Cooper 2026-10-08. Logo from flymurrayaviation.com.
+    lead: "Before AerScheduler, we used a mix of a shared Google Calendar and Venmo to conduct aircraft rental, flight instruction and payments.",
+    quote:
+      "The AerScheduler system has improved our operations tremendously. Less need for owner supervision, aircraft maintenance is precisely tracked, and student progression is clearly defined.",
+    short:
+      "Less need for owner supervision, aircraft maintenance is precisely tracked, and student progression is clearly defined.",
+    school: "Murray Aviation",
+    logo: { src: "/customers/murray-aviation.png", width: 504, height: 326 },
+    since: 2023,
+  },
+];
 
 /**
  * Reads `?for=` and marks <html> before anything below it paints, so the matching headline,
@@ -358,6 +391,7 @@ export default function HomePage() {
               className="sm:col-span-2 lg:col-span-1"
             />
           </RevealGroup>
+          {TESTIMONIALS[0] && <ShortQuote t={TESTIMONIALS[0]} />}
         </div>
       </section>
 
@@ -515,27 +549,6 @@ export default function HomePage() {
             </div>
           </Reveal>
 
-          {TESTIMONIALS.length > 0 && (
-            <RevealGroup
-              className={`mt-20 grid gap-12 ${TESTIMONIALS.length > 1 ? "lg:grid-cols-2" : "mx-auto max-w-3xl"}`}
-            >
-              {TESTIMONIALS.map((t) => (
-                <figure key={t.name}>
-                  <blockquote className="text-2xl font-medium leading-snug tracking-tight text-[#0b0b0d] sm:text-[1.75rem]">
-                    &ldquo;{t.quote}&rdquo;
-                  </blockquote>
-                  <figcaption className="mt-6 text-sm">
-                    <span className="font-semibold text-[#0b0b0d]">{t.name}</span>
-                    <span className="text-muted-foreground">
-                      {" "}
-                      · {t.role}, {t.school}
-                    </span>
-                  </figcaption>
-                </figure>
-              ))}
-            </RevealGroup>
-          )}
-
         </div>
       </section>
 
@@ -575,6 +588,9 @@ export default function HomePage() {
                 Try the live demo
               </Button>
             </div>
+            {TESTIMONIALS.map((t) => (
+              <CustomerQuote key={t.school} t={t} />
+            ))}
           </Reveal>
           <Reveal delay={100}>
             <div className="rounded-2xl border border-white/15 bg-white/[0.06] p-7 backdrop-blur-sm sm:p-8">
@@ -599,6 +615,72 @@ export default function HomePage() {
         </div>
       </section>
     </div>
+  );
+}
+
+/**
+ * One customer, in their words, under the trial buttons in the closing pricing
+ * band, so the proof sits where people decide. Small on purpose: as a large
+ * band straight under the hero it crowded the console and broke the flow
+ * (Tony, 2026-10-08). The "before" sentence is dimmer than the result, so it
+ * reads as a change rather than praise. The logo is black line art, inverted
+ * to white for the dark band.
+ */
+function CustomerQuote({ t }: { t: Testimonial }) {
+  return (
+    <figure className="mt-12 max-w-xl border-t border-white/10 pt-8">
+      <blockquote className="text-[17px] leading-relaxed">
+        {t.lead && <span className="text-white/45">&ldquo;{t.lead} </span>}
+        <span className="text-white/90">
+          {!t.lead && <>&ldquo;</>}
+          {t.quote}&rdquo;
+        </span>
+      </blockquote>
+      <figcaption className="mt-6 flex items-center gap-4">
+        <Image
+          src={t.logo.src}
+          alt={`${t.school} logo`}
+          width={t.logo.width}
+          height={t.logo.height}
+          className="h-11 w-auto shrink-0 opacity-85 invert"
+        />
+        <div className="text-sm leading-snug">
+          <p className="font-medium text-white">{t.school}</p>
+          <p className="text-white/50">On AerScheduler since {t.since}</p>
+        </div>
+      </figcaption>
+    </figure>
+  );
+}
+
+/**
+ * One sentence of the quote under the audience strip, behind the same faint
+ * rule the feature sections use. The point is reach, not weight: it sits in
+ * the second screen, which about half of visitors see, and stays at the size of
+ * the strip's own titles so it does not crowd the hero above it.
+ */
+function ShortQuote({ t }: { t: Testimonial }) {
+  return (
+    <Reveal
+      as="figure"
+      className="mt-12 flex flex-col gap-5 border-t border-black/[0.06] pt-8 sm:flex-row sm:items-center sm:gap-6 lg:mt-14"
+    >
+      <Image
+        src={t.logo.src}
+        alt={`${t.school} logo`}
+        width={t.logo.width}
+        height={t.logo.height}
+        className="h-11 w-auto shrink-0 self-start opacity-75 sm:self-center"
+      />
+      <div>
+        <blockquote className="text-lg font-medium leading-snug tracking-tight text-[#0b0b0d] sm:text-xl">
+          &ldquo;{t.short}&rdquo;
+        </blockquote>
+        <figcaption className="mt-1.5 text-sm text-black/45">
+          {t.school}, on AerScheduler since {t.since}
+        </figcaption>
+      </div>
+    </Reveal>
   );
 }
 
