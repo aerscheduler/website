@@ -115,6 +115,29 @@ aircraft. Check them against the meters and click **Save**, or **Cancel** to lea
 When it moves to **Ready for pickup** or **Completed** with no Hobbs or tach out, the meters open
 again for the readings out, the aircraft's return to service.
 
+If a customer's aircraft has no Hobbs meter (or no tach) and was added as having both, an admin
+clicks **This aircraft has no Hobbs meter** under the readings (on the phone, **No Hobbs meter**
+in the meters sheet). The aircraft is recorded as tach only from then on, here and on every later
+job, and a 0.0 typed for the missing meter comes off the job. Never type 0.0 for a meter the
+aircraft does not have: it goes on the aircraft's meter log as a reading.
+
+### Completing a job that is not invoiced
+
+Moving a job somebody pays for to **Completed** while it has charges on it and no invoice asks
+first, because a finished job that was never billed is easy to lose.
+
+- **Raise the invoice** opens the invoice; the job completes once it is sent.
+- **Complete without an invoice** is for a job you are not billing: a staff member's own
+  aircraft, a warranty job. The job reads **Not billed**, and the **Billing** card says so, with
+  **Bill it after all** to change your mind.
+- On the phone, where invoices are not raised, the choices are **Complete, invoice later** and,
+  for an admin, **Not billing it**. A technician's **Complete anyway** completes it too.
+
+A completed job with charges and no invoice, that nobody said not to bill, reads **Not invoiced**
+on the job, on **Finished jobs**, and on the phone's **Finished** list, until somebody raises the
+invoice (the **Billing** card has the button) or clicks **Not billing it**. Reopening a job clears
+**Not billed**, so completing it again asks again.
+
 Moving a job to **Ready for pickup** or **Completed** while an inspection on it is not signed off
 (and the owner did not decline or put it off) asks first. Sign it off, or choose **Complete
 anyway**: while the job is open the owner hears nothing about that inspection, and once it is
@@ -176,6 +199,10 @@ a finding, or a charge not for any item.
   sent yet, an owner's request, or a finding already done rewords freely. On a job that is
   invoiced or closed nothing can be asked again, so rewording only corrects the words and the
   owner's answer stands, as the bill does.
+- **On your organization's own aircraft** there is no owner to ask, so a finding is simply work
+  to do: it has no answer tag. To decide not to do one, or to do it later, use its **⋯** menu,
+  **Not doing it** or **Later**; its lines then stay on the job, not billed, and **Doing it after
+  all** puts it back.
 - An item's **⋯** menu adds labor or a part for it, marks it done, renames it or removes it. A
   finding you never sent that still has charges on it cannot be removed: its lines would stay on
   the bill for something the owner never heard of. Take its lines off first, or send it.
@@ -265,8 +292,9 @@ keeps the usual values never needs them: the **kind**, the **item** it is for, t
 **sales tax**, and whether it is **billed**. Click one to change it.
 
 <Callout type="note">
-Only an admin prices. Technicians enter work at the shop's rates: their labor
-takes the shop's labor rate and their parts and outside work the shop's markup. They type a
+Only an admin prices. Technicians enter work at the job's rates (see
+[Rates for a customer or a job](#rates-for-a-customer-or-a-job)): their labor takes the job's
+labor rate and their parts and outside work its markup, on the console and on the phone alike. They type a
 price only on Shop supplies, Freight, Fee and Other lines. An admin changes a line's rate,
 markup, price or kind, decides its tax and whether it is billed, and changes lines somebody
 else entered. Everyone else changes only the lines they entered, and a line an admin prices
@@ -274,9 +302,11 @@ becomes the admin's. An admin sees every line in the invoice preview before rais
 </Callout>
 
 - **Labor** is hours at a rate. Type clock time: 1.5 is an hour and a half, 0.25 a quarter.
-  **Rate per hour** fills in from the shop's labor rate; an admin can change it on the entry.
-  Until the shop has a labor rate, only an admin can enter labor.
-  Pick the **Technician** and the **Day** the work was done.
+  **Rate per hour** fills in from the job's labor rate, which says under it whose it is (the
+  shop's, the customer's, or the job's own); an admin can change it on the entry. Until there is
+  a labor rate, only an admin can enter labor. The **Technician** starts as the job's technician
+  when it has one (on the phone, you, when you are a technician); pick who did the work and the
+  **Day** it was done.
 - **Part** and **Outside work** are what the shop paid (**Cost each**) plus the shop's markup for
   that kind. **Price each** shows the result, greyed, and says the markup under it. An admin can
   type a price there to charge that instead; empty the field to go back to cost plus the markup.
@@ -375,6 +405,25 @@ Markups are percentages: 15 adds 15% to what the shop paid.
 These price NEW lines only. Each line keeps the rate and markup it was entered with, so changing
 the shop's rates never changes a job already in progress. Only owners and admins see this page; a
 technician sees the rate filled in on each labor line, and only an admin changes it there.
+
+## Rates for a customer or a job
+
+<Roles>Owners, Admins</Roles>
+
+Some customers are charged differently: your own staff at cost, a fleet operator at an agreed
+rate. Set it once instead of on every line.
+
+- **For a customer:** on their page under <Where app="web">People</Where>, the **Rates** card,
+  **Set rates**. Every new line on a job billed to them is priced at their labor rate and
+  markups. Leave a field empty to use the shop's; 0% is at cost. It is not shown to the customer,
+  and nobody can set their own.
+- **For one job:** on the job's **Billing** card, click **Rates for new lines**. A job's own rate
+  wins over the customer's; **Use the customer's** (or **Use the shop's**) clears it.
+
+Each rate is taken from the nearest place that sets it: the job, then the customer billed, then
+the shop. The card says which, for example "Dale Whitcomb's rate". Changing a rate on a job
+with lines already on it offers to **Re-price** the lines priced at the old rate; a line priced by
+hand or at a flat price keeps its price. Choose **Keep their prices** to leave them all.
 
 ## Find a job
 

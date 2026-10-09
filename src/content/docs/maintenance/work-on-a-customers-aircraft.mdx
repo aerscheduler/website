@@ -28,7 +28,10 @@ from and somebody with an admin role sets it up.
   <Step n={3} title="Fill in the tail, make, model and meters">
     The same fields as your own aeroplanes, minus the rate and the flying day: you are not
     renting this one out. Put in the Hobbs and tach readings as they are when it arrives.
-    Everything that comes due later is counted from them.
+    Everything that comes due later is counted from them. Then click **Which meters?** under
+    the fields and choose what the aircraft has: **Hobbs and tach**, **Tach only** (most older
+    singles), **Hobbs only**, or none. The form asks before it adds the aircraft, because every
+    job on it asks for the readings of the meters it has, and only those.
   </Step>
   <Step n={4} title="Say who owns it">
     **Owner** lists everybody on your roster: pick them, or choose **Add a new person** and
@@ -44,10 +47,12 @@ from and somebody with an admin role sets it up.
 
 ## Add another owner
 
-Open the aircraft, then <Where app="web">Owners → Add owner</Where>. A name is all that is
-required. Add an email and a phone number too: the email is where the invoices you raise for
-them are sent, and the phone number is what you will reach for when the annual turns up
-something. On the owner's row, the phone number is a link you can tap to call.
+Open the aircraft, then <Where app="web">Owners → Add owner</Where>. **Who** lists everybody on
+your roster, found by name or by email: pick them if they are already here, for example a member
+who owns their own aeroplane, or one of your staff. Otherwise choose **Add a new person**. A name
+is all that is required. Add an email and a phone number too: the email is where the invoices
+you raise for them are sent, and the phone number is what you will reach for when the annual
+turns up something. On the owner's row, the phone number is a link you can tap to call.
 
 The owner goes on your roster, marked **Aircraft owner** and **Not signed up**. They cannot
 sign in yet. If you record an email address, AerScheduler writes to them there about their
@@ -73,8 +78,11 @@ person you deal with as a co-owner, so they hear about the work too.
 
 ### When the email address is already on your roster
 
-If somebody on your roster already uses the address you typed, the form stops and says who,
-instead of quietly creating a second record or merging two people.
+If somebody on your roster already uses the address you typed for a new person, the form says
+so as you type, before anything is saved, with a button to use them instead. The same name as
+somebody on your roster is pointed out too; click **A different person** if it is not them. An
+address the form cannot see (somebody archived) is checked when you click **Add owner**, and
+the form stops and says who, instead of quietly creating a second record or merging two people.
 
 | What it says | What to click |
 |---|---|
