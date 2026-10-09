@@ -121,6 +121,14 @@ card is charged. A school that started its trial without a card (signups before 
 pauses for everyone at the school, but nothing is deleted: subscribing turns it straight
 back on with every flight, person and aircraft where you left them.
 
+If a monthly charge is declined, every owner and admin gets an email from AerScheduler with
+a **Pay** button that settles that month with any card, no sign-in needed. Until it is paid
+the schedule pauses for everyone. Owners and admins who sign in see **Your payment didn't go
+through** and an **Update payment method** button, which opens Stripe's billing page to
+change the card for future months; everyone else sees **Access paused**. Stripe tries the
+card again on its own (the email gives the date), and each declined try sends another
+email. Nothing is deleted, and everything comes back the moment the payment goes through.
+
 <Callout type="note">
 Schools that were already billing through Stripe Connect before per-aircraft pricing
 launched stay on their existing plan. Their Plan tab reads **Legacy plan** and shows no
