@@ -1,0 +1,51 @@
+<Summary>
+Your organization bills in one currency: US, Canadian, Australian or New Zealand dollars, British pounds, or euros. It is set from your Stripe account when you connect payouts. The owner can change it under <Where app="web">Settings → Billing → Currency</Where> until anyone has been billed, and then it is fixed.
+</Summary>
+
+<Roles>Owners</Roles>
+
+## Where it comes from
+
+When you connect Stripe under <Where app="web">Settings → Billing → Payouts</Where>, AerScheduler starts billing in your Stripe account's own currency, as long as nobody has been billed yet and you have not already picked one. A school whose Stripe account pays out in Australian dollars bills in Australian dollars without doing anything else.
+
+Before you connect, every new organization starts in US dollars.
+
+## Change it
+
+<Steps>
+<Step n={1} title="Open Settings, then Billing">
+The Currency card sits under Payouts.
+</Step>
+<Step n={2} title="Pick the currency">
+The change saves straight away. Every price, rate, invoice and balance in the console and the app now reads in that currency.
+</Step>
+</Steps>
+
+Only the organization owner can change it. Admins see the card but cannot edit it.
+
+<Callout type="warning">
+Your rates are numbers, not amounts in a particular currency. If you set an aircraft at 250.00 an hour and then switch from US dollars to Australian dollars, the rate becomes A$250.00, not the converted value. Set the currency first, then your rates.
+</Callout>
+
+## When it stops changing
+
+The currency is fixed as soon as money moves: the first invoice, the first account ledger entry, or the first card payment a member starts. From then on the card is greyed out and says why. Every amount you have recorded is a number in that currency, so changing it later would reprice everything already billed and turn account balances into a mix of two currencies.
+
+If it was set wrong, contact support before you bill anyone else.
+
+## If Stripe pays out in a different currency
+
+You can bill in a currency other than your Stripe account's. Settings shows a note when they differ. Stripe then converts every payment into your payout currency and charges you for the conversion, and your members may see a foreign transaction fee on their card. Billing in your payout currency avoids both.
+
+## What uses it
+
+- Invoices, receipts, statements and the emails about them
+- Account ledger balances, top-ups, refunds, late fees and auto-refill
+- Rates, fees, membership dues, course fees, package prices and work orders
+- Reports and their CSV and PDF exports, which name the currency in each money column
+- Your public booking pages
+- QuickBooks: AerScheduler only posts to a QuickBooks company whose home currency matches
+
+Amounts are always written with a point for the decimals and commas for thousands, for example £1,234.56.
+
+Your AerScheduler plan itself is priced and billed in US dollars.

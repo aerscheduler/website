@@ -2813,6 +2813,180 @@
         ]
       }
     },
+    "/organizations/billingCurrency": {
+      "get": {
+        "tags": [
+          "Organizations"
+        ],
+        "summary": "Get the billing currency",
+        "description": "The currency every amount in this organization is in, whether it can still change, and the supported list. Any member may read. Pass `includeStripe=true` as an owner or admin to also get the connected Stripe account's own currency.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/OrganizationBillingCurrency"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getOrganizationBillingCurrency",
+        "parameters": [
+          {
+            "name": "includeStripe",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            },
+            "description": "Also return the connected Stripe account's currency (owners and admins only)."
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Organizations"
+        ],
+        "summary": "Set the billing currency",
+        "description": "Changes the currency the organization bills in. **Owner only.** Refused with 409 once any invoice, account ledger entry or card charge exists, because every recorded amount is a number in the old currency.",
+        "responses": {
+          "200": {
+            "description": "The currency after the change.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/OrganizationBillingCurrency"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Not one of the supported currencies.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Only the organization owner can change this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The organization has already billed in its current currency.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "setOrganizationBillingCurrency",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The new currency.",
+                "properties": {
+                  "currency": {
+                    "type": "string",
+                    "enum": [
+                      "usd",
+                      "cad",
+                      "aud",
+                      "nzd",
+                      "gbp",
+                      "eur"
+                    ]
+                  }
+                },
+                "required": [
+                  "currency"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
     "/organizations/ledger": {
       "get": {
         "tags": [
@@ -20423,6 +20597,32 @@
                       "null"
                     ],
                     "maxLength": 2000
+                  },
+                  "laborRateCents": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "description": "This customer's labor rate in cents an hour, on jobs billed to them; null for the shop's."
+                  },
+                  "partsMarkupBps": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 100000,
+                    "description": "This customer's parts markup in basis points (0 is at cost); null for the shop's."
+                  },
+                  "outsideWorkMarkupBps": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 100000,
+                    "description": "This customer's outside work markup in basis points; null for the shop's."
                   }
                 }
               }
@@ -24062,6 +24262,36 @@
                     "maxItems": 20,
                     "description": "People with the technician role assigned. Replaces the whole list; somebody already on the job who lost the role may stay."
                   },
+                  "noInvoice": {
+                    "type": "boolean",
+                    "description": "Close a completed job without an invoice (true), or put it back to be billed (false). Refused on a job that is not `completed` or has a live invoice. Cleared when the job is reopened or invoiced. **Admins only** (403 otherwise)."
+                  },
+                  "laborRateCents": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "description": "This job's labor rate in cents an hour, for lines added from now on (lines already written keep their price); null to follow the customer's or the shop's. **Admins only.**"
+                  },
+                  "partsMarkupBps": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 100000,
+                    "description": "This job's parts markup in basis points (0 is at cost); null to follow the customer's or the shop's. **Admins only.**"
+                  },
+                  "outsideWorkMarkupBps": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "maximum": 100000,
+                    "description": "This job's outside work markup in basis points; null to follow the customer's or the shop's. **Admins only.**"
+                  },
                   "confirmLower": {
                     "type": "boolean",
                     "description": "A reading in or out lower than the aircraft's own answers 409 `METER_LOWER` before anything saves; send again with this to record it as a correction."
@@ -25817,7 +26047,7 @@
           "Work orders"
         ],
         "summary": "Price a job's invoice",
-        "description": "**Admins only.** The bill as it would be raised now: the job's billable lines, each with its sales tax, the organization's service fee, and the total. Priced by the same code as the invoice.",
+        "description": "**Admins only.** The bill as it would be raised now: the job's billable lines, each with its sales tax, the organization's service fee, and the total. Priced by the same code as the invoice. Lines on an item the owner declined or deferred are left off (`leftOff`).",
         "responses": {
           "200": {
             "description": "The priced bill.",
@@ -25886,11 +26116,30 @@
                                 "$ref": "#/components/schemas/WorkOrderUnagreedCharge"
                               }
                             },
-                            "declinedCharged": {
+                            "leftOff": {
                               "type": "array",
-                              "description": "Findings the owner declined or deferred that still have charges on this bill.",
+                              "description": "Items the owner declined or deferred, found by the shop or asked for by the owner, whose lines are left off this bill. To bill one, record a new answer for it, or move its lines off the item.",
                               "items": {
-                                "$ref": "#/components/schemas/WorkOrderUnagreedCharge"
+                                "allOf": [
+                                  {
+                                    "$ref": "#/components/schemas/WorkOrderUnagreedCharge"
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "decision": {
+                                        "type": "string",
+                                        "enum": [
+                                          "declined",
+                                          "deferred"
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "decision"
+                                    ]
+                                  }
+                                ]
                               }
                             }
                           }
@@ -25903,7 +26152,7 @@
             }
           },
           "400": {
-            "description": "Nobody billed, nothing billable, or the job was cancelled.",
+            "description": "Nobody billed, nothing billable (or everything with charges was declined or deferred), the job was cancelled, or a line is marked taxable with no sales tax rate to charge it at (`code`: `TAX_RATE_MISSING`; add one under Settings, Billing, Sales tax).",
             "content": {
               "application/json": {
                 "schema": {
@@ -26101,12 +26350,134 @@
       }
     },
     "/work-orders/{id}/send-to-owner": {
+      "get": {
+        "tags": [
+          "Work orders"
+        ],
+        "summary": "Who a send would reach",
+        "description": "**Owners, admins and technicians only.** Who Send to owner would reach on this job right now, by the same rules as the send, sending nothing: the aircraft's owners and the person billed, less the caller. `blocked` says why a send would reach nobody (no owner on record, nobody with an address, or the caller is the only owner), and is null when it would reach somebody.",
+        "responses": {
+          "200": {
+            "description": "Who it would reach.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "tail": {
+                          "type": "string",
+                          "description": "The aircraft's tail number."
+                        },
+                        "reached": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "Who a send would reach."
+                        },
+                        "notReached": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string"
+                              },
+                              "reason": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "description": "Who it would not, and why."
+                        },
+                        "you": {
+                          "type": "boolean",
+                          "description": "The caller owns the aircraft or is the person billed: nobody is sent their own findings."
+                        },
+                        "blocked": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "description": "Why a send would reach nobody; null when it would reach somebody."
+                        }
+                      },
+                      "required": [
+                        "tail",
+                        "reached",
+                        "notReached",
+                        "you",
+                        "blocked"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not one of this organization's jobs.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getWorkOrderSendAudience",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The work order id."
+          }
+        ]
+      },
       "post": {
         "tags": [
           "Work orders"
         ],
         "summary": "Send findings to the owners",
-        "description": "**Owners, admins and technicians only.** Sends the found items still waiting on an answer that have not been sent yet to every owner of the aircraft and the person billed, in one message (prices only to the person billed). An owner who has not signed up is emailed at the address on record, with a way to sign up. Until a finding is sent the owners are not shown it. A job in Received or In progress moves to Waiting on owner, and back to In progress once every finding sent is answered. Answers 409 when there is nothing new to send, or when the message reached nobody (nothing is marked sent then).",
+        "description": "**Owners, admins and technicians only.** Sends the found items still waiting on an answer that have not been sent yet to every owner of the aircraft and the person billed, in one message (prices only to the person billed). An owner who has not signed up is emailed at the address on record, with a way to sign up. Until a finding is sent the owners are not shown it. A job in Received or In progress moves to Waiting on owner, and back to In progress once every finding sent is answered. Answers 409 when there is nothing new to send, or when nobody can be reached, with the reason (nothing is marked sent then). `GET` on the same path says who would be reached before sending.",
         "responses": {
           "201": {
             "description": "Sent.",
@@ -38415,6 +38786,19 @@
             "description": "Which plan the organization is on: `standard` or `enterprise`. Enterprise is what makes this API available at all.",
             "example": "enterprise"
           },
+          "billingCurrency": {
+            "type": "string",
+            "description": "The currency the organization bills its members in, lowercase ISO 4217. Every money field on this organization's records (`total`, `unitPrice`, `*Cents`, rates) is an integer in this currency's minor unit. One of `usd`, `cad`, `aud`, `nzd`, `gbp`, `eur`.",
+            "example": "aud",
+            "enum": [
+              "usd",
+              "cad",
+              "aud",
+              "nzd",
+              "gbp",
+              "eur"
+            ]
+          },
           "scheduledDeletionAt": {
             "format": "date-time",
             "description": "When set, the organization will be hard-deleted at this time. Null means no countdown is running. Owners schedule via DELETE /organizations; admins cancel via POST /organizations/cancelDeletion.",
@@ -41156,6 +41540,18 @@
               "paid"
             ]
           },
+          "notInvoiced": {
+            "type": "boolean",
+            "description": "Completed, charges on it, no live invoice, and nobody closed it as not billed: a customer's job the shop has not billed yet. Only on a customer's aircraft or a job with a person billed."
+          },
+          "noInvoiceAt": {
+            "format": "date-time",
+            "description": "When an admin closed the finished job without an invoice (`noInvoice`), or null. Cleared when the job is reopened or invoiced.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "invoice": {
             "description": "The live (unvoided) invoice, when there is one.",
             "properties": {
@@ -41319,6 +41715,182 @@
           "hasInvoices": {
             "type": "boolean",
             "description": "The job has been billed, voided bills included. Such a job stays on the record: it can be cancelled, not deleted."
+          },
+          "ownRates": {
+            "type": "object",
+            "description": "The job's own rates, set by an admin; null each where the job follows the customer's or the shop's. On the single job only.",
+            "properties": {
+              "laborRateCents": {
+                "description": "Labor rate, cents an hour.",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "partsMarkupBps": {
+                "description": "Parts markup, basis points (1500 is 15%).",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "outsideWorkMarkupBps": {
+                "description": "Outside work markup, basis points.",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": true
+          },
+          "inheritedRates": {
+            "type": "object",
+            "description": "What the job would be priced at without its own rates: the customer's, else the shop's, with `from` saying which. On the single job only.",
+            "properties": {
+              "laborRateCents": {
+                "description": "Labor rate, cents an hour.",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "partsMarkupBps": {
+                "description": "Parts markup, basis points.",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "outsideWorkMarkupBps": {
+                "description": "Outside work markup, basis points.",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "from": {
+                "type": "object",
+                "description": "Where each rate came from: `customer` or `shop`.",
+                "properties": {
+                  "laborRateCents": {
+                    "description": "Source.",
+                    "enum": [
+                      "job",
+                      "customer",
+                      "shop",
+                      null
+                    ],
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "partsMarkupBps": {
+                    "description": "Source.",
+                    "enum": [
+                      "job",
+                      "customer",
+                      "shop",
+                      null
+                    ],
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "outsideWorkMarkupBps": {
+                    "description": "Source.",
+                    "enum": [
+                      "job",
+                      "customer",
+                      "shop",
+                      null
+                    ],
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "additionalProperties": true
+          },
+          "rates": {
+            "type": "object",
+            "description": "What the next line on this job is priced at, each from the job, else the customer billed, else the shop. Lines already written keep their price. On the single job only.",
+            "properties": {
+              "laborRateCents": {
+                "description": "Labor rate, cents an hour.",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "partsMarkupBps": {
+                "description": "Parts markup, basis points.",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "outsideWorkMarkupBps": {
+                "description": "Outside work markup, basis points.",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "from": {
+                "type": "object",
+                "description": "Where each rate came from: `job`, `customer` or `shop` (null when no level sets it).",
+                "properties": {
+                  "laborRateCents": {
+                    "description": "Source.",
+                    "enum": [
+                      "job",
+                      "customer",
+                      "shop",
+                      null
+                    ],
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "partsMarkupBps": {
+                    "description": "Source.",
+                    "enum": [
+                      "job",
+                      "customer",
+                      "shop",
+                      null
+                    ],
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "outsideWorkMarkupBps": {
+                    "description": "Source.",
+                    "enum": [
+                      "job",
+                      "customer",
+                      "shop",
+                      null
+                    ],
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "additionalProperties": true
           }
         },
         "additionalProperties": true
@@ -43028,6 +43600,71 @@
               "integer",
               "null"
             ]
+          }
+        },
+        "additionalProperties": true
+      },
+      "OrganizationBillingCurrency": {
+        "type": "object",
+        "description": "The organization's billing currency, whether it can still change, and the supported list.",
+        "properties": {
+          "currency": {
+            "type": "string",
+            "description": "Lowercase ISO 4217.",
+            "example": "aud",
+            "enum": [
+              "usd",
+              "cad",
+              "aud",
+              "nzd",
+              "gbp",
+              "eur"
+            ]
+          },
+          "lockedReason": {
+            "description": "Why the currency can no longer change, once any invoice, ledger entry or card charge exists. Null while it can.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "stripeAccountCurrency": {
+            "description": "The connected Stripe account's own currency, returned to owners and admins only when asked for. Null otherwise.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "options": {
+            "type": "array",
+            "description": "Every currency the organization may bill in, in display order.",
+            "items": {
+              "type": "object",
+              "description": "One supported currency.",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "description": "Lowercase ISO 4217.",
+                  "example": "gbp"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Display name.",
+                  "example": "British pound"
+                },
+                "symbol": {
+                  "type": "string",
+                  "description": "The narrow symbol amounts are printed with.",
+                  "example": "£"
+                },
+                "minimumChargeMinor": {
+                  "type": "integer",
+                  "description": "Stripe's smallest chargeable amount in this currency, in minor units.",
+                  "example": 30
+                }
+              },
+              "additionalProperties": true
+            }
           }
         },
         "additionalProperties": true

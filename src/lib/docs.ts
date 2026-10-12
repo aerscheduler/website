@@ -805,6 +805,29 @@ export const DOC_SECTIONS: DocSection[] = [
         seoQuery: "how to accept card payments at a flight school with Stripe",
       },
       {
+        slug: "choose-your-billing-currency",
+        title: "Choose your billing currency",
+        description:
+          "Bill in US, Canadian, Australian or New Zealand dollars, British pounds or euros. Set from your Stripe account when you connect, changeable by the owner until the first bill, then fixed.",
+        kind: "task",
+        audience: ["Owners"],
+        seoQuery: "flight school billing in australian dollars or pounds",
+        faqs: [
+          {
+            q: "Can I change the currency after I have billed people?",
+            a: "No. Every amount on an invoice or an account balance is stored as a number in your currency, so changing it would reprice everything already billed. Contact support if it was set wrong.",
+          },
+          {
+            q: "My Stripe account pays out in a different currency. Does that matter?",
+            a: "It works, but Stripe converts every payment and charges for the conversion. Settings shows a note when the two differ. Billing in your payout currency avoids it.",
+          },
+          {
+            q: "What does my AerScheduler subscription cost in my currency?",
+            a: "Your AerScheduler plan is priced and billed in US dollars, whatever your members are billed in.",
+          },
+        ],
+      },
+      {
         slug: "choose-invoice-or-account-ledger",
         title: "Choose invoice or account ledger",
         description:
@@ -817,7 +840,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "set-a-card-fee-on-account-top-ups",
         title: "Set a card fee on account top-ups",
         description:
-          "Optionally recover card processing when members add funds to a ledger balance. Cash and check at the desk stay dollar-for-dollar.",
+          "Optionally recover card processing when members add funds to a ledger balance. Cash and check at the desk are credited in full.",
         kind: "task",
         audience: ["Owners"],
         seoQuery: "card surcharge on flight school account top up",
