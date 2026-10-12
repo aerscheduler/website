@@ -2987,6 +2987,446 @@
         }
       }
     },
+    "/organizations/ledger/blocks": {
+      "get": {
+        "tags": [
+          "Organizations"
+        ],
+        "summary": "List prepaid blocks",
+        "description": "The blocks this organization sells (pay a price, get more credit on the account ledger). Members get the active ones; owners and admins may pass `includeArchived=true` and get purchase counts.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/LedgerBlock"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listLedgerBlocks",
+        "parameters": [
+          {
+            "name": "includeArchived",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            },
+            "description": "Owners and admins: include archived blocks."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1,1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row , `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Organizations"
+        ],
+        "summary": "Create a prepaid block",
+        "description": "Adds a block members can buy from Add funds and the desk can sell. **Admin only.** Requires Account ledger mode.",
+        "responses": {
+          "201": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/LedgerBlock"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A missing name, or amounts that do not work (credit below price, price under 1.00).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The organization is not in Account ledger mode.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "createLedgerBlock",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The block.",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 60
+                  },
+                  "description": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 300
+                  },
+                  "priceCents": {
+                    "type": "integer",
+                    "minimum": 100,
+                    "description": "What the member pays."
+                  },
+                  "creditCents": {
+                    "type": "integer",
+                    "description": "What lands on the balance; at least priceCents, at most 100000000."
+                  },
+                  "active": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "name",
+                  "priceCents",
+                  "creditCents"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/organizations/ledger/blocks/{blockId}": {
+      "patch": {
+        "tags": [
+          "Organizations"
+        ],
+        "summary": "Change a prepaid block",
+        "description": "Edit any of name, description, priceCents, creditCents, active, sortOrder. Past purchases keep their own figures. Setting active true also brings an archived block back. **Admin only.**",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/LedgerBlock"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Amounts that do not work.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such block in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "updateLedgerBlock",
+        "parameters": [
+          {
+            "name": "blockId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The block id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Any subset.",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "maxLength": 60
+                  },
+                  "description": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 300
+                  },
+                  "priceCents": {
+                    "type": "integer"
+                  },
+                  "creditCents": {
+                    "type": "integer"
+                  },
+                  "active": {
+                    "type": "boolean"
+                  },
+                  "sortOrder": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Organizations"
+        ],
+        "summary": "Archive a prepaid block",
+        "description": "Hides the block from members. Blocks are never deleted, so purchase history keeps its name. **Admin only.**",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/LedgerBlock"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such block in this organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "archiveLedgerBlock",
+        "parameters": [
+          {
+            "name": "blockId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The block id."
+          }
+        ]
+      }
+    },
     "/organizations/ledger": {
       "get": {
         "tags": [
@@ -5244,7 +5684,7 @@
           "Members"
         ],
         "summary": "Start a ledger card top-up",
-        "description": "Creates a PaymentIntent on the organization's connected Stripe account to credit this member's ledger. **Self or admin.** Requires ledger mode. Minimum $1. Pass `paymentMethodId` to confirm immediately with a saved card (native clients); otherwise return the client secret for Stripe.js.",
+        "description": "Creates a PaymentIntent on the organization's connected Stripe account to credit this member's ledger. **Self or admin.** Requires ledger mode. Send either `amountCents` (at least 1.00) or `blockId` to buy a prepaid block, never both: a block charges its price and, when the payment lands, posts its bonus as a separate `block_bonus` row. Pass `paymentMethodId` to confirm immediately with a saved card (native clients); otherwise return the client secret for Stripe.js.",
         "responses": {
           "201": {
             "description": "PaymentIntent created (and confirmed when paymentMethodId was sent).",
@@ -5320,12 +5760,16 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "description": "Top-up amount.",
+                "description": "Top-up amount, or a prepaid block.",
                 "properties": {
                   "amountCents": {
                     "type": "integer",
-                    "description": "Amount in cents. Minimum 100.",
+                    "description": "Amount in minor units. Minimum 100. Omit when sending blockId.",
                     "minimum": 100
+                  },
+                  "blockId": {
+                    "type": "integer",
+                    "description": "A prepaid block to buy (GET /organizations/ledger/blocks). Omit when sending amountCents."
                   },
                   "paymentMethodId": {
                     "type": "string",
@@ -5335,10 +5779,7 @@
                     "type": "string",
                     "description": "Optional Stripe idempotency key."
                   }
-                },
-                "required": [
-                  "amountCents"
-                ]
+                }
               }
             }
           }
@@ -5802,7 +6243,7 @@
           "Members"
         ],
         "summary": "Reverse a flight charge",
-        "description": "Posts an opposing entry that cancels a `flight_charge`, so the flight behind it can be corrected. **Admin only.**\n\n**This is the ledger's counterpart to voiding an invoice.** Correcting a recorded reading is refused while live money stands against the booking, and at a ledger organization the charge posts automatically the moment the last pilot enters their PIN, so the booking locks on the same tap that finishes it. Reverse the charge, correct the reading, let the crew re-confirm, and the flight bills again from the corrected hours.\n\n**Money is countered, never rewritten.** The member's statement keeps the original charge and shows the reversal beside it. A charge that has already been reversed is refused, and a reversal cannot itself be reversed.\n\nOnly a `flight_charge` can be reversed here. Correct a top-up, a membership due or a manual adjustment by posting an adjustment of its own.",
+        "description": "Posts an opposing entry that cancels a `flight_charge`, so the flight behind it can be corrected. **Admin only.**\n\n**This is the ledger's counterpart to voiding an invoice.** Correcting a recorded reading is refused while live money stands against the booking, and at a ledger organization the charge posts automatically the moment the last pilot enters their PIN, so the booking locks on the same tap that finishes it. Reverse the charge, correct the reading, let the crew re-confirm, and the flight bills again from the corrected hours.\n\n**Money is countered, never rewritten.** The member's statement keeps the original charge and shows the reversal beside it. A charge that has already been reversed is refused, and a reversal cannot itself be reversed.\n\nOnly a `flight_charge` can be reversed here, plus one exception: the payment row of a prepaid block sold at the desk (an entry whose `blockSale.method` is not `card`). Reversing that sale also takes its block bonus off, up to the bonus still on the account. A block bought by card goes back through a refund instead. A `block_bonus` row can also be reversed on its own, which removes that bonus (for example when the school's terms let it lapse); it is refused once a refund has already taken the bonus off. Correct a top-up, a membership due or a manual adjustment by posting an adjustment of its own.",
         "responses": {
           "201": {
             "description": "The reversing entry, and the balance it leaves.",
@@ -5914,6 +6355,234 @@
                     "description": "Kept on the reversing entry, so the statement says why."
                   }
                 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orgUsers/{orgUserId}/ledger/blocks": {
+      "get": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "List a member's prepaid blocks",
+        "description": "The prepaid blocks this member has bought, newest first, and the block bonus still on their account. **Self or admin.**",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "description": "Purchases and unspent bonus.",
+                      "properties": {
+                        "purchases": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/LedgerBlockPurchase"
+                          }
+                        },
+                        "unspentBonusCents": {
+                          "type": "integer",
+                          "description": "Block bonus still on the account. Never refundable."
+                        }
+                      },
+                      "required": [
+                        "purchases",
+                        "unspentBonusCents"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not in your organization, or not allowed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listOrgUserLedgerBlocks",
+        "parameters": [
+          {
+            "name": "orgUserId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The membership id."
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Sell a prepaid block at the desk",
+        "description": "Records a block paid for at the desk: posts the payment (cash, check or other) and the block bonus as two ledger rows, in one step. **Admin only.** Requires ledger mode.",
+        "responses": {
+          "201": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "description": "The sale.",
+                      "properties": {
+                        "balanceCents": {
+                          "type": "integer",
+                          "description": "Balance after the payment and the bonus."
+                        },
+                        "purchase": {
+                          "$ref": "#/components/schemas/LedgerBlockPurchase"
+                        }
+                      },
+                      "required": [
+                        "balanceCents",
+                        "purchase"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unknown payment method.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not an administrator, or not a member here.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "That block is no longer offered.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The organization is not in Account ledger mode.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "sellOrgUserLedgerBlock",
+        "parameters": [
+          {
+            "name": "orgUserId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The membership id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The block and how it was paid.",
+                "properties": {
+                  "blockId": {
+                    "type": "integer",
+                    "description": "An active block."
+                  },
+                  "method": {
+                    "type": "string",
+                    "enum": [
+                      "cash",
+                      "check",
+                      "other"
+                    ]
+                  },
+                  "memo": {
+                    "type": "string",
+                    "description": "Optional, e.g. a check number. Up to 200 characters."
+                  }
+                },
+                "required": [
+                  "blockId",
+                  "method"
+                ]
               }
             }
           }
@@ -43163,7 +43832,7 @@
           },
           "type": {
             "type": "string",
-            "description": "topup | cash | check | other | adjustment | flight_charge | item_charge | fee | refund | reversal"
+            "description": "topup | cash | check | other | adjustment | flight_charge | item_charge | fee | refund | reversal | block_bonus"
           },
           "memo": {
             "description": "Optional note.",
@@ -43252,6 +43921,39 @@
           },
           "refundsTopupId": {
             "description": "Top-up this refund draws down (partial refunds).",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "blockSale": {
+            "description": "Set on the payment row of a prepaid block. A desk sale (method other than card) can be reversed, which also takes its bonus off.",
+            "properties": {
+              "method": {
+                "type": "string",
+                "description": "card | cash | check | other"
+              },
+              "bonusCents": {
+                "type": "integer",
+                "description": "The bonus posted with this sale, in minor units."
+              },
+              "bonusLeftCents": {
+                "type": "integer",
+                "description": "Of that bonus, what is still on the account. Bonus is used last, so flying the balance down below it uses it."
+              },
+              "refundedSince": {
+                "type": "boolean",
+                "description": "A refund was posted after this sale, so it can no longer be reversed (that would pay the member back twice)."
+              }
+            },
+            "additionalProperties": true,
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "bonusLeftCents": {
+            "description": "On a `block_bonus` row: how much of it is still on the account. Reversing the row removes this much; 0 means it was flown or removed.",
             "type": [
               "integer",
               "null"
@@ -43813,6 +44515,33 @@
           "balanceCents": {
             "type": "integer",
             "description": "Current ledger balance after a saved-card confirm. Omitted when the Intent still needs Stripe.js."
+          },
+          "block": {
+            "type": "object",
+            "description": "The prepaid block being bought, when the request named one. Omitted otherwise.",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "Block id."
+              },
+              "name": {
+                "type": "string",
+                "description": "Block name."
+              },
+              "priceCents": {
+                "type": "integer",
+                "description": "What the member pays (before any card fee)."
+              },
+              "creditCents": {
+                "type": "integer",
+                "description": "What lands on the balance."
+              },
+              "bonusCents": {
+                "type": "integer",
+                "description": "creditCents minus priceCents, posted as a separate block_bonus row."
+              }
+            },
+            "additionalProperties": true
           }
         },
         "additionalProperties": true
@@ -43892,6 +44621,122 @@
             "items": {
               "$ref": "#/components/schemas/LedgerRefundableTopup"
             }
+          },
+          "unspentBonusCents": {
+            "type": "integer",
+            "description": "Block bonus still on the account. Never refundable."
+          },
+          "refundableCents": {
+            "type": "integer",
+            "description": "The most a refund may return: the balance minus unspent block bonus."
+          }
+        },
+        "additionalProperties": true
+      },
+      "LedgerBlock": {
+        "type": "object",
+        "description": "A prepaid block the organization sells: pay priceCents, get creditCents on the account ledger (block time with a bonus). Amounts are in the organization's billing currency.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Block id."
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name, e.g. `10-hour block`.",
+            "example": "10-hour block"
+          },
+          "description": {
+            "description": "Optional detail shown to members.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "priceCents": {
+            "type": "integer",
+            "description": "What the member pays.",
+            "example": 170000
+          },
+          "creditCents": {
+            "type": "integer",
+            "description": "What lands on the balance; at least priceCents.",
+            "example": 180000
+          },
+          "bonusCents": {
+            "type": "integer",
+            "description": "creditCents minus priceCents.",
+            "example": 10000
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Offered to members right now."
+          },
+          "archivedAt": {
+            "format": "date-time",
+            "description": "When it was archived. Archived blocks are hidden from members.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "sortOrder": {
+            "type": "integer",
+            "description": "Display order, lowest first."
+          },
+          "purchaseCount": {
+            "type": "integer",
+            "description": "How many times it has been sold. Owners and admins only; 0 for members."
+          }
+        },
+        "additionalProperties": true
+      },
+      "LedgerBlockPurchase": {
+        "type": "object",
+        "description": "One prepaid block sold to one member, with the figures at the time of sale.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Purchase id."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When it was sold."
+          },
+          "name": {
+            "type": "string",
+            "description": "The block's name at the time."
+          },
+          "priceCents": {
+            "type": "integer",
+            "description": "What was paid."
+          },
+          "creditCents": {
+            "type": "integer",
+            "description": "What was credited."
+          },
+          "bonusCents": {
+            "type": "integer",
+            "description": "The bonus part of the credit."
+          },
+          "method": {
+            "type": "string",
+            "description": "How it was paid.",
+            "enum": [
+              "card",
+              "cash",
+              "check",
+              "other"
+            ]
+          },
+          "reversedAt": {
+            "format": "date-time",
+            "description": "When the purchase was reversed (its payment and bonus). Null when standing.",
+            "type": [
+              "string",
+              "null"
+            ]
           }
         },
         "additionalProperties": true

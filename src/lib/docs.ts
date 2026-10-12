@@ -828,6 +828,29 @@ export const DOC_SECTIONS: DocSection[] = [
         ],
       },
       {
+        slug: "sell-prepaid-blocks",
+        title: "Sell prepaid blocks with a bonus",
+        description:
+          "Block time: members pay up front and get extra credit, for example pay 1,700 and get 1,800. Set up blocks, let members buy them by card, sell them at the desk, and how refunds treat the bonus.",
+        kind: "task",
+        audience: ["Owners", "Admins", "Students", "Renters"],
+        seoQuery: "flight school block time prepaid bonus credit",
+        faqs: [
+          {
+            q: "Can a member get the bonus back as cash?",
+            a: "No. The bonus is credit to fly with. A refund can return what the member paid, never the bonus, and a refund that leaves only bonus on the account removes it.",
+          },
+          {
+            q: "Does the bonus expire?",
+            a: "Not in AerScheduler. If your organization's terms say it does, remove it with a ledger adjustment when it lapses.",
+          },
+          {
+            q: "Do blocks lock in today's rates?",
+            a: "No. A block adds money to the account, and each flight is charged at the rates on the day it is flown.",
+          },
+        ],
+      },
+      {
         slug: "choose-invoice-or-account-ledger",
         title: "Choose invoice or account ledger",
         description:

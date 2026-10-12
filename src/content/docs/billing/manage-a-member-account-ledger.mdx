@@ -34,6 +34,7 @@ Audit logs → Ledger. Common types:
 | Fee | Join fee, dues, enrollment fee, or a monthly late fee |
 | Charge | Desk custom charge (when posted as a ledger item) |
 | Refund | Money returned from a prepaid balance |
+| Block bonus | The extra credit on a [prepaid block](/docs/billing/sell-prepaid-blocks); not refundable |
 | Reversal | Undoes an earlier entry (never an edit of the original) |
 
 Nothing on the ledger is edited in place. Corrections are new rows that reverse or replace
@@ -63,16 +64,7 @@ Owners and admins only. Members cannot credit or adjust themselves.
 
 ## Sell a block of time with a bonus
 
-Some schools sell prepaid blocks, for example "pay 1,700, fly 1,800". There is no package for this yet; post it in two steps:
-
-1. Record the payment: the member adds funds by card, or you **Add credit** for cash, check or a bank transfer (1,700.00).
-2. Post an **Adjustment** of +100.00 with a memo like "Block bonus".
-
-The balance reads 1,800.00 and every flight comes off it.
-
-<Callout type="note">
-A **Refund** pays back from the whole positive balance, bonus included. If a member leaves with unused bonus credit, post a negative **Adjustment** for the bonus before you refund the rest.
-</Callout>
+Members can buy [prepaid blocks](/docs/billing/sell-prepaid-blocks) (pay 1,700, get 1,800) from Add funds, and the desk can sell one with **Sell a block**. The block's bonus posts as its own **Block bonus** row and is never refundable.
 
 ## Refund
 

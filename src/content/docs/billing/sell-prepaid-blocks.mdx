@@ -1,0 +1,58 @@
+<Summary>
+A prepaid block is block time sold at a bonus: the member pays up front and gets more credit on their account, for example pay 1,700 and get 1,800. Set blocks up under <Where app="web">Settings → Billing → Prepaid blocks</Where>. Members buy them from **Add funds**, and the desk can sell one from the member's **Ledger**. The bonus is never refundable.
+</Summary>
+
+<Roles>Owners, Admins, Students, Renters</Roles>
+
+Prepaid blocks need [Account ledger](/docs/billing/choose-invoice-or-account-ledger): a block is credit on the member's balance, and every flight draws it down.
+
+## Set up a block
+
+<Steps>
+<Step n={1} title="Open Settings, then Billing">
+The **Prepaid blocks** card sits under the account ledger cards.
+</Step>
+<Step n={2} title="Click Add block">
+Give it a name members will recognize, such as "10-hour block", and an optional description.
+</Step>
+<Step n={3} title="Enter what the member pays and the credit it adds">
+Member pays 1,700.00, Credit added 1,800.00. The card shows the bonus as you type: +100.00 (5.9% extra). The credit can't be less than the price.
+</Step>
+<Step n={4} title="Save">
+The block is offered to members straight away. Turn its switch off to stop offering it for a while, or archive it to retire it. Archived blocks keep their history and can be restored.
+</Step>
+</Steps>
+
+Owners and admins manage blocks. Changing a block's price or credit never changes what earlier buyers got.
+
+## How members buy one
+
+On <Where app="web">Billing</Where> in the console, or Add funds in the app, the member picks a block instead of typing an amount and pays by card. If your organization [adds a card fee to top-ups](/docs/billing/set-a-card-fee-on-account-top-ups), it applies to the block's price.
+
+When the payment goes through, the ledger shows two rows:
+
+| Row | Type | Amount |
+|---|---|---|
+| Block purchase: 10-hour block | Top-up | +1,700.00 |
+| Block bonus: 10-hour block | Block bonus | +100.00 |
+
+## Sell one at the desk
+
+For cash, a check or a bank transfer: open the member under <Where app="web">People</Where>, go to **Ledger**, and click **Sell a block**. Pick the block, how they paid (Cash, Check or Other) and an optional note such as a check number, then confirm. The payment and the bonus post together.
+
+## Refunds and the bonus
+
+<Callout type="important">
+The bonus is credit to fly with, not money the member paid, so a refund never returns it.
+</Callout>
+
+- **Bonus is used last.** Flights draw down the paid part of a balance first. Whatever is left after that is bonus.
+- **A refund can return up to the balance minus the unspent bonus.** The Refund dialog shows how much that is, and how much is bonus.
+- **A refund of everything paid closes the account.** If a refund leaves nothing but bonus, the bonus is removed in the same step, as a "Block bonus removed with refund" row.
+- **A desk sale recorded by mistake can be reversed.** On the member's **Ledger**, click **Reverse** on the block's payment row. The payment and its bonus both come off. A block bought by card is paid back with **Refund** instead, and once a refund has been posted after the sale it can no longer be reversed (that would pay the member back twice).
+
+## What blocks are not
+
+- **They don't lock in rates.** A block is money on the account; each flight is charged at the rates on the day it is flown.
+- **The bonus doesn't expire on its own.** If your terms say it lapses, click **Remove** on the member's **Block bonus** row when it does. Don't use an Adjustment for this: the bonus would still count as unspent and hold back that much from a later refund.
+- **They are separate from [membership dues](/docs/billing/set-up-membership-dues)** and from [package prices on a booking](/docs/billing/charge-a-package-price-when-booked).
