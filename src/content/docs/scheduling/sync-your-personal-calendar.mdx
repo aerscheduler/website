@@ -28,6 +28,10 @@ Google pushes each of your reservations into a Google Calendar you choose when a
   Connected before the calendar picker existed? The picker asks you to reconnect first. Tap <strong>Reconnect Google Calendar</strong> and accept the extra permission that lets AerScheduler read your list of calendars. Until you do, flights keep going to your default calendar.
 </Callout>
 
+### If sync stops
+
+If you remove AerScheduler's access in your Google account, or your Google sign-in is signed out or expires, Google stops accepting your bookings. AerScheduler then pauses your sync, emails you once, and shows <strong>Needs reconnecting</strong> on the Google Calendar card under <Where app="web">Profile → Calendar</Where>. Click <strong>Reconnect</strong> and allow calendar access. Your upcoming bookings are added again straight away.
+
 <Callout type="note">
   Flutter web cannot connect Google Calendar. Use the web console, or the iOS or Android app.
 </Callout>
