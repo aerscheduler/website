@@ -114,6 +114,13 @@ use that time either:
 - **Aircraft maintenance** or **Aircraft unavailable**, when the booking has an aircraft.
 - **Instructor unavailable**, when the booking has an instructor.
 
+Two more do not start it, because they are not really a free slot:
+
+- **Booked in error** or **Rescheduled to another time**. The person is fixing their own
+  booking and usually books again straight away, often in the same slot.
+- **The lesson's own instructor cancelled it.** Recovery would ask them to confirm the slot
+  they just gave up, and hold their time while it waited.
+
 The desk can still press **Offer this slot** on any of these if the situation has changed,
 for example once the weather clears.
 
@@ -141,8 +148,8 @@ Only after a cancellation, and only once everything above has run:
 3. Only when nobody on standby can take it does AerScheduler suggest it, once, to up to
    three members at the same time.
 
-It never suggests a slot that the cancellation reason rules out (weather, maintenance, an
-unavailable instructor, see above), a slot offered by hand from the desk, or idle time
+It never suggests a slot that the cancellation rules out (weather, maintenance, an
+unavailable instructor, a correction, or an instructor cancelling their own lesson, see above), a slot offered by hand from the desk, or idle time
 found by **Fill idle time automatically**.
 
 ### How the member is chosen
