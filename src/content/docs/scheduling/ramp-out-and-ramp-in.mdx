@@ -8,7 +8,8 @@ a plan into a billable flight.
 <Roles>Owners, Admins, Dispatchers, Instructors, Students, Renters</Roles>
 
 Staff can ramp any booking. Everybody else can ramp the bookings they are on, and the
-maintenance they scheduled themselves.
+maintenance they scheduled themselves, unless an admin has given them **Ramp any flight out
+and in** (see [Let an instructor ramp any flight](#let-an-instructor-ramp-any-flight)).
 
 ## Reading the close-out
 
@@ -56,6 +57,13 @@ which are the two things the server will refuse to bill.
 Ramp out is refused if the aircraft is already out on another booking, if the aircraft is
 grounded (maintenance is the exception), or if somebody on the booking is grounded.
 
+### If the aircraft is still out on another booking
+
+The message names the booking that still has it. That flight only needs to be **ramped in**;
+the next booking does not wait for anybody to sign off or for the flight to be billed. If its
+pilot has gone home without ramping in, anybody who can ramp that booking can do it for them:
+staff, or somebody given **Ramp any flight out and in**.
+
 ## Ramp in
 
 <Steps>
@@ -93,6 +101,30 @@ detail, billed at the instructor rate.
 On a booking with no aircraft it is the only figure recorded, and it is required. The help
 text under the field changes to match. See
 [Close out a ground lesson](/docs/scheduling/close-out-a-ground-lesson).
+
+## Let an instructor ramp any flight
+
+At an organization without a front desk, the instructor at the airport is often the one who
+sends aircraft out and brings them back, including on bookings they are not part of. An admin
+can allow that one person at a time:
+
+<Steps>
+  <Step n={1} title="Open People and choose the person">
+    In the console, open their record and choose <strong>Permissions</strong>.
+  </Step>
+  <Step n={2} title="Turn on Ramp any flight out and in">
+    It is under <strong>Scheduling</strong>. The change takes effect straight away.
+  </Step>
+</Steps>
+
+They can then ramp out and ramp in any booking in the organization, and before anybody has
+signed off they can also correct the readings and split the flight between payers. They
+cannot sign a close-out for somebody else (each pilot still confirms with their own PIN),
+and they cannot edit, reschedule or cancel bookings they are not on.
+
+Admins and dispatchers can already ramp any booking, so they need nothing here. The readings
+entered at ramp in are what the flight is billed on, so give it to people you would trust at
+the dispatch desk.
 
 ## What locks once the aircraft is out
 
