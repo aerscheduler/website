@@ -193,18 +193,18 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
       },
       {
         title: "Cancellations turn back into flying hours",
-        body: "A freed slot goes to whoever stood by for it, or else to the member whose flying fits it best, who accepts straight from the phone notification.",
+        body: "A freed slot reaches everyone who asked for it at once, and the first to book it from the notification or Home gets it.",
       },
     ],
     sections: [
       {
         eyebrow: "Cancellations",
-        title: "Cancelled lessons offered to the students most likely to fly them",
-        body: "When a booking is cancelled, anyone standing by for that time is offered it first. If nobody is, AerScheduler suggests it to the few members whose flying fits it best: the same aircraft, instructor, day and time. The offer says why, and the first to tap Accept books it.",
+        title: "Cancelled lessons offered to the students who asked for them",
+        body: "Members press Notify me on the time they could not get, or stand by for a booking or for the days they fly. When it cancels, everyone who asked is told at once, nothing is held, and the first to tap Book it gets it. If you turn it on, a slot nobody asked for is also suggested to the few members whose flying fits it best.",
         points: [
-          "On a dual, the instructor confirms they can still teach before any student is offered it",
+          "Nothing is held while people decide, so the aircraft and instructor stay bookable",
           "Flights cancelled for weather or maintenance are not offered out automatically",
-          "At most 3 suggested slots a week per member, and each can turn them off",
+          "Suggestions are off unless you turn them on, never sent as notifications, and each member can stop them",
         ],
       },
     ],
@@ -221,7 +221,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
       },
       {
         q: "What happens to the slot when a student cancels?",
-        a: "Anyone standing by for it is offered it first, one at a time, each offer holding the aircraft for a short window. If none of them takes it, it is suggested at once to up to three members who fly that aircraft or instructor, without holding it, and the first to accept books it. Nobody is booked until they accept.",
+        a: "Everyone who asked for that time is told at once, and the first to book it gets it. Nothing is held while they decide. If nobody asked and you have suggestions turned on, it is listed for up to three members who fly that aircraft or instructor. Nobody is booked until they tap Book it, and members whose bookings need approval send a request instead.",
       },
       {
         q: "Can a member cancel at the last minute?",

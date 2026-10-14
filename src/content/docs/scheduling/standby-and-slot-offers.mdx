@@ -1,16 +1,17 @@
 <Summary>
-Stand by for a booking you want, or set standing preferences for the kinds of
-slots you want. When a matching time opens, AerScheduler sends you a time-limited
-offer to accept. When nobody is standing by, a cancelled slot can be suggested to the
-member whose flying fits it best. Either way it never rebooks you silently.
+Ask to hear when a time you want opens up: from the Book screen, from a booking, or with a
+standing preference. When it opens, everyone who asked is told at the same moment, nothing
+is held, and the first to book it gets it. When nobody asked, a cancelled slot can be
+suggested quietly under **Open slots for you**. It never books you without your say-so.
 </Summary>
 
 <Roles>Students, Renters, Instructors, Owners, Admins, Dispatchers</Roles>
 
-## Three ways to ask for a slot
+## Ways to ask for a slot
 
 | Kind | Where you set it | What it matches |
 |---|---|---|
+| Notify me | On <Where app="web">You → Book</Where> or the app's booking screen, choose the aircraft and day, then **Notify me** under the time | That aircraft on that day. It lapses at the end of the day |
 | One booking | Open that reservation and press **Stand by for this booking** | Only that booking, if it cancels |
 | Standing preference | <Where app="web">You → Profile → Standby</Where>, or Settings → Standby on iOS | Days, types, hours, aircraft, and instructors you choose |
 | Open window | Same Standby screen | One date range you are free |
@@ -18,7 +19,7 @@ member whose flying fits it best. Either way it never rebooks you silently.
 Pick at least one day. Leave any other field blank to mean any.
 
 You do not have to find the Standby screen to set a standing preference. Right after you
-join a school, AerScheduler asks **When are you usually free to fly?** Pick your days and a
+join an organization, AerScheduler asks **When are you usually free to fly?** Pick your days and a
 time of day and save. Until you have a preference, a one-line **Get first dibs on cancelled
 slots** callout on <Where app="web">You → Schedule</Where> and on the app's Home screen links
 to the Standby screen; the **X** hides it on that device. After you accept an offer, you are
@@ -32,33 +33,27 @@ Owners and admins can turn the whole feature off under
 It is on by default. When it is off, cancel recovery does not send offers and the
 Standby / Offers screens are hidden.
 
-If your school requires a checkout before you book an aircraft, the Standby aircraft list
+If your organization requires a checkout before you book an aircraft, the Standby aircraft list
 shows only the fleet you are checked out on, the same rule as booking. Assigned instructors
-sort first; you can still prefer any instructor on the school roster.
+sort first; you can still prefer any instructor on the organization's roster.
 
-## Accept or decline an offer
+## Book an open slot
 
-When a matching slot opens, you get an offer with a deadline to respond. On iPhone
-the push includes **Accept**, **Decline**, and **View**: you can claim or pass
-without opening the app first. Tapping the notification body still opens the offer
-screen.
+When a time you asked for opens, you are told by notification (**A time you asked for just
+opened**), and it is listed under **Open slots for you** on Home (and on the Book screen
+on the web). It is also under <Where app="web">You → Schedule → Offers</Where>.
 
-<Steps>
-  <Step n={1} title="Respond from the notification, or open Offers">
-    On iPhone, pull down the banner or open Notification Center and choose Accept,
-    Decline, or View. On the web, go to
-    <Where app="web">You → Schedule → Offers</Where>. On iOS you can also open
-    Offers from the notification body or from your schedule flow.
-  </Step>
-  <Step n={2} title="Accept or Decline">
-    Accept creates the reservation on your schedule. Decline (or letting the offer
-    expire) can roll the offer to the next eligible member.
-  </Step>
-</Steps>
+- **Book it** (**Book** on the app's Home) puts the reservation on your schedule.
+- **Not for me** on the web, or **Decline** on the offer itself, removes it from your list.
+  In the app, tap the slot on Home to open the offer.
 
-Turn on **Offers & standby** under notification settings (email and/or push). Offers
-expire quickly, and with both channels off you will only see them if you open the list
-yourself.
+Everyone whose request matched was told at the same time, and nothing is held for any of
+you: the first to book it gets it, and if someone beats you to it, **Book it** says so. An
+open slot stays bookable until 30 minutes before it starts, so you can still take it that
+evening.
+
+Turn on **Offers & standby** under notification settings (email and/or push) to be told
+straight away. With both off, open slots still appear on Home and the Book screen.
 
 ## What the front desk does
 
@@ -66,35 +61,26 @@ On <Where app="web">Calendar</Where>, staff can:
 
 - See who is standing by on a reservation
 - Press **Offer this slot** on a canceled booking to start or resume recovery
-- Open **Pending offers** to withdraw an offer that should not stay open
+- Offer a slot by hand to one member
 
-While an offer is pending, the day and week boards show a dashed **Offer** / **Confirm**
-block on that aircraft for the offered window. That time is not free: dragging or booking
-over it is refused with a clear reason. The reservation stays reserved for the offered
-member until someone accepts, declines, the offer expires, or the desk withdraws it.
+An offer holds nothing. While it is open the aircraft and instructor stay free on the board,
+and anyone, the desk included, can book over it; the open offers for that time then close by
+themselves.
 
-Withdrawing a pending offer **stops the chain** and frees the window so the desk can book by hand.
-Member decline or offer expiry still moves recovery to the next eligible person.
+## Offers that still hold time
 
-## Rebook a slot you just cancelled
-
-Cancelling a booking can start an offer on that same time, and while the offer is pending the
-aircraft and the instructor are held for it. The hold keeps other members out. It does not
-keep out the people who were on the cancelled booking: the student, the instructor, or whoever
-cancelled it can book that time again as if the hold were not there. Doing so withdraws the
-offer, so nobody else is offered a slot that is gone.
-
-For everyone else the time is held until the offer ends. Owners, admins and dispatchers can
-free any hold, and an instructor can free a hold on their own time:
+Offers made before 14 October 2026 could hold the aircraft and instructor while one person
+decided. Any still open show as a dashed **Offer** / **Confirm** block on the day and week
+boards and on the desk's **Pending offers** list. The people who were on the cancelled
+booking can book over one as if it were not there. Owners, admins and dispatchers can free
+any of them, and an instructor can free one on their own time:
 
 - **In the app**, open the **Start** time list. Held times are greyed out and marked
   **Held**. Tap one to see who it is offered to and until when, then tap **Release**.
-- **On the web**, the hold is a dashed block on <Where app="web">Calendar</Where>. Click it and
-  choose **Withdraw offer**.
+- **On the web**, click the dashed block on <Where app="web">Calendar</Where> and choose
+  **Withdraw offer**.
 
-Releasing withdraws the offer and stops the chain, so the time is free to book at once.
-Students and renters who were not on the booking see the time as unavailable until the offer
-ends.
+New offers never hold anything, so this list empties as the old ones end.
 
 ## Who actually gets offered
 
@@ -102,10 +88,11 @@ Eligibility still applies. A renter standing by on a dual booking will not recei
 dual offer. Role, checkout approvals, grounding, and schedule clashes all filter the list
 before ranking.
 
-For dual, ground, and instructor lessons, cancel recovery first asks the **instructor on
-that booking** to confirm they can still teach. Only after they confirm does a claim
-offer go to a student or other watcher. Desk-created offers skip that step. If the
-instructor declines or the confirm expires, students are not offered that window.
+The lesson's instructor is not asked first. A dual, ground or instructor lesson is offered
+straight to the students who asked for it, and only while the instructor is free at that
+time. Booking it puts it on the instructor's schedule like any other booking. If your
+organization approves your bookings, booking an offer sends the desk a booking request
+instead, exactly as booking that time by hand would.
 
 Some cancellations do not start recovery at all, because the reason means nobody else can
 use that time either:
@@ -118,8 +105,8 @@ Two more do not start it, because they are not really a free slot:
 
 - **Booked in error** or **Rescheduled to another time**. The person is fixing their own
   booking and usually books again straight away, often in the same slot.
-- **The lesson's own instructor cancelled it.** Recovery would ask them to confirm the slot
-  they just gave up, and hold their time while it waited.
+- **The lesson's own instructor cancelled it.** The time was theirs to give up, and they
+  often book it again themselves.
 
 The desk can still press **Offer this slot** on any of these if the situation has changed,
 for example once the weather clears.
@@ -134,23 +121,26 @@ reservation, so a specific watcher still goes first.
 ## Suggested slots
 
 Most members never set up standby, so a cancelled slot often has nobody waiting for it.
-When that happens, AerScheduler looks at who actually flies like that slot and offers it
-to the few members most likely to take it, all at once. The first to accept books it. You
-do not sign up for this; it is on for every school that has offers turned on.
+An organization can choose to have AerScheduler list such a slot for the few members most
+likely to take it. It is off by default: owners and admins turn on **Suggest open slots to
+members who didn't ask** under <Where app="web">Settings → Booking preferences</Where>,
+separately from offers themselves.
 
 ### When it happens
 
 Only after a cancellation, and only once everything above has run:
 
-1. If the booking had an instructor, they confirm they can still teach.
-2. Everyone standing by for that booking, or with a matching standing preference or open
-   window, is offered it first, one at a time.
-3. Only when nobody on standby can take it does AerScheduler suggest it, once, to up to
-   three members at the same time.
+1. Everyone who asked for it (standing by for that booking, a matching standing
+   preference, an open window, or **Notify me**) is told at the same time, up to ten
+   people. Nothing is held and the first to book it gets it.
+2. Only when nobody who asked can take it, and the organization has suggestions on, does
+   AerScheduler suggest it, once, to up to three members. Suggestions are not sent as
+   notifications.
 
 It never suggests a slot that the cancellation rules out (weather, maintenance, an
-unavailable instructor, a correction, or an instructor cancelling their own lesson, see above), a slot offered by hand from the desk, or idle time
-found by **Fill idle time automatically**.
+unavailable instructor, a correction, or an instructor cancelling their own lesson, see
+above), a slot offered by hand from the desk, or idle time found by **Fill idle time
+automatically**.
 
 ### How the member is chosen
 
@@ -180,44 +170,41 @@ same facts are ranked by fixed rules instead and the offer still goes out.
 
 ### What the member sees
 
-The offer arrives with **A slot that fits you just opened** in the notification. In the app
-and on the web it is marked **Suggested for you**, says why, for example "You've flown
+A suggestion is not sent as a notification. It appears under **Open slots for you** on
+Home and on the Book screen, and is marked **Suggested for you** on the Offers list. It says why, for example "You've flown
 N172TS 6 times recently and you fly with Jake". When it went to more than one member, it
 also says the first to accept books it. It shows the reservation type and aircraft, never
 the cancelled booking's title, which is often another student's name. If someone else got
-there first, **Accept** says so and the offer closes. If your booking is refused for your
+there first, **Book it** says so and the offer closes. If your booking is refused for your
 own reason, such as no card on file, you see that reason and the offer stays open while
 you fix it.
 
 A suggested slot does not hold anything. It stays on the board as free time, instructors
 see no hold on their schedule, and the desk or any member can book it at any moment; the
-open suggestions for it then close by themselves. It does not appear on the desk's
-**Pending offers** list, which shows only offers holding a slot.
+open suggestions for it then close by themselves.
 
 ### Limits
 
 - A slot is suggested once, to at most three members. If none of them accepts, nobody
   else is asked.
-- A suggestion stays open for the same window as any offer, set in the school offer rules
-  below: 30 minutes by default when the slot starts within 24 hours, 2 hours when it is
-  further out, and never past the slot start.
+- A suggestion stays bookable until 30 minutes before the slot starts, or until someone
+  books it.
 - Nobody gets more than 3 suggested offers in 7 days.
 - Pass on 3 suggested offers in a row, by declining or letting them expire, and
   suggestions pause for you for 30 days. Accepting any offer resets the count.
 - The member who cancelled, and anyone else on that booking, is never offered it back.
-- The school's offer rules below still apply: quiet hours, decline cooldown, and the
-  per-person cap on pending offers. The school-wide cap on pending offers counts only
-  offers that hold a slot, so suggestions never use it up.
+- The organization's offer rules below still apply: quiet hours, decline cooldown, and the
+  per-person cap on open offers.
 
 ### Turning it off
 
 - **For yourself:** press **Stop suggesting slots** on any suggested offer, or turn off
   **Suggest open slots to me** on the Standby screen. Slots you stand by for yourself
   keep coming.
-- **For the school:** turning off **Offer open slots after a cancel** stops all offers,
-  suggested ones included.
+- **For the organization:** turn off **Suggest open slots to members who didn't ask**.
+  Turning off **Offer open slots after a cancel** stops all offers, suggested ones included.
 
-## School offer rules
+## Organization offer rules
 
 Owners set these under
 <Where app="web">Settings → Booking preferences</Where> when offers are on.
@@ -225,8 +212,8 @@ Owners set these under
 ### Fill idle time automatically
 
 When this is on, AerScheduler AI looks for open aircraft time that matches standing
-preferences and sends the same kind of timed offer cancel recovery uses. It is off by
-default. Nobody is booked until they accept. The scanner only looks inside the school flying day
+preferences and sends the same kind of offer cancel recovery uses. It is off by
+default. Nobody is booked until they accept. The scanner only looks inside the organization's flying day
 (Settings → Booking preferences, default 6am to 10pm local), skips gaps it already offered or cooled down, and respects a
 daily offer budget so the board is not flooded.
 
@@ -238,16 +225,15 @@ for walk-up bookings.
 
 ### Max AI offers per day
 
-Caps how many new AerScheduler AI offers the school can create in a local day (default 20),
-on top of the max-pending offers cap.
+Caps how many new AerScheduler AI offers the organization can create in a local day
+(default 20).
 
 ### Quiet hours
 
-Cancel recovery waits through this local window (default 9pm to 7am) before creating an
-offer, so a late-night cancel does not reserve the aircraft overnight. The same goes for
-the next member in line: when an offer is declined or expires overnight, the slot is offered
-to the next person when quiet hours end, not at 1am. The clock is the
-**airport time zone**, then the school zone if the airport has none. Desk-created offers
+Cancel recovery waits through this local window (default 9pm to 7am) before telling anyone,
+so a late-night cancel does not wake people up: the slot is offered when quiet hours end,
+not at 1am. The clock is the **airport time zone**, then the organization's zone if the
+airport has none. Desk-created offers
 skip quiet hours and still go out immediately.
 
 ### Decline cooldown
@@ -256,32 +242,15 @@ After someone declines or lets an offer expire, they are not offered another ove
 window on that same aircraft for this long (default 48 hours). It is not limited to the
 same cancelled booking.
 
-### Max pending offers
-
-Each pending offer reserves the aircraft. This cap limits how many of those offers can
-be open at once for the school (default 10).
-
 ### Max pending offers per person
 
-Separately, one member can hold only this many pending offers at a time (default 2). That
-stops a broad standby preference from filling one person's inbox and soft-holding them
-across many windows in a single sweep.
+One member can have only this many open desk offers and suggestions at a time (default 2),
+so one inbox does not fill up. Slots a member asked for are not counted.
 
-### Offer window when slot is within 24 hours
-
-When the slot starts within 24 hours, the offer reserves the aircraft for a shorter time
-(default 30 minutes). Keep this short so a last-minute recovery does not lock the plane for
-hours. The offer window never runs past the slot start.
-
-### Offer window when slot is further out
-
-When the slot starts more than 24 hours from now, the offer reserves the aircraft longer
-(default 2 hours) so the member has time to see the notification and respond. The offer
-window never runs past the slot start.
-
-<Callout type="warning">
-Accepting an offer books a real reservation. Pending offers block other people from taking
-the same aircraft or instructor until the offer ends or is withdrawn.
+<Callout type="note">
+Booking an open slot books a real reservation (or sends a booking request, if your
+organization approves your bookings). An open offer never blocks anyone else from booking
+the same aircraft or instructor.
 </Callout>
 
 ## Related
