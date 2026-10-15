@@ -657,7 +657,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "schedule-colors",
         title: "Change the colors on the schedule",
         description:
-          "An admin can give each reservation type its own color under Settings, Schedule colors. Everyone in the organization sees it, on the web console and in the app.",
+          "An admin picks each reservation type's color from a menu under Settings, Schedule colors. It saves at once and everyone in the organization sees it, on the web console and in the app.",
         kind: "task",
         audience: ["Owners", "Admins"],
         seoQuery: "change reservation colors flight school calendar",
