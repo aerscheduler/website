@@ -7309,6 +7309,28 @@
                     "maxLength": 200,
                     "description": "Free-text notes shown on the booking."
                   },
+                  "meetingUrl": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 500,
+                    "example": "https://meet.google.com/abc-defg-hij",
+                    "description": "A video call link for the booking, https only. A bare `zoom.us/j/123` gets `https://` added. A `ground` booking with a link (or `meeting.create`) needs no room."
+                  },
+                  "meeting": {
+                    "type": "object",
+                    "properties": {
+                      "create": {
+                        "type": "string",
+                        "enum": [
+                          "google_meet",
+                          "zoom"
+                        ]
+                      }
+                    },
+                    "description": "Make the video call for you, on the caller's own connected Google Calendar (`google_meet`) or Zoom account (`zoom`). Refused with `400` before anything saves when that account is not connected. Otherwise it is made after the booking saves: if the service then fails, the booking still saves and the response carries `meetingError` beside `data`."
+                  },
                   "resource": {
                     "type": "object",
                     "properties": {
@@ -7579,6 +7601,27 @@
                   },
                   "notes": {
                     "type": "string"
+                  },
+                  "meetingUrl": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 500,
+                    "description": "Set, replace, or (with `null`) clear the video call link. Left out, the link is kept."
+                  },
+                  "meeting": {
+                    "type": "object",
+                    "properties": {
+                      "create": {
+                        "type": "string",
+                        "enum": [
+                          "google_meet",
+                          "zoom"
+                        ]
+                      }
+                    },
+                    "description": "Make a video call on the caller's own account after the save. A failure is `meetingError` beside `data`, not a failed request."
                   }
                 }
               }
@@ -7966,6 +8009,122 @@
         ]
       }
     },
+    "/reservations/{id}/meeting": {
+      "post": {
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Add a video call",
+        "description": "Creates a Google Meet or Zoom meeting on the caller's own connected account and stores its link on the booking. Same permission as editing the booking.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "meetingUrl": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`provider` is not `google_meet` or `zoom`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "You may not edit this booking.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "The service is not connected, or it refused to make the meeting. The message says which.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "addReservationMeeting",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The reservation id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Which service.",
+                "properties": {
+                  "provider": {
+                    "type": "string",
+                    "enum": [
+                      "google_meet",
+                      "zoom"
+                    ]
+                  }
+                },
+                "required": [
+                  "provider"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
     "/reservations/{id}/rampOut": {
       "post": {
         "tags": [
@@ -7990,7 +8149,7 @@
             }
           },
           "400": {
-            "description": "The aircraft is already ramped out, or you are not on this booking.",
+            "description": "`RESOURCE_ALREADY_RAMPED_OUT`: the aircraft is still out on another booking (`details.holdingReservationId` names it). `RESERVATION_ALREADY_RAMPED_IN`: this flight has already come back; correct its readings instead. Or you are not on this booking.",
             "content": {
               "application/json": {
                 "schema": {
@@ -31312,13 +31471,90 @@
         ]
       }
     },
+    "/slot-offers/{id}/viewed": {
+      "post": {
+        "tags": [
+          "Standby"
+        ],
+        "summary": "Mark a slot offer seen",
+        "description": "Records the first time the member it was offered to saw it (on Home, Book or Offers). Idempotent. Answers viewed: false for an offer that was already seen, is someone else's, or does not exist.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "viewed": {
+                          "type": "boolean",
+                          "description": "True when this call recorded the first view."
+                        }
+                      },
+                      "required": [
+                        "viewed"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "markSlotOfferViewed",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The slot offer id."
+          }
+        ]
+      }
+    },
     "/slot-offers/{id}/decline": {
       "post": {
         "tags": [
           "Standby"
         ],
         "summary": "Decline a slot offer",
-        "description": "Declines your pending offer and rolls recovery to the next eligible member.",
+        "description": "Declines your pending offer. For an offer that holds the slot, recovery rolls to the next eligible member; an offer sent to everyone who asked simply leaves your list.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -40443,6 +40679,14 @@
               "null"
             ]
           },
+          "meetingUrl": {
+            "description": "The booking's video call link (Google Meet, Zoom or any https link). A `ground` booking with one may have no room.",
+            "maxLength": 500,
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "cancelledAt": {
             "format": "date-time",
             "description": "When it was cancelled. Null for a live booking.",
@@ -46157,6 +46401,14 @@
           "respondedAt": {
             "format": "date-time",
             "description": "When the offer left pending state.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "viewedAt": {
+            "format": "date-time",
+            "description": "When the member it was offered to first saw it.",
             "type": [
               "string",
               "null"

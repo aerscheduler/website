@@ -1,0 +1,69 @@
+<Summary>
+Book the lesson as **Ground**, then set **Video call**: paste a Zoom, Meet, or Teams link, or
+choose **Add Google Meet** to have one made. With a call, the Room can be **No room**. Everyone
+on the booking sees a **Join** button, and the link goes into their calendars too.
+</Summary>
+
+<Roles>Owners, Admins, Dispatchers, Instructors, Students</Roles>
+
+## Add a video call when you book
+
+<Steps>
+<Step n={1} title="Start a Ground booking">
+On <Where app="web">Calendar → New reservation</Where>, or the **+** button in the app, set
+**Type** to **Ground**. The **Video call** row appears under Room. Only ground lessons offer it.
+</Step>
+<Step n={2} title="Choose the call">
+<div>
+- **Paste a link**: any https link works, Zoom, Google Meet, Microsoft Teams, Webex. A link
+  copied without `https://` (for example `zoom.us/j/845...`) is fixed for you.
+- **Add Google Meet**: a Meet is made on your own Google Calendar when you save. It needs
+  Google Calendar connected first, see below.
+- **No video call**: an ordinary classroom lesson.
+</div>
+</Step>
+<Step n={3} title="Pick a room, or none">
+With a call set, **Room** offers **No room** and the location becomes optional: the lesson
+happens over the call. Pick a room as well if some students are coming in person.
+</Step>
+<Step n={4} title="Save">
+The booking shows a **Video call** row with **Join Zoom** (or Join Google Meet) on the web,
+and a **Join** button under When in the app, which opens the Zoom or Meet app if it is
+installed.
+</Step>
+</Steps>
+
+## Connect Google to make Meet links
+
+Add Google Meet uses the Google Calendar connection you may already have for syncing your
+schedule. Connect it under <Where app="web">Profile & account → Calendar</Where> on the web,
+or <Where app="mobile">Settings → Calendars</Where> in the app. No extra Google permission is
+asked for. The Meet belongs to the person who booked it, so they are its host.
+
+<Callout type="note">
+Making a Zoom meeting for you, the way Add Google Meet does, is coming soon. Until then, create
+the meeting in Zoom and paste its link.
+</Callout>
+
+## Change or remove the call
+
+Edit the booking. **Video call** opens on the current link (for example "Zoom (current
+link)"). Pick **Paste a link** to replace it, **Add Google Meet** to make a new one, or **No
+video call** to remove it. Removing the call from a lesson with **No room** asks for a room
+again, because a ground lesson has to happen somewhere.
+
+## What else carries the link
+
+- **Calendars.** Google Calendar sync and the Apple Calendar or Outlook subscription both put
+  "Join Zoom: ..." at the top of the event, and use the link as the event's location when the
+  lesson has no room. See [Sync your schedule to your calendar](/docs/scheduling/sync-your-personal-calendar).
+- **The schedule.** A lesson with no room sits in the bottom lane of the dispatch board,
+  labelled **Video calls** when that is all the lane holds.
+- **Close-out.** Unchanged: press **Review times** and record the instruction time. See
+  [Close out a ground lesson](/docs/scheduling/close-out-a-ground-lesson).
+
+<Callout type="warning">
+If a Meet cannot be made (Google is down, or your connection lapsed), the booking still saves
+and you are told the call was not made. Edit the booking to try again or paste a link, so
+nobody turns up to a lesson without one.
+</Callout>

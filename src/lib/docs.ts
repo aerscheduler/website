@@ -654,6 +654,29 @@ export const DOC_SECTIONS: DocSection[] = [
         seoQuery: "how to close out a ground lesson flight school",
       },
       {
+        slug: "remote-ground-lessons",
+        title: "Hold a ground lesson over Zoom or Google Meet",
+        description:
+          "Choose Video call on a ground lesson: paste a Zoom or Meet link, or have a Google Meet made for you. A lesson with a call needs no room, and everyone on it gets a Join button.",
+        kind: "task",
+        audience: ["Owners", "Admins", "Dispatchers", "Instructors", "Students"],
+        seoQuery: "schedule a remote ground school lesson zoom",
+        faqs: [
+          {
+            q: "Do I still need to book a classroom?",
+            a: "No. Once a ground lesson has a video call, the Room field offers No room. Pick a room as well if some students are coming in person.",
+          },
+          {
+            q: "Why is Add Google Meet greyed out?",
+            a: "The meeting is made on your own Google Calendar, so it needs Google Calendar connected first, under Profile & account, Calendar on the web. Until then you can paste any Meet link.",
+          },
+          {
+            q: "Does the link show up in students' calendars?",
+            a: "Yes. The Google Calendar sync and the Apple Calendar or Outlook subscription both carry the link, and it becomes the event's location when the lesson has no room.",
+          },
+        ],
+      },
+      {
         slug: "close-out-a-guest-flight",
         title: "Close out and bill a discovery or guest flight",
         description:

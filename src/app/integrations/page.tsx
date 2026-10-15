@@ -9,12 +9,12 @@ import { signupUrl } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Flight School Software Integrations",
   description:
-    "AerScheduler integrates with Stripe, Google Calendar, Apple Calendar, Outlook, QuickBooks Online, the FAA aircraft registry, and aviation weather. Connect the tools your flight school already uses, on every plan.",
+    "AerScheduler integrates with Stripe, Google Calendar, Google Meet, Zoom, Apple Calendar, Outlook, QuickBooks Online, the FAA aircraft registry, and aviation weather. Connect the tools your flight school already uses, on every plan.",
   alternates: { canonical: "/integrations" },
   openGraph: {
     title: "Flight School Software Integrations",
     description:
-      "Stripe, Google Calendar, Apple Calendar, Outlook, QuickBooks Online, the FAA aircraft registry, and aviation weather, available now on every plan.",
+      "Stripe, Google Calendar, Google Meet, Zoom, Apple Calendar, Outlook, QuickBooks Online, the FAA aircraft registry, and aviation weather, available now on every plan.",
     url: "/integrations",
   },
 };
@@ -48,6 +48,28 @@ const INTEGRATIONS: {
       "Sync instructor and student schedules out to Google Calendar so flights show up next to everything else. Connect from Profile → Calendar on web, or Settings → Calendars in the iOS and Android apps.",
     logo: "/integrations/google-calendar.svg",
     logoAlt: "Google Calendar logo",
+  },
+  {
+    name: "Google Meet",
+    status: "available",
+    blurb: "A Meet link on a ground lesson, made in one step.",
+    detail:
+      "Booking a ground lesson, choose Add Google Meet and the link is made on your connected Google Calendar when you save. Everyone on the booking gets a Join button, and the link rides along in their calendar event. A remote lesson needs no classroom.",
+    logo: "/integrations/google-meet.svg",
+    logoAlt: "Google Meet logo",
+    learnMoreHref: "/docs/scheduling/remote-ground-lessons",
+    learnMoreLabel: "Remote ground lessons",
+  },
+  {
+    name: "Zoom",
+    status: "available",
+    blurb: "Paste any Zoom link on a ground lesson.",
+    detail:
+      "Paste a Zoom link into Video call on a ground lesson, on web or in the iOS and Android apps, and the booking shows a Join button that opens Zoom. The link is added to everyone's calendar too. Making the Zoom meeting for you from the booking is coming soon.",
+    logo: "/integrations/zoom.svg",
+    logoAlt: "Zoom logo",
+    learnMoreHref: "/docs/scheduling/remote-ground-lessons",
+    learnMoreLabel: "Remote ground lessons",
   },
   {
     name: "Apple Calendar",
@@ -109,8 +131,9 @@ export default function IntegrationsPage() {
             Flight school software integrations
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-            Stripe payments, Google Calendar, Apple Calendar and Outlook subscriptions,
-            QuickBooks Online, FAA registry lookup, and aviation weather are live today,
+            Stripe payments, Google Calendar, Google Meet and Zoom links on ground lessons,
+            Apple Calendar and Outlook subscriptions, QuickBooks Online, FAA registry lookup,
+            and aviation weather are live today,
             in the same self-serve product, not as an enterprise add-on.
           </p>
         </div>
