@@ -54,7 +54,7 @@ const INTEGRATIONS: {
     status: "available",
     blurb: "A Meet link on a ground lesson, made in one step.",
     detail:
-      "Booking a ground lesson, choose Add Google Meet and the link is made on your connected Google Calendar when you save. Everyone on the booking gets a Join button, and the link rides along in their calendar event. A remote lesson needs no classroom.",
+      "Booking a ground lesson, choose Add Google Meet and the meeting is made when you save, hosted on the instructor's connected Google Calendar (or yours). Everyone on the booking gets a Join button, and the link rides along in their calendar event. A remote lesson needs no classroom.",
     logo: "/integrations/google-meet.svg",
     logoAlt: "Google Meet logo",
     learnMoreHref: "/docs/scheduling/remote-ground-lessons",
@@ -65,7 +65,7 @@ const INTEGRATIONS: {
     status: "available",
     blurb: "A Zoom meeting on a ground lesson, made in one step.",
     detail:
-      "Connect Zoom once, then choose Add Zoom meeting under Video call on a ground lesson. The meeting is made on your Zoom account when you save, everyone on the booking gets a Join button that opens Zoom, and the link goes into their calendars.",
+      "Connect Zoom once, then choose Add Zoom meeting under Video call on a ground lesson. The meeting is made when you save, hosted on the instructor's Zoom account (or yours), everyone on the booking gets a Join button that opens Zoom, and the link goes into their calendars.",
     logo: "/integrations/zoom.svg",
     logoAlt: "Zoom logo",
     learnMoreHref: "/docs/scheduling/remote-ground-lessons",

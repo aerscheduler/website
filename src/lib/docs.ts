@@ -676,7 +676,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "remote-ground-lessons",
         title: "Hold a ground lesson over Zoom or Google Meet",
         description:
-          "Choose Video call on a ground lesson and a Google Meet or Zoom meeting is made on your account. A lesson with a call needs no room, and everyone on it gets a Join button.",
+          "Choose Video call on a ground lesson and a Google Meet or Zoom meeting is made, hosted by the instructor. A lesson with a call needs no room, and everyone on it gets a Join button.",
         kind: "task",
         audience: ["Owners", "Admins", "Dispatchers", "Instructors", "Students"],
         seoQuery: "schedule a remote ground school lesson zoom",

@@ -7342,7 +7342,7 @@
                         ]
                       }
                     },
-                    "description": "Make the video call for you, on the caller's own connected Google Calendar (`google_meet`) or Zoom account (`zoom`). Refused with `400` before anything saves when that account is not connected. Otherwise it is made after the booking saves: if the service then fails, the booking still saves and the response carries `meetingError` beside `data`."
+                    "description": "Make the video call for you on Google Meet (`google_meet`) or Zoom (`zoom`): on the booking's instructor's connected account when they have one, else the caller's. Refused with `400` before anything saves when that account is not connected. Otherwise it is made after the booking saves: if the service then fails, the booking still saves and the response carries `meetingError` beside `data`."
                   },
                   "resource": {
                     "type": "object",
@@ -7634,7 +7634,7 @@
                         ]
                       }
                     },
-                    "description": "Make a video call on the caller's own account after the save. A failure is `meetingError` beside `data`, not a failed request."
+                    "description": "Make a video call after the save, on the instructor's connected account when they have one, else the caller's. A failure is `meetingError` beside `data`, not a failed request."
                   }
                 }
               }
@@ -8091,7 +8091,7 @@
           "Reservations"
         ],
         "summary": "Add a video call",
-        "description": "Creates a Google Meet or Zoom meeting on the caller's own connected account and stores its link on the booking. Same permission as editing the booking.",
+        "description": "Creates a Google Meet or Zoom meeting, on the instructor's connected account when they have one, else the caller's, and stores its link on the booking. Same permission as editing the booking.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -32066,7 +32066,7 @@
                         ]
                       }
                     },
-                    "description": "Ground lessons only: make the call on the requester's own connected account once the request is approved. Refused with 400 if that account is not connected. A failure at approval is `meetingError` beside the approval."
+                    "description": "Ground lessons only: make the call once the request is approved, on the instructor's connected account when they have one, else the requester's. Refused with 400 if neither is connected. A failure at approval is `meetingError` beside the approval."
                   },
                   "resource": {
                     "type": "object",
