@@ -119,11 +119,36 @@ can ramp out, ramp in and sign off from there.
 
 <Screenshot id="my-schedule-list" />
 
-## What the iOS app does
+## The calendar in the app
 
 The app is the same account, narrowed to what a pilot needs away from a desk: the
 calendar, your reservations, creating a booking, and the view-reservation screen with its
 progress stepper (Ramp out, Ramp in, Review times, Completed).
+
+The app's calendar has one header on every view. The month is the large title; tap it to
+jump to a date. Beside it, the view button picks how the calendar is drawn:
+
+| View | What it draws |
+|---|---|
+| Year | Twelve small months. Tap one to open it. |
+| Schedule | Every day with a booking as a list, scrolling back and forward. Each day's date stays at the top while its bookings scroll under it. |
+| Day | One day's hours, with each booking's time and who is on it. |
+| Week | Seven days side by side, Sunday first. |
+| Month | The whole month. In its List style, the chosen day's bookings sit underneath. |
+| By resource | One row per aircraft, simulator and classroom, hours across. A grounded aircraft says Grounded in red and its row is hatched. |
+
+Day and Month have styles, on the button in the top-right group. Day can be **Single Day**,
+**Multi Day** (two days side by side) or **List**; Month can be **Compact**, **Stacked**,
+**Details** or **List**. Day and By resource show the week across the top, with a dot under
+each day that has a booking; tap a day, or swipe the week, to move.
+
+Tap a month on Year, or a day on Month or Week, and the calendar zooms into it. The button
+at the top left then reads **‹ October** (or the year, or the view you came from) and takes
+you back. Open the calendar from Home, or pick a view yourself, and that button is plain Back.
+
+**Filter**, in the same group, offers **Only mine** and the reservation types. A type you
+untick fades on the calendar rather than disappearing, so you can still see the time is taken.
+**More filters** narrows the resources, the instructor and the location.
 
 Correcting a reading after the fact and overriding a booking's rates are on both surfaces.
 The app calls them **Update Details** and **Override Payment**; the console calls them
