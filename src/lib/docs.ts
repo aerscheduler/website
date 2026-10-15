@@ -676,7 +676,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "remote-ground-lessons",
         title: "Hold a ground lesson over Zoom or Google Meet",
         description:
-          "Choose Video call on a ground lesson: paste a Zoom or Meet link, or have a Google Meet made for you. A lesson with a call needs no room, and everyone on it gets a Join button.",
+          "Choose Video call on a ground lesson and a Google Meet or Zoom meeting is made on your account. A lesson with a call needs no room, and everyone on it gets a Join button.",
         kind: "task",
         audience: ["Owners", "Admins", "Dispatchers", "Instructors", "Students"],
         seoQuery: "schedule a remote ground school lesson zoom",
@@ -687,7 +687,7 @@ export const DOC_SECTIONS: DocSection[] = [
           },
           {
             q: "Why is Add Google Meet greyed out?",
-            a: "The meeting is made on your own Google Calendar, so it needs Google Calendar connected first, under Profile & account, Calendar on the web. Until then you can paste any Meet link.",
+            a: "The meeting is made on your own Google Calendar, so it needs Google Calendar connected first: Profile & account, Calendar on the web, or Settings, Calendars in the app.",
           },
           {
             q: "Does the link show up in students' calendars?",

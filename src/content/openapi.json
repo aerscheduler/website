@@ -32047,6 +32047,27 @@
                   "notes": {
                     "type": "string"
                   },
+                  "meetingUrl": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 500,
+                    "description": "Ground lessons only: a video call link (https), carried onto the booking when approved. With one, the lesson needs no room."
+                  },
+                  "meeting": {
+                    "type": "object",
+                    "properties": {
+                      "create": {
+                        "type": "string",
+                        "enum": [
+                          "google_meet",
+                          "zoom"
+                        ]
+                      }
+                    },
+                    "description": "Ground lessons only: make the call on the requester's own connected account once the request is approved. Refused with 400 if that account is not connected. A failure at approval is `meetingError` beside the approval."
+                  },
                   "resource": {
                     "type": "object",
                     "properties": {

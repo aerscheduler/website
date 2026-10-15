@@ -1,7 +1,7 @@
 <Summary>
-Book the lesson as **Ground**, then set **Video call**: paste a Zoom, Meet, or Teams link, or
-choose **Add Google Meet** to have one made. With a call, the Room can be **No room**. Everyone
-on the booking sees a **Join** button, and the link goes into their calendars too.
+Book the lesson as **Ground**, then set **Video call** to **Add Google Meet** or **Add Zoom
+meeting**. The meeting is made on your own account when you save. With a call, the Room can be
+**No room**, and everyone on the booking gets a **Join** button and the link in their calendar.
 </Summary>
 
 <Roles>Owners, Admins, Dispatchers, Instructors, Students</Roles>
@@ -13,43 +13,41 @@ on the booking sees a **Join** button, and the link goes into their calendars to
 On <Where app="web">Calendar → New reservation</Where>, or the **+** button in the app, set
 **Type** to **Ground**. The **Video call** row appears under Room. Only ground lessons offer it.
 </Step>
-<Step n={2} title="Choose the call">
-<div>
-- **Paste a link**: any https link works, Zoom, Google Meet, Microsoft Teams, Webex. A link
-  copied without `https://` (for example `zoom.us/j/845...`) is fixed for you.
-- **Add Google Meet**: a Meet is made on your own Google Calendar when you save. It needs
-  Google Calendar connected first, see below.
-- **No video call**: an ordinary classroom lesson.
-</div>
+<Step n={2} title="Choose Google Meet or Zoom">
+Pick **Add Google Meet** or **Add Zoom meeting**. Each needs that account connected first (see
+below); until it is, the option is greyed out and says so. There is no pasting a link: the
+call is always made through one of these, so every link on a booking works.
 </Step>
 <Step n={3} title="Pick a room, or none">
 With a call set, **Room** offers **No room** and the location becomes optional: the lesson
 happens over the call. Pick a room as well if some students are coming in person.
 </Step>
 <Step n={4} title="Save">
-The booking shows a **Video call** row with **Join Zoom** (or Join Google Meet) on the web,
-and a **Join** button under When in the app, which opens the Zoom or Meet app if it is
-installed.
+The meeting is made on your account, and the booking shows **Join Google Meet** or **Join Zoom**
+on the web, and a **Join** button under When in the app that opens Meet or Zoom.
 </Step>
 </Steps>
 
-## Connect Google to make Meet links
+If your organization approves bookings before they go on the schedule, a requested ground
+lesson can have a call too. The meeting is made on your account when the request is approved,
+and the desk sees on the request that it will be a call.
 
-Add Google Meet uses the Google Calendar connection you may already have for syncing your
-schedule. Connect it under <Where app="web">Profile & account → Calendar</Where> on the web,
-or <Where app="mobile">Settings → Calendars</Where> in the app. No extra Google permission is
-asked for. The Meet belongs to the person who booked it, so they are its host.
+## Connect your accounts
 
-<Callout type="note">
-Making a Zoom meeting for you, the way Add Google Meet does, is coming soon. Until then, create
-the meeting in Zoom and paste its link.
-</Callout>
+- **Google Meet** uses the Google Calendar connection you may already have for syncing your
+  schedule. Connect it under <Where app="web">Profile & account → Calendar</Where> on the web,
+  or <Where app="mobile">Settings → Calendars</Where> in the app. No extra Google permission is
+  asked for.
+- **Zoom** connects under <Where app="web">Profile & account → Calendar → Zoom</Where> on the
+  web. You approve AerScheduler on your Zoom account once.
+
+The meeting belongs to the person who booked it, so they are its host.
 
 ## Change or remove the call
 
-Edit the booking. **Video call** opens on the current link (for example "Zoom (current
-link)"). Pick **Paste a link** to replace it, **Add Google Meet** to make a new one, or **No
-video call** to remove it. Removing the call from a lesson with **No room** asks for a room
+Edit the booking. **Video call** opens on the current call (for example "Zoom (current
+call)"). Pick **Add Google Meet** or **Add Zoom meeting** to make a new one, or **No video call**
+to remove it. Removing the call from a lesson with **No room** asks for a room
 again, because a ground lesson has to happen somewhere.
 
 ## What else carries the link
@@ -64,6 +62,6 @@ again, because a ground lesson has to happen somewhere.
 
 <Callout type="warning">
 If a Meet cannot be made (Google is down, or your connection lapsed), the booking still saves
-and you are told the call was not made. Edit the booking to try again or paste a link, so
+and you are told the call was not made. Edit the booking to try again, or choose the other service, so
 nobody turns up to a lesson without one.
 </Callout>

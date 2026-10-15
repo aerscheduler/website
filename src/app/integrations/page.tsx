@@ -63,9 +63,9 @@ const INTEGRATIONS: {
   {
     name: "Zoom",
     status: "available",
-    blurb: "Paste any Zoom link on a ground lesson.",
+    blurb: "A Zoom meeting on a ground lesson, made in one step.",
     detail:
-      "Paste a Zoom link into Video call on a ground lesson, on web or in the iOS and Android apps, and the booking shows a Join button that opens Zoom. The link is added to everyone's calendar too. Making the Zoom meeting for you from the booking is coming soon.",
+      "Connect Zoom once, then choose Add Zoom meeting under Video call on a ground lesson. The meeting is made on your Zoom account when you save, everyone on the booking gets a Join button that opens Zoom, and the link goes into their calendars.",
     logo: "/integrations/zoom.svg",
     logoAlt: "Zoom logo",
     learnMoreHref: "/docs/scheduling/remote-ground-lessons",
