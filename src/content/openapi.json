@@ -2252,6 +2252,19 @@
                     ],
                     "description": "Guest /book accent, #RRGGBB. Null clears it."
                   },
+                  "reservationTypeColors": {
+                    "type": [
+                      "object",
+                      "null"
+                    ],
+                    "description": "Colors for reservation types on the schedule: keys dual, solo, shared, ground, sim, rental, guest, maintenance; values #RRGGBB dark enough to read on white (3:1). A type set to null goes back to its default; null for the whole field resets them all. Admins only.",
+                    "additionalProperties": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
                   "publicBookingAppearance": {
                     "type": "string",
                     "enum": [
@@ -8007,6 +8020,69 @@
             "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
           }
         ]
+      }
+    },
+    "/organizations/reservationTypeColors": {
+      "get": {
+        "tags": [
+          "Organizations"
+        ],
+        "summary": "Reservation type colors",
+        "description": "The organization's own colors for reservation types on the schedule, readable by every member. Null means every type uses its default. Set them with PATCH /organizations (admins).",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "additionalProperties": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getReservationTypeColors"
       }
     },
     "/reservations/{id}/meeting": {
@@ -39738,6 +39814,17 @@
               "string",
               "null"
             ]
+          },
+          "reservationTypeColors": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "The organization's own colors for reservation types on the schedule, as `{ \"ground\": \"#2D8CFF\" }`. A type that is absent uses the default color. Null means every type uses its default.",
+            "additionalProperties": {
+              "type": "string",
+              "pattern": "^#[0-9A-F]{6}$"
+            }
           },
           "publicBookingAppearance": {
             "type": "string",

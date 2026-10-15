@@ -654,6 +654,25 @@ export const DOC_SECTIONS: DocSection[] = [
         seoQuery: "how to close out a ground lesson flight school",
       },
       {
+        slug: "schedule-colors",
+        title: "Change the colors on the schedule",
+        description:
+          "An admin can give each reservation type its own color under Settings, Schedule colors. Everyone in the organization sees it, on the web console and in the app.",
+        kind: "task",
+        audience: ["Owners", "Admins"],
+        seoQuery: "change reservation colors flight school calendar",
+        faqs: [
+          {
+            q: "Why won't it take my color?",
+            a: "The booking's title is written in the type's color on a light tint of it, so a color has to be dark enough to read on white. Pale yellows and light greys are refused. Pick a darker shade.",
+          },
+          {
+            q: "Can each instructor pick their own colors?",
+            a: "No. The colors are one setting for the whole organization, so a red block means the same thing to everybody looking at the board.",
+          },
+        ],
+      },
+      {
         slug: "remote-ground-lessons",
         title: "Hold a ground lesson over Zoom or Google Meet",
         description:
