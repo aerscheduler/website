@@ -53,17 +53,32 @@ schedule one. What this page adds is saying which rule it is, and keeping the si
     <Screenshot id="add-inspections-source" />
   </Step>
   <Step n={4} title="Enter the document number">
-    The AD number as published, for example `2015-19-07`. This one is required: an AD
+    The AD number as published, for example `2013-11-11`. This one is required: an AD
     without its number cannot be found, filtered, or listed on the report an inspector
     reads.
+
+    If the AD was published in the Federal Register since 1995, AerScheduler finds it as
+    you type and fills in the amendment, the revision date (its effective date) and a link
+    to the Federal Register copy. A blank **Name** becomes the AD number and its subject,
+    for example "AD 2013-11-11 Engine oil pressure". Anything you typed yourself is kept.
   </Step>
-  <Step n={5} title="Add the revision and link if you have them">
-    The revision currently in force, and a link to the issuing authority's copy.
+  <Step n={5} title="Check what was filled in">
+    A line under the number says which AD was found. If a later AD superseded it, a second
+    line names it: track the one in force instead. An AD older than 1995, or one we
+    have not loaded yet, says it is not in the library. Fill in the revision and link by
+    hand.
   </Step>
 </Steps>
 
 An **AD** badge now appears on that inspection everywhere it is listed, so a regulation is
 distinguishable from a shop interval at a glance.
+
+## Where the AD details come from
+
+The AD library holds every Airworthiness Directive the Federal Register has published since
+1995, and checks for new ones every day. ADs from before 1995 are not in it, so for an older
+airframe some ADs still have to be entered by hand. The library fills in details; it never
+decides whether an AD applies to your aircraft.
 
 ## When the AD is superseded
 

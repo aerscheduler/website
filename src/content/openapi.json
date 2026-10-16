@@ -23269,6 +23269,163 @@
         ]
       }
     },
+    "/maintenance/airworthiness-directives/coverage": {
+      "get": {
+        "tags": [
+          "Maintenance"
+        ],
+        "summary": "AD library coverage",
+        "description": "How much of the AD library is loaded: the count, the oldest and newest publication dates, and whether every year from 1995 to last year is in. The library fills itself from the Federal Register; the current year fills daily.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer"
+                        },
+                        "oldest": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "format": "date-time"
+                        },
+                        "newest": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "format": "date-time"
+                        },
+                        "complete": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getAdLibraryCoverage"
+      }
+    },
+    "/maintenance/airworthiness-directives/{adNumber}": {
+      "get": {
+        "tags": [
+          "Maintenance"
+        ],
+        "summary": "Look up an AD by number",
+        "description": "One Airworthiness Directive from the library. Accepts `2013-11-11`, `AD 2013-11-11` or `2007-21-14R1`. `supersededBy` lists later ADs that replace it.\n\n`404` when it is not in the library, an ordinary answer: the library holds ADs published since 1995, so an older one is entered by hand.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AirworthinessDirective"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not in the AD library.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getAirworthinessDirective",
+        "parameters": [
+          {
+            "name": "adNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The AD number, e.g. `2013-11-11`."
+          }
+        ]
+      }
+    },
     "/maintenance/reminders/presets": {
       "get": {
         "tags": [
@@ -41855,6 +42012,106 @@
             "description": "Exactly the body `POST /maintenance/reminders/templates` accepts.",
             "properties": {},
             "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "AirworthinessDirective": {
+        "type": "object",
+        "description": "A published Airworthiness Directive from the AD library: every AD the Federal Register has published since 1995, kept current daily. Reference data shared by every organization. Whether it applies to an aircraft is a person's decision; nothing here says so.",
+        "properties": {
+          "adNumber": {
+            "type": "string",
+            "description": "As printed: `96-12-22` before 2000, `2013-11-10` since, `2007-21-14 R1` for a revision.",
+            "example": "2013-11-11"
+          },
+          "amendment": {
+            "description": "The 14 CFR 39.13 amendment that adopted it.",
+            "example": "39-17471",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "url": {
+            "type": "string",
+            "description": "The AD on federalregister.gov."
+          },
+          "publishedOn": {
+            "type": "string",
+            "description": "Federal Register publication date.",
+            "format": "date"
+          },
+          "effectiveOn": {
+            "description": "Effective date. The revision date 14 CFR 91.417(a)(2)(v) asks for.",
+            "format": "date",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "description": "The Federal Register title.",
+            "example": "Airworthiness Directives; Cessna Aircraft Company Airplanes"
+          },
+          "manufacturer": {
+            "type": "string",
+            "description": "The type certificate holder as the AD names it.",
+            "example": "Cessna Aircraft Company"
+          },
+          "productType": {
+            "type": "string",
+            "description": "What kind of product it is about.",
+            "enum": [
+              "airplane",
+              "rotorcraft",
+              "engine",
+              "propeller",
+              "glider",
+              "balloon",
+              "appliance",
+              "various"
+            ]
+          },
+          "applicability": {
+            "type": "string",
+            "description": "The applicability paragraph, whole: models, serial ranges, installed parts, exceptions."
+          },
+          "subject": {
+            "description": "The subject line (JASC code). Absent before about 2008.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "unsafeCondition": {
+            "description": "The unsafe condition it addresses.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "summary": {
+            "description": "The Federal Register summary of what it requires.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "supersedes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "AD numbers this one supersedes or revises."
+          },
+          "supersededBy": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Later ADs that supersede or revise this one. Returned on a single look-up."
           }
         },
         "additionalProperties": true
