@@ -104,11 +104,13 @@ const MAINTENANCE_SECTION: Partial<FeatureSectionData> = {
 /**
  * The comparison pages' default Scheduling section: the home page's, opening
  * with the dispatch board, because on these pages scheduling is what a school
- * is switching (Tony, 2026-10-16: "our scheduling is top tier"). Drag to
- * reschedule is the console's day and week boards (web `drag-rules.ts`).
+ * is switching (Tony, 2026-10-16: "our scheduling is top tier"). Lead with
+ * what makes it good as a whole (only mutually free times offered, the checks,
+ * live on every screen), not one control: drag is not a selling point on its own.
+ * The free-time picker is web `smart-time-range.tsx` and the app's equivalent.
  */
 const SCHEDULING_SECTION: Partial<FeatureSectionData> = {
-  body: "A dispatch board with a lane for every aircraft, simulator and classroom. Drag a booking to move it and every screen in the school updates at once. Students and renters book from the app under the rules you set, with currency, conflicts and open squawks checked before it saves.",
+  body: "Booking only offers the times when the aircraft, the instructor and the student are all free, and shows the next opening. Currency, checkouts, grounded aircraft and open squawks are checked before it saves, and every screen in the school sees the change at once.",
 };
 
 const SECTION_ORDER: CompareSectionId[] = ["scheduling", "billing", "maintenance", "work-orders", "reporting"];

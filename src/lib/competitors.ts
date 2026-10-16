@@ -285,8 +285,8 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
         "Buying it",
       ],
       [
-        "Dispatch board",
-        "A lane for every aircraft, simulator and classroom. Drag a booking to move or stretch it.",
+        "Booking",
+        "Only the times when the aircraft, instructor and student are all free are offered, checked for currency and checkouts, and live on every screen.",
         "Drag-and-drop scheduling, and Intelligent Scheduling in beta.",
         "Running the day",
       ],
@@ -431,8 +431,8 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
     rows: [
       ["Pricing", PRICE_ROW_OURS, "$10 per aircraft or simulator a month. Unlimited users.", "Buying it"],
       [
-        "Dispatch board",
-        "A lane for every aircraft, simulator and classroom. Drag a booking to move or stretch it.",
+        "Booking",
+        "Only the times when the aircraft, instructor and student are all free are offered, checked for currency and checkouts, and live on every screen.",
         "A schedule with split views, recurring reservations and booking restrictions.",
         "Scheduling",
       ],
@@ -567,8 +567,8 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
         "Buying it",
       ],
       [
-        "Dispatch board",
-        "A lane for every aircraft, simulator and classroom, live on every screen. Drag a booking to move or stretch it.",
+        "Booking",
+        "Only the times when the aircraft, instructor and student are all free are offered, checked for currency and checkouts, and live on every screen.",
         "Scheduling and dispatch",
         "Running the day",
       ],
@@ -711,8 +711,8 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
         "Buying it",
       ],
       [
-        "Dispatch board",
-        "A lane for every aircraft, simulator and classroom, live on every screen. Drag a booking to move or stretch it.",
+        "Booking",
+        "Only the times when the aircraft, instructor and student are all free are offered, checked for currency and checkouts, and live on every screen.",
         "Scheduling",
         "Running the day",
       ],
@@ -842,8 +842,8 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
         "Buying it",
       ],
       [
-        "Dispatch board",
-        "A lane for every aircraft, simulator and classroom, live on every screen. Drag a booking to move or stretch it.",
+        "Booking",
+        "Only the times when the aircraft, instructor and student are all free are offered, checked for currency and checkouts, and live on every screen.",
         "Scheduling and flight operations",
         "Running the day",
       ],
@@ -1071,7 +1071,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       ["Price", PRICE_ROW_OURS, "Free", "Buying it"],
       [
         "Booking",
-        "A lane for every aircraft, simulator and classroom, live on every screen. Drag a booking to move or stretch it.",
+        "Only the times when the aircraft, instructor and student are all free are offered, checked for currency and checkouts, and live on every screen.",
         "Aircraft booking with member roles and instructor availability",
         "Running the day",
       ],
@@ -1196,7 +1196,7 @@ export const COMPETITOR_FAQS: Record<
     },
     {
       q: "Is AerScheduler cheaper than Flight Circle?",
-      a: `No. Flight Circle publishes $10 per aircraft or simulator a month. AerScheduler is $${PRICE_PER_AIRCRAFT} per aircraft, with simulators and classrooms free and every user included. Schools move for the scheduling: a dispatch board that is live on every screen, drag to reschedule, and booking from a native app, with billing, maintenance and work orders on the same record.`,
+      a: `No. Flight Circle publishes $10 per aircraft or simulator a month. AerScheduler is $${PRICE_PER_AIRCRAFT} per aircraft, with simulators and classrooms free and every user included. Schools move for the scheduling: only the times when the aircraft, instructor and student are all free are offered, every screen updates at once, and students book from a native app, with billing, maintenance and work orders on the same record.`,
     },
     {
       q: "Can I try it before talking to anyone?",
