@@ -93,7 +93,17 @@ export type Competitor = {
    * price card (Flight Schedule Pro's hubs, say). The price itself is always the
    * "Pricing" row's third column, so the hero and the table cannot disagree.
    */
-  priceLines?: string[];
+  priceLines?: (string | [label: string, note: string])[];
+  /**
+   * Which picture the hero shows. "price" (the default) is the live price card;
+   * use it only where our price wins. "app" sets our app against what the other
+   * product publishes about its phone experience (`phoneLines`).
+   */
+  heroVisual?: "price" | "app";
+  phoneLines?: [label: string, value: string][];
+  /** The "app" picture's panel title and tag. Default "{name} on a phone", no tag. */
+  phoneTitle?: string;
+  phoneTag?: string;
   /** Per-section copy for the shared feature sections. */
   angles?: Partial<Record<CompareSectionId, SectionAngle>>;
   reasons: string[];
@@ -154,12 +164,6 @@ const PROOF_REALTIME: CompareProof = {
   label: "Scheduling & Dispatch",
 };
 
-const PROOF_MAINTENANCE: CompareProof = {
-  title: "An aircraft that is out of annual cannot be booked",
-  body: "Inspections carry server-computed due dates against hours and calendar time. When one comes due the aircraft grounds itself on the board, so nobody dispatches a tail that should not fly.",
-  href: "/features/maintenance",
-  label: "Maintenance",
-};
 
 /**
  * The switching offer, shared by every comparison page.
@@ -355,159 +359,259 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
 
   /* ---------------------------------------------------------------- */
   /* Flight Circle                                                     */
-  /* Facts from flightcircle.com, checked 2026-08-18.                  */
+  /* Facts from flightcircle.com, checked 2026-08-18, rechecked        */
+  /* 2026-10-16 (the August entry said "quoted per school" and         */
+  /* "account setup with the vendor"; both were wrong):                */
+  /* - docs/about-flight-circle/pricing: "$10 per month, per aircraft  */
+  /*   or sim", unlimited users. Home page: self-serve Sign Up and a   */
+  /*   60-day free trial. So price is NOT our argument here.           */
+  /* - docs/users/faq: on a phone it is a web app added to the home    */
+  /*   screen; "Soon we will have offline options". No Flight Circle   */
+  /*   app on the App Store (iTunes search API) or Google Play.        */
+  /* - schedule settings: "Rideshare" adds a second user and splits    */
+  /*   the bill; a multi-day scheduling restriction exists.            */
+  /* - maintenance reminders: meter, time and calendar; expired ones   */
+  /*   block dispatch for basic users; an AD is a reminder you enter,  */
+  /*   with a reference URL. No work orders anywhere in the docs.      */
+  /* - also: ledger, autopay, block time contracts, inventory and      */
+  /*   point of sale, a safety management system, QuickBooks Online,   */
+  /*   Google Calendar, Mailchimp, Fiserv terminals, API by contact.   */
   /* ---------------------------------------------------------------- */
   "flight-circle": {
     slug: "flight-circle",
     name: "Flight Circle",
     navLabel: "vs Flight Circle",
     seoTitle: "AerScheduler vs Flight Circle",
-    seoDescription: `Compare AerScheduler and Flight Circle for flight schools: self-serve setup, $${PRICE_PER_AIRCRAFT}/mo per aircraft with unlimited users, dispatch that closes out into an invoice, and a native app.`,
+    seoDescription: `Compare AerScheduler and Flight Circle: native iOS and Android apps instead of a home-screen web app, any number of people billed on one flight, work orders on customers' aircraft, and ADs picked from a library.`,
     ogDescription:
-      "Self-serve setup, per-aircraft pricing, and the whole day in one system.",
-    heroHeadline: "A modern alternative to Flight Circle",
-    intro: "Flight Circle already runs your schedule, so the question is not whether software helps. It is whether the rest of the day still costs you more admin than it should. AerScheduler puts dispatch, billing and maintenance in one place, updates every screen in the school the moment anything changes, and we move your data and set the school up with you. Keep both running in parallel for as long as it takes to trust it.",
+      "Native iOS and Android apps, split billing for any number of people, work orders and an AD library.",
+    heroHeadline: "The Flight Circle alternative with native iOS and Android apps",
+    heroSubhead: "Flight Circle runs on a phone as a web page added to the home screen. AerScheduler has its own apps on the App Store and Google Play for students, renters, instructors and mechanics, and the same system runs your billing, maintenance and work orders.",
+    heroVisual: "app",
+    phoneTag: "No native app",
+    phoneLines: [
+      ["App Store", "Not listed"],
+      ["Google Play", "Not listed"],
+      ["How you get it", "Add the website to the home screen from the browser"],
+      ["Offline", "\"Soon\", in its own FAQ"],
+    ],
+    intro: "Flight Circle already runs your schedule, so the question is not whether software helps. It is whether the rest of the day still costs you more admin than it should. We move your data and set the school up with you, and you keep Flight Circle running in parallel for as long as it takes to trust the new one.",
+    angles: {
+      scheduling: {
+        note: "Both check checkouts and currency before a booking saves. Here students and renters book from a native app, with a push notification when the schedule changes.",
+      },
+      billing: {
+        title: "Billing\nfor shared flights",
+        note: "Flight Circle's Rideshare splits a flight between two pilots. Here any number of people share a booking, split per head, by logged time or in set shares, with an invoice each.",
+      },
+      maintenance: {
+        title: "Maintenance\nand AD tracking",
+        body: "Every inspection counts down by tach, Hobbs or calendar month, and an overdue annual grounds the aircraft until it is signed off. Airworthiness directives are tracked on the airframe and on each component, from a library of every AD published since 1995.",
+        note: "In Flight Circle an AD is a reminder you type in, with a link to the directive. Here you pick it from the library and track it on the airframe or the component it applies to.",
+      },
+      "work-orders": {
+        note: "Flight Circle tracks squawks and maintenance reminders, and its documentation has no work orders. Here a job runs from the finding to the owner's approval to a paid invoice.",
+      },
+      reporting: {
+        note: "Flight Circle has standard reports with CSV export. Here each of 21 reports can be filtered, grouped, saved as a view and emailed daily, weekly or monthly.",
+      },
+    },
     reasons: [
-      "You want to be dispatching this week, without a sales call",
-      `Predictable cost: $${PRICE_PER_AIRCRAFT} per aircraft, every user included, sims and rooms free`,
-      "The schedule, the invoice and the maintenance record should be one system",
-      "Your instructors and renters will actually open the app on the ramp",
+      "Your pilots want an app from the App Store or Google Play, not a website on the home screen",
+      "Several people share flights and each needs their own invoice",
+      "Your mechanics work on customers' aircraft as well as your own",
+      "You want ADs picked from a library, not typed in one by one",
     ],
     rows: [
+      ["Pricing", PRICE_ROW_OURS, "$10 per aircraft or simulator a month. Unlimited users.", "Buying it"],
       [
-        "Getting started",
-        "Self-serve signup. On the schedule the same day.",
-        "Account setup with the vendor",
-      ],
-      ["Pricing", PRICE_ROW_OURS, "Quoted per school"],
-      [
-        "Dispatch board",
-        "Lane views across aircraft, simulators and rooms, with conflict-aware booking and a live front-desk view.",
-        "Scheduling calendar",
+        "Mobile apps",
+        "Native apps on the App Store and Google Play, with push notifications.",
+        "A web app added to the home screen from the browser. Not on the App Store or Google Play.",
+        "On the ramp",
       ],
       [
-        "Closing out a flight",
-        "Ramp in with Hobbs, tach and fuel, and the invoice drafts from the rates on the tail.",
-        "Available",
-      ],
-      [
-        "Several people on one flight",
-        "Built in. Split per head, by logged time, or in set shares. One invoice each.",
+        "Live schedule",
+        "Every screen in the school updates the moment a booking changes.",
         "Not published",
+        "On the ramp",
       ],
       [
-        "Multi-day trips",
-        "One reservation across nights, with a per-night minimum set per tail.",
-        "Not published",
+        "Shared flights",
+        "Any number of people on one booking, split per head, by logged time or in set shares, with an invoice each.",
+        "Rideshare: a second pilot on the reservation, with the bill split between them.",
+        "Money",
       ],
       [
+        "Overnight trips",
+        "One reservation across nights, with a minimum charge per night set per aircraft.",
+        "A multi-day scheduling restriction. Per-night minimums not published.",
+        "Money",
+      ],
+      [
+        "Close-out",
+        "Ramp-in drafts the invoice from the meters and the rates on the tail. Card, ACH or account balance.",
+        "Check-in bills the flight. Cards on file, ACH, autopay and a member ledger.",
+        "Money",
+      ],
+      [
+        "Inspections",
+        "Tach, Hobbs and calendar-month countdowns. An overdue inspection grounds the aircraft.",
+        "Meter, time and calendar reminders. An expired one blocks dispatch for basic users.",
         "Maintenance",
-        "Squawks, inspections with server-computed due dates, and grounding that blocks the board.",
-        "Available",
       ],
       [
-        "Mobile",
-        "Native iOS and Android apps for the whole team. Book, dispatch and close out from the ramp.",
-        "Mobile access",
+        "Airworthiness directives",
+        "Picked from a library of every AD published since 1995, updated daily, and tracked on the airframe and each component.",
+        "Entered by hand as a maintenance reminder, with a link to the directive.",
+        "Maintenance",
       ],
       [
-        "Public discovery-flight requests",
-        "Embeddable request page. Guest confirms by email, desk approves. Not instant booking.",
+        "Work orders",
+        "On your own fleet and on customers' aircraft, with the owner approving each finding online and paying the invoice.",
         "Not published",
+        "Maintenance",
       ],
       [
         "Integrations",
-        "Stripe, Google Calendar and QuickBooks Online, plus a public REST API on the Enterprise plan.",
-        "Available",
+        "Stripe, Google Calendar and QuickBooks Online.",
+        "QuickBooks Online, Google Calendar, Mailchimp and Fiserv card terminals.",
+        "Connecting",
+      ],
+      [
+        "API",
+        "A documented public REST API on the Enterprise plan.",
+        "By arrangement: contact them.",
+        "Connecting",
       ],
     ],
     disclaimer: disclaimerFor("Flight Circle"),
-    proofsTitle: "What running the day looks like",
-    proofs: [PROOF_REALTIME, PROOF_CLOSE_OUT, PROOF_SPLIT, PROOF_SIMS_FREE, PROOF_MULTI_DAY],
+    proofsTitle: "Also in every plan",
+    proofs: [PROOF_SIMS_FREE, PROOF_REALTIME, PROOF_MULTI_DAY],
     notFitTitle: "When we may not be the right fit",
     notFit: [
-      "You want ground-school courseware, video, reading and quizzes, inside the same tool. We do not build it, and link out to Sporty's, King or Gleim instead",
+      "Cost per aircraft decides it: Flight Circle publishes $10 a month per aircraft or simulator",
+      "You want a safety management system with safety reports in the same tool",
+      "You sell at the counter and want inventory and a point of sale in the scheduler",
       "You already run a large deployment elsewhere and moving it would cost more than it saves",
-      "You need a workflow or integration we do not cover yet",
     ],
   },
 
   /* ---------------------------------------------------------------- */
   /* Schedule Pointe                                                   */
-  /* Facts from schedulepointe.com, checked 2026-08-18: serves flight  */
-  /* schools, clubs and charter alongside medical practices, health    */
-  /* clubs, CPA firms and salons; modules listed as Scheduling,        */
-  /* Dispatch, Invoicing, Accounts Receivable, Curriculum and Advanced */
-  /* Maintenance Tracking; no published pricing, a phone number and a  */
-  /* custom demo; iOS and Android apps (SchedulePt, SchedulePointeGo). */
+  /* Facts from schedulepointe.com, checked 2026-08-18, rechecked      */
+  /* 2026-10-16: serves flight schools, clubs and charter alongside    */
+  /* medical practices, health clubs, CPA firms and salons; modules    */
+  /* listed as Scheduling, Dispatch, Invoicing, Accounts Receivable,   */
+  /* Curriculum and Advanced Maintenance Tracking; no published        */
+  /* pricing, a phone number and a custom demo; iOS and Android apps   */
+  /* (SchedulePt, SchedulePointeGo). Nothing on ADs or work orders.    */
   /* ---------------------------------------------------------------- */
   "schedule-pointe": {
     slug: "schedule-pointe",
     name: "Schedule Pointe",
     navLabel: "vs Schedule Pointe",
     seoTitle: "AerScheduler vs Schedule Pointe",
-    seoDescription: `Compare AerScheduler and Schedule Pointe for flight schools and clubs: one published price at $${PRICE_PER_AIRCRAFT}/mo per aircraft, self-serve signup, and software built only for aviation.`,
+    seoDescription: `Compare AerScheduler and Schedule Pointe for flight schools and clubs: software built only for aviation, $${PRICE_PER_AIRCRAFT}/mo per aircraft published, self-serve signup, work orders and AD tracking.`,
     ogDescription:
-      "Built for aviation only, with a published price and no demo call.",
-    heroHeadline: "A modern alternative to Schedule Pointe",
+      "Built only for aviation, with a published price, work orders and AD tracking.",
+    heroHeadline: "The Schedule Pointe alternative built only for flight schools and clubs",
+    heroSubhead: `Schedule Pointe sells the same scheduling platform to medical practices, salons and CPA firms, and its price comes after a phone call. AerScheduler is built only for flying operations, at $${PRICE_PER_AIRCRAFT} per aircraft a month with every user included, and you can start today.`,
     intro: "Every screen in AerScheduler was drawn for a flight line rather than adapted from another industry, the price is published, and you can be dispatching this afternoon instead of waiting for a call back. If you are on Schedule Pointe today, we help you move what you can export and configure the school with you, and nothing forces a cutover date.",
+    angles: {
+      scheduling: {
+        note: "Schedule Pointe's scheduling also runs salons, health clubs and CPA firms. Here every screen is built around aircraft, instructors, checkouts and currency.",
+      },
+      billing: {
+        note: "Schedule Pointe lists invoicing and accounts receivable. Here close-out drafts the invoice from the meters, and several people on one flight each get their own.",
+      },
+      maintenance: {
+        title: "Maintenance\nand AD tracking",
+        body: "Every inspection counts down by tach, Hobbs or calendar month, and an overdue annual grounds the aircraft until it is signed off. Airworthiness directives are tracked on the airframe and on each component, from a library of every AD published since 1995.",
+        note: "Schedule Pointe lists advanced maintenance tracking and does not publish AD tracking. Here ADs come from a library and sit on the airframe or the component.",
+      },
+      "work-orders": {
+        note: "Schedule Pointe does not publish work orders. Here a job runs from the finding to the owner's approval to a paid invoice.",
+      },
+    },
     reasons: [
       "The price is published, so you can decide without booking a call",
       "Every screen was designed for a flight school, not adapted from another industry",
       "Self-serve signup, on the schedule the same day",
-      "Maintenance, dispatch and invoicing are the same system, not three modules that have to agree",
+      "Your shop works on customers' aircraft as well as your own",
     ],
     rows: [
+      ["Pricing", PRICE_ROW_OURS, "Not published. Quoted per operation", "Buying it"],
       [
         "Getting started",
         "Self-serve signup. On the schedule the same day.",
         "Custom demo, arranged by phone",
+        "Buying it",
       ],
-      ["Pricing", PRICE_ROW_OURS, "Not published. Quoted per operation"],
       [
         "Who it is built for",
         "Flight schools, flying clubs and aircraft rental operations. Aviation only.",
-        "Aviation operations plus other industries served by the same platform",
+        "Aviation operations, plus medical practices, health clubs, CPA firms and salons on the same platform",
+        "Buying it",
       ],
       [
         "Dispatch board",
         "Lane views across aircraft, simulators and rooms, with conflict-aware booking and a live front-desk view.",
         "Scheduling and dispatch",
+        "Running the day",
+      ],
+      [
+        "Mobile apps",
+        "Native iOS and Android apps for the whole team. Book, dispatch and close out from the ramp.",
+        "iOS and Android apps",
+        "Running the day",
       ],
       [
         "Closing out a flight",
         "Ramp in with Hobbs, tach and fuel, and the invoice drafts from the rates on the tail.",
         "Invoicing and accounts receivable",
-      ],
-      [
-        "Maintenance",
-        "Squawks, inspections with server-computed due dates, and grounding that blocks the board.",
-        "Advanced maintenance tracking",
+        "Money",
       ],
       [
         "Several people on one flight",
         "Built in. Split per head, by logged time, or in set shares. One invoice each.",
         "Not published",
+        "Money",
       ],
       [
         "Multi-day trips",
         "One reservation across nights, with a per-night minimum set per tail.",
         "Not published",
+        "Money",
       ],
       [
-        "Mobile",
-        "Native iOS and Android apps for the whole team. Book, dispatch and close out from the ramp.",
-        "iOS and Android apps",
+        "Inspections",
+        "Tach, Hobbs and calendar-month countdowns. An overdue inspection grounds the aircraft.",
+        "Advanced maintenance tracking",
+        "Maintenance",
+      ],
+      [
+        "Airworthiness directives",
+        "Picked from a library of every AD published since 1995, updated daily, and tracked on the airframe and each component.",
+        "Not published",
+        "Maintenance",
+      ],
+      [
+        "Work orders",
+        "On your own fleet and on customers' aircraft, with the owner approving each finding online and paying the invoice.",
+        "Not published",
+        "Maintenance",
       ],
       [
         "Integrations",
         "Stripe, Google Calendar and QuickBooks Online, plus a public REST API on the Enterprise plan.",
         "Not published",
+        "Connecting",
       ],
     ],
     disclaimer: disclaimerFor("Schedule Pointe"),
-    proofsTitle: "What running the day looks like",
-    proofs: [PROOF_REALTIME, PROOF_MAINTENANCE, PROOF_CLOSE_OUT, PROOF_SIMS_FREE, PROOF_SPLIT],
+    proofsTitle: "Also in every plan",
+    proofs: [PROOF_REALTIME, PROOF_SIMS_FREE, PROOF_MULTI_DAY],
     notFitTitle: "When we may not be the right fit",
     notFit: [
       "You run charter alongside training and need crew duty-time tracking, which we do not build",
@@ -518,89 +622,134 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
 
   /* ---------------------------------------------------------------- */
   /* FlightLogger                                                      */
-  /* Facts from flightlogger.net/packages, checked 2026-08-18: the     */
-  /* platform package includes unlimited aircraft, simulators, renters,*/
-  /* instructors, crew and admin users, with variable "Active Student  */
-  /* & Operations Flights Fees" on top, and pricing given by quote     */
-  /* ("Only pay for what you train"). No dollar figures are published, */
-  /* so none are quoted here.                                          */
+  /* Facts from flightlogger.net/packages, checked 2026-08-18,         */
+  /* rechecked 2026-10-16: the platform package includes unlimited     */
+  /* aircraft, simulators, renters, instructors, crew and admin users, */
+  /* with "Active Student & Operations Flights Fees" on top, priced by */
+  /* quote ("Only pay for what you train"). Optional add-on modules    */
+  /* include the Financial Module (billing, QuickBooks), Business      */
+  /* Insights, an LMS, a safety management system and an Integration   */
+  /* Module. No dollar figures are published, so none are quoted here. */
   /* ---------------------------------------------------------------- */
   flightlogger: {
     slug: "flightlogger",
     name: "FlightLogger",
     navLabel: "vs FlightLogger",
     seoTitle: "AerScheduler vs FlightLogger",
-    seoDescription: `Compare AerScheduler and FlightLogger: a flat $${PRICE_PER_AIRCRAFT}/mo per aircraft with unlimited users, versus pricing that varies with how many students you train and how much you fly.`,
+    seoDescription: `Compare AerScheduler and FlightLogger: a flat $${PRICE_PER_AIRCRAFT}/mo per aircraft with every module and user included, versus a platform fee plus charges for each active student and operational flight.`,
     ogDescription:
-      "A fixed per-aircraft price versus a bill that moves with your student count.",
-    heroHeadline: "A modern alternative to FlightLogger",
+      "A flat price per aircraft versus a bill that grows with every student and flight.",
+    heroHeadline: "The FlightLogger alternative that does not charge per student",
+    heroSubhead: `FlightLogger adds a fee for every active student and operational flight on top of its platform package, and billing and business reports are add-on modules. AerScheduler is $${PRICE_PER_AIRCRAFT} per aircraft a month with every module and every user included, however many students you train.`,
+    priceLines: [
+      ["Platform package", "Quote"],
+      ["Active students", "Fee per student"],
+      ["Operational flights", "Fee per flight"],
+      ["Financial Module", "Add-on"],
+      ["Business Insights", "Add-on"],
+    ],
     intro: "The clearest difference shows up when the school grows. FlightLogger prices on active students and operational flights, so a bigger intake costs more; AerScheduler charges for aircraft and nothing else, so it does not. Moving is not a project either. We help get your data across and set the school up with you, and you can run both systems until the change has stuck.",
+    angles: {
+      billing: {
+        title: "Billing\nin every plan",
+        note: "Billing is FlightLogger's Financial Module, an add-on. Here it is part of the price, with an invoice each when several people share a flight.",
+      },
+      maintenance: {
+        title: "Maintenance\nand AD tracking",
+        body: "Every inspection counts down by tach, Hobbs or calendar month, and an overdue annual grounds the aircraft until it is signed off. Airworthiness directives are tracked on the airframe and on each component, from a library of every AD published since 1995.",
+        note: "FlightLogger does not publish AD tracking. Here ADs come from a library and sit on the airframe or the component they apply to.",
+      },
+      "work-orders": {
+        note: "FlightLogger does not publish work orders on customers' aircraft. Here a job runs from the finding to the owner's approval to a paid invoice.",
+      },
+      reporting: {
+        title: "Reporting\non the same plan",
+        note: "Business Insights is a FlightLogger add-on. Here all 21 reports come with every plan.",
+      },
+    },
     reasons: [
       "Your software cost stops depending on how busy you are",
       `One published number: $${PRICE_PER_AIRCRAFT} per aircraft per month`,
-      "Every user is included, so nobody is left off the system to save money",
+      "Billing and reports are in the plan, not add-on modules",
       "Self-serve signup, no quote and no discovery call",
     ],
     rows: [
       [
-        "Getting started",
-        "Self-serve signup. On the schedule the same day.",
-        "Custom quote based on training volume",
-      ],
-      [
         "Pricing",
         PRICE_ROW_OURS,
         "Platform package plus active-student and operational-flight fees",
+        "Buying it",
       ],
       [
         "What moves your bill",
         "The number of aircraft. Nothing else.",
         "How many students are active and how much you fly",
+        "Buying it",
       ],
       [
-        "Users included",
-        "Unlimited, on every plan.",
-        "Unlimited renters, instructors, crew and admin users",
+        "What the price covers",
+        "Scheduling, billing, maintenance, work orders and reporting, in every plan.",
+        "The platform, with the Financial Module, Business Insights and others as add-ons",
+        "Buying it",
+      ],
+      [
+        "Getting started",
+        "Self-serve signup. On the schedule the same day.",
+        "Custom quote based on training volume",
+        "Buying it",
       ],
       [
         "Dispatch board",
         "Lane views across aircraft, simulators and rooms, with conflict-aware booking and a live front-desk view.",
         "Scheduling",
+        "Running the day",
+      ],
+      [
+        "Mobile apps",
+        "Native iOS and Android apps for the whole team. Book, dispatch and close out from the ramp.",
+        "Available",
+        "Running the day",
       ],
       [
         "Closing out a flight",
         "Ramp in with Hobbs, tach and fuel, and the invoice drafts from the rates on the tail.",
-        "Available",
+        "Through the Financial Module, an add-on",
+        "Money",
       ],
       [
         "Several people on one flight",
         "Built in. Split per head, by logged time, or in set shares. One invoice each.",
         "Not published",
+        "Money",
       ],
       [
-        "Multi-day trips",
-        "One reservation across nights, with a per-night minimum set per tail.",
-        "Not published",
-      ],
-      [
+        "Inspections",
+        "Tach, Hobbs and calendar-month countdowns. An overdue inspection grounds the aircraft.",
+        "Available",
         "Maintenance",
-        "Squawks, inspections with server-computed due dates, and grounding that blocks the board.",
-        "Available",
       ],
       [
-        "Mobile",
-        "Native iOS and Android apps for the whole team. Book, dispatch and close out from the ramp.",
-        "Available",
+        "Airworthiness directives",
+        "Picked from a library of every AD published since 1995, updated daily, and tracked on the airframe and each component.",
+        "Not published",
+        "Maintenance",
+      ],
+      [
+        "Work orders",
+        "On your own fleet and on customers' aircraft, with the owner approving each finding online and paying the invoice.",
+        "Not published",
+        "Maintenance",
       ],
       [
         "Integrations",
         "Stripe, Google Calendar and QuickBooks Online, plus a public REST API on the Enterprise plan.",
-        "Not published",
+        "QuickBooks through the Financial Module, and an Integration Module add-on",
+        "Connecting",
       ],
     ],
     disclaimer: disclaimerFor("FlightLogger"),
     proofsTitle: "What a fixed price actually buys you",
-    proofs: [PROOF_REALTIME, PROOF_SIMS_FREE, PROOF_CLOSE_OUT, PROOF_SPLIT, PROOF_MULTI_DAY],
+    proofs: [PROOF_SIMS_FREE, PROOF_REALTIME, PROOF_MULTI_DAY],
     notFitTitle: "When we may not be the right fit",
     notFit: [
       "You train under EASA rules and need reporting built around them. We are built for FAA Part 61 and Part 141 operations",
@@ -612,89 +761,130 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
   /* ---------------------------------------------------------------- */
   /* Talon Systems                                                     */
   /* Facts from talonsystems.com and talonsystems.com/taloneta,        */
-  /* checked 2026-08-18: trading since 2001, product is TalonETA (not  */
-  /* "DaVinci"), web-based training management for universities and    */
-  /* flight schools with Embry-Riddle and Western Michigan named as    */
-  /* customers, sold via "Request a Demo" with no published pricing,   */
-  /* configurable per customer, sibling modules TalonRMS and           */
-  /* TalonSMART.                                                       */
+  /* checked 2026-08-18, rechecked 2026-10-16: trading since 2001,     */
+  /* product is TalonETA, web-based training management for            */
+  /* universities and flight schools with Embry-Riddle and Western     */
+  /* Michigan named as customers, sold via "Request a Demo" with no    */
+  /* published pricing, configurable per customer. Separate products:  */
+  /* Talon RMS (maintenance, "integrates with RMS"), Talon Mobile and  */
+  /* TalonSMART. ETA lists "300+ Built-In Reports" with automated      */
+  /* delivery, smart scheduling that checks currency, and automated    */
+  /* billing from contract or student rates. The August entry said     */
+  /* mobile was "not published"; Talon Mobile exists, so it is fixed.  */
+  /* RMS was not reviewed, so nothing here claims what it lacks.       */
   /* ---------------------------------------------------------------- */
   "talon-systems": {
     slug: "talon-systems",
     name: "Talon Systems",
     navLabel: "vs Talon Systems",
     seoTitle: "AerScheduler vs Talon Systems (Talon ETA)",
-    seoDescription: `Compare AerScheduler and Talon Systems ETA: a published price at $${PRICE_PER_AIRCRAFT}/mo per aircraft and same-day self-serve setup, versus an enterprise platform sold by demo and configured per organization.`,
+    seoDescription: `Compare AerScheduler and Talon Systems ETA: one system at $${PRICE_PER_AIRCRAFT}/mo per aircraft that an independent school sets up itself, versus ETA, RMS and Talon Mobile sold by demo and configured per organization.`,
     ogDescription:
-      "Same-day setup and a published price, versus a configured enterprise rollout.",
-    heroHeadline: "A modern alternative to Talon Systems",
+      "One system you set up yourself, versus separate products sold by demo.",
+    heroHeadline: "The Talon Systems alternative for independent flight schools and clubs",
+    heroSubhead: `Talon sells ETA, RMS for maintenance and Talon Mobile as separate products, by demo, mostly to universities and large academies. AerScheduler is one system at $${PRICE_PER_AIRCRAFT} per aircraft a month with every user included, and an independent school can set it up this afternoon.`,
+    priceLines: [
+      ["Talon ETA", "Training and operations"],
+      ["Talon RMS", "Separate product"],
+      ["Talon Mobile", "Separate product"],
+      ["TalonSMART", "Separate product"],
+    ],
     intro: "Talon builds ETA for university programs with a procurement process behind them, and for that kind of operation it is a real fit. If you run an independent school or club, you can have AerScheduler configured and dispatching this afternoon, at a price that is published rather than negotiated. Coming off ETA, we help move what you can export and set the school up with you.",
+    angles: {
+      scheduling: {
+        note: "Both check instructor and aircraft currency before a booking. Talon configures ETA for each organization; here a school sets its own rules in an afternoon.",
+      },
+      billing: {
+        note: "Talon bills each activity from contract or student rates. Here close-out drafts the invoice from the meters, and any number of people can share a flight with an invoice each.",
+      },
+      maintenance: {
+        title: "Maintenance\nand AD tracking",
+        body: "Every inspection counts down by tach, Hobbs or calendar month, and an overdue annual grounds the aircraft until it is signed off. Airworthiness directives are tracked on the airframe and on each component, from a library of every AD published since 1995.",
+        note: "Talon tracks maintenance in RMS, a separate product. Here inspections, squawks and ADs live in the same system as the schedule.",
+      },
+    },
     reasons: [
       "You want to evaluate the software by using it, not by sitting through a demo",
       "The price is published and does not depend on a negotiation",
-      "There is no implementation project. You add a tail and book a flight",
+      "Scheduling, billing and maintenance are one system, not separate products",
       `A school with six aircraft pays $${PRICE_PER_AIRCRAFT * 6} a month, all users included`,
     ],
     rows: [
+      ["Pricing", PRICE_ROW_OURS, "Not published. Quoted per organization", "Buying it"],
       [
         "Getting started",
         "Self-serve signup. On the schedule the same day.",
         "Request a demo",
+        "Buying it",
       ],
-      ["Pricing", PRICE_ROW_OURS, "Not published. Quoted per organization"],
       [
         "Typical customer",
         "Independent flight schools, flying clubs and rental operations.",
         "Universities and flight training organizations, including named university programs",
+        "Buying it",
       ],
       [
         "Setup",
         "You configure it yourself in an afternoon.",
         "Configured to the organization's requirements",
+        "Buying it",
       ],
       [
         "Dispatch board",
         "Lane views across aircraft, simulators and rooms, with conflict-aware booking and a live front-desk view.",
         "Scheduling and flight operations",
+        "Running the day",
+      ],
+      [
+        "Mobile apps",
+        "Native iOS and Android apps for the whole team, in the same plan.",
+        "Talon Mobile, a separate product",
+        "Running the day",
       ],
       [
         "Closing out a flight",
         "Ramp in with Hobbs, tach and fuel, and the invoice drafts from the rates on the tail.",
-        "Billing and invoicing",
+        "Hobbs and tach billing, with per-activity costs from contract or student rates",
+        "Money",
       ],
       [
         "Several people on one flight",
         "Built in. Split per head, by logged time, or in set shares. One invoice each.",
         "Not published",
-      ],
-      [
-        "Multi-day trips",
-        "One reservation across nights, with a per-night minimum set per tail.",
-        "Not published",
+        "Money",
       ],
       [
         "Maintenance",
-        "Squawks, inspections with server-computed due dates, and grounding that blocks the board.",
-        "Available as a separate module",
+        "Inspections, squawks and grounding in the same system as the schedule.",
+        "Talon RMS, a separate product that integrates with ETA",
+        "Maintenance",
       ],
       [
-        "Mobile",
-        "Native iOS and Android apps for the whole team. Book, dispatch and close out from the ramp.",
-        "Not published",
+        "Airworthiness directives",
+        "Picked from a library of every AD published since 1995, updated daily, and tracked on the airframe and each component.",
+        "Not published in ETA",
+        "Maintenance",
+      ],
+      [
+        "Reports",
+        "21 reports you can filter, group, save and email daily, weekly or monthly.",
+        "300+ built-in reports, with automated delivery",
+        "Reports and integrations",
       ],
       [
         "Integrations",
         "Stripe, Google Calendar and QuickBooks Online, plus a public REST API on the Enterprise plan.",
         "Not published",
+        "Reports and integrations",
       ],
     ],
     disclaimer: disclaimerFor("Talon Systems"),
     proofsTitle: "What you get without an implementation project",
-    proofs: [PROOF_REALTIME, PROOF_CLOSE_OUT, PROOF_MAINTENANCE, PROOF_SIMS_FREE, PROOF_SPLIT],
+    proofs: [PROOF_REALTIME, PROOF_SIMS_FREE, PROOF_SPLIT],
     notFitTitle: "When we may not be the right fit",
     notFit: [
       "You are a university program with a procurement process and need a vendor who will answer an RFP",
-      "You need a formal safety management system alongside your training records",
+      "You need hundreds of built-in reports, or a formal safety management system alongside your training records",
       "You run hundreds of aircraft across multiple campuses and need a configured deployment",
     ],
   },
@@ -721,7 +911,20 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
     ogDescription:
       "Corporate jet scheduling versus software for a flight school or club.",
     heroHeadline: "Flight school software, not corporate jet scheduling",
+    heroSubhead: `Airplane Manager is built for corporate flight departments: trips, passengers and owners. AerScheduler is built for the flight school day, with students and renters booking themselves, instructors with their own rates and an invoice at the end of every flight, at $${PRICE_PER_AIRCRAFT} per aircraft a month.`,
     intro: "Airplane Manager is built for corporate flight departments and says so plainly. A flight school day looks nothing like that: students and renters booking themselves, instructors with availability and their own rates, aircraft billed by the hour, and an invoice at the end of every flight. AerScheduler is built for that day, and we help you move across and get set up rather than handing you a login and wishing you luck.",
+    angles: {
+      scheduling: {
+        note: "Airplane Manager schedules trips for pilots, passengers and owners. Here students and renters book their own aircraft and instructor under rules you set.",
+      },
+      billing: {
+        note: "Airplane Manager does not publish billing the person who flew by the hour. Here every flight ends in an invoice, drafted from the meters.",
+      },
+      maintenance: {
+        title: "Maintenance\nand AD tracking",
+        body: "Every inspection counts down by tach, Hobbs or calendar month, and an overdue annual grounds the aircraft until it is signed off. Airworthiness directives are tracked on the airframe and on each component, from a library of every AD published since 1995.",
+      },
+    },
     reasons: [
       "Your schedule is driven by students and renters, not by trip requests",
       "Instructors need availability, pairing and their own rates",
@@ -733,47 +936,61 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
         "Who it is built for",
         "Flight schools, flying clubs and aircraft rental operations.",
         "Corporate flight departments and private jet operations",
+        "Buying it",
       ],
-      ["Pricing", PRICE_ROW_OURS, "Monthly plans by aircraft count"],
+      ["Pricing", PRICE_ROW_OURS, "Monthly plans by aircraft count", "Buying it"],
       [
         "The people on the system",
         "Students, instructors, renters, dispatchers, technicians and office staff, each with their own permissions.",
         "Pilots, passengers, owners and schedulers",
+        "Running the day",
       ],
       [
         "Self-booking",
         "Approved students and renters book their own aircraft and instructor within rules you set.",
         "Not published",
+        "Running the day",
       ],
       [
         "Instructors",
         "Weekly availability, student pairing, and dual and ground rates that flow into the invoice.",
         "Not published",
+        "Running the day",
+      ],
+      [
+        "Mobile apps",
+        "Native iOS and Android apps for the whole team. Book, dispatch and close out from the ramp.",
+        "Mobile access",
+        "Running the day",
       ],
       [
         "Closing out a flight",
         "Ramp in with Hobbs, tach and fuel, and the invoice drafts from the rates on the tail.",
         "Not published",
+        "Money",
       ],
       [
         "Billing the renter",
         "Stripe cards and ACH, account balances, and dues for club members.",
         "Not published",
+        "Money",
       ],
       [
-        "Maintenance",
-        "Squawks, inspections with server-computed due dates, and grounding that blocks the board.",
+        "Inspections",
+        "Tach, Hobbs and calendar-month countdowns. An overdue inspection grounds the aircraft.",
         "Not published",
+        "Maintenance",
       ],
       [
-        "Mobile",
-        "Native iOS and Android apps for the whole team. Book, dispatch and close out from the ramp.",
-        "Mobile access",
+        "Work orders",
+        "On your own fleet and on customers' aircraft, with the owner approving each finding online and paying the invoice.",
+        "Not published",
+        "Maintenance",
       ],
     ],
     disclaimer: `Airplane Manager is a trademark of its owner and is built for a different kind of operation, which is the point of this page rather than a criticism. Rows describe what each product publishes; "not published" means we could not confirm it, not that it is absent.`,
     proofsTitle: "What a training operation needs that a jet schedule does not",
-    proofs: [PROOF_REALTIME, PROOF_CLOSE_OUT, PROOF_SPLIT, PROOF_MAINTENANCE, PROOF_SIMS_FREE],
+    proofs: [PROOF_CLOSE_OUT, PROOF_SPLIT, PROOF_SIMS_FREE],
     notFitTitle: "When we may not be the right fit",
     notFit: [
       "You run a corporate flight department and need passenger manifests, catering and trip requests. Airplane Manager is built for that and we are not",
@@ -785,23 +1002,53 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
   /* ---------------------------------------------------------------- */
   /* BookOurPlane                                                      */
   /* Facts from bookourplane.com/features and /about, checked          */
-  /* 2026-08-18: free since 2004, unlimited members, aircraft and      */
-  /* bookings, six member roles, instructor availability, club and     */
-  /* aircraft messaging, file archive, member directory, maintenance   */
-  /* scheduling, iCalendar, METAR/TAF, mobile-friendly web. Their own  */
-  /* site states invoicing and payments are NOT included and lists     */
-  /* payments and logbooks as possible future paid options.            */
+  /* 2026-08-18, rechecked 2026-10-16: "100% Free"; unlimited users,   */
+  /* aircraft and bookings; six member roles; instructor availability; */
+  /* aircraft messages that can ground an aircraft; club messages; a   */
+  /* file archive; scheduled maintenance; a member directory;          */
+  /* iCalendar; METAR/TAF. "You do not need to download an app" (an    */
+  /* HTML5 website). It lists payments, statistics and logbooks as     */
+  /* possible future paid options, so invoicing and payments are not   */
+  /* included today.                                                   */
   /* ---------------------------------------------------------------- */
   bookourplane: {
     slug: "bookourplane",
     name: "BookOurPlane",
     navLabel: "vs BookOurPlane",
     seoTitle: "AerScheduler vs BookOurPlane",
-    seoDescription: `BookOurPlane is a free aircraft booking calendar for flying clubs. AerScheduler adds the money and the maintenance: invoicing, dues, inspection due dates and a native app, at $${PRICE_PER_AIRCRAFT}/mo per aircraft.`,
+    seoDescription: `BookOurPlane is a free aircraft booking calendar for flying clubs. AerScheduler adds the money and the maintenance: invoicing, dues, inspection due dates, AD tracking and native iOS and Android apps, at $${PRICE_PER_AIRCRAFT}/mo per aircraft.`,
     ogDescription:
-      "Free booking calendar versus running the money and the maintenance too.",
+      "A free booking calendar versus running the club's money and maintenance too.",
     heroHeadline: "When your club outgrows a free booking calendar",
+    heroSubhead: `BookOurPlane is a free calendar, and its own site says payments are not included. AerScheduler bills each flight from the Hobbs, collects monthly dues, tracks inspections and ADs, and comes as an app on the App Store and Google Play, at $${PRICE_PER_AIRCRAFT} per aircraft a month.`,
+    heroVisual: "app",
+    phoneTitle: "What BookOurPlane includes",
+    phoneTag: "Free",
+    phoneLines: [
+      ["Price", "Free, for any number of members and aircraft"],
+      ["On a phone", "The website; there is no app to download"],
+      ["Billing flights", "Not included; payments are a possible future option"],
+      ["Member dues", "Not included"],
+    ],
     intro: "BookOurPlane has given flying clubs a free calendar since 2004, and if a calendar is genuinely all your club needs then keep it. Clubs move when the money starts costing somebody their evenings: billing the flight from Hobbs, chasing monthly dues, and knowing an aircraft is not overdue an inspection before a member takes it. We help move your roster and set the club up, and the first 14 days cost nothing.",
+    angles: {
+      scheduling: {
+        note: "Both have member roles and instructor availability. Here members book from a native app and get a push notification when the schedule changes.",
+      },
+      billing: {
+        title: "Billing\nand dues",
+        body: "Hobbs and tach go in at ramp-in and the invoice is built from your rates. Monthly dues bill themselves, and members pay by card, ACH or their account balance.",
+        note: "BookOurPlane's site lists payments as a possible future option. Here the flight is billed the moment it is closed out.",
+      },
+      maintenance: {
+        title: "Maintenance\nand AD tracking",
+        body: "Every inspection counts down by tach, Hobbs or calendar month, and an overdue annual grounds the aircraft until it is signed off. Airworthiness directives are tracked on the airframe and on each component, from a library of every AD published since 1995.",
+        note: "In BookOurPlane an admin schedules maintenance and can ground an aircraft with a message. Here inspections count down and ground the aircraft on their own.",
+      },
+      reporting: {
+        note: "BookOurPlane lists statistics as a possible future option. Here 21 reports come with every plan.",
+      },
+    },
     reasons: [
       "Your treasurer is chasing dues and flight time in a spreadsheet",
       "You want the flight billed from Hobbs the moment it is closed out, not typed up later",
@@ -809,56 +1056,65 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       "Members would rather open an app than a mobile website",
     ],
     rows: [
-      ["Price", PRICE_ROW_OURS, "Free"],
+      ["Price", PRICE_ROW_OURS, "Free", "Buying it"],
       [
         "Booking",
         "Lane views across aircraft, simulators and rooms, with conflict-aware booking.",
         "Aircraft booking with member roles and instructor availability",
+        "Running the day",
+      ],
+      [
+        "Mobile apps",
+        "Native iOS and Android apps for the whole club.",
+        "Mobile-friendly website; no app to download",
+        "Running the day",
       ],
       [
         "Invoicing the flight",
         "Ramp in with Hobbs, tach and fuel, and the invoice drafts itself from the rates on the tail.",
         "Not included. Their site lists payments as a possible future option",
+        "Money",
       ],
       [
         "Member dues",
         "Membership tiers, joining fees and recurring dues, billed automatically with prorated first periods.",
         "Not included",
+        "Money",
       ],
       [
         "Taking payment",
-        "Stripe cards and ACH, account balances and auto-refill.",
+        "Stripe cards and ACH, and account balances.",
         "Not included",
-      ],
-      [
-        "Maintenance",
-        "Squawks, inspections with server-computed due dates, and grounding that blocks the board.",
-        "Maintenance scheduling",
+        "Money",
       ],
       [
         "Several people on one flight",
         "Split per head, by logged time, or in set shares. One invoice each.",
         "Not published",
+        "Money",
       ],
       [
-        "Multi-day trips",
-        "One reservation across nights, with a per-night minimum set per tail.",
+        "Inspections",
+        "Tach, Hobbs and calendar-month countdowns. An overdue inspection grounds the aircraft.",
+        "Maintenance scheduling, and a grounding message",
+        "Maintenance",
+      ],
+      [
+        "Airworthiness directives",
+        "Picked from a library of every AD published since 1995, updated daily, and tracked on the airframe and each component.",
         "Not published",
-      ],
-      [
-        "Mobile",
-        "Native iOS and Android apps for the whole club.",
-        "Mobile-friendly website",
+        "Maintenance",
       ],
       [
         "Integrations",
         "Stripe, Google Calendar and QuickBooks Online, plus a public REST API on the Enterprise plan.",
         "iCalendar feed",
+        "Connecting",
       ],
     ],
     disclaimer: `BookOurPlane is a trademark of its owner and has served flying clubs for over twenty years at no charge. Rows describe what each product publishes, including what BookOurPlane itself states is not included; "not published" means we could not confirm it, not that it is absent.`,
     proofsTitle: "What you get for the twenty dollars",
-    proofs: [PROOF_REALTIME, PROOF_CLOSE_OUT, PROOF_MAINTENANCE, PROOF_SPLIT, PROOF_MULTI_DAY],
+    proofs: [PROOF_CLOSE_OUT, PROOF_SPLIT, PROOF_MULTI_DAY],
     notFitTitle: "When you should stay on BookOurPlane",
     notFit: [
       "Your club shares one or two aircraft, settles up informally, and a calendar is genuinely all you need. Free is hard to argue with",
@@ -924,11 +1180,11 @@ export const COMPETITOR_FAQS: Record<
   "flight-circle": [
     {
       q: "How is AerScheduler different from Flight Circle?",
-      a: "Both run a flight school's schedule. The differences schools tell us about are how quickly you can start, what it costs as you add aircraft, and whether dispatch, billing and maintenance are one system or three.",
+      a: "Both run a flight school's schedule, billing and maintenance. AerScheduler has native iOS and Android apps where Flight Circle is a web app on the home screen, any number of people can share a booking with an invoice each, work orders run on customers' aircraft as well as your own, and ADs come from a library instead of being typed in.",
     },
     {
-      q: `What does AerScheduler cost?`,
-      a: `$${PRICE_PER_AIRCRAFT} per aircraft per month. Every user is included, and simulators and classrooms never appear on the bill.`,
+      q: "Is AerScheduler cheaper than Flight Circle?",
+      a: `No. Flight Circle publishes $10 per aircraft or simulator a month. AerScheduler is $${PRICE_PER_AIRCRAFT} per aircraft, with simulators and classrooms free and every user included. Schools move for the apps, the work orders and the billing, not the price.`,
     },
     {
       q: "Can I try it before talking to anyone?",

@@ -30,7 +30,7 @@ export function PriceQuote({
 }: {
   competitor: string;
   /** What the other product sells, one line each (e.g. its hubs). Optional. */
-  theirLines?: string[];
+  theirLines?: (string | [label: string, note: string])[];
   /** What it publishes about the price. */
   theirTotal: string;
   /** A tag on its panel, only when the record supports one ("Quote on request"). */
@@ -51,12 +51,16 @@ export function PriceQuote({
               <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-black/35">Price</p>
               <p className="mt-1 text-[15px] text-black/60">{theirTotal}</p>
             </div>
-            {(theirLines ?? []).map((line) => (
-              <div key={line} className="flex items-center justify-between border-b border-black/[0.05] px-5 py-3">
-                <span className="text-black/55">{line}</span>
-                <span className="text-black/30">Quote</span>
-              </div>
-            ))}
+            {/* A bare line is quoted separately; a pair carries its own note ("Add-on"). */}
+            {(theirLines ?? []).map((line) => {
+              const [label, note] = typeof line === "string" ? [line, "Quote"] : line;
+              return (
+                <div key={label} className="flex items-center justify-between gap-4 border-b border-black/[0.05] px-5 py-3">
+                  <span className="text-black/55">{label}</span>
+                  <span className="text-right text-black/30">{note}</span>
+                </div>
+              );
+            })}
             <div className="h-28" />
           </div>
         </Panel>

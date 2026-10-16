@@ -11,6 +11,7 @@ import {
   ShortQuote,
   TESTIMONIALS,
 } from "@/components/landing/home-blocks";
+import { AppCompare } from "@/components/landing/app-compare";
 import { PriceQuote } from "@/components/landing/price-quote";
 import { STATUS } from "@/components/landing/product-tokens";
 import { WorkOrdersComposite } from "@/components/landing/work-orders-composite";
@@ -41,8 +42,10 @@ import { DEMO_URL, PRICE_PER_AIRCRAFT, SIGNUP_URL, SITE_NAME, TRIAL_DAYS } from 
  * layouts, and each competitor entry re-angles them. Order, and why:
  *
  * 1. Hero: split, not the home page's centred one. The headline and buttons on
- *    the left; on the right the price card (`PriceQuote`), because the price is
- *    the comparison most of these products lose.
+ *    the left; on the right the price card (`PriceQuote`) where our price wins,
+ *    or our app against theirs (`AppCompare`, `heroVisual: "app"`) where it does
+ *    not (Flight Circle publishes $10 an aircraft). The app picture's tag
+ *    and title come from the entry (`phoneTag`, `phoneTitle`).
  * 2. Why schools move, plus the customer quote, in the second screen, which
  *    about half of visitors reach.
  * 3. The side-by-side table, grouped, while the visitor is still comparing.
@@ -209,12 +212,20 @@ export function ComparePage({ competitor }: { competitor: Competitor }) {
               </p>
             </div>
             <div className="animate-fade-up-delay-3 md:min-h-[540px]">
-              <PriceQuote
-                competitor={competitor.name}
-                theirLines={competitor.priceLines}
-                theirTotal={theirPrice(competitor)}
-                theirTag={/quote/i.test(theirPrice(competitor)) ? "Quote on request" : undefined}
-              />
+              {competitor.heroVisual === "app" ? (
+                <AppCompare
+                  title={competitor.phoneTitle ?? `${competitor.name} on a phone`}
+                  lines={competitor.phoneLines ?? []}
+                  tag={competitor.phoneTag}
+                />
+              ) : (
+                <PriceQuote
+                  competitor={competitor.name}
+                  theirLines={competitor.priceLines}
+                  theirTotal={theirPrice(competitor)}
+                  theirTag={/quote/i.test(theirPrice(competitor)) ? "Quote on request" : undefined}
+                />
+              )}
             </div>
           </div>
         </div>
