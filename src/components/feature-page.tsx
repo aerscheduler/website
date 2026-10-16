@@ -172,8 +172,8 @@ export function FeaturePage({ feature }: { feature: Feature }) {
               </Button>
             </div>
             <p className="mt-4 text-sm text-muted-foreground">
-              ${PRICE_PER_AIRCRAFT}/aircraft/mo · {TRIAL_DAYS}-day trial · No credit
-              card · No sales call
+              ${PRICE_PER_AIRCRAFT}/aircraft/mo · {TRIAL_DAYS}-day free trial · Cancel anytime · No
+              sales call
             </p>
           </div>
 
