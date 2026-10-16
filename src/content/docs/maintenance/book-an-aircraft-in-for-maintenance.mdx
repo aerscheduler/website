@@ -1,8 +1,9 @@
 <Summary>
 Start a booking, set the type to **Maintenance**, pick the aircraft and the window, and
-save. Nobody is assigned to it, it blocks the whole window on the dispatch board, and it is
-never invoiced. To book a job, pick it under **Work order**: the technicians, the work and the
-bill live on the job.
+save. It blocks the whole window on the dispatch board and is never invoiced. Pick the
+**Technicians** doing the work so it goes on their calendars. To book a job, pick it under
+**Work order**: the work and the bill live on the job, and its technicians fill in the
+booking's when you have not picked any.
 </Summary>
 
 <Roles>Owners, Admins, Dispatchers, Technicians</Roles>
@@ -24,22 +25,32 @@ bill live on the job.
     Book the whole time the aircraft will be unavailable, including the ferry out and back
     if it is going to another field.
   </Step>
-  <Step n={4} title="Say what it is for">
-    If you open work orders, choose the job under **Work order** (below). Otherwise put what is
-    being done in the notes: with nobody to assign and no job, they are the only place the
-    shift on the other end can read what this block is for.
+  <Step n={4} title="Say what it is for and who is doing it">
+    If you open work orders, choose the job under **Work order** (below). Pick who is doing the
+    work under **Technicians**. Otherwise put what is being done in the notes: without a job,
+    they are the only place the shift on the other end can read what this block is for.
   </Step>
   <Step n={5} title="Save">
     The aircraft is blocked for the whole window on the dispatch board.
   </Step>
 </Steps>
 
-## Nobody can be assigned to it
+## Technicians, not a crew
 
-A maintenance booking carries no people by design. Try to add one and it is refused: a
-maintenance booking cannot have anybody assigned to it, because it takes the aircraft off
-the line rather than putting somebody in it. The technicians doing the work go on the work
-order the booking holds.
+A maintenance booking has no instructor, student or renter: it takes the aircraft off the
+line rather than putting somebody in it, so nobody flies, pays or signs off on it. What it
+can have is **Technicians**, the people doing the work.
+
+- **Only people with the technician role** can be picked. Give someone the role first if
+  they are missing from the list.
+- **They are told.** Each technician newly put on the booking gets a notification with the
+  aircraft and the window, unless they put themselves on it.
+- **A job fills them in.** Pick a work order while **Technicians** is still empty and the
+  job's technicians are copied over. Linking a job to a booking from the job's page does the
+  same, as long as the booking has no technicians yet. A booking someone staffed by hand is
+  never overwritten, and taking people off the job later leaves the booking alone.
+- **Changing the type clears them.** Turn a maintenance booking into any other type and its
+  technicians come off it.
 
 ## Book a customer's aircraft in for a job
 
@@ -49,8 +60,8 @@ A maintenance booking holds the aircraft and the hangar for a work order. The jo
 is doing the work, what is being done and the bill; the booking carries only the time.
 
 - **Link the job from the booking.** On a Maintenance booking, **Work order** lists the open
-  jobs on that aircraft. Pick one, or choose **Open a new work order** and add its
-  **Technicians**: the job opens with the booking, with your notes as its request, at
+  jobs on that aircraft. Pick one, or choose **Open a new work order**: the job opens with the
+  booking and its **Technicians**, with your notes as its request, at
   **Scheduled** (or **Aircraft received** for a booking that has already started). A new job on
   a customer's aircraft at either stage emails its owners straight away. A repeating booking
   cannot hold a job: one job is one visit.
@@ -81,16 +92,13 @@ aircraft gets to the shop and back.
 Closing out a maintenance booking never produces an invoice, whatever rates the aircraft
 carries. Shop time is not a rental.
 
-## Only the person who booked it sees it on their own calendar
+## Whose calendar it is on
 
-Personal calendars are built from who is assigned to a booking, and a maintenance booking has
-nobody assigned. The person who created it sees it on their own calendar as a special case.
-
-<Callout type="warning">
-A second technician covering the shift will not see it on their calendar at all. They have
-to look at the dispatch board, where it blocks the lane in the normal way, or at the
-aircraft's own schedule.
-</Callout>
+A maintenance booking is on the personal calendar of the person who booked it and of every
+technician on it, and **Only mine** in the app keeps it for them. Anyone else sees it on the
+dispatch board, where it blocks the lane in the normal way, or on the aircraft's own
+schedule. To put a second technician covering the shift on it, add them under
+**Technicians**.
 
 ## Which roles can book maintenance
 

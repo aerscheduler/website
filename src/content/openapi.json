@@ -7331,6 +7331,14 @@
                     "example": "https://meet.google.com/abc-defg-hij",
                     "description": "A video call link for the booking, https only. A bare `zoom.us/j/123` gets `https://` added. A `ground` booking with a link (or `meeting.create`) needs no room."
                   },
+                  "technicianOrgUserIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "maxItems": 20,
+                    "description": "`maintenance` only: the mechanics on the block, as organization-user ids holding the technician role (at most 20). They see it on their own calendar and are told. Any other type refuses a non-empty list."
+                  },
                   "meeting": {
                     "type": "object",
                     "properties": {
@@ -7622,6 +7630,14 @@
                     ],
                     "maxLength": 500,
                     "description": "Set, replace, or (with `null`) clear the video call link. Left out, the link is kept."
+                  },
+                  "technicianOrgUserIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "maxItems": 20,
+                    "description": "`maintenance` only: the whole list of mechanics. Left out, they are kept; `[]` clears them. Changing the booking to another type clears them. Mechanics newly added are told."
                   },
                   "meeting": {
                     "type": "object",
@@ -25156,7 +25172,7 @@
                       "integer",
                       "null"
                     ],
-                    "description": "A maintenance booking on the same aircraft that holds the hangar slot."
+                    "description": "A maintenance booking on the same aircraft that holds the hangar slot. A booking with no mechanics of its own takes the job's technicians."
                   },
                   "technicianOrgUserIds": {
                     "type": "array",
@@ -25509,7 +25525,7 @@
                       "integer",
                       "null"
                     ],
-                    "description": "A maintenance booking on the same aircraft that holds the hangar slot."
+                    "description": "A maintenance booking on the same aircraft that holds the hangar slot. A booking with no mechanics of its own takes the job's technicians."
                   },
                   "technicianOrgUserIds": {
                     "type": "array",
@@ -40877,6 +40893,35 @@
               }
             },
             "additionalProperties": true
+          },
+          "technicians": {
+            "type": "array",
+            "description": "The mechanics on a `maintenance` booking: whose calendar it is on. Not personnel, which is who flies, pays and signs off. Empty on every other type. Linking a work order to a booking with none fills them from the job's technicians.",
+            "items": {
+              "type": "object",
+              "description": "A mechanic.",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "description": "Organization-user id."
+                },
+                "user": {
+                  "type": "object",
+                  "description": "The person.",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Name."
+                    }
+                  },
+                  "additionalProperties": true
+                }
+              },
+              "additionalProperties": true
+            }
           },
           "collectionStyle": {
             "type": "string",

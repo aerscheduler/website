@@ -15,7 +15,7 @@ invoice. Picking the wrong one is the most common reason a booking is refused.
 | Guest | Aircraft | 1 guest, plus an instructor if you want one |
 | Ground | Room | Up to 2 instructors and 12 students |
 | Sim | Simulator | Up to 2 instructors and 6 students |
-| Maintenance | Aircraft | Nobody at all |
+| Maintenance | Aircraft | No crew; technicians optional |
 
 <Screenshot id="reservation-form-dispatch" />
 
@@ -87,23 +87,24 @@ aircraft, also gets the short **Review times** close-out. There is nothing to re
 
 ## Maintenance
 
-Maintenance blocks the aircraft for the whole window and carries nobody at all. Trying to
-put a person on one is refused:
+Maintenance blocks the aircraft for the whole window and carries no crew: no instructor,
+student or renter, because nobody flies or pays for it. Trying to put one on is refused:
 
 > A maintenance booking can't have anyone assigned to it. It takes the aircraft off the line.
 
 Maintenance is also the one exception to grounding. A grounded aircraft can be booked for
 maintenance and nothing else, because the booking exists to get it back in service.
 
-Who does the work goes on the job, not the booking. Owners, admins and technicians see a
-**Work order** field on a maintenance booking: link an open work order on that aircraft, or
-choose **Open a new work order** and pick its technicians. The booking's notes become the
-job's request. The booking then shows the job, its stage and its technicians. See
-[Run a work order](/docs/maintenance/run-a-work-order).
+Who does the work goes under **Technicians** on the booking: people with the technician
+role, who get it on their calendar and are told. Owners, admins and technicians also see a
+**Work order** field: link an open work order on that aircraft, or choose **Open a new work
+order**, which opens with the booking's technicians. Picking a job while **Technicians** is
+empty copies the job's technicians onto the booking. The booking's notes become a new job's
+request. See [Book an aircraft in for maintenance](/docs/maintenance/book-an-aircraft-in-for-maintenance)
+and [Run a work order](/docs/maintenance/run-a-work-order).
 
-Because a maintenance booking has no personnel, a technician's own maintenance still
-appears on their <Where app="web">You &rarr; Schedule</Where> page: it is matched by who
-created it.
+A maintenance booking appears on <Where app="web">You &rarr; Schedule</Where> for the person
+who created it and for each technician on it.
 
 ## What each type books
 
