@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
-import { Check, ChevronRight, Clock } from "lucide-react";
+import Link from "next/link";
+import { Check, ChevronRight, Clock, PlayCircle } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/button";
 import { JsonLd } from "@/components/json-ld";
+import { PricingBand, ShortQuote, TESTIMONIALS } from "@/components/landing/home-blocks";
+import { PriceCard } from "@/components/landing/price-quote";
+import { Reveal, RevealGroup } from "@/components/reveal";
 import { faqJsonLd, PRICING_FAQS } from "@/lib/seo";
 import {
   BOOK_DEMO_PATH,
+  DEMO_URL,
   ENTERPRISE_FEATURES,
   PRICE_PER_AIRCRAFT,
   SIGNUP_URL,
@@ -23,57 +28,65 @@ export const metadata: Metadata = {
   },
 };
 
-/**
- * What the per-aircraft price buys. Everything here must be live TODAY, this is the
- * page a prospect checks a claim against, so anything half-built belongs on a feature
- * page with its own caveats, not in this list.
+/*
+ * The pricing page, rebuilt 2026-10-16 in the home page's style (it was two
+ * dense checklist cards). Order: the price, worked out live from the fleet
+ * (`PriceCard`); what you do not pay; everything the price covers; how other
+ * products price, linking to each comparison; Enterprise; the questions; the
+ * closing band with the customer quote.
+ *
+ * Everything listed here must be live TODAY: this is the page a prospect checks
+ * a claim against, so anything half-built belongs on a feature page with its
+ * own caveats, not in these lists.
  */
-const INCLUDED = [
-  "Unlimited instructors, students, and renters",
-  "Aircraft, simulator, and classroom scheduling",
-  "Student self-booking with conflict checks",
-  "Training records & syllabi, Part 61 and 141",
-  "Invoices, online payments, and member accounts",
-  "Split billing across everyone on a flight",
-  "Club memberships and recurring dues",
-  "Maintenance squawks and AVIATES inspections",
-  "Reports, dashboards, and an audit log",
-  "QuickBooks Online and Google Calendar sync",
-  "Native iOS and Android apps + web console",
-  "Proration when fleet size changes",
+
+/** What a school does not pay for, in the home page's audience-strip shape. */
+const NOT_CHARGED: { title: string; body: string }[] = [
+  { title: "No per-user fees", body: "Every instructor, student, renter and member is included." },
+  { title: "No charge for simulators", body: "Simulators and classrooms are on the board and never on the bill." },
+  { title: "No setup fee", body: "No contract and no onboarding call. Set the school up yourself." },
+  { title: "No add-on modules", body: "Scheduling, billing, maintenance, work orders and reporting in every plan." },
 ];
 
-/** Named on the standard card so the one exclusion is visible before the Enterprise card. */
-const NOT_INCLUDED = "API access is on Enterprise.";
-
-const FEATURES = [
+const INCLUDED: { title: string; items: string[] }[] = [
   {
-    title: "Scheduling & dispatch",
+    title: "Scheduling and dispatch",
     items: [
-      "Lane and week views",
-      "Conflict detection",
-      "Student self-booking",
-      "Drag to reschedule",
+      "Only mutually free times offered",
+      "Currency and checkouts checked at booking",
+      "Student and renter self-booking",
+      "Standby lists and suggested slots",
       "Multi-day and overnight rentals",
-      "Ramp in / out and close-out",
+      "Ramp out, ramp in and close-out",
     ],
   },
   {
-    title: "People & compliance",
+    title: "Billing",
     items: [
-      "Roles & invite codes",
-      "Documents & currencies",
-      "Instructor availability",
-      "Approved aircraft per pilot",
-      "Join requests",
-      "Airport time, not device time",
+      "Invoices drafted at close-out",
+      "Account ledger and prepaid balances",
+      "Split a booking between everyone on it",
+      "Memberships, joining fees and dues",
+      "Cards on file, ACH and autopay",
+      "Per-instructor rates",
+    ],
+  },
+  {
+    title: "Maintenance and work orders",
+    items: [
+      "Inspections on tach, Hobbs or calendar",
+      "Squawks that ground the aircraft",
+      "ADs from a library published since 1995",
+      "Life-limited components",
+      "Work orders on customers' aircraft",
+      "Owner approvals and job invoices",
     ],
   },
   {
     title: "Training",
     items: [
-      "Private, Instrument, Commercial, CFI syllabi",
-      "Stages, lessons, and graded tasks",
+      "Part 61 and Part 141 syllabi",
+      "Stages, lessons and graded tasks",
       "Hour requirements tracked separately",
       "Endorsements from AC 61-65K",
       "Grade offline at the aircraft",
@@ -81,206 +94,291 @@ const FEATURES = [
     ],
   },
   {
-    title: "Money",
+    title: "People and compliance",
     items: [
-      "Flight → invoice or account ledger",
-      "Split a booking between everyone on it",
-      "Memberships, joining fees, and dues",
-      "Auto-refill, late fees, and statements",
-      "Cards on file and autopay",
-      "Instruction rates, per instructor",
+      "Roles and invite codes",
+      "Documents, medicals and flight reviews",
+      "Instructor availability",
+      "Approved aircraft per pilot",
+      "Airport time, not device time",
+      "iOS and Android apps for everyone",
     ],
   },
   {
-    title: "Fleet & maintenance",
+    title: "Reporting and admin",
     items: [
-      "Squawks with triage and grounding",
-      "AVIATES inspections on hours or dates",
-      "Hobbs and tach meters",
-      "Grounded aircraft off the board",
-      "Simulators and classrooms",
-      "Locations and multiple fields",
-    ],
-  },
-  {
-    title: "Reporting & admin",
-    items: [
-      "Utilization, revenue, and instructor reports",
-      "Scheduled reports by email",
-      "AR: who owes and how much",
+      "21 reports, filtered and grouped",
+      "Saved views emailed on a schedule",
+      "Who owes what, and since when",
       "Audit log of who changed what",
-      "Announcements to your members",
+      "QuickBooks Online and Google Calendar",
       "Export any table to CSV",
     ],
   },
 ];
 
+/**
+ * How other products price, from the facts recorded in `lib/competitors.ts`
+ * (each checked against the product's own site). Only products whose price is
+ * a quote or a usage fee are listed: this row is about readable pricing.
+ */
+const OTHERS: { name: string; how: string; href: string }[] = [
+  {
+    name: "Flight Schedule Pro",
+    how: "A Scheduling Hub with Billing, Training, Maintenance and Reporting Hubs added, by custom quote.",
+    href: "/compare/flight-schedule-pro",
+  },
+  {
+    name: "FlightLogger",
+    how: "A platform package plus a fee for every active student and operational flight, by quote.",
+    href: "/compare/flightlogger",
+  },
+  {
+    name: "Talon Systems",
+    how: "ETA, RMS and Talon Mobile as separate products, priced per organization after a demo.",
+    href: "/compare/talon-systems",
+  },
+];
+
 export default function PricingPage() {
+  const quote = TESTIMONIALS[0];
+
   return (
-    <>
+    <div className="bg-white text-[#0b0b0d]">
       <JsonLd data={faqJsonLd(PRICING_FAQS)} />
-      <section className="relative overflow-hidden border-b border-border">
-        <div className="hero-mesh pointer-events-none absolute inset-0 opacity-70" aria-hidden />
-        <div className="pointer-events-none absolute inset-0 grid-lines opacity-30" aria-hidden />
 
-        <div className="relative mx-auto max-w-6xl px-4 pb-8 pt-12 sm:px-6 lg:pt-16">
+      {/* Hero: the claim on the left, the price worked out live on the right. */}
+      <section className="relative isolate overflow-hidden">
+        <div
+          className="grid-lines pointer-events-none absolute inset-x-0 top-0 h-[720px] opacity-60 [mask-image:linear-gradient(to_bottom,black_40%,transparent)]"
+          aria-hidden
+        />
+        <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-8 sm:px-6 lg:pb-24 lg:pt-10">
           <Breadcrumbs items={[{ name: "Pricing", href: "/pricing" }]} />
-          <h1 className="mt-6 max-w-2xl text-4xl font-semibold tracking-tight text-brand-surface sm:text-5xl">
-            Flight school software pricing: ${PRICE_PER_AIRCRAFT}/mo per aircraft
-          </h1>
-          <p className="mt-4 max-w-xl text-lg leading-relaxed text-muted-foreground">
-            One clear number for the aircraft you fly, not seats and not modules.
-            Bigger operations that need our API and their own integrations get an
-            Enterprise plan, quoted per account.
-          </p>
-        </div>
-
-        <div className="relative mx-auto grid max-w-6xl gap-4 px-4 pb-20 sm:px-6 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="rounded-2xl border border-border bg-white p-8 shadow-lg">
-            <div className="flex items-center justify-between gap-3">
-              <p className="text-sm font-semibold text-primary">Standard</p>
-              <span className="rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary">
-                Self-serve
-              </span>
+          <div className="mt-10 grid items-center gap-14 lg:mt-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
+            <div>
+              <h1 className="animate-fade-up">
+                <span className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-3.5 py-1.5 text-xs font-semibold tracking-tight text-[#1b1c1f] shadow-sm sm:text-sm">
+                  <span className="size-1.5 shrink-0 rounded-full bg-primary" aria-hidden />
+                  Flight school software pricing
+                </span>
+                <span className="sr-only">: </span>
+                <span className="mt-6 block text-balance text-[2.6rem] font-semibold leading-[1.02] tracking-[-0.035em] sm:text-6xl lg:text-[4rem]">
+                  ${PRICE_PER_AIRCRAFT} per aircraft a month, with every user included
+                </span>
+              </h1>
+              <p className="animate-fade-up-delay-2 mt-6 max-w-xl text-lg leading-relaxed text-black/55 sm:text-xl">
+                Every module is in the plan. Simulators and classrooms are free,
+                there is no setup fee and no contract, and a {TRIAL_DAYS}-day
+                free trial starts today.
+              </p>
+              <div className="animate-fade-up-delay-3 mt-8 flex flex-wrap items-center gap-3">
+                <Button href={SIGNUP_URL} size="lg">
+                  Start free trial
+                  <ChevronRight className="size-4 opacity-80" />
+                </Button>
+                <Button href={DEMO_URL} size="lg" variant="secondary">
+                  <PlayCircle className="size-4 opacity-80" />
+                  Try the live demo
+                </Button>
+              </div>
+              <p className="animate-fade-up-delay-3 mt-4 text-sm text-black/45">
+                {TRIAL_DAYS}-day free trial · Cancel anytime · No sales call
+              </p>
             </div>
-            <div className="mt-4 flex items-baseline gap-1">
-              <span className="text-5xl font-semibold tracking-tight text-brand-surface tabular-nums">
-                ${PRICE_PER_AIRCRAFT}
-              </span>
-              <span className="text-muted-foreground">/ aircraft / month</span>
+            <div className="animate-fade-up-delay-3 mx-auto w-full max-w-md lg:mx-0 lg:ml-auto">
+              <PriceCard extra={["Simulators and classrooms", "Free"]} />
             </div>
-            <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
-              Simulators and ground-school rooms are free. Start with a{" "}
-              {TRIAL_DAYS}-day free trial. Nothing is charged until it ends. {NOT_INCLUDED}
-            </p>
-            <Button href={SIGNUP_URL} size="lg" className="mt-8">
-              Start free trial
-              <ChevronRight className="size-4 opacity-80" />
-            </Button>
-            <ul className="mt-8 grid gap-3 sm:grid-cols-2">
-              {INCLUDED.map((item) => (
-                <li key={item} className="flex items-start gap-2 text-sm text-foreground">
-                  <Check className="mt-0.5 size-4 shrink-0 text-primary" />
-                  {item}
-                </li>
-              ))}
-            </ul>
           </div>
+        </div>
+      </section>
 
-          <div className="flex flex-col gap-4">
-          {/* Enterprise. Deliberately no number: it is quoted per account, and putting a
-              "from $X" here would be a number we would then have to defend on every call. */}
-          <div className="rounded-2xl border border-border bg-white p-8 shadow-lg">
-            <div className="flex items-center justify-between gap-3">
-              <p className="text-sm font-semibold text-primary">Enterprise</p>
-              <span className="rounded-full bg-brand-surface/10 px-2.5 py-1 text-[11px] font-semibold text-brand-surface">
-                Talk to us
-              </span>
-            </div>
-            <div className="mt-4 flex items-baseline gap-1">
-              <span className="text-3xl font-semibold tracking-tight text-brand-surface">
-                Custom pricing
-              </span>
-            </div>
-            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              For larger fleets and multi-location operations that need our API, their own
-              integrations, and a person to call.
+      {/* What you do not pay, in the home page's audience-strip shape, with the
+          customer quote under it. */}
+      <section aria-labelledby="pricing-not-charged">
+        <div className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:pb-20">
+          <h2
+            id="pricing-not-charged"
+            className="text-[11px] font-semibold uppercase tracking-[0.16em] text-black/40"
+          >
+            What you do not pay for
+          </h2>
+          <RevealGroup className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-0">
+            {NOT_CHARGED.map((item, i) => (
+              <div
+                key={item.title}
+                className={`relative lg:px-6 lg:first:pl-0 ${
+                  i > 0
+                    ? "lg:before:absolute lg:before:inset-y-1 lg:before:left-0 lg:before:w-px lg:before:bg-black/10"
+                    : ""
+                }`}
+              >
+                <h3 className="text-lg font-semibold tracking-tight">{item.title}</h3>
+                <p className="mt-1.5 max-w-[17rem] text-sm leading-relaxed text-black/50">{item.body}</p>
+              </div>
+            ))}
+          </RevealGroup>
+          {quote && <ShortQuote t={quote} />}
+        </div>
+      </section>
+
+      {/* Everything the price covers, in the home page's tinted panel. */}
+      <section aria-labelledby="pricing-included" className="overflow-x-clip px-2 sm:px-4">
+        <div
+          className="mx-auto max-w-[1400px] rounded-[28px] border border-black/[0.05] lg:rounded-[40px]"
+          style={{
+            background:
+              "radial-gradient(60% 50% at 80% 0%, color-mix(in srgb, #3b6fe0 9%, transparent), transparent 70%), #f5f7fa",
+          }}
+        >
+          <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-28">
+            <Reveal className="grid gap-6 md:grid-cols-2 md:gap-16">
+              <h2
+                id="pricing-included"
+                className="text-4xl font-medium leading-[1.05] tracking-[-0.03em] sm:text-5xl lg:text-[3.5rem]"
+              >
+                Everything included
+                <br />
+                at ${PRICE_PER_AIRCRAFT} per aircraft
+              </h2>
+              <p className="text-lg leading-relaxed text-black/60 sm:text-xl md:pt-2">
+                No tiers and no modules to unlock. The only thing on Enterprise is
+                the public API and the work that comes with it.
+              </p>
+            </Reveal>
+            <RevealGroup className="mt-16 grid gap-x-12 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+              {INCLUDED.map((group) => (
+                <div key={group.title} className="border-t border-black/[0.08] pt-6">
+                  <h3 className="text-[15px] font-semibold">{group.title}</h3>
+                  <ul className="mt-4 space-y-2.5">
+                    {group.items.map((item) => (
+                      <li key={item} className="flex items-start gap-2.5 text-[15px] text-black/60">
+                        <Check className="mt-1 size-3.5 shrink-0 text-primary" aria-hidden />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </RevealGroup>
+          </div>
+        </div>
+      </section>
+
+      {/* How other products price, each row linking to its comparison. */}
+      <section aria-labelledby="pricing-others">
+        <div className="mx-auto max-w-7xl px-4 pt-28 sm:px-6 lg:pt-36">
+          <Reveal className="grid gap-6 md:grid-cols-2 md:gap-16">
+            <h2
+              id="pricing-others"
+              className="text-4xl font-medium leading-[1.05] tracking-[-0.03em] sm:text-5xl lg:text-[3.5rem]"
+            >
+              How other flight school
+              <br />
+              software is priced
+            </h2>
+            <p className="text-lg leading-relaxed text-black/60 sm:text-xl md:pt-2">
+              Most of the alternatives quote a price after a demo, or charge for
+              the students you train. Here is what each one publishes about itself.
             </p>
-            {/* Enterprise is quoted per account, so this CTA has always been a
-                conversation. It now opens a calendar instead of a form: a school
-                at this size wants a time and a name, not a reply tomorrow. */}
-            <Button href={BOOK_DEMO_PATH} size="lg" variant="secondary" className="mt-6">
+          </Reveal>
+          <dl className="mt-14">
+            {OTHERS.map((o) => (
+              <div
+                key={o.name}
+                className="grid gap-2 border-t border-black/[0.08] py-6 md:grid-cols-[0.8fr_2fr_auto] md:items-center md:gap-8"
+              >
+                <dt className="text-[15px] font-semibold">{o.name}</dt>
+                <dd className="text-[15px] leading-relaxed text-black/55">{o.how}</dd>
+                <dd>
+                  <Link
+                    href={o.href}
+                    className="inline-flex items-center gap-1.5 text-[15px] text-black/60 hover:text-[#0b0b0d]"
+                  >
+                    Compare <span aria-hidden>→</span>
+                  </Link>
+                </dd>
+              </div>
+            ))}
+            <div className="grid gap-2 border-y border-black/[0.08] py-6 md:grid-cols-[0.8fr_2fr_auto] md:items-center md:gap-8">
+              <dt className="flex items-center gap-2 text-[15px] font-semibold text-primary">
+                <span className="size-1.5 rounded-full bg-primary" aria-hidden />
+                AerScheduler
+              </dt>
+              <dd className="text-[15px] leading-relaxed">
+                ${PRICE_PER_AIRCRAFT} per aircraft a month, on this page, with every module and every user included.
+              </dd>
+              <dd />
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      {/* Enterprise. Deliberately no number: it is quoted per account, and a
+          "from $X" here would be a number to defend on every call. */}
+      <section aria-labelledby="pricing-enterprise">
+        <div className="mx-auto grid max-w-7xl gap-12 px-4 py-28 sm:px-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16 lg:py-36">
+          <Reveal className="lg:sticky lg:top-28 lg:self-start">
+            <h2
+              id="pricing-enterprise"
+              className="text-4xl font-medium leading-[1.05] tracking-[-0.03em] sm:text-5xl"
+            >
+              Enterprise
+              <br />
+              for larger operations
+            </h2>
+            <p className="mt-6 text-lg leading-relaxed text-black/60">
+              For larger fleets and multi-location operations that need our API,
+              their own integrations and a person to call. Tell us your fleet size
+              and what you need to connect, and we come back with a number.
+            </p>
+            {/* Enterprise is quoted per account, so this button opens a calendar:
+                a school at this size wants a time and a name, not a reply tomorrow. */}
+            <Button href={BOOK_DEMO_PATH} size="lg" variant="secondary" className="mt-8">
               Contact sales
               <ChevronRight className="size-4 opacity-80" />
             </Button>
-            <ul className="mt-6 grid gap-3">
-              {ENTERPRISE_FEATURES.map((feature) => (
-                <li key={feature.title} className="flex items-start gap-2 text-sm">
+          </Reveal>
+          <RevealGroup className="grid gap-x-10 gap-y-8 sm:grid-cols-2">
+            {ENTERPRISE_FEATURES.map((feature) => (
+              <div key={feature.title} className="border-t border-black/[0.08] pt-5">
+                <h3 className="flex flex-wrap items-center gap-2 text-[15px] font-semibold">
                   {feature.soon ? (
-                    <Clock className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+                    <Clock className="size-3.5 text-black/40" aria-hidden />
                   ) : (
-                    <Check className="mt-0.5 size-4 shrink-0 text-primary" />
+                    <Check className="size-3.5 text-primary" aria-hidden />
                   )}
-                  <span>
-                    <span className="font-medium text-foreground">{feature.title}</span>
-                    {feature.soon && (
-                      <span className="ml-2 rounded-full border border-border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-                        Coming soon
-                      </span>
-                    )}
-                    <span className="block text-muted-foreground">{feature.body}</span>
-                  </span>
-                </li>
-              ))}
-            </ul>
-            <p className="mt-6 text-xs text-muted-foreground">
-              Tell us your fleet size and what you need to connect to, and we&apos;ll come
-              back with a number.
-            </p>
-          </div>
-
-          <div className="rounded-2xl bg-brand-surface p-8 text-white shadow-lg">
-            <p className="text-sm font-semibold text-sky-300">What you don&apos;t pay</p>
-            <ul className="mt-6 space-y-0 divide-y divide-white/10">
-              {[
-                ["Per-user fees", "Unlimited seats for your whole team"],
-                ["Simulator seats", "Sims & classrooms are free"],
-                ["Setup calls", "Onboard yourself in minutes"],
-                ["Hidden modules", "Scheduling, billing, and maintenance included"],
-              ].map(([title, body]) => (
-                <li key={title} className="py-4 first:pt-0 last:pb-0">
-                  <p className="font-semibold">{title}</p>
-                  <p className="mt-1 text-sm text-white/60">{body}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-[#fafbfc]">
-        <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
-          <h2 className="text-2xl font-semibold tracking-tight text-brand-surface sm:text-3xl">
-            Everything below is included at ${PRICE_PER_AIRCRAFT} per aircraft
-          </h2>
-          <p className="mt-3 max-w-2xl text-muted-foreground">
-            No modules, no tiers, no &ldquo;talk to sales&rdquo; to unlock a screen. Only the
-            API and what comes with it sit on Enterprise.
-          </p>
-          <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {FEATURES.map((group) => (
-              <div key={group.title}>
-                <h3 className="text-sm font-semibold text-foreground">{group.title}</h3>
-                <ul className="mt-4 space-y-2.5">
-                  {group.items.map((item) => (
-                    <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
-                      <Check className="mt-0.5 size-3.5 shrink-0 text-primary" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
+                  {feature.title}
+                  {feature.soon && (
+                    <span className="rounded-full border border-black/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-black/45">
+                      Coming soon
+                    </span>
+                  )}
+                </h3>
+                <p className="mt-1.5 text-[15px] leading-relaxed text-black/55">{feature.body}</p>
               </div>
             ))}
-          </div>
+          </RevealGroup>
         </div>
       </section>
 
-      <section className="border-t border-border bg-white">
-        <div className="mx-auto max-w-3xl px-4 py-20 sm:px-6">
-          <h2 className="text-center text-2xl font-semibold tracking-tight text-brand-surface">
+      <section aria-labelledby="faq">
+        <div className="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:pb-32">
+          <h2 id="faq" className="text-3xl font-medium tracking-[-0.03em] sm:text-4xl">
             Pricing questions
           </h2>
-          <dl className="mt-10 divide-y divide-border">
+          <dl className="mt-8 grid gap-x-14 lg:grid-cols-2">
             {PRICING_FAQS.map((faq) => (
-              <div key={faq.q} className="py-5">
-                <dt className="font-semibold text-foreground">{faq.q}</dt>
-                <dd className="mt-2 text-sm leading-relaxed text-muted-foreground">{faq.a}</dd>
+              <div key={faq.q} className="border-t border-black/[0.08] py-6">
+                <dt className="text-lg font-semibold tracking-tight">{faq.q}</dt>
+                <dd className="mt-2 text-[15px] leading-relaxed text-black/55">{faq.a}</dd>
               </div>
             ))}
           </dl>
         </div>
       </section>
-    </>
+
+      <PricingBand headingId="pricing-close-heading" eyebrow="Start today" />
+    </div>
   );
 }

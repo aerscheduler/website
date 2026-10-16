@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronRight } from "lucide-react";
+import { Check, ChevronRight, PlayCircle } from "lucide-react";
 import { Button } from "@/components/button";
 import { StoreBadges } from "@/components/store-badges";
 import { Reveal, RevealGroup } from "@/components/reveal";
@@ -21,6 +21,8 @@ import {
   WorkOrdersLiveDemo,
 } from "@/components/mocks/living";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { PricingBand, ShortQuote, TESTIMONIALS } from "@/components/landing/home-blocks";
+import { SkyScrim } from "@/components/sky-scrim";
 import { JsonLd } from "@/components/json-ld";
 import {
   FEATURES,
@@ -120,146 +122,126 @@ export function FeaturePage({ feature }: { feature: Feature }) {
 
   const cta = signupUrl(FEATURE_SOURCE[feature.slug]);
   const faqs = landing?.faqs ?? [];
+  const quote = TESTIMONIALS[0];
 
   return (
-    <>
+    <div className="bg-white text-[#0b0b0d]">
       {/* FAQPage only. `Breadcrumbs` emits its own BreadcrumbList, and adding
           one here would ship the page two of them. */}
       {faqs.length > 0 && <JsonLd data={faqJsonLd(faqs)} />}
 
-      {/* ---------------------------------------------------------------- */}
-      {/* Hero                                                             */}
-      {/* ---------------------------------------------------------------- */}
-      <section className="relative overflow-hidden border-b border-border">
-        <div className="hero-mesh pointer-events-none absolute inset-0 opacity-60" aria-hidden />
-        <div className="relative mx-auto max-w-7xl px-4 pb-14 pt-12 sm:px-6 lg:grid lg:grid-cols-[0.95fr_1.15fr] lg:items-center lg:gap-12 lg:pb-20 lg:pt-16">
-          <div>
-            <Breadcrumbs
-              items={[
-                { name: "Features", href: "/features" },
-                { name: feature.navLabel, href: featureHref(feature.slug) },
-              ]}
-            />
-
-            {productModule && !isHub ? (
-              <Link
-                href={featureHref(productModule.hub)}
-                className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
-              >
-                {productModule.title}
-                <ChevronRight className="size-3.5" />
-              </Link>
-            ) : (
-              <p className="mt-6 text-sm font-semibold text-primary">
-                {productModule ? `${productModule.title} module` : feature.eyebrow}
+      {/* Hero: split, the claim on the left and the running preview on the right. */}
+      <section className="relative isolate overflow-hidden">
+        <div
+          className="grid-lines pointer-events-none absolute inset-x-0 top-0 h-[720px] opacity-60 [mask-image:linear-gradient(to_bottom,black_40%,transparent)]"
+          aria-hidden
+        />
+        <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-8 sm:px-6 lg:pb-24 lg:pt-10">
+          <Breadcrumbs
+            items={[
+              { name: "Features", href: "/features" },
+              { name: feature.navLabel, href: featureHref(feature.slug) },
+            ]}
+          />
+          <div className="mt-10 grid items-center gap-14 lg:mt-14 lg:grid-cols-[0.95fr_1.15fr] lg:gap-12">
+            <div>
+              {productModule && !isHub ? (
+                <Link
+                  href={featureHref(productModule.hub)}
+                  className="animate-fade-up inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-3.5 py-1.5 text-xs font-semibold tracking-tight text-[#1b1c1f] shadow-sm hover:border-black/20 sm:text-sm"
+                >
+                  <span className="size-1.5 shrink-0 rounded-full bg-primary" aria-hidden />
+                  {productModule.title}
+                  <ChevronRight className="size-3.5 opacity-60" />
+                </Link>
+              ) : (
+                <p className="animate-fade-up inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-3.5 py-1.5 text-xs font-semibold tracking-tight text-[#1b1c1f] shadow-sm sm:text-sm">
+                  <span className="size-1.5 shrink-0 rounded-full bg-primary" aria-hidden />
+                  {productModule ? `${productModule.title} module` : feature.eyebrow}
+                </p>
+              )}
+              <h1 className="animate-fade-up mt-6 text-balance text-[2.4rem] font-semibold leading-[1.04] tracking-[-0.035em] sm:text-5xl lg:text-[3.6rem]">
+                {landing?.h1 ?? feature.title}
+              </h1>
+              <p className="animate-fade-up-delay-2 mt-6 max-w-xl text-lg leading-relaxed text-black/55 sm:text-xl">
+                {feature.summary}
               </p>
-            )}
-
-            <h1 className="mt-3 max-w-2xl text-4xl font-semibold tracking-tight text-brand-surface sm:text-5xl">
-              {landing?.h1 ?? feature.title}
-            </h1>
-            <p className="mt-4 max-w-xl text-lg leading-relaxed text-muted-foreground">
-              {feature.summary}
-            </p>
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button href={cta} size="lg">
-                Start free trial
-                <ChevronRight className="size-4 opacity-80" />
-              </Button>
-              <Button href={DEMO_URL} variant="secondary" size="lg">
-                See the live demo
-              </Button>
+              <div className="animate-fade-up-delay-3 mt-8 flex flex-wrap items-center gap-3">
+                <Button href={cta} size="lg">
+                  Start free trial
+                  <ChevronRight className="size-4 opacity-80" />
+                </Button>
+                <Button href={DEMO_URL} variant="secondary" size="lg">
+                  <PlayCircle className="size-4 opacity-80" />
+                  Try the live demo
+                </Button>
+              </div>
+              <p className="animate-fade-up-delay-3 mt-4 text-sm text-black/45">
+                ${PRICE_PER_AIRCRAFT}/aircraft/mo · {TRIAL_DAYS}-day free trial · Cancel anytime · No
+                sales call
+              </p>
             </div>
-            <p className="mt-4 text-sm text-muted-foreground">
-              ${PRICE_PER_AIRCRAFT}/aircraft/mo · {TRIAL_DAYS}-day free trial · Cancel anytime · No
-              sales call
-            </p>
-          </div>
-
-          <div className="mt-12 flex min-w-0 justify-center lg:mt-0">
-            <FeatureVisual slug={feature.slug} />
+            <div className="animate-fade-up-delay-3 flex min-w-0 justify-center">
+              <FeatureVisual slug={feature.slug} />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ---------------------------------------------------------------- */}
-      {/* Statement over a photograph                                      */}
-      {/* ---------------------------------------------------------------- */}
+      {/* The statement and its three proofs over the module's photograph (each
+          module carries one, `ModulePhoto` in lib/modules.ts), set as a contained
+          card like the home page's app card, then the customer quote. */}
       {landing && (
-        <section className="relative isolate overflow-hidden bg-brand-surface">
-          <Image
-            src={photo.src}
-            alt={photo.alt}
-            fill
-            sizes="100vw"
-            quality={60}
-            className="object-cover"
-            // Not `priority`: it sits below the fold on every page, and the hero
-            // demo above it is the thing that should win the network.
-          />
-          {/* Two layers rather than one flat tint: the gradient keeps the left
-              edge dark enough for text at any crop, while the right stays light
-              enough that the photograph is still a photograph. */}
-          <div
-            className="absolute inset-0 bg-gradient-to-r from-brand-surface via-brand-surface/75 to-brand-surface/25"
-            aria-hidden
-          />
-          {/* A second, vertical wash. Without it the statement sits on whatever
-              the photograph happens to be doing at that crop, and two of the
-              five have a bright sky exactly where the text lands. */}
-          <div
-            className="absolute inset-0 bg-gradient-to-b from-brand-surface/70 via-transparent to-brand-surface/40"
-            aria-hidden
-          />
-          <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-24">
-            <Reveal>
-              <p className="max-w-3xl text-balance text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl">
-                {landing.statement}
-              </p>
+        <section aria-labelledby="feature-statement">
+          <div className="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:pb-32">
+            <Reveal
+              as="div"
+              className="relative isolate overflow-hidden rounded-[28px] bg-brand-surface shadow-[0_40px_80px_-40px_rgba(16,35,63,0.55)]"
+            >
+              <Image src={photo.src} alt={photo.alt} fill sizes="(min-width: 1280px) 1232px, 100vw" quality={60} className="object-cover" />
+              <SkyScrim />
+              <div className="relative px-6 py-14 sm:px-10 lg:px-14 lg:py-20">
+                <h2
+                  id="feature-statement"
+                  className="max-w-3xl text-balance text-3xl font-semibold leading-[1.1] tracking-[-0.03em] text-white sm:text-5xl"
+                >
+                  {landing.statement}
+                </h2>
+                <dl className="mt-12 grid max-w-4xl gap-x-10 gap-y-6 sm:grid-cols-3">
+                  {landing.proof.map((item) => (
+                    <div key={item.label} className="border-t border-white/15 pt-4">
+                      <dt className="text-lg font-semibold tracking-tight text-white">{item.value}</dt>
+                      <dd className="mt-1 text-sm leading-relaxed text-white/65">{item.label}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
             </Reveal>
-            <RevealGroup className="mt-12 grid max-w-4xl gap-8 border-t border-white/20 pt-8 sm:grid-cols-3">
-              {landing.proof.map((item) => (
-                <div key={item.label}>
-                  <p className="text-balance text-xl font-semibold leading-snug tracking-tight text-white sm:text-2xl">
-                    {item.value}
-                  </p>
-                  <p className="mt-1.5 text-sm leading-snug text-white/65">
-                    {item.label}
-                  </p>
-                </div>
-              ))}
-            </RevealGroup>
+            {quote && <ShortQuote t={quote} />}
           </div>
         </section>
       )}
 
-      {/* ---------------------------------------------------------------- */}
-      {/* Outcomes. Three, short.                                          */}
-      {/* ---------------------------------------------------------------- */}
+      {/* Outcomes: three, numbered, behind faint rules. */}
       {landing && (
-        <section className="bg-white">
-          <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-20">
+        <section aria-labelledby="feature-outcomes">
+          <div className="mx-auto max-w-7xl px-4 pb-24 pt-8 sm:px-6 lg:pb-32">
             <Reveal>
-              <h2 className="max-w-2xl text-3xl font-semibold tracking-tight text-brand-surface sm:text-4xl">
+              <h2
+                id="feature-outcomes"
+                className="max-w-3xl text-4xl font-medium leading-[1.05] tracking-[-0.03em] sm:text-5xl lg:text-[3.5rem]"
+              >
                 {landing.outcomesTitle}
               </h2>
             </Reveal>
-            <RevealGroup className="mt-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+            <RevealGroup className="mt-14 grid gap-x-12 gap-y-10 md:grid-cols-3">
               {landing.outcomes.map((outcome, index) => (
-                <div key={outcome.title}>
-                  <span
-                    className="block text-sm font-semibold tabular-nums text-primary"
-                    aria-hidden
-                  >
+                <div key={outcome.title} className="border-t border-black/[0.08] pt-6">
+                  <p className="text-sm font-semibold tabular-nums text-primary" aria-hidden>
                     {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <p className="mt-3 text-lg font-semibold leading-snug text-brand-surface">
-                    {outcome.title}
                   </p>
-                  <p className="mt-2 leading-relaxed text-muted-foreground">
-                    {outcome.body}
-                  </p>
+                  <h3 className="mt-3 text-xl font-semibold leading-snug tracking-tight">{outcome.title}</h3>
+                  <p className="mt-2 text-[15px] leading-relaxed text-black/55">{outcome.body}</p>
                 </div>
               ))}
             </RevealGroup>
@@ -267,185 +249,154 @@ export function FeaturePage({ feature }: { feature: Feature }) {
         </section>
       )}
 
-      {/* ---------------------------------------------------------------- */}
-      {/* How it works, as a timeline                                      */}
-      {/* ---------------------------------------------------------------- */}
+      {/* How it works, as a timeline inside the home page's tinted panel. */}
       {landing?.steps && landing.steps.length > 0 && (
-        <section className="border-t border-border bg-[#fafbfc]">
-          <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-20">
-            <Reveal>
-              <p className="text-sm font-semibold text-primary">How it works</p>
-              <h2 className="mt-3 text-2xl font-semibold tracking-tight text-brand-surface sm:text-3xl">
-                {landing.stepsTitle ?? "Start to finish"}
-              </h2>
-            </Reveal>
-            <RevealGroup className="mt-10 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-              {landing.steps.map((step, index) => (
-                <div key={step.title} className="relative">
-                  {/* The rule joins the steps into a sequence instead of four
-                      unrelated cards. Hidden on the last one and on narrow
-                      screens, where the steps stack and the line would point
-                      sideways into nothing. */}
-                  {index < landing.steps!.length - 1 && (
-                    <span
-                      className="absolute left-9 right-0 top-4 hidden h-px bg-border lg:block"
-                      aria-hidden
-                    />
-                  )}
-                  <span className="relative inline-flex size-8 items-center justify-center rounded-full border border-border bg-white text-sm font-semibold text-primary">
-                    {index + 1}
-                  </span>
-                  <p className="mt-4 font-semibold text-brand-surface">{step.title}</p>
-                  <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-                    {step.body}
-                  </p>
-                </div>
-              ))}
-            </RevealGroup>
-          </div>
-        </section>
-      )}
-
-      {/* ---------------------------------------------------------------- */}
-      {/* Spotlights. At most two, three points each.                      */}
-      {/* ---------------------------------------------------------------- */}
-      {landing?.sections && landing.sections.length > 0 && (
-        <section className="border-t border-border bg-white">
-          <div className="mx-auto max-w-7xl space-y-14 px-4 py-16 sm:px-6 lg:py-20">
-            {landing.sections.map((section) => (
-              <Reveal
-                key={section.title}
-                className="grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-start lg:gap-16"
-              >
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
-                    {section.eyebrow}
-                  </p>
-                  <h3 className="mt-3 text-2xl font-semibold tracking-tight text-brand-surface sm:text-3xl">
-                    {section.title}
-                  </h3>
-                </div>
-                <div>
-                  <p className="text-lg leading-relaxed text-muted-foreground">
-                    {section.body}
-                  </p>
-                  <ul className="mt-6 space-y-2.5 border-l-2 border-primary/25 pl-5">
-                    {section.points.map((point) => (
-                      <li key={point} className="text-sm leading-relaxed text-foreground">
-                        {point}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+        <section aria-labelledby="feature-steps" className="overflow-x-clip px-2 sm:px-4">
+          <div
+            className="mx-auto max-w-[1400px] rounded-[28px] border border-black/[0.05] lg:rounded-[40px]"
+            style={{
+              background:
+                "radial-gradient(60% 50% at 80% 0%, color-mix(in srgb, #3b6fe0 9%, transparent), transparent 70%), #f5f7fa",
+            }}
+          >
+            <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:py-24">
+              <Reveal>
+                <p className="text-[15px] text-black/45">How it works</p>
+                <h2
+                  id="feature-steps"
+                  className="mt-3 text-4xl font-medium leading-[1.05] tracking-[-0.03em] sm:text-5xl"
+                >
+                  {landing.stepsTitle ?? "Start to finish"}
+                </h2>
               </Reveal>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* ---------------------------------------------------------------- */}
-      {/* Mid-page CTA                                                     */}
-      {/* ---------------------------------------------------------------- */}
-      {landing && (
-        <section className="border-y border-border bg-brand-surface text-white">
-          <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-4 py-12 sm:px-6 lg:flex-row lg:items-center">
-            <div className="max-w-2xl">
-              <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-                {landing.ctaTitle}
-              </h2>
-              <p className="mt-2 leading-relaxed text-white/65">{landing.ctaBody}</p>
-            </div>
-            <div className="flex shrink-0 flex-wrap gap-3">
-              <Button href={cta} size="lg" className="bg-white text-brand-surface hover:bg-white/90">
-                Start free trial
-                <ChevronRight className="size-4 opacity-80" />
-              </Button>
-              <Button
-                href={DEMO_URL}
-                size="lg"
-                className="border border-white/25 bg-transparent text-white hover:bg-white/10"
-              >
-                Open the demo
-              </Button>
+              <RevealGroup className="mt-14 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+                {landing.steps.map((step, index) => (
+                  <div key={step.title} className="relative">
+                    {/* The rule joins the steps into a sequence; hidden on the last
+                        one and on narrow screens, where the steps stack. */}
+                    {index < landing.steps!.length - 1 && (
+                      <span className="absolute left-10 right-0 top-4 hidden h-px bg-black/10 lg:block" aria-hidden />
+                    )}
+                    <span className="relative inline-flex size-8 items-center justify-center rounded-full border border-black/10 bg-white text-sm font-semibold text-primary shadow-sm">
+                      {index + 1}
+                    </span>
+                    <h3 className="mt-5 text-lg font-semibold tracking-tight">{step.title}</h3>
+                    <p className="mt-1.5 text-[15px] leading-relaxed text-black/55">{step.body}</p>
+                  </div>
+                ))}
+              </RevealGroup>
             </div>
           </div>
         </section>
       )}
 
-      {/* ---------------------------------------------------------------- */}
-      {/* Capability list, as a plain list.                                */}
-      {/* It answers "is the thing I need in here", which is a checking     */}
-      {/* question. Bordered cards gave it the visual weight of an argument.*/}
-      {/* ---------------------------------------------------------------- */}
-      <section className="bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
-          <h2 className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-            {landing?.bulletsTitle ?? "Everything else in here"}
-          </h2>
-          <ul className="mt-6 columns-1 gap-x-10 sm:columns-2 lg:columns-3">
-            {feature.bullets.map((item) => (
-              <li
-                key={item}
-                className="mb-2.5 break-inside-avoid border-l border-border pl-4 text-sm leading-relaxed text-muted-foreground"
-              >
-                {item}
-              </li>
-            ))}
-          </ul>
+      {/* Spotlights: at most two, in the home page's split shape. */}
+      {landing?.sections && landing.sections.length > 0 && (
+        <div className="mx-auto max-w-7xl space-y-24 px-4 pt-28 sm:px-6 lg:space-y-32 lg:pt-36">
+          {landing.sections.map((section) => (
+            <Reveal as="section" key={section.title} className="grid gap-6 md:grid-cols-2 md:gap-16">
+              <div>
+                <p className="text-[15px] text-black/45">{section.eyebrow}</p>
+                <h2 className="mt-3 text-4xl font-medium leading-[1.05] tracking-[-0.03em] sm:text-5xl">
+                  {section.title}
+                </h2>
+              </div>
+              <div className="md:pt-9">
+                <p className="text-lg leading-relaxed text-black/60 sm:text-xl">{section.body}</p>
+                <ul className="mt-8 space-y-3 border-t border-black/[0.08] pt-6">
+                  {section.points.map((point) => (
+                    <li key={point} className="flex items-start gap-2.5 text-[15px] text-black/70">
+                      <Check className="mt-1 size-3.5 shrink-0 text-primary" aria-hidden />
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      )}
+
+      {/* The rest of the capability list, plain, then the help articles. It
+          answers "is the thing I need in here", a checking question. */}
+      <section aria-labelledby="feature-everything">
+        <div className="mx-auto max-w-7xl px-4 pt-28 sm:px-6 lg:pt-36">
+          <div className="border-t border-black/[0.06] pt-8">
+            <h2 id="feature-everything" className="text-[15px] text-black/45">
+              {landing?.bulletsTitle ?? "Everything else in here"}
+            </h2>
+            <ul className="mt-6 columns-1 gap-x-12 sm:columns-2 lg:columns-3">
+              {feature.bullets.map((item) => (
+                <li key={item} className="mb-3 flex break-inside-avoid items-start gap-2.5 text-[15px] leading-relaxed text-black/60">
+                  <span className="mt-[0.6rem] size-1 shrink-0 rounded-full bg-black/30" aria-hidden />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
 
           {(docs.length > 0 || guides.length > 0) && (
-            <div className="mt-10 flex flex-wrap items-center gap-2 border-t border-border pt-8">
-              <span className="mr-1 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                Read more
-              </span>
-              {guides.map((guide) => (
-                <Link
-                  key={guide.href}
-                  href={guide.href}
-                  className="rounded-full border border-border px-3 py-1.5 text-sm text-foreground transition-colors hover:border-primary/40 hover:text-primary"
-                >
-                  {guide.label}
-                </Link>
-              ))}
-              {docs.map((doc) => (
-                <Link
-                  key={doc.href}
-                  href={doc.href}
-                  className="rounded-full border border-border px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
-                >
-                  {doc.label}
-                </Link>
-              ))}
-              {productModule && (
-                <Link
-                  href={`/docs/${productModule.docsSection}`}
-                  className="inline-flex items-center gap-1 px-2 text-sm font-semibold text-primary hover:underline"
-                >
-                  All {productModule.title.toLowerCase()} docs
-                  <ChevronRight className="size-3.5" />
-                </Link>
-              )}
+            <div className="mt-12 grid gap-y-4 border-t border-black/[0.06] pt-8 md:grid-cols-[1fr_2fr]">
+              <p className="text-[15px] text-black/45">Read more</p>
+              <ul className="grid gap-x-8 gap-y-2.5 sm:grid-cols-2">
+                {[...guides.map((g) => ({ href: g.href, label: g.label })), ...docs].map((link) => (
+                  <li key={link.href}>
+                    <Link href={link.href} className="group inline-flex items-center gap-2 text-[15px] text-black/60 hover:text-[#0b0b0d]">
+                      {link.label}
+                      <span className="text-black/35 transition-transform group-hover:translate-x-0.5">+</span>
+                    </Link>
+                  </li>
+                ))}
+                {productModule && (
+                  <li>
+                    <Link
+                      href={`/docs/${productModule.docsSection}`}
+                      className="inline-flex items-center gap-1.5 text-[15px] font-medium text-primary hover:underline"
+                    >
+                      All {productModule.title.toLowerCase()} docs <span aria-hidden>→</span>
+                    </Link>
+                  </li>
+                )}
+              </ul>
             </div>
           )}
         </div>
       </section>
 
-      {/* ---------------------------------------------------------------- */}
-      {/* FAQ, two columns so five answers are not five screens            */}
-      {/* ---------------------------------------------------------------- */}
+      {/* A light call to action between the reference material and the FAQ. */}
+      {landing && (
+        <section aria-labelledby="feature-cta">
+          <Reveal className="mx-auto max-w-3xl px-4 pt-28 text-center sm:px-6 lg:pt-36">
+            <h2 id="feature-cta" className="text-balance text-3xl font-medium tracking-[-0.03em] sm:text-4xl">
+              {landing.ctaTitle}
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-lg leading-relaxed text-black/55">{landing.ctaBody}</p>
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <Button href={cta} size="lg">
+                Start free trial
+                <ChevronRight className="size-4 opacity-80" />
+              </Button>
+              <Button href={DEMO_URL} variant="secondary" size="lg">
+                <PlayCircle className="size-4 opacity-80" />
+                Try the live demo
+              </Button>
+            </div>
+          </Reveal>
+        </section>
+      )}
+
+      {/* FAQ, two columns behind faint rules, so five answers are not five screens. */}
       {faqs.length > 0 && (
-        <section className="border-t border-border bg-[#fafbfc]">
-          <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-20">
-            <h2 id="faq" className="text-2xl font-semibold tracking-tight text-brand-surface sm:text-3xl">
+        <section aria-labelledby="faq">
+          <div className="mx-auto max-w-7xl px-4 pt-28 sm:px-6 lg:pt-36">
+            <h2 id="faq" className="text-3xl font-medium tracking-[-0.03em] sm:text-4xl">
               Common questions
             </h2>
-            <dl className="mt-8 grid gap-x-14 gap-y-8 lg:grid-cols-2">
+            <dl className="mt-8 grid gap-x-14 lg:grid-cols-2">
               {faqs.map((faq) => (
-                <div key={faq.q}>
-                  <dt className="font-semibold text-brand-surface">{faq.q}</dt>
-                  <dd className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    {faq.a}
-                  </dd>
+                <div key={faq.q} className="border-t border-black/[0.08] py-6">
+                  <dt className="text-lg font-semibold tracking-tight">{faq.q}</dt>
+                  <dd className="mt-2 text-[15px] leading-relaxed text-black/55">{faq.a}</dd>
                 </div>
               ))}
             </dl>
@@ -453,76 +404,31 @@ export function FeaturePage({ feature }: { feature: Feature }) {
         </section>
       )}
 
-      {/* ---------------------------------------------------------------- */}
-      {/* Explore more. One grid, not two.                                 */}
-      {/* ---------------------------------------------------------------- */}
+      {/* More in this module: the home page's Features row of links. */}
       {explore.length > 0 && (
-        <section className="border-t border-border bg-white">
-          <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
-            <h2 className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-              {productModule ? `More in ${productModule.title}` : "Explore more"}
-            </h2>
-            <div className="mt-6 grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-4">
-              {explore.map((f) => (
-                <Link
-                  key={f.slug}
-                  href={featureHref(f.slug)}
-                  className="group flex items-baseline gap-2 border-t border-border pt-4"
-                >
-                  <span className="font-semibold text-brand-surface group-hover:text-primary">
-                    {f.navLabel}
-                  </span>
-                  <ChevronRight className="size-3.5 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-primary" />
-                </Link>
-              ))}
+        <section aria-labelledby="feature-more">
+          <div className="mx-auto max-w-7xl px-4 pb-28 pt-20 sm:px-6 lg:pb-36">
+            <div className="grid gap-y-4 border-t border-black/[0.06] pt-8 md:grid-cols-[1fr_2fr]">
+              <h2 id="feature-more" className="text-[15px] text-black/45">
+                {productModule ? `More in ${productModule.title}` : "Explore more"}
+              </h2>
+              <ul className="grid gap-x-8 gap-y-2.5 sm:grid-cols-2">
+                {explore.map((f) => (
+                  <li key={f.slug}>
+                    <Link href={featureHref(f.slug)} className="group inline-flex items-center gap-2 text-[15px] text-black/60 hover:text-[#0b0b0d]">
+                      {f.navLabel}
+                      <span className="text-black/35 transition-transform group-hover:translate-x-0.5">+</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </section>
       )}
 
-      {/* ---------------------------------------------------------------- */}
-      {/* Closing CTA                                                      */}
-      {/* ---------------------------------------------------------------- */}
-      <section className="border-t border-border bg-brand-surface text-white">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-20">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-              {landing?.closingTitle ?? `Try ${feature.title.toLowerCase()} on your fleet.`}
-            </h2>
-            <p className="mt-4 text-lg leading-relaxed text-white/65">
-              {landing?.closingBody ??
-                `Add a tail, put a flight on the board, and see it work on your own operation. ${TRIAL_DAYS} days free, no sales call.`}
-            </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Button href={cta} size="lg" className="bg-white text-brand-surface hover:bg-white/90">
-                Start free trial
-                <ChevronRight className="size-4 opacity-80" />
-              </Button>
-              <Button
-                href={DEMO_URL}
-                size="lg"
-                className="border border-white/25 bg-transparent text-white hover:bg-white/10"
-              >
-                Try the live demo
-              </Button>
-            </div>
-            <p className="mt-6 text-sm text-white/50">
-              <Link href="/pricing" className="hover:text-white">
-                Pricing
-              </Link>
-              {" · "}
-              <Link href="/features" className="hover:text-white">
-                All features
-              </Link>
-              {" · "}
-              <Link href="/book-a-demo" className="hover:text-white">
-                Book a walkthrough
-              </Link>
-            </p>
-          </div>
-        </div>
-      </section>
-    </>
+      <PricingBand headingId="feature-pricing-heading" />
+    </div>
   );
 }
 

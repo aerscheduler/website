@@ -83,7 +83,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
   /* ================================================================== */
   scheduling: {
     h1: "Flight school scheduling and dispatch software",
-    statement: "If it is not on the board, it did not happen.",
+    statement: "A booking that would clash is refused when it saves, on the web and in the app.",
     proof: [
       { value: "Refused, not flagged", label: "A clash is stopped when the booking saves, from every surface" },
       { value: "Airport time", label: "9:00 AM stays 9:00 AM, whoever is looking and from where" },
@@ -175,7 +175,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
 
   "self-booking": {
     h1: "Online aircraft booking for students and renters",
-    statement: "Give the front desk its afternoon back.",
+    statement: "Students and renters book their own flights, inside the rules you set.",
     proof: [
       { value: "Web + mobile", label: "The same flow on both" },
       { value: "Your rules", label: "Checked at save, not after" },
@@ -242,7 +242,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
 
   fleet: {
     h1: "Aircraft fleet management software for flight schools",
-    statement: "One record per tail, feeding everything else.",
+    statement: "Each aircraft keeps its rates, meters and maintenance on one record.",
     proof: [
       { value: "$0", label: "Simulators and rooms cost nothing" },
       { value: "Wet or dry", label: "Per aircraft, on Hobbs or tach" },
@@ -293,7 +293,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
 
   compliance: {
     h1: "Pilot currency and compliance tracking",
-    statement: "The flight that should not go, does not go.",
+    statement: "Medicals, flight reviews and checkouts are checked before a booking is saved.",
     proof: [
       { value: "Always on", label: "Currency cannot be switched off" },
       { value: "At save", label: "Checked before the booking exists" },
@@ -347,7 +347,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
   /* ================================================================== */
   billing: {
     h1: "Flight school billing and invoicing software",
-    statement: "The flight bills itself before the pilot reaches the car park.",
+    statement: "Each flight is invoiced from its meters and your rates the moment it is closed out.",
     proof: [
       { value: "One invoice each", label: "Everybody on a shared flight is billed at their own rate" },
       { value: "No second system", label: "The schedule and the books are the same product" },
@@ -434,7 +434,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
 
   memberships: {
     h1: "Flying club membership and dues billing software",
-    statement: "Nobody chases the first of the month.",
+    statement: "Club dues and joining fees bill themselves, period after period.",
     proof: [
       { value: "Never twice", label: "One member, one period, enforced by the database itself" },
       { value: "Prorated", label: "Join on the 20th, pay for 10 days" },
@@ -488,7 +488,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
   training: {
     h1: "Part 141 and Part 61 training records software",
     statement:
-      "Written for the instructor on Tuesday and the inspector two years later.",
+      "Every lesson is graded against the flight that flew it, and a signed record cannot change.",
     proof: [
       { value: "Frozen at signing", label: "A signed record cannot be quietly tidied up later" },
       { value: "Part 141 enforced", label: "Stage checks, certification, and graduation actually blocked" },
@@ -624,7 +624,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
   /* ================================================================== */
   maintenance: {
     h1: "Aircraft maintenance and squawk tracking software",
-    statement: "Nothing unairworthy leaves the ramp.",
+    statement: "An overdue inspection or a grounding squawk takes the aircraft off the schedule.",
     proof: [
       { value: "Grounds itself", label: "An overdue annual clears the board with nobody remembering" },
       { value: "Reported from the ramp", label: "Anybody who flies can file a squawk against the tail" },
@@ -929,7 +929,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
 
   utilization: {
     h1: "Aircraft utilization tracking software",
-    statement: "The money is in the gap between booked, flown and billed.",
+    statement: "See what each aircraft was booked, what it flew and what it billed.",
     proof: [
       { value: "Booked, flown, billed", label: "Side by side, because the gaps between them are the finding" },
       { value: "Idle tails included", label: "A resource that flew nothing still gets its own row" },
@@ -983,7 +983,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
   /* ================================================================== */
   "people-roles": {
     h1: "Flight school staff and student management",
-    statement: "One roster the whole operation reads from.",
+    statement: "Each person's role decides what they can see and change.",
     proof: [
       { value: "No per-user fee", label: "Instructors, students, renters and staff are all unlimited" },
       { value: "Grounded, not deleted", label: "Stop somebody flying without losing any of their history" },
@@ -1030,7 +1030,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
 
   mobile: {
     h1: "The flight school app for iPhone and Android",
-    statement: "Built for the ramp, not shrunk from a desktop.",
+    statement: "Students, instructors and mechanics run their day from native iOS and Android apps.",
     proof: [
       { value: "Included", label: "On every plan, no surcharge" },
       { value: "Offline", label: "Lesson grading works without signal" },
@@ -1077,7 +1077,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
 
   integrations: {
     h1: "Flight school software integrations",
-    statement: "Every integration, on every plan.",
+    statement: "Stripe, QuickBooks Online and Google Calendar connect on every plan.",
     proof: [
       { value: "No tier", label: "Nothing is behind a premium plan" },
       { value: "Your Stripe", label: "Payouts land in your own account" },
