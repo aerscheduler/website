@@ -49,6 +49,19 @@ You can connect straight from the **Video call** menu (above; in the app that is
 they are the one running it. Otherwise the person who booked it. So a student whose instructor has
 connected Google can book a remote lesson without connecting anything themselves.
 
+## Disconnect or remove Zoom
+
+Either way works, and both remove AerScheduler's access to your Zoom account:
+
+- **In AerScheduler:** <Where app="web">Profile & account → Calendar → Zoom</Where>, then
+  **Disconnect**. AerScheduler also revokes its access at Zoom.
+- **In Zoom:** sign in to the Zoom App Marketplace, open **Manage → Added Apps**, find
+  **AerScheduler** and choose **Remove**.
+
+AerScheduler then deletes the Zoom tokens, user id and email it held for you. Meetings it already
+made stay on your Zoom account, and their Join links stay on the lessons they were made for. New
+lessons cannot get a Zoom call from your account until you connect again.
+
 ## Change or remove the call
 
 Edit the booking. **Video call** opens on the current call (for example "Zoom (current
