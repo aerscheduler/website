@@ -1,0 +1,78 @@
+<Summary>
+With **Find them for me** on, each aircraft has an **ADs** tab listing the Airworthiness
+Directives published since 1995 that name its make and model, its engine or its propeller. Read
+each one and mark it **Applies** (and track it) or **Not applicable** with a reason. Nothing is
+decided for you, and every decision keeps who made it and when.
+</Summary>
+
+<Roles>Owners, Admins, Technicians</Roles>
+
+<Callout type="important">
+A listed AD is one worth reading, not one that applies. An AD's applicability names serial
+ranges, installed parts and exceptions that only a person can check against the aircraft and its
+records. ADs issued before 1995 are not in the list at all, so an older airframe's still have to
+be found the way you find them today.
+</Callout>
+
+## Turn it on
+
+An owner or admin chooses **Find them for me** under <Where app="web">Settings → Airworthiness
+Directives</Where>. See [Choose how much AerScheduler does about Airworthiness
+Directives](/docs/maintenance/choose-how-we-handle-airworthiness-directives). The **ADs** tab then
+appears on every aircraft, for owners, admins and technicians.
+
+## What the list is
+
+The AD library holds every AD the Federal Register has published since 1995, and checks for new
+ones daily. An aircraft's list is the ADs in it that name:
+
+- **Its airframe**, by make and model. A Cessna's ADs may name *Textron Aviation*, the company
+  that holds the type certificate now; those are included.
+- **Its engine**, by make and model, when the aircraft has one recorded. Looking the tail number
+  up on the aircraft form fills the engine in from the FAA registry.
+- **Its propeller**, when one is recorded. The registry does not carry it, so type it in.
+
+Each row says how the AD names the aircraft: **names 172S** (the exact model), **in the range
+172A through 172S** (a letter range that covers it), or **names the 172 series** (its family,
+which you need to read closely). An AD replaced by a later one is left off; the later one says
+what it supersedes.
+
+## Decide each one
+
+<Steps>
+  <Step n={1} title="Open the aircraft and choose ADs">
+    The list opens on **To review**. Choose a row to read the AD's own applicability, with what
+    matched highlighted, what it requires, and a link to the AD in the Federal Register.
+  </Step>
+  <Step n={2} title="If it applies, choose Applies">
+    **Track it as an inspection** opens Add inspections with the AD filled in: set its interval
+    or deadline and save, and it is tracked like any AD, with its compliance record when signed
+    off. **Applies, nothing to track** records that it applies when there is nothing left to
+    schedule, such as a one-time AD already complied with.
+  </Step>
+  <Step n={3} title="If it does not apply, choose Not applicable">
+    Pick why: the serial number is outside the range, the affected part is not installed, an
+    earlier action terminated it, or other (say why in the note). The note is the place for what
+    you checked, such as the serial number.
+  </Step>
+</Steps>
+
+Decided ADs move to **Applies** or **Not applicable**, each showing who decided and when. An AD
+already tracked by an inspection with its number shows under **Applies** without anyone deciding
+it again. To change a decision, open the row's **…** menu and choose **Back to review**. Every
+decision is in the audit log.
+
+## When the list is short or empty
+
+- **No engine or propeller recorded.** Their ADs are not listed. An owner or admin can add them
+  with **Edit aircraft**.
+- **No serial number.** The list is the same, but you need the serial to rule an AD out on its
+  range.
+- **The library is still loading.** The first import takes a few hours after this feature
+  arrives; the tab says so, and the list grows as it fills.
+
+## Related
+
+- [Track Airworthiness Directives](/docs/maintenance/track-airworthiness-directives)
+- [Choose how much AerScheduler does about Airworthiness Directives](/docs/maintenance/choose-how-we-handle-airworthiness-directives)
+- [Sign off a completed inspection](/docs/maintenance/sign-off-an-inspection)

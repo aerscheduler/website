@@ -1370,7 +1370,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "choose-how-we-handle-airworthiness-directives",
         title: "Choose how much AerScheduler does about Airworthiness Directives",
         description:
-          "Four choices, and nothing is on by default. Do nothing about ADs, track them here yourself, have AerScheduler watch newly published ADs for ones naming your fleet, or say that applicability is tracked in another system such as ADlog or AVTRAK. Also explains what a serial number buys you and why we never decide that an AD does not apply.",
+          "Four choices, and nothing is on by default. Do nothing about ADs, track them here yourself, have AerScheduler list the published ADs that name each aircraft for you to decide, or say that applicability is tracked in another system such as ADlog or AVTRAK. Also explains what a serial number buys you and why we never decide whether an AD applies.",
         kind: "task",
         audience: ["Owners", "Admins"],
         seoQuery: "turn off airworthiness directive tracking flight school software",
@@ -1379,10 +1379,19 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "track-airworthiness-directives",
         title: "Track Airworthiness Directives and keep the compliance record",
         description:
-          "Set an inspection's source to Airworthiness Directive and give it the AD number and revision date. Signing it off then keeps a permanent record of what was done, the meter readings and who certified it. The Compliance log is the history and the Airworthiness compliance report prints it. AerScheduler records the ADs you enter; it does not tell you which ADs apply to your aircraft.",
+          "Set an inspection's source to Airworthiness Directive and give it the AD number and revision date. Signing it off then keeps a permanent record of what was done, the meter readings and who certified it. The Compliance log is the history and the Airworthiness compliance report prints it. Typing an AD number fills in its details from the Federal Register.",
         kind: "task",
         audience: ["Owners", "Admins", "Technicians"],
         seoQuery: "track airworthiness directive AD compliance for a flight school aircraft",
+      },
+      {
+        slug: "review-the-ads-for-an-aircraft",
+        title: "Review the ADs for an aircraft",
+        description:
+          "With Find them for me on, each aircraft's ADs tab lists the Airworthiness Directives published since 1995 that name its airframe, engine or propeller. Read each one and mark it Applies (and track it as an inspection) or Not applicable with a reason. Nothing is decided for you, and each decision keeps who made it and when.",
+        kind: "task",
+        audience: ["Owners", "Admins", "Technicians"],
+        seoQuery: "which airworthiness directives apply to my aircraft",
       },
       {
         slug: "track-life-limited-components",

@@ -1,19 +1,19 @@
 <Summary>
 Nothing about Airworthiness Directives is on by default. <Where app="web">Settings → Airworthiness
-Directives</Where> has four choices: do nothing, track them here yourself, tell us they are tracked
-somewhere else, and a fourth that is not built yet. The same page shows what we could actually
-match for each of your aeroplanes.
+Directives</Where> has four choices: do nothing, track them here yourself, have us list the ADs
+that name each of your aircraft, or tell us they are tracked somewhere else. The same page shows
+how much we know about each aircraft to match ADs against.
 </Summary>
 
 <Roles>Owners, Admins</Roles>
 
 ## Why this is a choice and not a feature
 
-Plenty of schools use AerScheduler for oil changes, annuals and the 100-hour, and have no
+Plenty of organizations use AerScheduler for oil changes, annuals and the 100-hour, and have no
 interest in us being involved in Airworthiness Directives. Plenty of others already pay for
 ADlog, AVTRAK or a Tdata subscription and have a mechanic who owns the whole question.
 
-Turning a catalogue on for those schools would not be a helpful default. It would be several
+Listing ADs for those organizations would not be a helpful default. It would be several
 hundred candidate directives nobody asked for, attached to a subject where a flood of alerts
 teaches people to stop reading alerts.
 
@@ -38,17 +38,16 @@ So it is off, and it stays off until somebody chooses otherwise.
     We still do not tell you which ADs apply. You add the ones your IA or your AD subscription
     identifies.
   </Step>
-  <Step n={3} title="Watch for new ones (not available yet)">
-    **This is not built.** The option is on the page so you can see where we are going, and it
-    cannot be selected.
+  <Step n={3} title="Find them for me">
+    Each aircraft gets an **ADs** tab listing the Airworthiness Directives published in the
+    Federal Register since 1995 that name its make and model, its engine or its propeller.
+    Owners, admins and technicians decide each one: it applies, and is tracked like any AD
+    inspection, or it does not, and they say why. Every decision keeps who made it and when.
+    See [Review the ADs for an aircraft](/docs/maintenance/review-the-ads-for-an-aircraft).
 
-    When it exists, it will read newly published Airworthiness Directives and flag the ones
-    naming your make, model or serial number, and somebody at your school will decide for each
-    one whether it applies to a given aeroplane. That decision will be recorded against a name
-    and a certificate, and it will be permanent.
-
-    Until then, **nothing in AerScheduler watches for new Airworthiness Directives**. Whatever
-    you use today to find out that one has been issued, keep using it.
+    Nothing is decided for you. A listed AD is one worth reading, not one that applies. ADs from
+    before 1995 are not in the list, so an older airframe's still have to be found the way you
+    find them today. Everything in *I track them here* still works.
   </Step>
   <Step n={4} title="Somewhere else">
     Applicability is tracked in another system. Name it, and we propose nothing and watch
@@ -60,10 +59,10 @@ So it is off, and it stays off until somebody chooses otherwise.
 </Steps>
 
 <Callout type="important">
-Whatever you choose, AerScheduler never decides that an Airworthiness Directive does **not**
-apply to your aircraft, and today it does not tell you that one exists either. Finding the
-directives that apply to your fleet is still yours to do. What this product does is keep the
-record of what you complied with, and when.
+Whatever you choose, AerScheduler never decides whether an Airworthiness Directive applies to
+your aircraft. *Find them for me* lists the ones that name it, from 1995 on; deciding which apply
+is still yours to do. What this product also does is keep the record of what you complied with,
+and when.
 
 That determination belongs to a certificated person, and it is the one thing software getting
 it wrong could actually hurt somebody over.
@@ -79,18 +78,16 @@ The same settings page shows, per aeroplane, how precisely we could match:
 
 <Screenshot id="ad-readiness-panel" />
 
-- **By serial.** We can check the range an AD names and tell whether your aeroplane falls inside
-  it.
-- **By model only.** We can tell that an AD mentions your make and model, but not whether your
-  particular aircraft is in the affected range. You will be shown more candidates than actually
-  apply, and somebody has to read them.
-- **Not enough detail.** We do not know the make or model, so we cannot propose anything.
+- **By serial.** The aircraft's ADs can be checked against the serial range each one names.
+- **By model only.** We list the ADs that name its make and model, but whoever reviews them has
+  to find the serial number to rule one out on its range.
+- **Not enough detail.** We do not know the make or model, so nothing can be listed.
 
-That panel is a statement of what we could match, not something running. Nothing in
-AerScheduler proposes directives today, because proposing them is *Watch for new ones* and that
-mode is not built.
+The list on an aircraft's **ADs** tab is the same either way: we never use the serial number to
+leave an AD off, because a misread range would hide one that applies. The serial is what the
+person reviewing checks against.
 
-What a serial number earns you now is on the paperwork. The **Airworthiness compliance** report
+A serial number also earns its keep on the paperwork. The **Airworthiness compliance** report
 prints **Make and model** and **Serial** beside the tail number. Those two are the whole of how
 a directive states applicability, so it can be checked against the aeroplane on the page you hand
 an inspector instead of somebody walking out to the hangar to read a data plate.
@@ -122,17 +119,19 @@ afternoon of data entry.
 
 Owners and admins. Not an office manager with the settings grant, and not a technician.
 
-Turning the catalogue on changes what every technician at the school is asked to review, which
-makes it a decision about how the school runs rather than a preference.
+Turning *Find them for me* on changes what every technician at the organization is asked to
+review, which makes it a decision about how the organization runs rather than a preference.
 
 ## Changing your mind
 
-Switching modes never deletes anything. Compliance records are permanent regardless, so a school
-that turns the catalogue off keeps every record it has already signed, and a school that switches
-to *Somewhere else* keeps its history and simply stops being offered new candidates.
+Switching modes never deletes anything. Compliance records are permanent regardless, and the
+decisions made on each aircraft's **ADs** tab are kept, so an organization that turns *Find them
+for me* off and on again finds them where it left them. One that switches to *Somewhere else*
+keeps its history and simply stops seeing the list.
 
 ## Related
 
+- [Review the ADs for an aircraft](/docs/maintenance/review-the-ads-for-an-aircraft)
 - [Track Airworthiness Directives](/docs/maintenance/track-airworthiness-directives)
 - [Sign off a completed inspection](/docs/maintenance/sign-off-an-inspection)
 - [How maintenance tracking works](/docs/maintenance/how-maintenance-tracking-works)

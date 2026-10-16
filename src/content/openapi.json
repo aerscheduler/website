@@ -2377,7 +2377,7 @@
           "Organizations"
         ],
         "summary": "Read the Airworthiness Directive tracking mode and readiness",
-        "description": "Whether this organization wants AerScheduler involved in Airworthiness Directives, and how well it could be. `mode` is one of `off` (we do nothing about ADs), `manual` (the organization enters ADs itself), `catalogue` (we watch published ADs and propose the ones that mention this fleet) or `external` (applicability is tracked in another system, named by `externalSystem`).\n\n`aircraft` reports, per aeroplane, how precisely a published AD could be matched: `serial` when we can narrow the AD's serial-number range, `model` when we can only tell that an AD mentions this make and model, and `none` when we do not know enough to propose anything. **Admin only.**",
+        "description": "Whether this organization wants AerScheduler involved in Airworthiness Directives, and how well it could be. `mode` is one of `off` (we do nothing about ADs), `manual` (the organization enters ADs itself), `catalogue` (each aircraft lists the published ADs that name its airframe, engine or propeller, from the AD library, for somebody to decide; see `GET /maintenance/resources/{resourceId}/airworthiness-directives`) or `external` (applicability is tracked in another system, named by `externalSystem`).\n\n`aircraft` reports, per aeroplane, how precisely a published AD could be matched: `serial` when we can narrow the AD's serial-number range, `model` when we can only tell that an AD mentions this make and model, and `none` when we do not know enough to propose anything. **Admin only.**",
         "responses": {
           "200": {
             "description": "The mode and what could be matched for each aeroplane.",
@@ -23269,6 +23269,489 @@
         ]
       }
     },
+    "/maintenance/ad-tracking-mode": {
+      "get": {
+        "tags": [
+          "Maintenance"
+        ],
+        "summary": "Read the AD mode",
+        "description": "The organization's Airworthiness Directive mode (`off`, `manual`, `catalogue` or `external`) and the external system's name, readable by any member. `catalogue` is the one where each aircraft lists its ADs to review. Changing it, and the readiness readout, is `/organizations/adTracking` (admin only).",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "mode": {
+                          "type": "string",
+                          "enum": [
+                            "off",
+                            "manual",
+                            "catalogue",
+                            "external"
+                          ]
+                        },
+                        "externalSystem": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getAdTrackingMode"
+      }
+    },
+    "/maintenance/resources/{resourceId}/airworthiness-directives": {
+      "get": {
+        "tags": [
+          "Maintenance"
+        ],
+        "summary": "List the ADs to review for an aircraft",
+        "description": "Library ADs that name the aircraft's airframe, engine or propeller by maker and model, each with the decision made about it. A match means the AD is worth reading, never that it applies: applicability names serial ranges, installed parts and exceptions that only a person can check. A superseded AD is left out (review the one that replaced it) unless somebody already decided or tracks it. An AD tracked by an inspection with its number reads `applies` without a decision. Owners, admins and technicians; anyone else gets `403`.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "aircraft": {
+                          "type": "object",
+                          "description": "The aircraft as the matcher reads it: tail, make, model, serial, engine and propeller."
+                        },
+                        "missing": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "engine",
+                              "propeller",
+                              "serialNumber"
+                            ]
+                          },
+                          "description": "What, if entered, would find more ADs or make them easier to rule out."
+                        },
+                        "coverage": {
+                          "type": "object",
+                          "description": "As `GET /maintenance/airworthiness-directives/coverage`."
+                        },
+                        "counts": {
+                          "type": "object",
+                          "properties": {
+                            "toReview": {
+                              "type": "integer"
+                            },
+                            "applies": {
+                              "type": "integer"
+                            },
+                            "notApplicable": {
+                              "type": "integer"
+                            }
+                          }
+                        },
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/AircraftAdItem"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not an aircraft in your organization.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listAircraftAds",
+        "parameters": [
+          {
+            "name": "resourceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The aircraft's resource id."
+          }
+        ]
+      }
+    },
+    "/maintenance/resources/{resourceId}/airworthiness-directives/{adNumber}": {
+      "put": {
+        "tags": [
+          "Maintenance"
+        ],
+        "summary": "Decide an AD for an aircraft",
+        "description": "Record that the AD applies, or that it does not and why. `reason` is required with `not_applicable`; `note` is required with reason `other`. Records who decided and when, and writes the audit trail. Returns the aircraft's list as `GET` does.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "aircraft": {
+                          "type": "object",
+                          "description": "The aircraft as the matcher reads it: tail, make, model, serial, engine and propeller."
+                        },
+                        "missing": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "engine",
+                              "propeller",
+                              "serialNumber"
+                            ]
+                          },
+                          "description": "What, if entered, would find more ADs or make them easier to rule out."
+                        },
+                        "coverage": {
+                          "type": "object",
+                          "description": "As `GET /maintenance/airworthiness-directives/coverage`."
+                        },
+                        "counts": {
+                          "type": "object",
+                          "properties": {
+                            "toReview": {
+                              "type": "integer"
+                            },
+                            "applies": {
+                              "type": "integer"
+                            },
+                            "notApplicable": {
+                              "type": "integer"
+                            }
+                          }
+                        },
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/AircraftAdItem"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A missing status, reason or note.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not an aircraft in your organization, or an AD the library does not have.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "decideAircraftAd",
+        "parameters": [
+          {
+            "name": "resourceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The aircraft's resource id."
+          },
+          {
+            "name": "adNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The AD number."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The decision.",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "applies",
+                      "not_applicable"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "enum": [
+                      "serial_outside",
+                      "not_installed",
+                      "terminated",
+                      "other"
+                    ]
+                  },
+                  "note": {
+                    "type": "string",
+                    "maxLength": 500
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Maintenance"
+        ],
+        "summary": "Undo an AD decision",
+        "description": "Puts the AD back on the aircraft's review list. Returns the list as `GET` does.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "aircraft": {
+                          "type": "object",
+                          "description": "The aircraft as the matcher reads it: tail, make, model, serial, engine and propeller."
+                        },
+                        "missing": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "engine",
+                              "propeller",
+                              "serialNumber"
+                            ]
+                          },
+                          "description": "What, if entered, would find more ADs or make them easier to rule out."
+                        },
+                        "coverage": {
+                          "type": "object",
+                          "description": "As `GET /maintenance/airworthiness-directives/coverage`."
+                        },
+                        "counts": {
+                          "type": "object",
+                          "properties": {
+                            "toReview": {
+                              "type": "integer"
+                            },
+                            "applies": {
+                              "type": "integer"
+                            },
+                            "notApplicable": {
+                              "type": "integer"
+                            }
+                          }
+                        },
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/AircraftAdItem"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "undoAircraftAd",
+        "parameters": [
+          {
+            "name": "resourceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The aircraft's resource id."
+          },
+          {
+            "name": "adNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The AD number."
+          }
+        ]
+      }
+    },
     "/maintenance/airworthiness-directives/coverage": {
       "get": {
         "tags": [
@@ -36860,7 +37343,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "description": "Fields to change. `type` must be present even when you are only changing a top-level field, and it has to be the kind the resource already is: this cannot turn an aircraft into a room. `use` moves an aircraft between your fleet and your shop. Moving one INTO the shop is refused while it still has upcoming bookings that are not maintenance, because those people would be stranded; moving it out simply makes it schedulable and billable again. **Omitting a key leaves the stored value alone, and on most fields `null` does the same. Four rules break that pattern, and each one is silent, because the write answers 200 whether it changed the field, left it alone, or blanked one nobody meant to blank.** On `serialNumber` and `year`, `\"\"` or `null` CLEARS the stored value. That is the only way back to blank once a wrong serial number has been typed in. On the pair `flyingDayStartMinute` and `flyingDayEndMinute`, `null` is taken literally and puts the aircraft back on the organization's hours, which changes the bookings the server will accept. Send both or neither; a half pair is rejected. On `cost.dryRate`, `cost.wetRate` and `cost.overnightMinimumTenths`, `null` is literal too, and it is not `0`: a `null` overnight minimum goes back to inheriting the organization's figure, while `0` exempts this aircraft. `groundedReason` is not independent of `grounded`. Any aircraft or simulator update that does not carry `grounded: true` writes the reason back to `null`, so send the two together. One value is not merely surprising but rejected: `cost.billByHobbsTime` is not nullable, and sending `null` fails the whole request with a 400. Omit the key to leave it alone. On the free-text fields (`tailNumber`, `make`, `model`) an empty string is stored AS an empty string and does not clear them.",
+                "description": "Fields to change. `type` must be present even when you are only changing a top-level field, and it has to be the kind the resource already is: this cannot turn an aircraft into a room. `use` moves an aircraft between your fleet and your shop. Moving one INTO the shop is refused while it still has upcoming bookings that are not maintenance, because those people would be stranded; moving it out simply makes it schedulable and billable again. **Omitting a key leaves the stored value alone, and on most fields `null` does the same. Four rules break that pattern, and each one is silent, because the write answers 200 whether it changed the field, left it alone, or blanked one nobody meant to blank.** On `serialNumber`, `year`, `engineMake`, `engineModel`, `propellerMake` and `propellerModel`, `\"\"` or `null` CLEARS the stored value. That is the only way back to blank once a wrong serial number has been typed in. On the pair `flyingDayStartMinute` and `flyingDayEndMinute`, `null` is taken literally and puts the aircraft back on the organization's hours, which changes the bookings the server will accept. Send both or neither; a half pair is rejected. On `cost.dryRate`, `cost.wetRate` and `cost.overnightMinimumTenths`, `null` is literal too, and it is not `0`: a `null` overnight minimum goes back to inheriting the organization's figure, while `0` exempts this aircraft. `groundedReason` is not independent of `grounded`. Any aircraft or simulator update that does not carry `grounded: true` writes the reason back to `null`, so send the two together. One value is not merely surprising but rejected: `cost.billByHobbsTime` is not nullable, and sending `null` fails the whole request with a 400. Omit the key to leave it alone. On the free-text fields (`tailNumber`, `make`, `model`) an empty string is stored AS an empty string and does not clear them.",
                 "properties": {
                   "name": {
                     "type": "string"
@@ -40250,6 +40733,42 @@
               "null"
             ]
           },
+          "engineMake": {
+            "description": "Engine manufacturer, as the FAA registry names it. Engine Airworthiness Directives are matched on this and `engineModel`.",
+            "example": "LYCOMING",
+            "maxLength": 60,
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "engineModel": {
+            "description": "Engine model.",
+            "example": "IO-360-L2A",
+            "maxLength": 60,
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "propellerMake": {
+            "description": "Propeller manufacturer, for propeller ADs.",
+            "example": "SENSENICH",
+            "maxLength": 60,
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "propellerModel": {
+            "description": "Propeller model.",
+            "example": "74DM6-0-60",
+            "maxLength": 60,
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "category": {
             "type": "string",
             "description": "What the aircraft is. Together with `aircraftClass` this replaces the four-value `categoryClass`, which could not describe a helicopter.",
@@ -42112,6 +42631,217 @@
               "type": "string"
             },
             "description": "Later ADs that supersede or revise this one. Returned on a single look-up."
+          }
+        },
+        "additionalProperties": true
+      },
+      "AircraftAdItem": {
+        "type": "object",
+        "description": "One AD on the review list for an aircraft: the library AD, how it names the aircraft, and what was decided.",
+        "properties": {
+          "ad": {
+            "type": "object",
+            "description": "The AD. `inLibrary` is false for one tracked here that the library does not hold (published before 1995).",
+            "properties": {
+              "adNumber": {
+                "type": "string",
+                "description": "AD number.",
+                "example": "2013-11-11"
+              },
+              "title": {
+                "description": "Federal Register title.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "manufacturer": {
+                "description": "Type certificate holder as the AD names it.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "productType": {
+                "description": "airplane, rotorcraft, engine, propeller, glider, balloon, appliance or various.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "effectiveOn": {
+                "description": "Effective date.",
+                "format": "date-time",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "subject": {
+                "description": "Subject line.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "applicability": {
+                "description": "The applicability paragraph, whole.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "summary": {
+                "description": "Federal Register summary.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "supersedes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "url": {
+                "description": "The AD on federalregister.gov.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "inLibrary": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": true
+          },
+          "match": {
+            "description": "How the AD names this aircraft. Null for one tracked or decided here that the matcher did not find.",
+            "properties": {
+              "on": {
+                "type": "string",
+                "description": "What it names.",
+                "enum": [
+                  "airframe",
+                  "engine",
+                  "propeller"
+                ]
+              },
+              "token": {
+                "type": "string",
+                "description": "The text that matched, as it appears in the AD.",
+                "example": "172S"
+              },
+              "strength": {
+                "type": "string",
+                "description": "`model` names this exact model, `range` covers it (\"172A through 172S\"), `family` names its series.",
+                "enum": [
+                  "model",
+                  "range",
+                  "family"
+                ]
+              }
+            },
+            "additionalProperties": true,
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "review": {
+            "description": "The decision, when one was made.",
+            "properties": {
+              "status": {
+                "type": "string",
+                "description": "",
+                "enum": [
+                  "applies",
+                  "not_applicable"
+                ]
+              },
+              "reason": {
+                "description": "Why it does not apply.",
+                "enum": [
+                  "serial_outside",
+                  "not_installed",
+                  "terminated",
+                  "other",
+                  null
+                ],
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "note": {
+                "description": "Free text.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "decidedAt": {
+                "type": "string",
+                "description": "When.",
+                "format": "date-time"
+              },
+              "decidedBy": {
+                "description": "Who.",
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "name": {
+                    "description": "Name.",
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "additionalProperties": true,
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": true,
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "tracked": {
+            "description": "The inspection tracking this AD on the aircraft, found by AD number.",
+            "properties": {
+              "templateId": {
+                "type": "integer"
+              },
+              "reminderId": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "string",
+                "description": "Inspection name."
+              }
+            },
+            "additionalProperties": true,
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "state": {
+            "type": "string",
+            "description": "What the list groups by. An AD with an inspection tracking it and no decision reads `applies`.",
+            "enum": [
+              "to_review",
+              "applies",
+              "not_applicable"
+            ]
           }
         },
         "additionalProperties": true
