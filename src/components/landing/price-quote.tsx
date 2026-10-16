@@ -17,7 +17,7 @@ import { PRICE_PER_AIRCRAFT } from "@/lib/site";
  * other side is whatever `competitors.ts` records for that product, never a guess.
  */
 
-const OURS = ["Scheduling", "Billing", "Maintenance", "Work orders", "Reporting", "iOS and Android apps"];
+const OURS = ["Scheduling", "Billing", "Maintenance", "Work orders", "Reporting", "iOS and Android"];
 
 const MIN = 1;
 const MAX = 60;
@@ -36,7 +36,7 @@ export function PriceQuote({
   /** A tag on its panel, only when the record supports one ("Quote on request"). */
   theirTag?: string;
 }) {
-  const [aircraft, setAircraft] = useState(8);
+  const [aircraft, setAircraft] = useState(1);
   const total = aircraft * PRICE_PER_AIRCRAFT;
   const step = (d: number) => setAircraft((n) => Math.min(MAX, Math.max(MIN, n + d)));
 
