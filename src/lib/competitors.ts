@@ -32,24 +32,6 @@ export type CompetitorSlug =
   | "airplane-manager"
   | "bookourplane";
 
-/**
- * Which living demo runs on the page.
- *
- * Deliberately one per competitor rather than the dispatch board everywhere: the
- * demo should show whatever the page is arguing about. The billing loop belongs
- * on the page that says the flight closes itself out, the roster belongs on the
- * page about per-student pricing, and so on. `compare-page.tsx` maps these to the
- * components in `components/mocks/living`.
- */
-export type CompetitorDemo =
-  | "scheduling"
-  | "billing"
-  | "maintenance"
-  | "people"
-  | "reports"
-  | "self-booking"
-  | "memberships";
-
 export type CompareRow = [topic: string, ours: string, theirs: string];
 
 export type CompareProof = {
@@ -82,9 +64,6 @@ export type Competitor = {
    * worth the disruption", so this paragraph has to answer the second one.
    */
   intro: string;
-  demo: CompetitorDemo;
-  demoTitle: string;
-  demoBody: string;
   reasons: string[];
   rows: CompareRow[];
   /** Trailing note under the table. Trademark line plus the "not published" caveat. */
@@ -175,9 +154,7 @@ const PROOF_MAINTENANCE: CompareProof = {
  * `{name}` is substituted with the competitor's own name by `compare-page.tsx`.
  */
 export const SWITCH_OFFER = {
-  title: "Switching, without the project",
-  intro:
-    "The reason schools stay somewhere they have outgrown is rarely the software. It is the week they imagine losing to moving. Here is what actually happens.",
+  title: "Moving from {name}",
   items: [
     {
       title: "A person moves your data, not an importer",
@@ -202,6 +179,11 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
   /* ---------------------------------------------------------------- */
   /* Flight Schedule Pro                                               */
   /* Facts from flightschedulepro.com, checked 2026-08-18.             */
+  /* Rechecked 2026-10-16: /plans-and-pricing sells a Scheduling Hub   */
+  /* with Billing, Training, Maintenance and Reporting Hubs added, or  */
+  /* a Suite, "simple per aircraft pricing" by custom quote with no     */
+  /* figure. Its app is "iOS app (iPad & iPhone)", and a Google Play   */
+  /* search for Flight Schedule Pro returns no app of theirs.          */
   /* ---------------------------------------------------------------- */
   "flight-schedule-pro": {
     slug: "flight-schedule-pro",
@@ -213,14 +195,10 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       "Self-serve vs demo-led. Per-aircraft pricing, unlimited users. Native app included.",
     heroHeadline: "The modern alternative to Flight Schedule Pro",
     intro: "Flight Schedule Pro works, and your school has years of history inside it. That is exactly why moving feels like a project, and it is the part we take off you: we move your data with you, set the school up with you, and you keep Flight Schedule Pro running until your staff stop reaching for it. What is on the other side is one system for the schedule, the invoice and the maintenance record, and a price you can read on this page.",
-    demo: "billing",
-    demoTitle: "This is the part that usually lives in another system",
-    demoBody:
-      "The flight is closed out, the invoice is already drafted from the rates on the tail, and the balance is chased from the same screen. Have a click around.",
     reasons: [
       "You want to be running this week, without a sales call",
-      `Predictable cost: $${PRICE_PER_AIRCRAFT} per aircraft, every user included`,
-      "Your instructors will actually open the app on the ramp",
+      `A price you can read: $${PRICE_PER_AIRCRAFT} per aircraft, every module and every user included`,
+      "Your instructors and renters are on Android as well as iPhone",
       "You want the schedule, the invoice and the maintenance record to be one system",
     ],
     rows: [
@@ -229,7 +207,12 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
         "Self-serve signup. On the schedule the same day.",
         "Demo request",
       ],
-      ["Pricing", PRICE_ROW_OURS, "Quoted per school"],
+      ["Pricing", PRICE_ROW_OURS, "Per aircraft, by custom quote. No price published."],
+      [
+        "What the price covers",
+        "Scheduling, billing, maintenance and reporting in every plan.",
+        "A Scheduling Hub, with Billing, Training, Maintenance and Reporting Hubs added one by one or as a Suite.",
+      ],
       [
         "Several people on one flight",
         "Built in. Split the cost per head, by logged time, or in set shares. One invoice each.",
@@ -243,7 +226,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       [
         "Mobile",
         "Native iOS and Android apps. Book, dispatch and close out from the ramp.",
-        "iOS app",
+        "iOS app for iPhone and iPad",
       ],
       [
         "Billing",
@@ -257,7 +240,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       ],
       [
         "Integrations",
-        "Stripe, Google Calendar, QuickBooks Online, plus a public REST API.",
+        "Stripe, Google Calendar and QuickBooks Online, plus a public REST API on the Enterprise plan.",
         "Available",
       ],
     ],
@@ -286,10 +269,6 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       "Self-serve setup, per-aircraft pricing, and the whole day in one system.",
     heroHeadline: "A modern alternative to Flight Circle",
     intro: "Flight Circle already runs your schedule, so the question is not whether software helps. It is whether the rest of the day still costs you more admin than it should. AerScheduler puts dispatch, billing and maintenance in one place, updates every screen in the school the moment anything changes, and we move your data and set the school up with you. Keep both running in parallel for as long as it takes to trust it.",
-    demo: "scheduling",
-    demoTitle: "The board your front desk will live on",
-    demoBody:
-      "Lanes for every aircraft, simulator and classroom, conflict-aware booking, and drag to reschedule. Have a click around.",
     reasons: [
       "You want to be dispatching this week, without a sales call",
       `Predictable cost: $${PRICE_PER_AIRCRAFT} per aircraft, every user included, sims and rooms free`,
@@ -340,7 +319,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       ],
       [
         "Integrations",
-        "Stripe, Google Calendar, QuickBooks Online, plus a public REST API.",
+        "Stripe, Google Calendar and QuickBooks Online, plus a public REST API on the Enterprise plan.",
         "Available",
       ],
     ],
@@ -374,10 +353,6 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       "Built for aviation only, with a published price and no demo call.",
     heroHeadline: "A modern alternative to Schedule Pointe",
     intro: "Every screen in AerScheduler was drawn for a flight line rather than adapted from another industry, the price is published, and you can be dispatching this afternoon instead of waiting for a call back. If you are on Schedule Pointe today, we help you move what you can export and configure the school with you, and nothing forces a cutover date.",
-    demo: "maintenance",
-    demoTitle: "Maintenance that stops a dispatch, not just a report",
-    demoBody:
-      "Squawks, inspections and due dates. When an aircraft comes due it grounds itself on the board. Try grounding one and watch the schedule react.",
     reasons: [
       "The price is published, so you can decide without booking a call",
       "Every screen was designed for a flight school, not adapted from another industry",
@@ -428,7 +403,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       ],
       [
         "Integrations",
-        "Stripe, Google Calendar, QuickBooks Online, plus a public REST API.",
+        "Stripe, Google Calendar and QuickBooks Online, plus a public REST API on the Enterprise plan.",
         "Not published",
       ],
     ],
@@ -462,10 +437,6 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       "A fixed per-aircraft price versus a bill that moves with your student count.",
     heroHeadline: "A modern alternative to FlightLogger",
     intro: "The clearest difference shows up when the school grows. FlightLogger prices on active students and operational flights, so a bigger intake costs more; AerScheduler charges for aircraft and nothing else, so it does not. Moving is not a project either. We help get your data across and set the school up with you, and you can run both systems until the change has stuck.",
-    demo: "people",
-    demoTitle: "Add the whole school. The bill does not move.",
-    demoBody:
-      "Students, instructors, renters, dispatchers, technicians, office staff. Invite as many as you like, set what each role can do, and pay for aircraft only.",
     reasons: [
       "Your software cost stops depending on how busy you are",
       `One published number: $${PRICE_PER_AIRCRAFT} per aircraft per month`,
@@ -525,7 +496,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       ],
       [
         "Integrations",
-        "Stripe, Google Calendar, QuickBooks Online, plus a public REST API.",
+        "Stripe, Google Calendar and QuickBooks Online, plus a public REST API on the Enterprise plan.",
         "Not published",
       ],
     ],
@@ -560,10 +531,6 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       "Same-day setup and a published price, versus a configured enterprise rollout.",
     heroHeadline: "A modern alternative to Talon Systems",
     intro: "Talon builds ETA for university programs with a procurement process behind them, and for that kind of operation it is a real fit. If you run an independent school or club, you can have AerScheduler configured and dispatching this afternoon, at a price that is published rather than negotiated. Coming off ETA, we help move what you can export and set the school up with you.",
-    demo: "reports",
-    demoTitle: "The numbers, without asking anyone to build a report",
-    demoBody:
-      "Utilization, revenue, instructor activity, receivables. Filter it, save it, and click any figure to open the report behind it.",
     reasons: [
       "You want to evaluate the software by using it, not by sitting through a demo",
       "The price is published and does not depend on a negotiation",
@@ -619,7 +586,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       ],
       [
         "Integrations",
-        "Stripe, Google Calendar, QuickBooks Online, plus a public REST API.",
+        "Stripe, Google Calendar and QuickBooks Online, plus a public REST API on the Enterprise plan.",
         "Not published",
       ],
     ],
@@ -657,10 +624,6 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       "Corporate jet scheduling versus software for a flight school or club.",
     heroHeadline: "Flight school software, not corporate jet scheduling",
     intro: "Airplane Manager is built for corporate flight departments and says so plainly. A flight school day looks nothing like that: students and renters booking themselves, instructors with availability and their own rates, aircraft billed by the hour, and an invoice at the end of every flight. AerScheduler is built for that day, and we help you move across and get set up rather than handing you a login and wishing you luck.",
-    demo: "self-booking",
-    demoTitle: "Students and renters book themselves",
-    demoBody:
-      "The rules are yours: who is approved on which aircraft, how far ahead they can book, whether an instructor is required. The desk stops being a switchboard.",
     reasons: [
       "Your schedule is driven by students and renters, not by trip requests",
       "Instructors need availability, pairing and their own rates",
@@ -741,10 +704,6 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       "Free booking calendar versus running the money and the maintenance too.",
     heroHeadline: "When your club outgrows a free booking calendar",
     intro: "BookOurPlane has given flying clubs a free calendar since 2004, and if a calendar is genuinely all your club needs then keep it. Clubs move when the money starts costing somebody their evenings: billing the flight from Hobbs, chasing monthly dues, and knowing an aircraft is not overdue an inspection before a member takes it. We help move your roster and set the club up, and the first 14 days cost nothing.",
-    demo: "memberships",
-    demoTitle: "The part a booking calendar leaves to a spreadsheet",
-    demoBody:
-      "Membership tiers, joining fees and monthly dues billed automatically, with prorated first periods and a record of every period billed, waived or owed.",
     reasons: [
       "Your treasurer is chasing dues and flight time in a spreadsheet",
       "You want the flight billed from Hobbs the moment it is closed out, not typed up later",
@@ -795,7 +754,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       ],
       [
         "Integrations",
-        "Stripe, Google Calendar, QuickBooks Online, plus a public REST API.",
+        "Stripe, Google Calendar and QuickBooks Online, plus a public REST API on the Enterprise plan.",
         "iCalendar feed",
       ],
     ],
@@ -849,7 +808,7 @@ export const COMPETITOR_FAQS: Record<
   "flight-schedule-pro": [
     {
       q: "How much does AerScheduler cost compared to Flight Schedule Pro?",
-      a: `AerScheduler is $${PRICE_PER_AIRCRAFT} per aircraft per month with every user included, and simulators and classrooms are free. Flight Schedule Pro is quoted per school and does not publish a price, so there is no public figure to compare against.`,
+      a: `AerScheduler is $${PRICE_PER_AIRCRAFT} per aircraft per month with every user included, and simulators and classrooms are free. Flight Schedule Pro prices per aircraft by custom quote and does not publish the figure, so there is no public number to compare against.`,
     },
     {
       q: "Can I switch from Flight Schedule Pro without a sales call?",

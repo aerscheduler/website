@@ -506,8 +506,6 @@ for (const block of competitorBlocks) {
       collapse(
         [
           competitorField(block, "intro"),
-          competitorField(block, "demoTitle"),
-          competitorField(block, "demoBody"),
           competitorField(block, "proofsTitle"),
         ].join(". ")
       )

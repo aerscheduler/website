@@ -532,8 +532,7 @@ export function FeaturePage({ feature }: { feature: Feature }) {
  * Exhaustive on purpose, with no `default:`. The old version fell back to the
  * dispatch board, which meant a new feature slug shipped a page whose copy talked
  * about invoices while the picture showed a schedule. That is a silent bug and it
- * has happened here before. A missing case is now a type error at build time,
- * which is the same rule `CompetitorDemoVisual` already follows.
+ * has happened here before. A missing case is now a type error at build time.
  */
 function FeatureVisual({ slug }: { slug: FeatureSlug }) {
   switch (slug) {
