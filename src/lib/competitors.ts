@@ -236,7 +236,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
     ogDescription:
       "A published price instead of a quote, every module in one plan, iOS and Android apps, and work orders on customers' aircraft.",
     heroHeadline: "The Flight Schedule Pro alternative with every module included",
-    heroSubhead: `Flight Schedule Pro sells scheduling, billing, training, maintenance and reporting as separate hubs, priced by quote. AerScheduler is one system at $${PRICE_PER_AIRCRAFT} per aircraft a month, with work orders, both mobile apps and every user included, and you can start today.`,
+    heroSubhead: `Flight Schedule Pro sells scheduling, billing, training, maintenance and reporting as separate hubs, priced by quote. AerScheduler puts all of it in one plan at $${PRICE_PER_AIRCRAFT} per aircraft a month, with iOS and Android apps and every user included, and you can start today.`,
     priceLines: ["Scheduling Hub", "Billing Hub", "Training Hub", "Maintenance Hub", "Reporting Hub"],
     intro: "Flight Schedule Pro works, and your school has years of history inside it. That is exactly why moving feels like a project, and it is the part we take off you: we move your data with you, set the school up with you, and you keep Flight Schedule Pro running until your staff stop reaching for it. What is on the other side is one system for the schedule, the invoice and the maintenance record, and a price you can read on this page.",
     angles: {
