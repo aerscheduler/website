@@ -42631,6 +42631,145 @@
               "type": "string"
             },
             "description": "Later ADs that supersede or revise this one. Returned on a single look-up."
+          },
+          "details": {
+            "description": "The applicability and required actions as readable structure, laid out as the Federal Register prints them. Null until read; empty lists when the layout could not be read (then use `applicability`).",
+            "properties": {
+              "v": {
+                "type": "integer",
+                "description": "Format version.",
+                "example": 1
+              },
+              "applicability": {
+                "type": "array",
+                "items": {
+                  "description": "One piece of an AD's text. `p` a paragraph at its outline depth (`(1)` is 1, `(i)` is 2); `h` a heading inside a section; `note` a note; `table` a table with its column headings and rows.",
+                  "type": "object",
+                  "properties": {
+                    "t": {
+                      "type": "string",
+                      "description": "Kind.",
+                      "enum": [
+                        "p",
+                        "h",
+                        "note",
+                        "table"
+                      ]
+                    },
+                    "text": {
+                      "type": "string",
+                      "description": "The text (`p`, `h`, `note`)."
+                    },
+                    "level": {
+                      "type": "integer",
+                      "description": "Outline depth of a paragraph, 0 to 3."
+                    },
+                    "title": {
+                      "description": "A table's title.",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "head": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "A table's column headings."
+                    },
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A table's rows, one string per cell."
+                    }
+                  },
+                  "required": [
+                    "t"
+                  ]
+                }
+              },
+              "actions": {
+                "type": "array",
+                "description": "The sections that say what to do, in order.",
+                "items": {
+                  "type": "object",
+                  "description": "One section.",
+                  "properties": {
+                    "heading": {
+                      "type": "string",
+                      "description": "Its heading.",
+                      "example": "Required Actions"
+                    },
+                    "blocks": {
+                      "type": "array",
+                      "items": {
+                        "description": "One piece of an AD's text. `p` a paragraph at its outline depth (`(1)` is 1, `(i)` is 2); `h` a heading inside a section; `note` a note; `table` a table with its column headings and rows.",
+                        "type": "object",
+                        "properties": {
+                          "t": {
+                            "type": "string",
+                            "description": "Kind.",
+                            "enum": [
+                              "p",
+                              "h",
+                              "note",
+                              "table"
+                            ]
+                          },
+                          "text": {
+                            "type": "string",
+                            "description": "The text (`p`, `h`, `note`)."
+                          },
+                          "level": {
+                            "type": "integer",
+                            "description": "Outline depth of a paragraph, 0 to 3."
+                          },
+                          "title": {
+                            "description": "A table's title.",
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "head": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "description": "A table's column headings."
+                          },
+                          "rows": {
+                            "type": "array",
+                            "items": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "description": "A table's rows, one string per cell."
+                          }
+                        },
+                        "required": [
+                          "t"
+                        ]
+                      }
+                    }
+                  },
+                  "additionalProperties": true
+                }
+              }
+            },
+            "additionalProperties": true,
+            "type": [
+              "object",
+              "null"
+            ]
           }
         },
         "additionalProperties": true
@@ -42713,6 +42852,145 @@
               },
               "inLibrary": {
                 "type": "boolean"
+              },
+              "details": {
+                "description": "The applicability and required actions as readable structure, laid out as the Federal Register prints them. Null until read; empty lists when the layout could not be read (then use `applicability`).",
+                "properties": {
+                  "v": {
+                    "type": "integer",
+                    "description": "Format version.",
+                    "example": 1
+                  },
+                  "applicability": {
+                    "type": "array",
+                    "items": {
+                      "description": "One piece of an AD's text. `p` a paragraph at its outline depth (`(1)` is 1, `(i)` is 2); `h` a heading inside a section; `note` a note; `table` a table with its column headings and rows.",
+                      "type": "object",
+                      "properties": {
+                        "t": {
+                          "type": "string",
+                          "description": "Kind.",
+                          "enum": [
+                            "p",
+                            "h",
+                            "note",
+                            "table"
+                          ]
+                        },
+                        "text": {
+                          "type": "string",
+                          "description": "The text (`p`, `h`, `note`)."
+                        },
+                        "level": {
+                          "type": "integer",
+                          "description": "Outline depth of a paragraph, 0 to 3."
+                        },
+                        "title": {
+                          "description": "A table's title.",
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "head": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "A table's column headings."
+                        },
+                        "rows": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "description": "A table's rows, one string per cell."
+                        }
+                      },
+                      "required": [
+                        "t"
+                      ]
+                    }
+                  },
+                  "actions": {
+                    "type": "array",
+                    "description": "The sections that say what to do, in order.",
+                    "items": {
+                      "type": "object",
+                      "description": "One section.",
+                      "properties": {
+                        "heading": {
+                          "type": "string",
+                          "description": "Its heading.",
+                          "example": "Required Actions"
+                        },
+                        "blocks": {
+                          "type": "array",
+                          "items": {
+                            "description": "One piece of an AD's text. `p` a paragraph at its outline depth (`(1)` is 1, `(i)` is 2); `h` a heading inside a section; `note` a note; `table` a table with its column headings and rows.",
+                            "type": "object",
+                            "properties": {
+                              "t": {
+                                "type": "string",
+                                "description": "Kind.",
+                                "enum": [
+                                  "p",
+                                  "h",
+                                  "note",
+                                  "table"
+                                ]
+                              },
+                              "text": {
+                                "type": "string",
+                                "description": "The text (`p`, `h`, `note`)."
+                              },
+                              "level": {
+                                "type": "integer",
+                                "description": "Outline depth of a paragraph, 0 to 3."
+                              },
+                              "title": {
+                                "description": "A table's title.",
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "head": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                },
+                                "description": "A table's column headings."
+                              },
+                              "rows": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                },
+                                "description": "A table's rows, one string per cell."
+                              }
+                            },
+                            "required": [
+                              "t"
+                            ]
+                          }
+                        }
+                      },
+                      "additionalProperties": true
+                    }
+                  }
+                },
+                "additionalProperties": true,
+                "type": [
+                  "object",
+                  "null"
+                ]
               }
             },
             "additionalProperties": true

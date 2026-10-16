@@ -19,7 +19,8 @@ be found the way you find them today.
 An owner or admin chooses **Find them for me** under <Where app="web">Settings → Airworthiness
 Directives</Where>. See [Choose how much AerScheduler does about Airworthiness
 Directives](/docs/maintenance/choose-how-we-handle-airworthiness-directives). The **ADs** tab then
-appears on every aircraft, for owners, admins and technicians.
+appears on every aircraft, for owners, admins and technicians, and the aircraft's page in the app
+gets an **ADs** row.
 
 ## What the list is
 
@@ -32,7 +33,9 @@ ones daily. An aircraft's list is the ADs in it that name:
   up on the aircraft form fills the engine in from the FAA registry.
 - **Its propeller**, when one is recorded. The registry does not carry it, so type it in.
 
-Each row says how the AD names the aircraft: **names 172S** (the exact model), **in the range
+The list is grouped by decision (**To review**, **Applies**, **Not applicable**), and inside
+each by what the AD is written against: **Airframe**, **Engine** or **Propeller**. Each row says
+how the AD names the aircraft: **names 172S** (the exact model), **in the range
 172A through 172S** (a letter range that covers it), or **names the 172 series** (its family,
 which you need to read closely). An AD replaced by a later one is left off; the later one says
 what it supersedes.
@@ -41,16 +44,20 @@ what it supersedes.
 
 <Steps>
   <Step n={1} title="Open the aircraft and choose ADs">
-    The list opens on **To review**. Choose a row to read the AD's own applicability, with what
-    matched highlighted, what it requires, and a link to the AD in the Federal Register.
+    Choose a row to read the AD beside the list: who it applies to, a short summary, and what it
+    requires, laid out as the Federal Register prints it, with numbered paragraphs, notes and
+    serial-number tables. What matched is highlighted, and a link opens the full AD.
   </Step>
-  <Step n={2} title="If it applies, choose Applies">
+  <Step n={2} title="Choose Decide">
+    **Decide** is on each row and at the bottom of the AD you are reading.
+  </Step>
+  <Step n={3} title="If it applies, choose Applies">
     **Track it as an inspection** opens Add inspections with the AD filled in: set its interval
     or deadline and save, and it is tracked like any AD, with its compliance record when signed
     off. **Applies, nothing to track** records that it applies when there is nothing left to
     schedule, such as a one-time AD already complied with.
   </Step>
-  <Step n={3} title="If it does not apply, choose Not applicable">
+  <Step n={4} title="If it does not apply, choose Not applicable">
     Pick why: the serial number is outside the range, the affected part is not installed, an
     earlier action terminated it, or other (say why in the note). The note is the place for what
     you checked, such as the serial number.
@@ -59,8 +66,15 @@ what it supersedes.
 
 Decided ADs move to **Applies** or **Not applicable**, each showing who decided and when. An AD
 already tracked by an inspection with its number shows under **Applies** without anyone deciding
-it again. To change a decision, open the row's **…** menu and choose **Back to review**. Every
-decision is in the audit log.
+it again. To change a decision, open the row's **…** menu, or **Change the decision** on the AD,
+and choose **Back to review**. Every decision is in the audit log.
+
+## On your phone
+
+Open the aircraft in the app and choose <Where app="mobile">ADs</Where>, under its inspections.
+The list has the same groups. Tap an AD to read it, then use the gear menu to mark it **Applies:
+track it**, **Applies: nothing to track** or **Not applicable** with a reason, or to send it
+**Back to review**. Decisions made on the phone and on the web are the same decisions.
 
 ## When the list is short or empty
 
