@@ -267,8 +267,8 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
     reasons: [
       "You want to start this week, without a demo call",
       "You want the price on the page, not a quote",
+      "Your front desk wants a board that updates on every screen the moment a booking moves",
       "Your renters and instructors carry Android phones as well as iPhones",
-      "Your shop works on customers' aircraft as well as your own",
     ],
     rows: [
       ["Pricing", PRICE_ROW_OURS, "Per aircraft, by custom quote. No price published.", "Buying it"],
@@ -283,6 +283,12 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
         "Sign up and put the first flight on the board the same day. No call needed.",
         "Request a demo, or ask for pricing.",
         "Buying it",
+      ],
+      [
+        "Dispatch board",
+        "A lane for every aircraft, simulator and classroom. Drag a booking to move or stretch it.",
+        "Drag-and-drop scheduling, and Intelligent Scheduling in beta.",
+        "Running the day",
       ],
       [
         "Mobile apps",
@@ -386,7 +392,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
     ogDescription:
       "Native iOS and Android apps, split billing for any number of people, work orders and an AD library.",
     heroHeadline: "The Flight Circle alternative with native iOS and Android apps",
-    heroSubhead: "Flight Circle runs on a phone as a web page added to the home screen. AerScheduler has its own apps on the App Store and Google Play for students, renters, instructors and mechanics, and the same system runs your billing, maintenance and work orders.",
+    heroSubhead: "Flight Circle runs on a phone as a web page added to the home screen. AerScheduler has its own apps on the App Store and Google Play, and a dispatch board that updates on every screen the moment a booking moves, with billing, maintenance and work orders on the same record.",
     heroVisual: "app",
     phoneTag: "No native app",
     phoneLines: [
@@ -417,24 +423,30 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       },
     },
     reasons: [
+      "Your front desk wants a board that updates on every screen the moment a booking moves",
       "Your pilots want an app from the App Store or Google Play, not a website on the home screen",
       "Several people share flights and each needs their own invoice",
       "Your mechanics work on customers' aircraft as well as your own",
-      "You want ADs picked from a library, not typed in one by one",
     ],
     rows: [
       ["Pricing", PRICE_ROW_OURS, "$10 per aircraft or simulator a month. Unlimited users.", "Buying it"],
       [
-        "Mobile apps",
-        "Native apps on the App Store and Google Play, with push notifications.",
-        "A web app added to the home screen from the browser. Not on the App Store or Google Play.",
-        "On the ramp",
+        "Dispatch board",
+        "A lane for every aircraft, simulator and classroom. Drag a booking to move or stretch it.",
+        "A schedule with split views, recurring reservations and booking restrictions.",
+        "Scheduling",
       ],
       [
         "Live schedule",
         "Every screen in the school updates the moment a booking changes.",
         "Not published",
-        "On the ramp",
+        "Scheduling",
+      ],
+      [
+        "Mobile apps",
+        "Native apps on the App Store and Google Play, with push notifications.",
+        "A web app added to the home screen from the browser. Not on the App Store or Google Play.",
+        "Scheduling",
       ],
       [
         "Shared flights",
@@ -556,7 +568,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       ],
       [
         "Dispatch board",
-        "Lane views across aircraft, simulators and rooms, with conflict-aware booking and a live front-desk view.",
+        "A lane for every aircraft, simulator and classroom, live on every screen. Drag a booking to move or stretch it.",
         "Scheduling and dispatch",
         "Running the day",
       ],
@@ -700,7 +712,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       ],
       [
         "Dispatch board",
-        "Lane views across aircraft, simulators and rooms, with conflict-aware booking and a live front-desk view.",
+        "A lane for every aircraft, simulator and classroom, live on every screen. Drag a booking to move or stretch it.",
         "Scheduling",
         "Running the day",
       ],
@@ -831,7 +843,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       ],
       [
         "Dispatch board",
-        "Lane views across aircraft, simulators and rooms, with conflict-aware booking and a live front-desk view.",
+        "A lane for every aircraft, simulator and classroom, live on every screen. Drag a booking to move or stretch it.",
         "Scheduling and flight operations",
         "Running the day",
       ],
@@ -1059,7 +1071,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       ["Price", PRICE_ROW_OURS, "Free", "Buying it"],
       [
         "Booking",
-        "Lane views across aircraft, simulators and rooms, with conflict-aware booking.",
+        "A lane for every aircraft, simulator and classroom, live on every screen. Drag a booking to move or stretch it.",
         "Aircraft booking with member roles and instructor availability",
         "Running the day",
       ],
@@ -1180,11 +1192,11 @@ export const COMPETITOR_FAQS: Record<
   "flight-circle": [
     {
       q: "How is AerScheduler different from Flight Circle?",
-      a: "Both run a flight school's schedule, billing and maintenance. AerScheduler has native iOS and Android apps where Flight Circle is a web app on the home screen, any number of people can share a booking with an invoice each, work orders run on customers' aircraft as well as your own, and ADs come from a library instead of being typed in.",
+      a: "Both run a flight school's schedule, billing and maintenance. AerScheduler's dispatch board updates on every screen the moment a booking moves and books from native iOS and Android apps, where Flight Circle is a web app on the home screen. Any number of people can share a booking with an invoice each, work orders run on customers' aircraft as well as your own, and ADs come from a library.",
     },
     {
       q: "Is AerScheduler cheaper than Flight Circle?",
-      a: `No. Flight Circle publishes $10 per aircraft or simulator a month. AerScheduler is $${PRICE_PER_AIRCRAFT} per aircraft, with simulators and classrooms free and every user included. Schools move for the apps, the work orders and the billing, not the price.`,
+      a: `No. Flight Circle publishes $10 per aircraft or simulator a month. AerScheduler is $${PRICE_PER_AIRCRAFT} per aircraft, with simulators and classrooms free and every user included. Schools move for the scheduling: a dispatch board that is live on every screen, drag to reschedule, and booking from a native app, with billing, maintenance and work orders on the same record.`,
     },
     {
       q: "Can I try it before talking to anyone?",

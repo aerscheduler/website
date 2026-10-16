@@ -101,6 +101,16 @@ const MAINTENANCE_SECTION: Partial<FeatureSectionData> = {
   ],
 };
 
+/**
+ * The comparison pages' default Scheduling section: the home page's, opening
+ * with the dispatch board, because on these pages scheduling is what a school
+ * is switching (Tony, 2026-10-16: "our scheduling is top tier"). Drag to
+ * reschedule is the console's day and week boards (web `drag-rules.ts`).
+ */
+const SCHEDULING_SECTION: Partial<FeatureSectionData> = {
+  body: "A dispatch board with a lane for every aircraft, simulator and classroom. Drag a booking to move it and every screen in the school updates at once. Students and renters book from the app under the rules you set, with currency, conflicts and open squawks checked before it saves.",
+};
+
 const SECTION_ORDER: CompareSectionId[] = ["scheduling", "billing", "maintenance", "work-orders", "reporting"];
 
 /** A "\n" in an angle's title is its line break, as the home titles have. */
@@ -126,7 +136,11 @@ function sectionsFor(competitor: Competitor): FeatureSectionData[] {
     const base =
       id === "work-orders"
         ? WORK_ORDERS_SECTION
-        : { ...HOME_SECTIONS.find((s) => s.id === id)!, ...(id === "maintenance" ? MAINTENANCE_SECTION : {}) };
+        : {
+            ...HOME_SECTIONS.find((s) => s.id === id)!,
+            ...(id === "maintenance" ? MAINTENANCE_SECTION : {}),
+            ...(id === "scheduling" ? SCHEDULING_SECTION : {}),
+          };
     const angle = competitor.angles?.[id];
     return {
       ...base,
