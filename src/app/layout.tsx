@@ -28,6 +28,9 @@ export const metadata: Metadata = {
   },
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
+  // Domain ownership for the Zoom Marketplace listing (Oct 2026). Zoom re-checks it, so
+  // leave it in place while the AerScheduler Zoom app exists.
+  other: { "zoom-domain-verification": "ZOOM_verify_d2a0ac9ed67d49b7a114691eb65e1359" },
   keywords: [
     "flight school management software",
     "aircraft scheduling software",
