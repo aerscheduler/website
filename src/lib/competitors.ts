@@ -32,7 +32,26 @@ export type CompetitorSlug =
   | "airplane-manager"
   | "bookourplane";
 
-export type CompareRow = [topic: string, ours: string, theirs: string];
+/**
+ * One row of the side-by-side. The optional fourth value is a group heading; the
+ * page starts a new group whenever it changes, so rows of a group sit together.
+ */
+export type CompareRow = [topic: string, ours: string, theirs: string, group?: string];
+
+/** The home page sections a comparison page can re-angle (see `angles`). */
+export type CompareSectionId = "scheduling" | "billing" | "maintenance" | "work-orders" | "reporting";
+
+/**
+ * A comparison page's take on one of the shared feature sections. Every field is
+ * optional; whatever is left out keeps the home page's wording. `title` takes a
+ * "\n" for its line break. `note` is one sentence set against the other product,
+ * and has to meet rule 1 like any table row.
+ */
+export type SectionAngle = {
+  title?: string;
+  body?: string;
+  note?: string;
+};
 
 export type CompareProof = {
   title: string;
@@ -64,6 +83,19 @@ export type Competitor = {
    * worth the disruption", so this paragraph has to answer the second one.
    */
   intro: string;
+  /**
+   * The hero's paragraph, when the page has its own. Without one the page uses a
+   * plain description of the product.
+   */
+  heroSubhead?: string;
+  /**
+   * What the other product sells, one line each, for the back panel of the hero's
+   * price card (Flight Schedule Pro's hubs, say). The price itself is always the
+   * "Pricing" row's third column, so the hero and the table cannot disagree.
+   */
+  priceLines?: string[];
+  /** Per-section copy for the shared feature sections. */
+  angles?: Partial<Record<CompareSectionId, SectionAngle>>;
   reasons: string[];
   rows: CompareRow[];
   /** Trailing note under the table. Trademark line plus the "not published" caveat. */
@@ -178,79 +210,145 @@ export const SWITCH_OFFER = {
 export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
   /* ---------------------------------------------------------------- */
   /* Flight Schedule Pro                                               */
-  /* Facts from flightschedulepro.com, checked 2026-08-18.             */
-  /* Rechecked 2026-10-16: /plans-and-pricing sells a Scheduling Hub   */
-  /* with Billing, Training, Maintenance and Reporting Hubs added, or  */
-  /* a Suite, "simple per aircraft pricing" by custom quote with no     */
-  /* figure. Its app is "iOS app (iPad & iPhone)", and a Google Play   */
-  /* search for Flight Schedule Pro returns no app of theirs.          */
+  /* Facts from flightschedulepro.com, checked 2026-08-18, rechecked   */
+  /* 2026-10-16 page by page:                                          */
+  /* - /plans-and-pricing: a Scheduling Hub with Billing, Training,    */
+  /*   Maintenance and Reporting Hubs added, or a Suite; "simple per   */
+  /*   aircraft pricing" by custom quote, no figure.                   */
+  /* - /ios-app: "iPhone or iPad"; offline grading, self-dispatch.     */
+  /*   A Google Play search returns no app of theirs.                  */
+  /* - /maintenance-hub: work orders with clock-in and clock-out,      */
+  /*   serialized parts inventory with low-stock alerts, logbook       */
+  /*   entries from the work, recurring reminders. No word of outside  */
+  /*   owners, owner approvals or ADs.                                 */
+  /* - /automated-billing: their own merchant account, QuickBooks      */
+  /*   Online sync, minimum balance before dispatch, packages.         */
+  /* - /in-app-api-access: a custom API, "case-by-case".               */
+  /* The AD row describes the AD library (server adLibrary.service.ts, */
+  /* built 2026-10-16); Tony asked for it to be written as shipped.    */
   /* ---------------------------------------------------------------- */
   "flight-schedule-pro": {
     slug: "flight-schedule-pro",
     name: "Flight Schedule Pro",
     navLabel: "vs Flight Schedule Pro",
     seoTitle: "AerScheduler vs Flight Schedule Pro",
-    seoDescription: `Compare AerScheduler and Flight Schedule Pro for flight schools: self-serve setup, $${PRICE_PER_AIRCRAFT}/mo per aircraft with unlimited users, a native app, and flight close-out that drafts the invoice.`,
+    seoDescription: `Compare AerScheduler and Flight Schedule Pro: $${PRICE_PER_AIRCRAFT} per aircraft a month with every module and user included, iOS and Android apps, work orders on customers' aircraft, and self-serve setup with no demo call.`,
     ogDescription:
-      "Self-serve vs demo-led. Per-aircraft pricing, unlimited users. Native app included.",
-    heroHeadline: "The modern alternative to Flight Schedule Pro",
+      "A published price instead of a quote, every module in one plan, iOS and Android apps, and work orders on customers' aircraft.",
+    heroHeadline: "The Flight Schedule Pro alternative with every module included",
+    heroSubhead: `Flight Schedule Pro sells scheduling, billing, training, maintenance and reporting as separate hubs, priced by quote. AerScheduler is one system at $${PRICE_PER_AIRCRAFT} per aircraft a month, with work orders, both mobile apps and every user included, and you can start today.`,
+    priceLines: ["Scheduling Hub", "Billing Hub", "Training Hub", "Maintenance Hub", "Reporting Hub"],
     intro: "Flight Schedule Pro works, and your school has years of history inside it. That is exactly why moving feels like a project, and it is the part we take off you: we move your data with you, set the school up with you, and you keep Flight Schedule Pro running until your staff stop reaching for it. What is on the other side is one system for the schedule, the invoice and the maintenance record, and a price you can read on this page.",
+    angles: {
+      scheduling: {
+        note: "Its app is for iPhone and iPad. AerScheduler's runs on iOS and Android, so the renter with an Android phone books from the app too.",
+      },
+      billing: {
+        title: "Billing\nin every plan",
+        note: "Billing is Flight Schedule Pro's Billing Hub, added to a plan. Here it is part of the price, with an invoice each when several people share a flight.",
+      },
+      maintenance: {
+        title: "Maintenance\nand AD tracking",
+        body: "Every inspection counts down by tach, Hobbs or calendar month, and an overdue annual grounds the aircraft until it is signed off. Airworthiness directives are tracked on the airframe and on each component, from a library of every AD published since 1995.",
+        note: "Flight Schedule Pro sells maintenance as its Maintenance Hub and does not publish AD tracking. Here inspections, squawks and ADs come with every plan.",
+      },
+      "work-orders": {
+        note: "Flight Schedule Pro's Maintenance Hub runs work orders with mechanic time clocks. It does not publish owner approvals or billing an aircraft's owner.",
+      },
+      reporting: {
+        title: "Reporting\non the same plan",
+        note: "Both email reports on a schedule. Here every report is part of the price, where Flight Schedule Pro sells a Reporting Hub.",
+      },
+    },
     reasons: [
-      "You want to be running this week, without a sales call",
-      `A price you can read: $${PRICE_PER_AIRCRAFT} per aircraft, every module and every user included`,
-      "Your instructors and renters are on Android as well as iPhone",
-      "You want the schedule, the invoice and the maintenance record to be one system",
+      "You want to start this week, without a demo call",
+      "You want the price on the page, not a quote",
+      "Your renters and instructors carry Android phones as well as iPhones",
+      "Your shop works on customers' aircraft as well as your own",
     ],
     rows: [
-      [
-        "Getting started",
-        "Self-serve signup. On the schedule the same day.",
-        "Demo request",
-      ],
-      ["Pricing", PRICE_ROW_OURS, "Per aircraft, by custom quote. No price published."],
+      ["Pricing", PRICE_ROW_OURS, "Per aircraft, by custom quote. No price published.", "Buying it"],
       [
         "What the price covers",
-        "Scheduling, billing, maintenance and reporting in every plan.",
+        "Scheduling, billing, maintenance, work orders and reporting, in every plan.",
         "A Scheduling Hub, with Billing, Training, Maintenance and Reporting Hubs added one by one or as a Suite.",
+        "Buying it",
       ],
       [
-        "Several people on one flight",
-        "Built in. Split the cost per head, by logged time, or in set shares. One invoice each.",
+        "Getting started",
+        "Sign up and put the first flight on the board the same day. No call needed.",
+        "Request a demo, or ask for pricing.",
+        "Buying it",
+      ],
+      [
+        "Mobile apps",
+        "iOS and Android, for students, renters, instructors and mechanics.",
+        "iOS app for iPhone and iPad.",
+        "Running the day",
+      ],
+      [
+        "Live schedule",
+        "Every screen in the school updates the moment a booking changes.",
         "Not published",
+        "Running the day",
       ],
       [
-        "Multi-day trips",
-        "One reservation across nights, with a per-night minimum per tail.",
+        "Close-out",
+        "Ramp-in drafts the invoice from the meters and the rates on the tail. Card, ACH or account balance.",
+        "Automated billing through their own merchant account.",
+        "Running the day",
+      ],
+      [
+        "Inspections",
+        "Tach, Hobbs and calendar-month countdowns. An overdue inspection grounds the aircraft.",
+        "Recurring maintenance reminders.",
+        "Maintenance",
+      ],
+      [
+        "Airworthiness directives",
+        "Tracked on the airframe and each component, from a library of every AD published since 1995, updated daily.",
         "Not published",
+        "Maintenance",
       ],
       [
-        "Mobile",
-        "Native iOS and Android apps. Book, dispatch and close out from the ramp.",
-        "iOS app for iPhone and iPad",
+        "Work orders",
+        "On your own fleet and on customers' aircraft.",
+        "Work orders with mechanic clock-in and clock-out.",
+        "Maintenance",
       ],
       [
-        "Billing",
-        "Ramp-in closes the flight and drafts the invoice. Stripe cards and ACH.",
-        "Available",
-      ],
-      [
-        "Public discovery-flight requests",
-        "Embeddable request page. Guest confirms by email, desk approves. Not instant booking.",
+        "Owner approval and billing",
+        "The owner approves, declines or puts off each finding online, then pays the job's invoice by card or ACH.",
         "Not published",
+        "Maintenance",
+      ],
+      [
+        "Parts",
+        "Parts on each job at cost plus your markup, labor at your shop rate.",
+        "Serialized parts inventory with low-stock alerts, and logbook entries written from the work.",
+        "Maintenance",
       ],
       [
         "Integrations",
-        "Stripe, Google Calendar and QuickBooks Online, plus a public REST API on the Enterprise plan.",
-        "Available",
+        "Stripe, Google Calendar and QuickBooks Online.",
+        "QuickBooks Online and an integrations marketplace.",
+        "Connecting",
+      ],
+      [
+        "API",
+        "A documented public REST API on the Enterprise plan.",
+        "A custom API, enabled case by case.",
+        "Connecting",
       ],
     ],
     disclaimer: `Flight Schedule Pro is a long-standing product and a trademark of its owner. Rows describe what each product publishes; "not published" means we could not confirm it, not that it is absent.`,
-    proofsTitle: "What the difference looks like",
-    proofs: [PROOF_REALTIME, PROOF_CLOSE_OUT, PROOF_SIMS_FREE],
+    proofsTitle: "Also in every plan",
+    proofs: [PROOF_SIMS_FREE, PROOF_SPLIT, PROOF_MULTI_DAY],
     notFitTitle: "When we may not be the right fit",
     notFit: [
       "You already run a large deployment and moving it would cost more than it saves",
       "You want a guided enterprise rollout with a named account team",
+      "You want parts inventory and logbook entries kept inside the maintenance software",
       "You need a specific workflow or integration we do not cover yet",
     ],
   },

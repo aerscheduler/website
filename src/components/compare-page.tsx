@@ -2,16 +2,18 @@ import Link from "next/link";
 import { Check, ChevronRight, PlayCircle } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Button } from "@/components/button";
-import { FeatureSection } from "@/components/landing/feature-sections";
+import { FeatureSection, type FeatureSectionData } from "@/components/landing/feature-sections";
 import {
   HOME_SECTIONS,
-  HeroWindow,
   MobileAppCard,
   PriceStatement,
   PricingBand,
   ShortQuote,
   TESTIMONIALS,
 } from "@/components/landing/home-blocks";
+import { PriceQuote } from "@/components/landing/price-quote";
+import { STATUS } from "@/components/landing/product-tokens";
+import { WorkOrdersComposite } from "@/components/landing/work-orders-composite";
 import { JsonLd } from "@/components/json-ld";
 import { Reveal, RevealGroup } from "@/components/reveal";
 import {
@@ -19,6 +21,8 @@ import {
   otherCompetitors,
   COMPETITOR_FAQS,
   SWITCH_OFFER,
+  type CompareRow,
+  type CompareSectionId,
   type Competitor,
 } from "@/lib/competitors";
 import { faqJsonLd } from "@/lib/seo";
@@ -30,28 +34,120 @@ import { DEMO_URL, PRICE_PER_AIRCRAFT, SIGNUP_URL, SITE_NAME, TRIAL_DAYS } from 
  * The content lives in `lib/competitors.ts`; this file owns only the layout, so
  * a change to the argument is made once rather than seven times.
  *
- * Rebuilt 2026-10-16 to read like the home page (Tony: "make it feel like a home
- * page ... and really sell what our platform can do"). It is built from the home
- * page's own blocks (`components/landing/home-blocks.tsx`), so the two cannot
- * drift apart. Order, and why:
+ * Rebuilt 2026-10-16 in the home page's style (Tony: "make it feel like a home
+ * page ... and really sell what our platform can do"), then made the page's own:
+ * "not copy the home page exactly ... personalize it to the Flight Schedule Pro
+ * comparison". It borrows the home page's blocks (`home-blocks.tsx`) and section
+ * layouts, and each competitor entry re-angles them. Order, and why:
  *
- * 1. Hero: "AerScheduler vs X" in the pill, the alternative headline, the trial
- *    buttons, then the same product window as the home page.
- * 2. Why schools move, plus the customer quote. About half of home page visitors
- *    reach the second screen, so the reasons and the proof go there.
- * 3. The side-by-side table, while the visitor is still comparing.
- * 4. The home page's feature sections, without Training: `competitors.ts` rule 2
- *    keeps training off every comparison page.
+ * 1. Hero: split, not the home page's centred one. The headline and buttons on
+ *    the left; on the right the price card (`PriceQuote`), because the price is
+ *    the comparison most of these products lose.
+ * 2. Why schools move, plus the customer quote, in the second screen, which
+ *    about half of visitors reach.
+ * 3. The side-by-side table, grouped, while the visitor is still comparing.
+ * 4. The feature sections, each with the entry's `angles` (title, body, and a
+ *    one-sentence note against the other product), plus Work orders. No
+ *    Training: `competitors.ts` rule 2 keeps it off every comparison page.
  * 5. The price statement, the proof points, the mobile app card.
  * 6. How the move works, the FAQ and the honest "not a fit", then the pricing
  *    band with the full quote and the other comparisons.
- *
- * The living demos that used to sit under the hero were dropped with this
- * rebuild; the hero window shows the product instead, and the sandbox is one
- * button away.
  */
 
-const COMPARE_SECTIONS = HOME_SECTIONS.filter((s) => s.id !== "training");
+/** Work orders get their own section here; on the home page they share Maintenance. */
+const WORK_ORDERS_SECTION: FeatureSectionData = {
+  id: "work-orders",
+  color: STATUS.orange,
+  layout: "side",
+  title: <>Work orders<br />for any aircraft</>,
+  body: "Open a job on one of your own aircraft or a customer's. Write up what you find, send it to the owner to approve, decline or put off each item, and close it out into an invoice with labor at your shop rate and parts at cost plus your markup.",
+  href: "/features/work-orders",
+  visual: <WorkOrdersComposite />,
+  features: [
+    [
+      { label: "Work orders", href: "/features/work-orders" },
+      { label: "Run a work order", href: "/docs/maintenance/run-a-work-order" },
+      { label: "Customer aircraft", href: "/docs/maintenance/work-on-a-customers-aircraft" },
+    ],
+    [
+      { label: "Owner approvals", href: "/docs/maintenance/see-your-aircraft-and-approve-work" },
+      { label: "Aircraft history", href: "/docs/maintenance/aircraft-history-and-invoices" },
+      { label: "Book it into the shop", href: "/docs/maintenance/book-an-aircraft-in-for-maintenance" },
+    ],
+  ],
+};
+
+/**
+ * The comparison pages' default Maintenance section: the home page's, with work
+ * orders moved out to their own section.
+ */
+const MAINTENANCE_SECTION: Partial<FeatureSectionData> = {
+  title: <>Maintenance<br />tracking</>,
+  body: "Every inspection counts down by tach, Hobbs or calendar month, and an overdue annual grounds the aircraft until it is signed off. A grounding squawk takes the aircraft off the schedule until it is fixed.",
+  features: [
+    [
+      { label: "Inspection tracking", href: "/features/inspections" },
+      { label: "Squawks and grounding", href: "/features/maintenance" },
+      { label: "AD compliance", href: "/resources/airworthiness-directive-tracking" },
+    ],
+    [
+      { label: "Life-limited components", href: "/docs/maintenance/track-life-limited-components" },
+      { label: "Go/no-go board", href: "/docs/maintenance/use-the-go-no-go-board" },
+      { label: "When an aircraft grounds", href: "/docs/maintenance/when-aerscheduler-grounds-an-aircraft" },
+    ],
+  ],
+};
+
+const SECTION_ORDER: CompareSectionId[] = ["scheduling", "billing", "maintenance", "work-orders", "reporting"];
+
+/** A "\n" in an angle's title is its line break, as the home titles have. */
+function titleOf(text: string) {
+  const [first, ...rest] = text.split("\n");
+  return (
+    <>
+      {first}
+      {rest.map((line) => (
+        <span key={line}>
+          {" "}
+          <br />
+          {line}
+        </span>
+      ))}
+    </>
+  );
+}
+
+/** The feature sections for one comparison page, with its angles applied. */
+function sectionsFor(competitor: Competitor): FeatureSectionData[] {
+  return SECTION_ORDER.map((id) => {
+    const base =
+      id === "work-orders"
+        ? WORK_ORDERS_SECTION
+        : { ...HOME_SECTIONS.find((s) => s.id === id)!, ...(id === "maintenance" ? MAINTENANCE_SECTION : {}) };
+    const angle = competitor.angles?.[id];
+    return {
+      ...base,
+      ...(angle?.title ? { title: titleOf(angle.title) } : {}),
+      ...(angle?.body ? { body: angle.body } : {}),
+      ...(angle?.note ? { note: { label: `Compared with ${competitor.name}`, text: angle.note } } : {}),
+    };
+  });
+}
+
+/** Consecutive rows that share a group heading. */
+function groupRows(rows: CompareRow[]) {
+  const groups: { title?: string; rows: CompareRow[] }[] = [];
+  for (const row of rows) {
+    const last = groups[groups.length - 1];
+    if (last && last.title === row[3]) last.rows.push(row);
+    else groups.push({ title: row[3], rows: [row] });
+  }
+  return groups;
+}
+
+/** What the other product publishes about its price: the table's own Pricing row. */
+const theirPrice = (competitor: Competitor) =>
+  competitor.rows.find(([topic]) => topic === "Pricing" || topic === "Price")?.[2] ?? "Not published";
 
 /** Fills `{name}` in the shared switching copy. */
 const withName = (text: string, name: string) => text.replace(/\{name\}/g, name);
@@ -67,54 +163,61 @@ export function ComparePage({ competitor }: { competitor: Competitor }) {
           adding breadcrumbJsonLd here would ship the page two of them. */}
       <JsonLd data={faqJsonLd(faqs)} />
 
-      {/* Hero, in the home page's shape. Somebody who searched a rival by name
-          has already decided they want software, so the buttons sit directly
-          under the promise. */}
+      {/* Hero: split, the argument on the left and the price card on the right.
+          Somebody who searched a rival by name has already decided they want
+          software, so the buttons sit directly under the promise. */}
       <section className="relative isolate overflow-hidden">
         <div
           className="grid-lines pointer-events-none absolute inset-x-0 top-0 h-[720px] opacity-60 [mask-image:linear-gradient(to_bottom,black_40%,transparent)]"
           aria-hidden
         />
-        <div className="relative mx-auto max-w-7xl px-4 pt-8 text-center sm:px-6 lg:pt-10">
+        <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-8 sm:px-6 lg:pb-24 lg:pt-10">
           <Breadcrumbs
-            className="flex justify-center"
             items={[
               { name: "Resources", href: "/resources" },
               { name: competitor.navLabel, href: competitorHref(competitor.slug) },
             ]}
           />
-          <h1 className="animate-fade-up mt-10 lg:mt-14">
-            <span className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-3.5 py-1.5 text-xs font-semibold tracking-tight text-[#1b1c1f] shadow-sm sm:text-sm">
-              <span className="size-1.5 shrink-0 rounded-full bg-primary" aria-hidden />
-              {SITE_NAME} vs {competitor.name}
-            </span>
-            <span className="sr-only">: </span>
-            <span className="mx-auto mt-6 block max-w-4xl text-balance text-[2.6rem] font-semibold leading-[1.02] tracking-[-0.035em] text-[#0b0b0d] sm:text-6xl lg:text-[5rem]">
-              {competitor.heroHeadline}
-            </span>
-          </h1>
-          <p className="animate-fade-up-delay-2 mx-auto mt-6 max-w-xl text-lg leading-relaxed text-black/55 sm:text-xl">
-            Scheduling, billing, maintenance tracking and reporting in one
-            system, with iOS and Android apps. ${PRICE_PER_AIRCRAFT} per
-            aircraft with every instructor, student and renter included, and
-            you can start today without a demo call.
-          </p>
-          <div className="animate-fade-up-delay-3 mt-8 flex flex-wrap items-center justify-center gap-3">
-            <Button href={SIGNUP_URL} size="lg">
-              Start free trial
-              <ChevronRight className="size-4 opacity-80" />
-            </Button>
-            <Button href={DEMO_URL} size="lg" variant="secondary">
-              <PlayCircle className="size-4 opacity-80" />
-              Try the live demo
-            </Button>
+          <div className="mt-10 grid items-center gap-14 lg:mt-14 lg:grid-cols-[1fr_1fr] lg:gap-12">
+            <div>
+              <h1 className="animate-fade-up">
+                <span className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-3.5 py-1.5 text-xs font-semibold tracking-tight text-[#1b1c1f] shadow-sm sm:text-sm">
+                  <span className="size-1.5 shrink-0 rounded-full bg-primary" aria-hidden />
+                  {SITE_NAME} vs {competitor.name}
+                </span>
+                <span className="sr-only">: </span>
+                <span className="mt-6 block text-balance text-[2.6rem] font-semibold leading-[1.02] tracking-[-0.035em] text-[#0b0b0d] sm:text-6xl lg:text-[3.75rem]">
+                  {competitor.heroHeadline}
+                </span>
+              </h1>
+              <p className="animate-fade-up-delay-2 mt-6 max-w-xl text-lg leading-relaxed text-black/55 sm:text-xl">
+                {competitor.heroSubhead ??
+                  `Scheduling, billing, maintenance tracking, work orders and reporting in one system, with iOS and Android apps. $${PRICE_PER_AIRCRAFT} per aircraft with every instructor, student and renter included, and you can start today without a demo call.`}
+              </p>
+              <div className="animate-fade-up-delay-3 mt-8 flex flex-wrap items-center gap-3">
+                <Button href={SIGNUP_URL} size="lg">
+                  Start free trial
+                  <ChevronRight className="size-4 opacity-80" />
+                </Button>
+                <Button href={DEMO_URL} size="lg" variant="secondary">
+                  <PlayCircle className="size-4 opacity-80" />
+                  Try the live demo
+                </Button>
+              </div>
+              <p className="animate-fade-up-delay-3 mt-4 text-sm text-black/45">
+                {TRIAL_DAYS}-day free trial · Cancel anytime · No sales call
+              </p>
+            </div>
+            <div className="animate-fade-up-delay-3 md:min-h-[540px]">
+              <PriceQuote
+                competitor={competitor.name}
+                theirLines={competitor.priceLines}
+                theirTotal={theirPrice(competitor)}
+                theirTag={/quote/i.test(theirPrice(competitor)) ? "Quote on request" : undefined}
+              />
+            </div>
           </div>
-          <p className="animate-fade-up-delay-3 mt-4 text-sm text-black/45">
-            {TRIAL_DAYS}-day free trial · Cancel anytime · No sales call
-          </p>
         </div>
-        <HeroWindow />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-white" aria-hidden />
       </section>
 
       {/* Why schools move, in the home page's audience strip, with the customer
@@ -183,27 +286,36 @@ export function ComparePage({ competitor }: { competitor: Competitor }) {
               </span>
               <span className="text-black/40">{competitor.name}</span>
             </div>
-            <dl className="relative">
-              {competitor.rows.map(([topic, ours, theirs]) => (
-                <div
-                  key={topic}
-                  className="grid gap-3 border-t border-black/[0.08] py-6 md:grid-cols-[0.8fr_1.2fr_1.2fr] md:gap-8"
-                >
-                  <dt className="text-[15px] font-semibold text-[#0b0b0d]">{topic}</dt>
-                  <dd className="flex items-start gap-2.5 text-[15px] leading-relaxed text-[#0b0b0d]">
-                    <Check className="mt-1 size-4 shrink-0 text-primary" aria-hidden />
-                    <span>
-                      <span className="mr-1.5 font-semibold text-primary md:hidden">{SITE_NAME}:</span>
-                      {ours}
-                    </span>
-                  </dd>
-                  <dd className="text-[15px] leading-relaxed text-black/50 md:pl-0 pl-[26px]">
-                    <span className="mr-1.5 font-semibold text-black/60 md:hidden">{competitor.name}:</span>
-                    {theirs}
-                  </dd>
-                </div>
-              ))}
-            </dl>
+            {groupRows(competitor.rows).map((group, gi) => (
+              <div key={group.title ?? gi} className="relative">
+                {group.title && (
+                  <h3 className={`pb-3 text-[13px] font-semibold uppercase tracking-[0.12em] text-black/35 ${gi === 0 ? "pt-2" : "pt-10"}`}>
+                    {group.title}
+                  </h3>
+                )}
+                <dl>
+                  {group.rows.map(([topic, ours, theirs]) => (
+                    <div
+                      key={topic}
+                      className="grid gap-3 border-t border-black/[0.08] py-6 md:grid-cols-[0.8fr_1.2fr_1.2fr] md:gap-8"
+                    >
+                      <dt className="text-[15px] font-semibold text-[#0b0b0d]">{topic}</dt>
+                      <dd className="flex items-start gap-2.5 text-[15px] leading-relaxed text-[#0b0b0d]">
+                        <Check className="mt-1 size-4 shrink-0 text-primary" aria-hidden />
+                        <span>
+                          <span className="mr-1.5 font-semibold text-primary md:hidden">{SITE_NAME}:</span>
+                          {ours}
+                        </span>
+                      </dd>
+                      <dd className="pl-[26px] text-[15px] leading-relaxed text-black/50 md:pl-0">
+                        <span className="mr-1.5 font-semibold text-black/60 md:hidden">{competitor.name}:</span>
+                        {theirs}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            ))}
             <p className="relative border-t border-black/[0.08] pt-5 text-xs leading-relaxed text-black/40">
               {competitor.disclaimer}
             </p>
@@ -211,9 +323,10 @@ export function ComparePage({ competitor }: { competitor: Competitor }) {
         </div>
       </section>
 
-      {/* What the platform does, as the home page tells it. */}
+      {/* What the platform does, in the home page's section layouts, angled at
+          this comparison. */}
       <div className="flex flex-col">
-        {COMPARE_SECTIONS.map((section) => (
+        {sectionsFor(competitor).map((section) => (
           <FeatureSection key={section.id} section={section} />
         ))}
       </div>

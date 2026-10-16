@@ -36,7 +36,27 @@ export type FeatureSectionData = {
   href: string;
   visual: ReactNode;
   features: Link2[][];
+  /**
+   * One sentence set against a named product, for the comparison pages
+   * (`compare-page.tsx`). The home page never sets it.
+   */
+  note?: { label: string; text: string };
 };
+
+/** The comparison note under a section's paragraph. */
+function Note({ section, center }: { section: FeatureSectionData; center?: boolean }) {
+  if (!section.note) return null;
+  return (
+    <p
+      className={cn(
+        "mt-6 max-w-xl text-[15px] leading-relaxed text-black/55",
+        center ? "mx-auto" : "border-l-2 border-primary/30 pl-4"
+      )}
+    >
+      <span className="font-semibold text-[#0b0b0d]">{section.note.label}.</span> {section.note.text}
+    </p>
+  );
+}
 
 function Title({ section }: { section: FeatureSectionData }) {
   return (
@@ -90,6 +110,7 @@ function SplitIntro({ section }: { section: FeatureSectionData }) {
       <Title section={section} />
       <div>
         <p className="text-lg leading-relaxed text-black/60 sm:text-xl">{section.body}</p>
+        <Note section={section} />
         <LearnMore href={section.href} />
       </div>
     </div>
@@ -121,6 +142,7 @@ export function FeatureSection({ section }: { section: FeatureSectionData }) {
           <div className="lg:sticky lg:top-28 lg:self-start">
             <Title section={section} />
             <p className="mt-6 text-lg leading-relaxed text-black/60 sm:text-xl">{section.body}</p>
+            <Note section={section} />
             <LearnMore href={section.href} />
             <FeatureList columns={section.features} stacked />
           </div>
@@ -141,6 +163,7 @@ export function FeatureSection({ section }: { section: FeatureSectionData }) {
           <div className="mx-auto max-w-3xl text-center">
             <Title section={section} />
             <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-black/60 sm:text-xl">{section.body}</p>
+            <Note section={section} center />
             <LearnMore href={section.href} />
           </div>
           <div className="mt-14 lg:mt-16">
