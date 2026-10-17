@@ -36,10 +36,23 @@ it opens them grouped by aircraft; tap one to read it and decide.
 
 <Where app="web">Reports → AD status</Where> lists every AD the library holds against each
 aircraft with its status: **Applies** and the inspection tracking it, **Not applicable** and
-why, or **To review**, with who decided and when. Group it by aircraft, status or AD, and
+why, or **To review**, with who decided and when. For an AD tracked as an inspection it adds
+whether it recurs or is one-time, when it was last done and the method of compliance written on
+that sign-off, and when it is next due (a date, or a meter reading for an hour interval). Group it by aircraft, status or AD, and
 export it for an inspector. It covers what the library reaches: ADs published since 1995 that
 name the aircraft's make and model, engine or propeller. Keep the ADs it cannot reach (older
 ones, or ones against parts the aircraft record does not name) tracked by hand.
+
+## On a work order
+
+On a job, **Add → ADs to review** puts the aircraft's ADs on it as findings, so AD research is
+part of the annual. It adds one item for each AD nobody has decided yet, and one for each AD
+inspection that is overdue or due soon. Pressing it again adds only what is new.
+
+An AD item reads **Decide AD …**: that opens the AD on the aircraft, and deciding it there
+marks the item done. AD items are the shop's own research, so they are never sent to the owner
+or counted among the findings waiting for an answer. An AD inspection item is done when the
+inspection is signed off, like any other.
 
 ## The AD library
 
@@ -61,6 +74,9 @@ AerScheduler checks the Federal Register every day. When a new AD names one of y
 owners, admins and technicians are told by email and push, and it appears in the inbox. The
 message names the AD and the aircraft, and opens that aircraft's ADs (or **Fleet ADs** when it
 names more than one).
+
+Every Monday, the same people get one email listing how many ADs are still undecided on each
+aircraft, with a button to **Fleet ADs**. It comes only when something is waiting.
 
 To stop these, turn off **New ADs for our aircraft** on <Where app="web">Notification
 settings</Where>, or **New ADs** under <Where app="mobile">Settings → Notifications</Where> in the

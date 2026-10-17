@@ -26781,6 +26781,106 @@
         }
       }
     },
+    "/work-orders/{id}/items/ads": {
+      "post": {
+        "tags": [
+          "Work orders"
+        ],
+        "summary": "Add the aircraft's ADs to review",
+        "description": "**Owners, admins and technicians only.** Adds a found item for each AD the AD library lists against the job's aircraft that nobody has decided (done when the AD is decided on the aircraft, `doneVia: ad`), and one for each AD inspection on it that is overdue or due soon (done when signed off). Anything already on the job is skipped, so a second call adds nothing. 400 on a closed job.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "added": {
+                          "type": "integer",
+                          "description": "How many items were added."
+                        },
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/WorkOrderItem"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The job is closed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not one of this organization's jobs.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "addWorkOrderAdItems",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The work order id."
+          }
+        ]
+      }
+    },
     "/work-orders/{id}/items/{itemId}": {
       "patch": {
         "tags": [
@@ -44569,11 +44669,12 @@
           },
           "doneVia": {
             "type": "string",
-            "description": "Where done is read from.",
+            "description": "Where done is read from: the item, its inspection's sign-off, its squawk, or (`ad`) the AD it reviews being decided on the aircraft.",
             "enum": [
               "item",
               "inspection",
-              "squawk"
+              "squawk",
+              "ad"
             ]
           },
           "inspection": {
@@ -44651,6 +44752,21 @@
             "description": "When the shop sent this finding to the owners. Until then the owners are not shown it or asked about it.",
             "type": [
               "string",
+              "null"
+            ]
+          },
+          "ad": {
+            "description": "The AD this item reviews (added by Add the aircraft's ADs to review).",
+            "properties": {
+              "adNumber": {
+                "type": "string",
+                "description": "AD number.",
+                "example": "2013-11-11"
+              }
+            },
+            "additionalProperties": true,
+            "type": [
+              "object",
               "null"
             ]
           }
