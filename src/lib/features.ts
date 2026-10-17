@@ -256,6 +256,8 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
       "Photos and PDFs on an open inspection, copied onto the signed record",
       "POH and weight and balance on the aircraft, readable when you book",
       "AVIATES inspections (annual, 100-hour, ELT and the rest) on hour and date intervals",
+      "Every AD since 1995 that names each aircraft, engine or propeller, listed for a person to decide",
+      "An alert the day a new AD names one of your aircraft",
       "Sign off overdue items and return the aircraft to service",
       "Grounded status visible across scheduling",
       "Log issues from the native app on the ramp",

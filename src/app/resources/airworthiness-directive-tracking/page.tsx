@@ -13,12 +13,12 @@ const PATH = "/resources/airworthiness-directive-tracking";
 export const metadata: Metadata = {
   title: TITLE,
   description:
-    "What AD tracking actually means, the difference between knowing which directives apply and proving what you did about them, and where a scheduling system helps versus where you still need ADlog or AVTRAK. Written for flight school owners and the mechanics who sign.",
+    "What AD tracking actually means: finding the directives that name each aircraft, deciding which apply, proving what you did about them, and keeping a lapsed one off the schedule. What AerScheduler does for each, and where ADlog or AVTRAK still fit. Written for flight school owners and the mechanics who sign.",
   alternates: { canonical: PATH },
   openGraph: {
     title: TITLE,
     description:
-      "Applicability versus compliance, why the two are different products, and how a schedule that grounds an aeroplane is the half a dedicated AD service cannot do.",
+      "Finding the ADs that name each aircraft, deciding which apply, recording compliance, and a schedule that grounds the aeroplane when one lapses.",
     url: PATH,
   },
 };
@@ -26,14 +26,16 @@ export const metadata: Metadata = {
 /**
  * THE HONEST POSITION, and the page exists to state it rather than to blur it.
  *
- * We do not have an applicability catalogue and are not pretending to. Everything on this page
- * is checkable against the product, and the "what this does not do" section is deliberately
- * above the call to action rather than below it.
+ * Since 2026-10-16 there is an AD library: every AD the Federal Register has published since
+ * 1995, matched to each aircraft by the make and model of its airframe, engine and propeller.
+ * It LISTS; a person DECIDES. Serial ranges and equipment are not checked by the software, ADs
+ * before 1995 are not in it, and the page says so. Everything here is checkable against the
+ * product, and the limits sit above the call to action rather than below it.
  */
 const HALVES = [
   {
     label: "Applicability: which directives apply to this aeroplane",
-    body: "An AD names the aircraft it applies to by make, model and usually a serial number range. Answering that for a whole fleet, and keeping the answer current as new directives are issued, is a curated catalogue maintained by people. ADlog, AVTRAK and Tdata sell exactly this, and it is the harder half. AerScheduler does not do it.",
+    body: "An AD names the aircraft it applies to by make, model and usually a serial number range. AerScheduler lists every AD published since 1995 that names each aircraft's make and model, its engine or its propeller, and tells you the day a new one does. Whether a listed AD applies, by serial number or installed equipment, is still decided by a person, and the decision is recorded with who made it and when.",
   },
   {
     label: "Compliance: what you did about the ones that apply",
@@ -52,7 +54,7 @@ const FAQS = [
   },
   {
     q: "Do I need dedicated AD software, or is my scheduling system enough?",
-    a: "If you have no reliable way to learn that a directive has been issued against your fleet, you need something that does applicability, and a scheduling system is not it. What a scheduling system adds is the part a dedicated service cannot: it knows the aeroplane is booked at two o'clock, so a lapsed directive can take it off the board rather than appearing on a report somebody reads on Monday. Most schools are best served by both, with applicability tracked where it is maintained and the recurring items entered where the flying is scheduled.",
+    a: "It depends on what your fleet needs looked up. AerScheduler lists the ADs published since 1995 that name each aircraft, engine and propeller, alerts you to new ones, and keeps the decision, the compliance record and the schedule in one place, so a lapsed directive takes the aeroplane off the board rather than appearing on a report somebody reads on Monday. A dedicated service such as ADlog, AVTRAK or Tdata adds a curated catalogue: directives older than 1995, appliance ADs written against installed equipment, and determinations made for you by serial number. If you already pay for one, keep it and choose Somewhere else in AerScheduler, and the documents we produce say where applicability lives.",
   },
   {
     q: "What has to be in an AD compliance record?",
@@ -72,7 +74,7 @@ const FAQS = [
   },
   {
     q: "Is a compliance log the same as an AD status report?",
-    a: "No, and conflating the two is the mistake worth avoiding. A log of sign-offs tells you what you did about the directives you entered. An AD status tells you where the aircraft stands against every directive that applies to it, including one-time ones complied with decades ago and ones found not applicable by serial number. The second requires a catalogue. AerScheduler says this on the screen rather than in a footnote.",
+    a: "No, and conflating the two is the mistake worth avoiding. A log of sign-offs tells you what you did. An AD status tells you where the aircraft stands against every directive that names it, including ones found not applicable by serial number and why. AerScheduler keeps both: the compliance log, and the AD status report, which lists every AD in the library against each aircraft with its decision, who made it, how it is tracked, when it was last done and when it is next due. The report says on its face that ADs before 1995 are not in the library.",
   },
   {
     q: "Does a lapsed Airworthiness Directive stop the aircraft being booked?",
@@ -125,21 +127,32 @@ export default function Page() {
             What {SITE_NAME} does, and what it does not
           </h2>
           <p className="text-muted-foreground">
-            We keep the record and we enforce the lapse. We do not have an applicability
-            catalogue, we will not tell you a new directive has been issued, and the settings page
-            says so in its first paragraph rather than in the small print.
+            With <em>Find them for me</em> chosen, {SITE_NAME} lists the Airworthiness Directives
+            that name each aircraft, from a library of every AD the Federal Register has published
+            since 1995, checked for new ones every day. Each AD opens laid out as it was published,
+            with the model that matched highlighted. An owner, admin or technician decides it:
+            applies, and tracked as an inspection, or not applicable, with the reason. When a new
+            AD names one of your aircraft, they get a push and an email that day, and a weekly
+            email lists what is still undecided. The AD status report is what you hand an
+            inspector.
           </p>
           <p className="text-muted-foreground">
-            If you already pay for ADlog, AVTRAK or a Tdata subscription, keep it. Track
-            applicability where it is maintained, enter the recurring items where the flying is
-            scheduled, and let the schedule do the part your AD service cannot: refuse the
-            booking. There is a setting for exactly that posture, and any document we produce says
-            on its face where applicability actually lives, so nobody mistakes our records for the
-            authoritative list.
+            What it does not do: ADs published before 1995 are not in the library, so an older
+            airframe still has some found by hand. An AD written against equipment rather than the
+            airframe, engine or propeller, an avionics unit or a muffler part number, is not
+            listed, so those are still found by hand. Emergency ADs reach owners before they are published, so
+            our alert can be days behind one. And the software does not check serial number
+            ranges: a listed AD is one to read, not one that applies.
           </p>
           <p className="text-muted-foreground">
-            Nothing about this is on by default. A school using {SITE_NAME} for oil changes and
-            annuals is not opted in to anything, and never sees the word.
+            If you already pay for ADlog, AVTRAK or a Tdata subscription, keep it. Choose{" "}
+            <em>Somewhere else</em>, name it, and any document we produce says on its face where
+            applicability actually lives, while the schedule still does the part your AD service
+            cannot: refuse the booking.
+          </p>
+          <p className="text-muted-foreground">
+            Nothing about this is on by default. An organization using {SITE_NAME} for oil changes
+            and annuals is not opted in to anything, and never sees the word.
           </p>
         </section>
 
@@ -151,14 +164,14 @@ export default function Page() {
             Whether a directive applies to a particular aeroplane is a judgement made by a
             certificated person against a serial number and a set of paragraphs. It is the one
             thing in this whole area where software being confidently wrong could hurt somebody,
-            so {SITE_NAME} never makes it. We will not tell you an Airworthiness Directive does
-            not apply to your aircraft, whatever the settings say, and that sentence is on the
-            screen where the choice is made.
+            so {SITE_NAME} never makes it. The library finds the ADs that name your aircraft; it
+            will not tell you one does not apply, and it never moves one out of To review on its
+            own.
           </p>
           <p className="text-muted-foreground">
-            The corollary is worth saying too. Because we cannot rule a directive out, a school
-            that treats our compliance log as a complete AD status is relying on something it is
-            not. The log says what you signed. It does not say what you owe.
+            The corollary is worth saying too. A listed AD that nobody has decided is not a
+            compliant one, and the AD status report shows it as To review until somebody does.
+            The log says what you signed. The status says what is left to decide.
           </p>
         </section>
 
@@ -215,8 +228,8 @@ export default function Page() {
         <section className="mt-12 rounded-lg border bg-muted/30 p-6">
           <h2 className="text-xl font-semibold tracking-tight">Try it on one aeroplane</h2>
           <p className="mt-2 text-muted-foreground">
-            {TRIAL_DAYS} days free. Add the directive you are already tracking somewhere else,
-            set it to ground the tail, and sign it off from the phone at the aircraft.
+            {TRIAL_DAYS} days free. Add a tail with its engine and propeller, choose Find them for
+            me, and read the ADs that name it.
           </p>
           <div className="mt-4 flex flex-wrap gap-3">
             <Button href={signupUrl()} size="lg">

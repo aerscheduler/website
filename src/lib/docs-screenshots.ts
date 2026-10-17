@@ -1087,7 +1087,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/maintenance?view=compliance",
     alt: "The compliance log, under the sentence saying what it is not",
     caption:
-      "The line above the table is the part that matters: this records the ADs you enter, and does not tell you which ADs apply.",
+      "The line above the table: this is the history of what was signed. Which ADs apply to each aircraft is in Fleet ADs and the AD status report.",
     dataState:
       "Four or more signed-off inspections across two aircraft, including Airworthiness Directives with real document numbers and revisions, one signed by an A&P and one by an IA so the certificate line shows both kinds. THE DEV DATABASE ACCUMULATES E2E LITTER: end-to-end runs sign off dozens of templates named E2E-something, and because compliance records are append-only there is no API that removes them. The first capture here was 111 rows of test data. Sweep them in SQL before shooting this. This crop deliberately includes the caption above the table: a school that believes this log IS its AD status is the one failure in this feature that could hurt somebody, and the sentence saying otherwise has to be in the picture.",
     crop: '[data-doc-shot="compliance-log"]',

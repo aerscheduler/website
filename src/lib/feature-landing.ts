@@ -663,6 +663,17 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
           "Grounding is a flag and a reason on the aircraft itself",
         ],
       },
+      {
+        eyebrow: "Airworthiness Directives",
+        title: "AD tracking that finds the ADs naming each aircraft",
+        body: "Every AD the Federal Register has published since 1995 is in the library, matched to each aircraft by the make and model of its airframe, engine and propeller. Each one opens laid out as it was published. A person reads it and decides: applies, and tracked as an inspection, or not applicable, with the reason.",
+        points: [
+          "Fleet ADs lists every aircraft's ADs in one place, by aircraft or by status",
+          "A push and an email when a new AD names one of your aircraft, and a weekly list of what is undecided",
+          "The AD status report shows each decision, who made it, last done and next due, for the inspector",
+          "Add ADs to review puts the undecided ones on an annual's work order",
+        ],
+      },
     ],
     docs: [
       "/docs/maintenance/how-maintenance-tracking-works",
@@ -670,6 +681,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
       "/docs/maintenance/resolve-a-squawk",
       "/docs/maintenance/ground-an-aircraft",
       "/docs/maintenance/who-can-do-what-in-maintenance",
+      "/docs/maintenance/airworthiness-directives-across-the-fleet",
     ],
     faqs: [
       {
@@ -678,7 +690,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
       },
       {
         q: "Does it track Airworthiness Directives?",
-        a: "It keeps the compliance record for the ADs you enter: number, revision, meter readings, who certified it, and a report that prints the history. It does not tell you which directives apply to your fleet, and it never decides that one does not apply. That determination belongs to a certificated person. If you run ADlog or AVTRAK, name it and we propose nothing.",
+        a: "Yes. Choose Find them for me and it lists every AD published since 1995 that names each aircraft's make and model, engine or propeller, and alerts you when a new one does. An owner, admin or technician decides each one, and it never decides for you that one does not apply: that determination belongs to a certificated person. ADs older than 1995 are not in the library. If you run ADlog or AVTRAK, choose Somewhere else, name it, and we list nothing.",
       },
       {
         q: "Can my mechanic have access without seeing the money?",
