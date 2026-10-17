@@ -1394,6 +1394,15 @@ export const DOC_SECTIONS: DocSection[] = [
         seoQuery: "which airworthiness directives apply to my aircraft",
       },
       {
+        slug: "airworthiness-directives-across-the-fleet",
+        title: "See every aircraft's ADs, and search the AD library",
+        description:
+          "Maintenance has two AD views. Fleet ADs lists every aircraft's Airworthiness Directives in one list, grouped by aircraft or by status, and you decide them right there. The AD library searches every AD published since 1995 by number, maker, model or any word, and shows which of your aircraft each one names.",
+        kind: "task",
+        audience: ["Owners", "Admins", "Technicians"],
+        seoQuery: "search airworthiness directives by aircraft model",
+      },
+      {
         slug: "track-life-limited-components",
         title: "Track life-limited components",
         description:
