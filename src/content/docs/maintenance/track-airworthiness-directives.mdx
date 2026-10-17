@@ -44,17 +44,13 @@ schedule one. What this page adds is saying which rule it is, and keeping the si
     Choose **Recurring** for a repeating AD, or **One-off** for one with a single
     compliance deadline.
   </Step>
-  <Step n={2} title="Set the interval as usual">
-    For "every 100 hours or 12 months, whichever comes first", pick **Whichever comes
-    first** and fill in both clocks.
-  </Step>
-  <Step n={3} title="Open Where this comes from and choose Airworthiness Directive">
-    Three more fields appear. They stay hidden for an ordinary shop reminder, so an oil
-    change does not grow boxes it has no answers for.
+  <Step n={2} title="Under Where this comes from, choose Airworthiness Directive">
+    The document number, revision, revision date and link appear. They stay hidden for an
+    ordinary shop reminder, so an oil change does not grow boxes it has no answers for.
 
     <Screenshot id="add-inspections-source" />
   </Step>
-  <Step n={4} title="Enter the document number">
+  <Step n={3} title="Enter the document number">
     The AD number as published, for example `2013-11-11`. This one is required: an AD
     without its number cannot be found, filtered, or listed on the report an inspector
     reads.
@@ -64,11 +60,15 @@ schedule one. What this page adds is saying which rule it is, and keeping the si
     to the Federal Register copy. A blank **Name** becomes the AD number and its subject,
     for example "AD 2013-11-11 Engine oil pressure". Anything you typed yourself is kept.
   </Step>
-  <Step n={5} title="Check what was filled in">
+  <Step n={4} title="Check what was filled in">
     A line under the number says which AD was found. If a later AD superseded it, a second
     line names it: track the one in force instead. An AD older than 1995, or one we
     have not loaded yet, says it is not in the library. Fill in the revision and link by
     hand.
+  </Step>
+  <Step n={5} title="Set when it comes due">
+    Under **Comes due**, as for any inspection. For "every 100 hours or 12 months, whichever
+    comes first", pick **Whichever comes first** and fill in both clocks.
   </Step>
 </Steps>
 

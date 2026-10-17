@@ -980,15 +980,14 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/maintenance?view=aircraft",
     alt: "Add inspections, Recurring",
     dataState:
-      "Modal open in Recurring mode with a name typed, On the meter selected, Count tach time chosen, Every 100 and Warn me 10 filled, and Grounds the aircraft switched on.",
-    // Every 100 and Warn 10 are the form's own defaults, so only the mode, the
-    // basis, the meter and the grounds switch need a click. Name is left on its
-    // placeholder: the steps click, they cannot type.
+      "Modal open in Recurring mode on On the meter, Counted on Tach time, Every 100 hours and Warn me 10 hours before, and Grounds the aircraft switched on.",
+    // Every 100, Warn 10 and Tach are the form's own defaults, so only the mode,
+    // the basis and the grounds switch need a click. The crop is the Comes due
+    // section, so the name above it is not in the picture.
     open: [
       'button:has-text("Add inspections")',
       'button:has-text("Repeats on hours")',
       'button:has-text("On the meter")',
-      'button:has-text("Count tach time")',
       "#insp-grounds",
     ],
     crop: '[data-doc-shot="add-inspections-recurring"]',
@@ -1025,7 +1024,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     route: "/maintenance?view=aircraft",
     alt: "A calendar interval, counted in days, weeks or calendar months",
     caption:
-      "Calendar months is the default, and the note says why it is not the same as 365 days.",
+      "Calendar months is the default. The info button beside Comes due says why it is not the same as 365 days.",
     dataState:
       "The form's own opening state, which is the point: On the calendar is preselected, the unit is calendar months, and the number beside it is 12. No typing, only the two clicks that open the modal and switch it to Recurring. The sibling shot add-inspections-recurring clicks through to On the meter, so it cannot show this control at all.",
     open: ['button:has-text("Add inspections")', 'button:has-text("Recurring")'],
