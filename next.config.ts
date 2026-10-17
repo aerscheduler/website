@@ -53,8 +53,31 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  /**
+   * `/docs/<section>/<slug>.md`, the Markdown twin of every help article, served
+   * by `app/md/docs/[section]/[slug]/route.ts`. A rewrite because App Router
+   * cannot name a dynamic segment `[slug].md`, and `beforeFiles` so the HTML
+   * article route never sees the `.md` path (it would 404 on slug "x.md").
+   */
+  async rewrites() {
+    return {
+      beforeFiles: [
+        { source: "/docs/:section/:slug([a-z0-9-]+)\\.md", destination: "/md/docs/:section/:slug" },
+      ],
+      afterFiles: [],
+      fallback: [],
+    };
+  },
   async redirects() {
     return [
+      // The Markdown routes' internal path is not a second public URL for the same
+      // file. Redirects run on the incoming path only, so this cannot loop with the
+      // `.md` rewrite that maps onto it.
+      {
+        source: "/md/docs/:section/:slug",
+        destination: "/docs/:section/:slug.md",
+        permanent: true,
+      },
       // Canonical terms URL referenced by the mobile app / store listings.
       {
         source: "/terms",

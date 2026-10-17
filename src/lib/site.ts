@@ -136,5 +136,4 @@ export const ENTERPRISE_FEATURES: { title: string; body: string; soon?: boolean 
 ];
 
 /** Longer default meta description for SEO. */
-export const SITE_DESCRIPTION =
-  "Flight school management software for scheduling, billing, training records, maintenance, and reporting. Native iOS and Android apps. Self-serve from $20/mo per aircraft.";
+export const SITE_DESCRIPTION = `Flight school management software for scheduling, billing, training records, maintenance, and reporting. Native iOS and Android apps. Self-serve from $${PRICE_PER_AIRCRAFT}/mo per aircraft.`;

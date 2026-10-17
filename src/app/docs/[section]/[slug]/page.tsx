@@ -15,7 +15,7 @@ import {
 } from "@/lib/docs";
 import { tableOfContents } from "@/lib/docs-toc";
 import { faqJsonLd } from "@/lib/seo";
-import { RESOURCE_LINKS } from "@/lib/resources";
+import { resolveRelated } from "@/lib/docs-related";
 import { SITE_NAME, SITE_URL, SUPPORT_EMAIL } from "@/lib/site";
 
 /**
@@ -60,7 +60,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       `${SITE_NAME} help`,
       "flight school software documentation",
     ],
-    alternates: { canonical: href },
+    // The Markdown version, for AI assistants and other readers that want the
+    // article without the page around it (`app/md/docs`, `lib/llms.ts`).
+    alternates: { canonical: href, types: { "text/markdown": `${href}.md` } },
     openGraph: {
       title: `${article.title} | ${SITE_NAME} docs`,
       description: article.description,
@@ -82,17 +84,9 @@ export default async function DocArticlePage({ params }: Props) {
   const { previous, next } = neighbours(sectionSlug, slug);
   const href = articleHref(section.slug, article.slug);
 
-  // Related links are hrefs only, resolved here against whatever they point at,
-  // so a retitled guide cannot leave a stale label behind on an article.
-  const related = (article.related ?? [])
-    .map((target) => {
-      const doc = allArticles().find((entry) => entry.href === target);
-      if (doc) return { href: target, label: doc.article.title, description: doc.article.description };
-      const resource = RESOURCE_LINKS.find((link) => link.href === target);
-      if (resource) return resource;
-      return null;
-    })
-    .filter((link): link is { href: string; label: string; description: string } => link !== null);
+  // Related links are hrefs only, resolved against whatever they point at, so a
+  // retitled guide cannot leave a stale label behind. Shared with the Markdown version.
+  const related = resolveRelated(article);
 
   return (
     <>

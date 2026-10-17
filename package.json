@@ -3,13 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "node scripts/sync-openapi.mjs && node scripts/check-docs-auth.mjs && node scripts/check-docs.mjs && node scripts/build-search-index.mjs && next build",
+    "build": "node scripts/sync-openapi.mjs && node scripts/check-docs-auth.mjs && node scripts/check-docs.mjs && node scripts/check-llms.mjs && node --test src/lib/mdx-markdown.test.mjs && node scripts/build-search-index.mjs && next build && node scripts/check-llms.mjs --built",
     "dev": "node scripts/build-search-index.mjs && next dev --turbopack",
     "search:index": "node scripts/build-search-index.mjs",
     "start": "next start",
     "lint": "next lint",
     "check:docs-auth": "node scripts/check-docs-auth.mjs",
     "check:docs": "node scripts/check-docs.mjs",
+    "check:llms": "node scripts/check-llms.mjs",
+    "test:llms": "node --test src/lib/mdx-markdown.test.mjs",
     "docs:screenshots": "node scripts/capture-docs-screenshots.mjs"
   },
   "dependencies": {
@@ -25,7 +27,11 @@
     "react-dom": "^19.0.0",
     "rehype-slug": "^6.0.0",
     "remark-gfm": "^4.0.1",
-    "tailwind-merge": "^3.6.0"
+    "remark-mdx": "^3.1.1",
+    "remark-parse": "^11.0.0",
+    "remark-stringify": "^11.0.0",
+    "tailwind-merge": "^3.6.0",
+    "unified": "^11.0.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

@@ -15,7 +15,7 @@ export const DEVELOPER_LINKS: ResourceLink[] = [
   {
     href: "/docs/api",
     label: "API documentation",
-    description: `${endpointCount()} REST endpoints. Included on every plan.`,
+    description: `${endpointCount()} REST endpoints, on the Enterprise plan.`,
   },
   {
     href: "/docs/api/reservations",

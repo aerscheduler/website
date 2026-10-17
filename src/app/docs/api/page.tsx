@@ -20,7 +20,7 @@ const COUNT = endpointCount();
 
 export const metadata: Metadata = {
   title: "API Documentation: Flight School Scheduling API",
-  description: `The ${SITE_NAME} REST API. Book aircraft, close out flights, and pull billing and utilization data from your own software. ${COUNT} documented endpoints, OpenAPI 3.1, free on every plan.`,
+  description: `The ${SITE_NAME} REST API. Book aircraft, close out flights, and pull billing and utilization data from your own software. ${COUNT} documented endpoints, OpenAPI 3.1, on the Enterprise plan.`,
   keywords: [
     "flight school API",
     "aircraft scheduling API",
@@ -47,7 +47,7 @@ const FAQS = [
   },
   {
     q: "Is the API included in the price?",
-    a: "Yes. API access is included on every plan at no extra cost. There is no enterprise tier and no per-call charge.",
+    a: "API keys are on the Enterprise plan, which is quoted per account. Everything else, including the iOS and Android apps, is in the standard per-aircraft price. There is no per-call charge, and the reference on this page is public, so you can read it before you ask for access.",
   },
   {
     q: "How do I authenticate with the AerScheduler API?",
@@ -114,7 +114,7 @@ export default function ApiDocsPage() {
             </h1>
             <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
               Book aircraft, close flights out, invoice them, and pull the numbers back. {COUNT}{" "}
-              endpoints, described in OpenAPI 3.1, included on every plan.
+              endpoints, described in OpenAPI 3.1, on the Enterprise plan.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button href="#quickstart" size="lg">

@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/button";
 import { FeatureSection } from "@/components/landing/feature-sections";
 import { HeroHeadline } from "@/components/landing/hero-headline";
+import { AUDIENCES } from "@/lib/audiences";
 import {
   HOME_SECTIONS,
   HeroWindow,
@@ -170,36 +171,17 @@ export default function HomePage() {
             Built for flying operations and the shops that maintain them
           </h2>
           <RevealGroup className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-5 lg:gap-0">
-            <AudiencePoint
-              href="/features/scheduling"
-              title="Part 61 flight schools"
-              body="Book, fly, bill and log a lesson without the desk juggling three tools."
-            />
-            <AudiencePoint
-              href="/features/training"
-              title="Part 141 programs"
-              body="Stages, stage checks and certified training records on one syllabus."
-              rule
-            />
-            <AudiencePoint
-              href="/features/memberships"
-              title="Flying clubs"
-              body="Members book themselves, dues collect monthly, balances stay current."
-              rule
-            />
-            <AudiencePoint
-              href="/features/compliance"
-              title="Aircraft rental"
-              body="Checkouts and currency checked before every booking, billed off the meters."
-              rule
-            />
-            <AudiencePoint
-              href="/features/work-orders"
-              title="Maintenance shops"
-              body="Work orders on customers' aircraft, approved by the owner, billed at your rates."
-              rule
-              className="sm:col-span-2 lg:col-span-1"
-            />
+            {AUDIENCES.map((a, i) => (
+              <AudiencePoint
+                key={a.href}
+                href={a.href}
+                title={a.title}
+                body={a.body}
+                rule={i > 0}
+                // The fifth sits alone on its row at sm, so it spans both columns there.
+                className={i === AUDIENCES.length - 1 ? "sm:col-span-2 lg:col-span-1" : ""}
+              />
+            ))}
           </RevealGroup>
           {TESTIMONIALS[0] && <ShortQuote t={TESTIMONIALS[0]} />}
         </div>
