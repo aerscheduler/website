@@ -271,6 +271,33 @@ export const DOC_SECTIONS: DocSection[] = [
         seoQuery: "AerScheduler new features",
       },
       {
+        slug: "messages",
+        title: "Message people in your organization",
+        description:
+          "Message anyone in your organization one to one, start a group, or talk on a booking. Type @ to point at a person, an aircraft, a booking or a work order, and each reader sees only what they are allowed to open.",
+        kind: "task",
+        audience: ["Owners", "Admins", "Dispatchers", "Instructors", "Students", "Renters", "Technicians"],
+        seoQuery: "message instructor in flight school app",
+        faqs: [
+          {
+            q: "Can an admin read my direct messages?",
+            a: "No. A direct message or a group is read only by the people in it, admins and owners included. A conversation on a booking is different: everyone on the booking and your organization's staff (owners, admins and dispatchers) can read it.",
+          },
+          {
+            q: "Why does a mention show as \"a work order\" instead of a link?",
+            a: "Each person sees a mention only if they could open that record themselves. A student who is mentioned alongside a work order sees the words \"a work order\", because students cannot open work orders.",
+          },
+          {
+            q: "Can I turn off message notifications?",
+            a: "Yes. Messages has its own row in your notification settings. Push is on and email is off to start. To quiet one busy conversation instead, open it and choose Mute.",
+          },
+          {
+            q: "Can I delete a message?",
+            a: "You can delete your own messages, and they disappear for everyone right away. In the console you can also edit a message for 15 minutes after you send it.",
+          },
+        ],
+      },
+      {
         slug: "find-anything",
         title: "Find anything with search",
         description:
