@@ -89,6 +89,11 @@ const FEATURE_SEO: Record<
     description:
       "The native AerScheduler app for booking, invoices, documents, and squawks. The same operation as the web desk.",
   },
+  messages: {
+    title: "Flight School Messaging and In-App Chat",
+    description:
+      "Students, instructors, the desk and the shop message each other in the console and the app, one to one, in groups or on a booking, with @ mentions of aircraft and bookings.",
+  },
   reports: {
     // Deliberately commercial-intent ("reporting software", "dashboards") so it
     // doesn't compete with /resources/flight-school-reports, which owns the

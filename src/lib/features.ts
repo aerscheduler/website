@@ -13,6 +13,7 @@ export type FeatureSlug =
   | "inspections"
   | "work-orders"
   | "mobile"
+  | "messages"
   | "reports"
   | "utilization"
   | "integrations";
@@ -337,6 +338,24 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
     ],
     personas: ["Students", "Renters", "Instructors", "Technicians", "Everyone"],
     related: ["self-booking", "scheduling", "billing", "maintenance"],
+  },
+  messages: {
+    slug: "messages",
+    title: "Messages",
+    navLabel: "Messages",
+    eyebrow: "In-app chat",
+    headline: "Message anyone in your organization, about the flight in front of you.",
+    summary:
+      "Chat one to one, in groups, or on a booking, in the web console and the app. Type @ to point at a person, an aircraft, a booking or a work order.",
+    bullets: [
+      "One to one, groups, and a conversation on every booking",
+      "@ mentions of people, aircraft, bookings, work orders and squawks",
+      "Each reader sees only the records they are allowed to open",
+      "Live in the console and the app, with one push for a burst of messages",
+      "Email only for what is still unread 15 minutes later, as one roundup",
+    ],
+    personas: ["Students", "Instructors", "Dispatchers", "Technicians", "Everyone"],
+    related: ["scheduling", "mobile", "people-roles", "work-orders"],
   },
   reports: {
     slug: "reports",

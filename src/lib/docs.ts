@@ -289,7 +289,7 @@ export const DOC_SECTIONS: DocSection[] = [
           },
           {
             q: "Can I turn off message notifications?",
-            a: "Yes. Messages has its own row in your notification settings. Push is on and email is off to start. To quiet one busy conversation instead, open it and choose Mute.",
+            a: "Yes. Messages has its own row under Push and under Email in your notification settings. Push is on and email is off to start. Email is one roundup of what you have not read after 15 minutes, never an email per message. To quiet one busy conversation instead, open it and choose Mute.",
           },
           {
             q: "Can I delete a message?",

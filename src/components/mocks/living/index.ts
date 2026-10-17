@@ -12,3 +12,4 @@ export { IntegrationsLiveDemo } from "@/components/mocks/living/integrations-liv
 export { MobileLiveDemo } from "@/components/mocks/living/mobile-live-demo";
 export { SchedulingLiveDemo } from "@/components/mocks/living/scheduling-live-demo";
 export { WorkOrdersLiveDemo } from "@/components/mocks/living/work-orders-live-demo";
+export { MessagesLiveDemo } from "@/components/mocks/living/messages-live-demo";

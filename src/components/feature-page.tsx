@@ -16,6 +16,7 @@ import {
   SelfBookingLiveDemo,
   ReportsLiveDemo,
   IntegrationsLiveDemo,
+  MessagesLiveDemo,
   TrainingLiveDemo,
   MobileLiveDemo,
   WorkOrdersLiveDemo,
@@ -472,6 +473,8 @@ function FeatureVisual({ slug }: { slug: FeatureSlug }) {
       return <ReportsLiveDemo />;
     case "integrations":
       return <IntegrationsLiveDemo />;
+    case "messages":
+      return <MessagesLiveDemo />;
     case "mobile":
       return (
         <div className="flex flex-col items-center gap-6">

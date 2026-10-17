@@ -144,6 +144,7 @@ export const MODULES: ProductModule[] = [
  */
 export const CROSS_CUTTING: FeatureSlug[] = [
   "people-roles",
+  "messages",
   "mobile",
   "integrations",
 ];

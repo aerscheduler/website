@@ -1087,6 +1087,53 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
     ctaBody: "Included on every plan, on the App Store and Google Play, the same operation as the desk.",
   },
 
+  messages: {
+    h1: "Messaging for flight schools, in the console and the app",
+    statement: "Students, instructors, the desk and the shop talk where the bookings and aircraft already are.",
+    proof: [
+      { value: "Included", label: "On every plan, no surcharge" },
+      { value: "Live", label: "Messages arrive as they are sent" },
+      { value: "Private", label: "Direct messages stay between the two of you" },
+    ],
+    outcomesTitle: "What changes",
+    outcomes: [
+      {
+        title: "Lessons get sorted out without a phone call",
+        body: "A student and instructor agree the time and the aircraft in two messages, and the booking is one tap away.",
+      },
+      {
+        title: "Everyone on a booking hears the change",
+        body: "Each booking has its own conversation: the pilot, the instructor, and the desk reading along.",
+      },
+      {
+        title: "Nobody asks which aircraft you meant",
+        body: "Type @ and the tail number becomes a link to that aircraft, for everyone allowed to open it.",
+      },
+    ],
+    docs: [
+      "/docs/getting-started/messages",
+      "/docs/getting-started/notifications-and-emails",
+      "/docs/getting-started/the-mobile-app",
+    ],
+    faqs: [
+      { q: "Does Messages cost extra?", a: "No. It is included on every plan, in the web console and the iOS and Android apps." },
+      {
+        q: "Can an admin read my direct messages?",
+        a: "No. A direct message or a group is read only by the people in it. A conversation on a booking is read by everyone on the booking and your organization's owners, admins and dispatchers.",
+      },
+      {
+        q: "Will it flood people with notifications?",
+        a: "No. A run of messages sends one push, your phone stays quiet while you use the web console, and email is one roundup of what is still unread after 15 minutes, off until you turn it on.",
+      },
+      {
+        q: "Can I mention an aircraft or a work order?",
+        a: "Yes. Type @ for a person, an aircraft, a booking, a work order or a squawk. Somebody who cannot open that record sees its kind, never the details.",
+      },
+    ],
+    ctaTitle: "Keep the conversation next to the schedule",
+    ctaBody: "Included on every plan, in the console and the iOS and Android apps.",
+  },
+
   integrations: {
     h1: "Flight school software integrations",
     statement: "Stripe, QuickBooks Online and Google Calendar connect on every plan.",
