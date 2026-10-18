@@ -295,6 +295,10 @@ export const DOC_SECTIONS: DocSection[] = [
             q: "Can I delete a message?",
             a: "You can delete your own messages, and they disappear for everyone right away. In the console you can also edit a message for 15 minutes after you send it.",
           },
+          {
+            q: "Can people tell when I have read their message?",
+            a: "Yes. Under somebody's newest message they see Seen once you have read it, and in a group who has read it. A reaction never sends a notification, so reacting is a quiet way to say you saw it.",
+          },
         ],
       },
       {
