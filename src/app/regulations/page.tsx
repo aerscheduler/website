@@ -5,8 +5,9 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { JsonLd } from "@/components/json-ld";
 import { RegNotice } from "@/components/regulations/notice";
 import { RegList } from "@/components/regulations/reg-list";
+import { HubSearch, type HubSearchItem } from "@/components/hub-search";
 import { TOPICS } from "@/content/regulations/registry.mjs";
-import { PARTS_WITH_PAGES, REG_BASE, REGS, TEXT_AS_OF, partHref, regsInPart, regsInTopic } from "@/lib/regulations";
+import { PARTS_WITH_PAGES, REG_BASE, REGS, TEXT_AS_OF, farCite, fullCite, partHref, regHref, regsInPart, regsInTopic, shortCite } from "@/lib/regulations";
 import { faqJsonLd } from "@/lib/seo";
 import { signupUrl } from "@/lib/site";
 
@@ -41,6 +42,15 @@ const FAQS = [
   },
 ];
 
+/** Every section, searchable by any way of writing its cite, its name, its points and its questions. */
+const SEARCH_ITEMS: HubSearchItem[] = REGS.map((r) => ({
+  href: regHref(r.slug),
+  title: `${shortCite(r)}: ${r.name}`,
+  detail: r.summary.answer,
+  ids: [r.cite, shortCite(r), fullCite(r), farCite(r)],
+  text: [r.official.heading, ...r.summary.points.map((p) => p.text), ...r.summary.faqs.map((f) => f.q)].join(" "),
+}));
+
 export default function RegulationsHub() {
   return (
     <>
@@ -57,7 +67,13 @@ export default function RegulationsHub() {
             The {REGS.length} sections of the FARs that aircraft owners, flight schools, mechanics, instructors and renters look up most.
             Each one starts with the answer, explains the rule paragraph by paragraph, and shows the official text underneath.
           </p>
-          <nav aria-label="Topics" className="mt-8 flex flex-wrap gap-2">
+          <HubSearch
+            items={SEARCH_ITEMS}
+            label="Search the regulations"
+            placeholder="A cite like 91.409, or a topic like 100 hour or medical"
+            className="mt-8 max-w-2xl"
+          />
+          <nav aria-label="Topics" className="mt-6 flex flex-wrap gap-2">
             {TOPICS.filter((t) => regsInTopic(t.slug).length).map((t) => (
               <a
                 key={t.slug}

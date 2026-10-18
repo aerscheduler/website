@@ -4,7 +4,8 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { JsonLd } from "@/components/json-ld";
 import { TaxNotice } from "@/components/aircraft-tax/fact";
 import { TaxMatrix } from "@/components/aircraft-tax/matrix";
-import { COUNTRY_LIST, PUBLISHED, TAX_BASE, countryHref, regionsIn } from "@/lib/aircraft-tax";
+import { HubSearch, type HubSearchItem } from "@/components/hub-search";
+import { ALL_REGIONS, COUNTRY_LIST, PUBLISHED, TAX_BASE, TOPICS, countryHref, countryOf, question, regionHref, regionsIn } from "@/lib/aircraft-tax";
 import { faqJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -31,6 +32,27 @@ const FAQS = [
   },
 ];
 
+/**
+ * Each state, plus each of its seven answers, so "texas flight instruction"
+ * lands on that answer rather than the top of the page.
+ */
+const SEARCH_ITEMS: HubSearchItem[] = [
+  { href: `${TAX_BASE}/calculator`, title: "Aircraft sales tax calculator", detail: "Estimate the tax on buying or basing an aircraft, and the yearly fee.", ids: ["calculator"], text: "estimate calculate" },
+  ...ALL_REGIONS.flatMap((r) => {
+    const c = countryOf(r);
+    return [
+      { href: regionHref(r), title: `${r.name} aircraft tax`, detail: r.summary, ids: [r.name, r.code], text: c.name },
+      ...TOPICS.map((t) => ({
+        href: `${regionHref(r)}#${t}`,
+        title: question(c, t, r),
+        detail: r.facts[t].answer,
+        ids: [] as string[],
+        text: `${r.name} ${r.code} ${c.labels[t]}`,
+      })),
+    ];
+  }),
+];
+
 export default function AircraftTaxHub() {
   return (
     <>
@@ -45,6 +67,12 @@ export default function AircraftTaxHub() {
             registration taxes. Each answer quotes the state&apos;s own source.
           </p>
         </header>
+        <HubSearch
+          items={SEARCH_ITEMS}
+          label="Search aircraft tax by state"
+          placeholder="A state, or a question like flight instruction in Texas"
+          className="mt-8 max-w-2xl"
+        />
         <p className="mt-6 text-base">
           <Link href={`${TAX_BASE}/calculator`} className="font-medium text-primary hover:underline">
             Estimate the tax on an aircraft with the calculator

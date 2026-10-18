@@ -12,7 +12,7 @@ export function RegList({ regs, className }: { regs: Reg[]; className?: string }
             <span className="font-medium text-primary tabular-nums">{shortCite(r)}</span>
             <span className="min-w-0">
               <span className="block font-medium text-brand-surface group-hover:text-primary">{r.name}</span>
-              <span className="mt-0.5 line-clamp-2 block text-sm leading-relaxed text-muted-foreground">{r.summary.answer}</span>
+              <span className="mt-0.5 line-clamp-2 text-sm leading-relaxed text-muted-foreground">{r.summary.answer}</span>
             </span>
           </Link>
         </li>
