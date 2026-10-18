@@ -21493,6 +21493,232 @@
         }
       }
     },
+    "/orgUsers/{orgUserId}/profileImage/signedUrl": {
+      "get": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Get an upload form for a member's profile photo",
+        "description": "A presigned POST for a new profile photo. POST every field, then the file LAST as `file`, to `url`; the photo's URL is `url` + `/` + `fields.key`, which you then send to `PATCH /orgUsers/{orgUserId}/profileImage`. `contentType` is required and must be `image/jpeg`, `image/png`, `image/webp` or `image/gif`; `maxBytes` is the size limit. The member themselves, or **owners and admins** for anyone in the organization; anybody else is answered 403 for any id. Turned off in the public demo.",
+        "responses": {
+          "200": {
+            "description": "The upload form.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PresignedPost"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Not an image type we accept.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "signMemberProfilePhotoUpload",
+        "parameters": [
+          {
+            "name": "orgUserId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The member id."
+          },
+          {
+            "name": "contentType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The image's media type."
+          }
+        ]
+      }
+    },
+    "/orgUsers/{orgUserId}/profileImage": {
+      "patch": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Set a member's profile photo",
+        "description": "Records a photo uploaded with the form from `GET /orgUsers/{orgUserId}/profileImage/signedUrl`. Only a URL from a form signed for this member is accepted. The photo it replaces is deleted. Same access as the upload form.",
+        "responses": {
+          "204": {
+            "description": "Success. No body."
+          },
+          "400": {
+            "description": "No URL, or not one uploaded for this member.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "setMemberProfilePhoto",
+        "parameters": [
+          {
+            "name": "orgUserId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The member id."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "The uploaded photo.",
+                "properties": {
+                  "profileImageUrl": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "profileImageUrl"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Members"
+        ],
+        "summary": "Remove a member's profile photo",
+        "description": "Clears the photo, so initials show instead. Same access as the upload form.",
+        "responses": {
+          "204": {
+            "description": "Success. No body."
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not allowed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "removeMemberProfilePhoto",
+        "parameters": [
+          {
+            "name": "orgUserId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The member id."
+          }
+        ]
+      }
+    },
     "/orgUsers/{orgUserId}/owner-sign-in-email": {
       "post": {
         "tags": [
@@ -34605,6 +34831,85 @@
         ]
       }
     },
+    "/public/airworthiness-directives/registrations/{tailNumber}": {
+      "get": {
+        "tags": [
+          "AD library"
+        ],
+        "summary": "AD check by N-number",
+        "description": "What the FAA registry says the aircraft is (year, make, model, serial, engine) and the ADs that name its airframe or engine, with how each names it, plus the equipment ADs that name its model. The same matching as an organization's own aircraft. A list to check against the logbooks; serial ranges and installed equipment decide applicability. Unauthenticated: no account and no key. Cached for five minutes; 3,000 requests per 5 minutes per address.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AdRegistrationCheck"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No US registration with that number.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "checkPublicAdRegistration",
+        "security": [],
+        "parameters": [
+          {
+            "name": "tailNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The N-number, with or without the N: `N235EP` or `235EP`."
+          }
+        ]
+      }
+    },
     "/public/airworthiness-directives/coverage": {
       "get": {
         "tags": [
@@ -42314,6 +42619,198 @@
         },
         "additionalProperties": true
       },
+      "AdRegistrationCheck": {
+        "type": "object",
+        "description": "The AD check for one registered aircraft: the FAA registry's facts, the ADs that name its airframe or engine, and the equipment ADs that name its model. A list to check against the aircraft and its records, never a determination that an AD applies.",
+        "properties": {
+          "aircraft": {
+            "type": "object",
+            "description": "The aircraft, from the FAA registry. Nothing about its owner.",
+            "properties": {
+              "tailNumber": {
+                "type": "string",
+                "description": "The registration.",
+                "example": "N235EP"
+              },
+              "year": {
+                "description": "Year built.",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "make": {
+                "type": "string",
+                "description": "As the registry writes it.",
+                "example": "TEXTRON AVIATION INC"
+              },
+              "model": {
+                "type": "string",
+                "description": "As the registry writes it.",
+                "example": "172S"
+              },
+              "serialNumber": {
+                "description": "The manufacturer's serial number, which AD applicability is written against.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "engineMake": {
+                "description": "Engine maker, as the registry writes it.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "engineModel": {
+                "description": "Engine model, as the registry writes it.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "category": {
+                "description": "Aircraft category.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "seats": {
+                "description": "Seats.",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "pages": {
+                "type": "object",
+                "description": "The library pages for its model and engine, when they exist.",
+                "properties": {
+                  "aircraft": {
+                    "description": "Its model's page.",
+                    "properties": {
+                      "slug": {
+                        "type": "string",
+                        "description": "Page."
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Name."
+                      }
+                    },
+                    "additionalProperties": true,
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  },
+                  "engine": {
+                    "description": "Its engine family's page.",
+                    "properties": {
+                      "slug": {
+                        "type": "string",
+                        "description": "Page."
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Name."
+                      }
+                    },
+                    "additionalProperties": true,
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "additionalProperties": true
+          },
+          "ads": {
+            "type": "array",
+            "description": "ADs that name its airframe or engine and are not superseded: airframe first, the exact model before its family, newest first.",
+            "items": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/PublicAirworthinessDirective"
+                },
+                {
+                  "type": "object",
+                  "description": "How the AD names this aircraft.",
+                  "properties": {
+                    "match": {
+                      "type": "object",
+                      "description": "The match.",
+                      "properties": {
+                        "on": {
+                          "type": "string",
+                          "description": "What it names.",
+                          "enum": [
+                            "airframe",
+                            "engine",
+                            "propeller"
+                          ]
+                        },
+                        "token": {
+                          "type": "string",
+                          "description": "The text that matched.",
+                          "example": "172S"
+                        },
+                        "strength": {
+                          "type": "string",
+                          "description": "`model` names this model; `range` covers it in a letter range; `family` names its series.",
+                          "enum": [
+                            "model",
+                            "range",
+                            "family"
+                          ]
+                        }
+                      },
+                      "additionalProperties": true
+                    }
+                  },
+                  "additionalProperties": true
+                }
+              ]
+            }
+          },
+          "equipment": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicAirworthinessDirective"
+            },
+            "description": "Equipment ADs that name its model: they apply only if that equipment is installed."
+          },
+          "counts": {
+            "type": "object",
+            "description": "Counts.",
+            "properties": {
+              "listed": {
+                "type": "integer",
+                "description": "ADs in `ads`."
+              },
+              "repetitive": {
+                "type": "integer",
+                "description": "Of those, with a repeat action."
+              },
+              "superseded": {
+                "type": "integer",
+                "description": "ADs that name it but were superseded, left out."
+              },
+              "equipment": {
+                "type": "integer",
+                "description": "ADs in `equipment`."
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
       "AdLibraryMonth": {
         "type": "object",
         "description": "A month with published ADs.",
@@ -45754,6 +46251,13 @@
                   "null"
                 ]
               },
+              "profileImage": {
+                "description": "URL of their profile photo.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
               "external": {
                 "type": "boolean",
                 "description": "An owner from outside the organization."
@@ -45789,6 +46293,13 @@
                 },
                 "name": {
                   "description": "Name.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "profileImage": {
+                  "description": "URL of their profile photo.",
                   "type": [
                     "string",
                     "null"
@@ -45935,6 +46446,13 @@
               },
               "name": {
                 "description": "Name.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "profileImage": {
+                "description": "URL of their profile photo.",
                 "type": [
                   "string",
                   "null"
@@ -46569,6 +47087,13 @@
                   "string",
                   "null"
                 ]
+              },
+              "profileImage": {
+                "description": "URL of their profile photo.",
+                "type": [
+                  "string",
+                  "null"
+                ]
               }
             },
             "additionalProperties": true,
@@ -46967,6 +47492,13 @@
               },
               "name": {
                 "description": "Their name.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "profileImage": {
+                "description": "URL of their profile photo.",
                 "type": [
                   "string",
                   "null"

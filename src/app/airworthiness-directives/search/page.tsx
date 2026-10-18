@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { AdList } from "@/components/ad-library/ad-list";
 import { AdSearchBox } from "@/components/ad-library/search-box";
-import { AD_BASE, fmt, SEARCH_PAGE_SIZE, searchAds } from "@/lib/ad-library";
+import { AD_BASE, checkHref, fmt, isTailNumber, SEARCH_PAGE_SIZE, searchAds, tailKey } from "@/lib/ad-library";
 
 export const metadata: Metadata = {
   title: "Search Airworthiness Directives",
@@ -30,6 +30,14 @@ export default async function AdSearchPage({ searchParams }: Props) {
       />
       <h1 className="mt-6 text-3xl font-semibold tracking-tight text-brand-surface">Search Airworthiness Directives</h1>
       <AdSearchBox defaultValue={q} className="mt-6 max-w-2xl" autoFocus={!q} />
+      {/^n/i.test(q.trim()) && isTailNumber(q) && (
+        <p className="mt-4 text-[15px]">
+          Looking for one aircraft?{" "}
+          <Link href={checkHref(q)} className="font-medium text-primary hover:underline">
+            Check N{tailKey(q)}&apos;s ADs by its registration
+          </Link>
+        </p>
+      )}
       {results && (
         <div className="mt-8 space-y-4">
           <p className="text-sm text-muted-foreground">

@@ -435,6 +435,7 @@ const PAGE_META = {
   "/airworthiness-directives/propellers": { group: "Guides", title: "Propeller ADs" },
   "/airworthiness-directives/appliances": { group: "Guides", title: "Equipment and appliance ADs" },
   "/airworthiness-directives/data": { group: "Pages", title: "AD data: JSON API, CSV and RSS" },
+  "/airworthiness-directives/check": { group: "Guides", title: "AD check by N-number" },
   "/airworthiness-directives/follow": { group: "Pages", title: "Your AD library emails" },
   "/resources/flight-school-scheduling-software": { group: "Guides", title: "Scheduling software" },
   "/resources/quickbooks-integration": { group: "Guides", title: "QuickBooks integration" },

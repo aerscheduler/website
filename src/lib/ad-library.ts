@@ -128,6 +128,36 @@ export const getMonth = async (month: string) => all<AdRow & { summary: string |
 export const getSitemap = async () =>
   data(await get<{ data: { ads: { adNumber: string; updatedAt: string; readable: boolean }[]; pages: { kind: PageKind; slug: string; updatedAt: string }[] } }>("/sitemap"));
 
+/** How an AD names an aircraft: its airframe, engine or propeller, by the exact model, a letter range, or the family. */
+export type AdMatchInfo = { on: "airframe" | "engine" | "propeller"; token: string; strength: "model" | "range" | "family" };
+
+/** The AD check for one registered aircraft (GET /public/airworthiness-directives/registrations/{tail}). */
+export type RegistrationCheck = {
+  aircraft: {
+    tailNumber: string;
+    year: number | null;
+    make: string;
+    model: string;
+    serialNumber: string | null;
+    engineMake: string | null;
+    engineModel: string | null;
+    category: string | null;
+    seats: number | null;
+    pages: { aircraft: { slug: string; name: string } | null; engine: { slug: string; name: string } | null };
+  };
+  ads: (AdRow & { match: AdMatchInfo })[];
+  equipment: AdRow[];
+  counts: { listed: number; repetitive: number; superseded: number; equipment: number };
+};
+
+export const CHECK_BASE = `${AD_BASE}/check`;
+/** "n 172-sp" is 172SP: what the registry is keyed by, without the N. */
+export const tailKey = (raw: string) => raw.toUpperCase().replace(/[\s-]/g, "").replace(/^N(?=\d)/, "");
+/** An N-number: N, then a digit 1 to 9, then up to four more letters and digits. */
+export const isTailNumber = (raw: string) => /^[1-9][0-9A-Z]{0,4}$/.test(tailKey(raw));
+export const checkHref = (raw: string) => `${CHECK_BASE}/N${tailKey(raw)}`;
+export const getRegistration = async (tail: string) => data(await get<{ data: RegistrationCheck }>(`/registrations/${encodeURIComponent(tailKey(tail))}`));
+
 /** Search results a page at a time: page 1 is the first 25. */
 export const SEARCH_PAGE_SIZE = 25;
 export async function searchAds(q: string, page = 1) {

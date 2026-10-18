@@ -5,8 +5,9 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { JsonLd } from "@/components/json-ld";
 import { AdList } from "@/components/ad-library/ad-list";
 import { AdSearchBox } from "@/components/ad-library/search-box";
+import { TailCheckForm } from "@/components/ad-library/tail-check-form";
 import { LibraryNotice } from "@/components/ad-library/notice";
-import { AD_BASE, adDate, fmt, getPages, getRecent, getStats, KINDS, pageHref, type KindSegment } from "@/lib/ad-library";
+import { AD_BASE, adDate, CHECK_BASE, fmt, getPages, getRecent, getStats, KINDS, pageHref, type KindSegment } from "@/lib/ad-library";
 import { faqJsonLd } from "@/lib/seo";
 import { signupUrl } from "@/lib/site";
 
@@ -93,6 +94,19 @@ export default async function AdLibraryPage() {
               {adDate(stats.newest, "long")}
             </p>
           )}
+
+          <div className="flex flex-col gap-4 rounded-lg border border-border p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+            <div className="max-w-md">
+              <h2 className="text-lg font-semibold text-brand-surface">Check one aircraft by N-number</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                The ADs that name its airframe and engine, from its registry record, as a printable checklist for a pre-buy or an annual.{" "}
+                <Link href={CHECK_BASE} className="text-primary hover:underline">
+                  How it works
+                </Link>
+              </p>
+            </div>
+            <TailCheckForm className="sm:max-w-md" />
+          </div>
 
           {(upcoming.length > 0 || latest.length > 0) && (
             <div className="space-y-4">

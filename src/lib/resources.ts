@@ -104,6 +104,11 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
         description: "FAA Airworthiness Directives by aircraft, engine, propeller and equipment. Free.",
       },
       {
+        href: "/airworthiness-directives/check",
+        label: "AD check by N-number",
+        description: "Every AD that names one aircraft's airframe and engine, as a printable pre-buy or annual checklist. Free.",
+      },
+      {
         href: "/resources/airworthiness-directive-tracking",
         label: "Airworthiness Directive tracking",
         description:
