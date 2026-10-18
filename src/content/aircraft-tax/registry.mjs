@@ -164,6 +164,126 @@ export const REGIONS = [
   },
   {
     country: "US",
+    slug: "montana",
+    name: "Montana",
+    code: "MT",
+    summary:
+      "Montana has no general sales tax, so buying, renting, teaching in and maintaining an aircraft carry no state sales tax. Instead, aircraft based in Montana register every year and pay a fee in lieu of property tax that falls with the aircraft's age.",
+    facts: {
+      buying: {
+        status: "none",
+        answer: "No state sales tax. Montana does not have a general sales tax.",
+        sources: [
+          src("Montana Department of Revenue", "Sales Tax Guidance for Montana Business and Residents", "https://revenuefiles.mt.gov/taxes/general-sales-tax", "Montana does not have a general sales tax."),
+        ],
+      },
+      bringingIn: {
+        status: "none",
+        answer: "No state use tax on an aircraft bought elsewhere and based in Montana. It still registers and pays the yearly fee in lieu of tax.",
+        sources: [
+          src("Montana Department of Revenue", "Sales Tax Guidance for Montana Business and Residents", "https://revenuefiles.mt.gov/taxes/general-sales-tax", "Montana does not have a general sales tax."),
+        ],
+      },
+      exemptions: {
+        status: "none",
+        answer: "With no general sales tax there is nothing to be exempted from. The yearly fee has its own exemptions.",
+        sources: [
+          src("Montana Department of Revenue", "Sales Tax Guidance for Montana Business and Residents", "https://revenuefiles.mt.gov/taxes/general-sales-tax", "Montana does not have a general sales tax."),
+        ],
+      },
+      rental: {
+        status: "none",
+        answer: "Aircraft rentals carry no state sales tax in Montana.",
+        sources: [
+          src("Montana Department of Revenue", "Sales Tax Guidance for Montana Business and Residents", "https://revenuefiles.mt.gov/taxes/general-sales-tax", "Montana does not have a general sales tax."),
+        ],
+      },
+      instruction: {
+        status: "none",
+        answer: "Flight instruction carries no state sales tax in Montana.",
+        sources: [
+          src("Montana Department of Revenue", "Sales Tax Guidance for Montana Business and Residents", "https://revenuefiles.mt.gov/taxes/general-sales-tax", "Montana does not have a general sales tax."),
+        ],
+      },
+      maintenance: {
+        status: "none",
+        answer: "Parts and labor carry no state sales tax in Montana.",
+        sources: [
+          src("Montana Department of Revenue", "Sales Tax Guidance for Montana Business and Residents", "https://revenuefiles.mt.gov/taxes/general-sales-tax", "Montana does not have a general sales tax."),
+        ],
+      },
+      annual: {
+        status: "taxable",
+        answer: "Aircraft based in Montana register every year and pay a fee in lieu of property tax, set by type and age. A single-engine, fixed-gear airplane of 200 horsepower or less pays $450 in its first five years, falling to $37.50 at 31 to 40 years; aircraft over 40 years old, homebuilts and antiques pay $30.",
+        sources: [
+          src("Montana Code Annotated", "MCA 67-3-204, 2025", "https://mca.legmt.gov/bills/mca/title_0670/chapter_0030/part_0020/section_0040/0670-0030-0020-0040.html", "The registration fee is in lieu of property tax."),
+          src("Montana Code Annotated", "MCA 67-3-206, 2025", "https://mca.legmt.gov/bills/mca/title_0670/chapter_0030/part_0020/section_0060/0670-0030-0020-0060.html", "Single engine, fixed gear, 200 horsepower and under"),
+        ],
+      },
+    },
+  },
+  {
+    country: "US",
+    slug: "oregon",
+    name: "Oregon",
+    code: "OR",
+    summary:
+      "Oregon has no general sales or use tax, so buying, bringing in, renting out, teaching in and maintaining an aircraft carry no sales tax. Aircraft based in Oregon register with the Oregon Department of Aviation every year, $65 for a single-engine piston airplane.",
+    facts: {
+      buying: {
+        status: "none",
+        answer: "No sales tax. Oregon has no general sales or use tax.",
+        sources: [
+          src("Oregon Department of Revenue", "Sales tax in Oregon", "https://www.oregon.gov/dor/programs/businesses/pages/sales-tax.aspx", "Oregon doesn't have a general sales or use/transaction tax."),
+        ],
+      },
+      bringingIn: {
+        status: "none",
+        answer: "No use tax on an aircraft bought elsewhere and based in Oregon, because Oregon has no general use tax. The aircraft still has to be registered.",
+        sources: [
+          src("Oregon Department of Revenue", "Sales tax in Oregon", "https://www.oregon.gov/dor/programs/businesses/pages/sales-tax.aspx", "Oregon doesn't have a general sales or use/transaction tax."),
+        ],
+      },
+      exemptions: {
+        status: "none",
+        answer: "With no general sales or use tax there is nothing to be exempted from. Registration exemptions are listed under registration.",
+        sources: [
+          src("Oregon Department of Revenue", "Sales tax in Oregon", "https://www.oregon.gov/dor/programs/businesses/pages/sales-tax.aspx", "Oregon doesn't have a general sales or use/transaction tax."),
+        ],
+      },
+      rental: {
+        status: "none",
+        answer: "Aircraft rentals carry no sales tax in Oregon.",
+        sources: [
+          src("Oregon Department of Revenue", "Sales tax in Oregon", "https://www.oregon.gov/dor/programs/businesses/pages/sales-tax.aspx", "Oregon doesn't have a general sales or use/transaction tax."),
+        ],
+      },
+      instruction: {
+        status: "none",
+        answer: "Flight instruction carries no sales tax in Oregon.",
+        sources: [
+          src("Oregon Department of Revenue", "Sales tax in Oregon", "https://www.oregon.gov/dor/programs/businesses/pages/sales-tax.aspx", "Oregon doesn't have a general sales or use/transaction tax."),
+        ],
+      },
+      maintenance: {
+        status: "none",
+        answer: "Parts and labor carry no sales tax in Oregon.",
+        sources: [
+          src("Oregon Department of Revenue", "Sales tax in Oregon", "https://www.oregon.gov/dor/programs/businesses/pages/sales-tax.aspx", "Oregon doesn't have a general sales or use/transaction tax."),
+        ],
+      },
+      annual: {
+        status: "taxable",
+        answer: "Aircraft based in Oregon, or used here for commercial operations, register with the Oregon Department of Aviation within 60 days and renew every year: $65 for a single-engine piston airplane or piston helicopter, $150 for a piston twin, $250 for a single-engine turboprop, and $700 for a jet.",
+        sources: [
+          src("Oregon Revised Statutes", "ORS 837.040(1)(a), 2025 edition", "https://www.oregonlegislature.gov/bills_laws/ors/ors837.html", "The owner of a civil aircraft that is capable of flight and that is based in this state."),
+          src("Oregon Revised Statutes", "ORS 837.045(1), 2025 edition", "https://www.oregonlegislature.gov/bills_laws/ors/ors837.html", "Single engine fixed wing, piston"),
+        ],
+      },
+    },
+  },
+  {
+    country: "US",
     slug: "texas",
     name: "Texas",
     code: "TX",
@@ -375,6 +495,161 @@ export const REGIONS = [
           src("Arizona Revised Statutes", "A.R.S. 28-8322", "https://www.azleg.gov/ars/28/08322.htm",
             "Owned by a nonresident who bases the aircraft in this state for a period of not more than ninety consecutive days"),
         ],
+      },
+    },
+  },
+  {
+    country: "US",
+    slug: "idaho",
+    name: "Idaho",
+    code: "ID",
+    summary:
+      "Idaho charges 6 percent sales or use tax on aircraft and on bare aircraft rentals, but not on flight instruction or separately stated repair labor. Aircraft operating in Idaho register with the Idaho Transportation Department every year, at 3 cents per pound of maximum gross weight.",
+    facts: {
+      buying: {
+        status: "taxable",
+        answer: "6 percent of the sales price on each retail sale of an aircraft, under Idaho's general sales tax.",
+        sources: [
+          src("Idaho Code", "Section 63-3619", "https://legislature.idaho.gov/statutesrules/idstat/title63/t63ch36/sect63-3619/",
+            "An excise tax is hereby imposed upon each sale at retail at the rate of six percent (6%) of the sales price"),
+        ],
+      },
+      bringingIn: {
+        status: "conditional",
+        answer:
+          "Use tax applies to an aircraft bought elsewhere and used in Idaho. An LLC or other entity an Idaho resident forms in another state to own aircraft is not a nonresident, and its aircraft owes use tax on first use in Idaho.",
+        sources: [
+          src("Idaho Administrative Code", "IDAPA 35.01.02.037.01.c, effective 7-1-26", "https://adminrules.idaho.gov/rules/current/35/350102.pdf",
+            "The use of an aircraft owned by such an entity will be subject to use tax upon its first use in Idaho."),
+        ],
+      },
+      exemptions: {
+        status: "conditional",
+        answer:
+          "Sales or leases to nonresidents for use outside Idaho are exempt if the aircraft leaves and is not used in Idaho more than 90 days in any 12-month period. Aircraft used primarily as common carriers or for air ambulance service are exempt, and so are parts installed on nonresidents' private aircraft by an FAA-approved Idaho repair station.",
+        sources: [
+          src("Idaho Code", "Section 63-3622GG(3)", "https://legislature.idaho.gov/statutesrules/idstat/title63/t63ch36/sect63-3622gg/",
+            "ninety (90) days in any twelve (12) month period"),
+          src("Idaho Code", "Section 63-3622GG(4)", "https://legislature.idaho.gov/statutesrules/idstat/title63/t63ch36/sect63-3622gg/",
+            "nonresident privately owned aircraft by qualified employees of an FAA-approved Idaho repair station"),
+        ],
+      },
+      rental: {
+        status: "taxable",
+        answer:
+          "Renting an aircraft without a pilot is a taxable sale, and the owner collects tax on each rental payment. A flying club's rentals to its members are taxable bare rentals too.",
+        sources: [
+          src("Idaho Administrative Code", "IDAPA 35.01.02.024.01, effective 7-1-26", "https://adminrules.idaho.gov/rules/current/35/350102.pdf",
+            "A bare equipment rental is a rental of equipment without an operator and is a taxable sale."),
+          src("Idaho Administrative Code", "IDAPA 35.01.02.038.01", "https://adminrules.idaho.gov/rules/current/35/350102.pdf",
+            "The aircraft rentals to the club members are considered bare equipment rentals and are taxable at a reasonable rental value."),
+        ],
+      },
+      instruction: {
+        status: "exempt",
+        answer:
+          "Flight instruction, including solo flights within the lessons, is a service and not taxed. The school's purchase or lease of aircraft used mainly for instruction is taxable.",
+        sources: [
+          src("Idaho Administrative Code", "IDAPA 35.01.02.037.03", "https://adminrules.idaho.gov/rules/current/35/350102.pdf",
+            "Flying instructions or lessons which may include solo flights are a service and the fees are not taxable."),
+          src("Idaho Administrative Code", "IDAPA 35.01.02.037.03.a", "https://adminrules.idaho.gov/rules/current/35/350102.pdf",
+            "Aircraft purchased, rented, or leased to be used primarily for flying instruction are taxable."),
+        ],
+      },
+      maintenance: {
+        status: "conditional",
+        answer: "Parts and materials are taxable. Repair labor is not, if it is stated separately; an unitemized repair bill is taxable in full.",
+        sources: [
+          src("Idaho Administrative Code", "IDAPA 35.01.02.062.02, effective 7-1-26", "https://adminrules.idaho.gov/rules/current/35/350102.pdf",
+            "Separately stated repair labor isn't taxable."),
+        ],
+      },
+      annual: {
+        status: "taxable",
+        answer:
+          "Every aircraft operating in Idaho registers with the Idaho Transportation Department each year, at 3 cents per pound of maximum certified gross weight, at least $20 and at most $600. A nonresident's aircraft is exempt unless it operates in Idaho more than 90 days in the registration year.",
+        sources: [
+          src("Idaho Code", "Section 21-114", "https://legislature.idaho.gov/statutesrules/idstat/title21/t21ch1/sect21-114/",
+            "three cents (3\u00a2) per pound of the manufacturer's certified maximum gross weight"),
+          src("Idaho Code", "Section 21-114", "https://legislature.idaho.gov/statutesrules/idstat/title21/t21ch1/sect21-114/",
+            "a cumulative period of greater than ninety (90) days"),
+        ],
+      },
+    },
+  },
+  {
+    country: "US",
+    slug: "utah",
+    name: "Utah",
+    code: "UT",
+    summary:
+      "Utah taxes aircraft as vehicles, at the rate for the aircraft's FAA registration address, and private sales are taxed too. Flight school rentals with an instructor present or supervising are not taxed, but solo rentals and repair labor are, and aircraft register every year with UDOT's Division of Aeronautics.",
+    facts: {
+      buying: {
+        status: "taxable",
+        answer:
+          "Aircraft that must be registered are treated as vehicles and taxed at the combined rate for the aircraft's registration address on file with the FAA. A trade-in reduces the taxable price. Buying from a private seller does not avoid the tax.",
+        sources: [
+          src("Utah State Tax Commission", "Aircraft Sales Tax", "https://tax.utah.gov/sales/aircraft-sales-tax",
+            "The jurisdiction tax rate used is based on the aircraft's registration address filed with the FAA."),
+          src("Utah State Tax Commission", "Aircraft Sales Tax", "https://tax.utah.gov/sales/aircraft-sales-tax",
+            "Although an exemption exists for 'isolated or occasional sales,' that exemption does not apply to sales of vehicles that require registration, including aircraft."),
+        ],
+      },
+      bringingIn: {
+        status: "conditional",
+        answer:
+          "An individual's aircraft stored and operated in Utah, wherever the owner lives, owes Utah tax if it is operated here more than six months or for most days of a year. An aircraft not used or stored in Utah can show no tax is due.",
+        sources: [
+          src("Utah State Tax Commission", "Aircraft Sales Tax", "https://tax.utah.gov/sales/aircraft-sales-tax",
+            "the aircraft is operated in the state for more than six months, or the cumulative majority of days in a year"),
+        ],
+      },
+      exemptions: {
+        status: "conditional",
+        answer:
+          "Private and occasional sales are not exempt. Work by a Utah maintenance, repair and overhaul provider on a fixed-wing turbine aircraft not registered in Utah is exempt.",
+        sources: [
+          src("Utah State Tax Commission", "Publication 25, Sales and Use Tax General Information", "https://files.tax.utah.gov/tax/forms/2025/pub-25.pdf",
+            "Sales to or by a Utah aircraft maintenance, repair and overhaul provider to maintain, repair, overhaul or refurbish a fixed-wing turbine-powered aircraft that is not registered in Utah.", { dated: "Rev. 10/24" }),
+        ],
+      },
+      rental: {
+        status: "taxable",
+        answer: "Renting an aircraft to a pilot without an instructor is taxed on the rental price.",
+        sources: [
+          src("Utah State Tax Commission", "Aircraft Sales Tax", "https://tax.utah.gov/sales/aircraft-sales-tax",
+            "Any aircraft rented to pilots without an instructor are subject to sales tax on the rental price."),
+        ],
+      },
+      instruction: {
+        status: "exempt",
+        answer:
+          "A flight school's rental is not taxed when the school requires the instructor to be in the aircraft with the student or supervising from the ground. The school pays sales or use tax on its own purchase or lease of the aircraft.",
+        sources: [
+          src("Utah State Tax Commission", "Aircraft Sales Tax", "https://tax.utah.gov/sales/aircraft-sales-tax",
+            "requires the instructor to be physically present in the plane with the student"),
+          src("Utah State Tax Commission", "Aircraft Sales Tax", "https://tax.utah.gov/sales/aircraft-sales-tax",
+            "Sales or use tax is due on the purchase or lease of the aircraft by the flight school."),
+        ],
+      },
+      maintenance: {
+        status: "taxable",
+        answer: "Both parts and repair labor are taxed, unless the item being repaired or the part is itself exempt.",
+        sources: [
+          src("Utah State Tax Commission", "Publication 25", "https://files.tax.utah.gov/tax/forms/2025/pub-25.pdf",
+            "Repair charges for labor are subject to sales tax unless the personal property being repaired is exempt under \u00a759-12-104.", { dated: "Rev. 10/24" }),
+        ],
+      },
+      annual: {
+        status: "taxable",
+        answer:
+          "Aircraft must be registered every year with the Utah Department of Transportation's Division of Aeronautics. The fee is set by the Division and is not stated on the Tax Commission's page.",
+        sources: [
+          src("Utah State Tax Commission", "Aircraft Sales Tax", "https://tax.utah.gov/sales/aircraft-sales-tax",
+            "Aircraft must be registered annually with the Utah Department of Transportation, Division of Aeronautics."),
+        ],
+        caveat: "Add the registration fee from Utah Code 72-10-110 once its text can be read (le.utah.gov renders it client-side).",
       },
     },
   },
