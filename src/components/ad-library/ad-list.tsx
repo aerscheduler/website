@@ -94,7 +94,7 @@ export function AdList({
                 <span className="min-w-0 flex-1">
                   <span className="line-clamp-2 block text-[15px] font-medium text-brand-surface">{a.requires ?? adAbout(a)}</span>
                   <span className="block truncate text-sm text-muted-foreground">
-                    {[a.requires ? adAbout(a) : null, showMaker ? adTitle(a.title) : PRODUCT_LABEL[a.productType] ?? a.productType].filter(Boolean).join(" · ")}
+                    {[...new Set([a.requires ? adAbout(a) : null, showMaker ? adTitle(a.title) : PRODUCT_LABEL[a.productType] ?? a.productType].filter(Boolean))].join(" · ")}
                   </span>
                   <span className="mt-1 flex flex-wrap gap-1.5">
                     {a.onPublicInspection && <Chip tone="amber">To be published {adDate(a.publishedOn)}</Chip>}
