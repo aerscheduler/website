@@ -1,0 +1,56 @@
+name: eCFR check
+
+# Weekly: pull the official text of every section in the regulations library
+# (/regulations) from the eCFR and compare it with the committed snapshot.
+#
+# It never commits. A commit on main is a deploy, and an amended section needs
+# a person to reread its plain-English summary before the new text ships (the
+# build's check-regulations.mjs fails until they do). So when anything changed,
+# this opens an issue naming the sections, and the fix is run locally:
+#
+#   node scripts/sync-ecfr.mjs <cite> ...   then reread each summary, set textHash
+#
+# The repo does not let Actions open pull requests, which is why it is an issue.
+
+on:
+  schedule:
+    - cron: "17 14 * * 1" # Mondays 14:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Pull the eCFR
+        id: sync
+        run: |
+          node scripts/sync-ecfr.mjs | tee sync.log
+          changed=$(sed -n 's/^Text changed in [0-9]*: //p' sync.log)
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
+      - name: Open an issue
+        if: steps.sync.outputs.changed != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CHANGED: ${{ steps.sync.outputs.changed }}
+        run: |
+          title="eCFR text changed: $CHANGED"
+          if gh issue list --state open --search "in:title \"$title\"" --json number --jq '.[0].number' | grep -q .; then
+            echo "Already reported."; exit 0
+          fi
+          gh issue create --title "$title" --body "The weekly eCFR check found amended text in: **$CHANGED**.
+
+          The regulations library still shows the old text, which is correct until someone rereads each summary. To update:
+
+          1. \`node scripts/sync-ecfr.mjs $(echo $CHANGED | tr -d ,)\`
+          2. Read the new text of each section and fix anything its summary in \`src/content/regulations/sections/\` now gets wrong.
+          3. Set each summary's \`textHash\` to the new hash and run \`node scripts/check-regulations.mjs\`.
+
+          Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

@@ -90,6 +90,28 @@ const GUIDE_CLUSTERS: {
     ],
   },
   {
+    title: "FAA regulations",
+    blurb:
+      "The rules owners, flight schools, mechanics and pilots look up most, each explained in plain English beside the official eCFR text.",
+    items: [
+      {
+        href: "/regulations",
+        title: "FAA regulations in plain English",
+        body: "52 sections of 14 CFR, grouped by who needs them: owning an aircraft, inspections, maintenance records, ADs, pilots, instructors and Part 141 schools.",
+      },
+      {
+        href: "/regulations/91-409",
+        title: "Annual and 100-hour inspections",
+        body: "14 CFR 91.409: the annual every 12 calendar months, who needs a 100-hour, and the 10-hour allowance to reach the shop.",
+      },
+      {
+        href: "/regulations/91-417",
+        title: "Maintenance records an owner must keep",
+        body: "14 CFR 91.417: the work records you can retire after a year and the status records that stay with the aircraft for good.",
+      },
+    ],
+  },
+  {
     title: "Billing and money",
     blurb:
       "The cases that decide whether billing is five minutes a day or an afternoon a month.",

@@ -199,7 +199,24 @@ export default function Page() {
             <Link className="text-primary underline" href="/docs/maintenance/add-your-own-inspection">
               Add your own inspection
             </Link>{" "}
-            is the step-by-step version.
+            is the step-by-step version. The rules themselves, in plain English beside the official
+            text:{" "}
+            <Link className="text-primary underline" href="/regulations/91-409">
+              91.409 annual and 100-hour
+            </Link>
+            ,{" "}
+            <Link className="text-primary underline" href="/regulations/91-411">
+              91.411 pitot-static
+            </Link>
+            ,{" "}
+            <Link className="text-primary underline" href="/regulations/91-413">
+              91.413 transponder
+            </Link>{" "}
+            and{" "}
+            <Link className="text-primary underline" href="/regulations/91-207">
+              91.207 ELT
+            </Link>
+            .
           </p>
         </section>
 

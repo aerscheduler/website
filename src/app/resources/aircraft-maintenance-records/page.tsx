@@ -168,7 +168,19 @@ export default function Page() {
             <Link className="text-primary underline" href="/resources/flight-training-records">
               Flight training records
             </Link>{" "}
-            is the same question for people rather than aeroplanes.
+            is the same question for people rather than aeroplanes.{" "}
+            <Link className="text-primary underline" href="/regulations/91-417">
+              14 CFR 91.417 in plain English
+            </Link>{" "}
+            puts the rule beside its official text, with{" "}
+            <Link className="text-primary underline" href="/regulations/43-9">
+              43.9
+            </Link>{" "}
+            and{" "}
+            <Link className="text-primary underline" href="/regulations/91-419">
+              91.419
+            </Link>
+            .
           </p>
         </section>
 

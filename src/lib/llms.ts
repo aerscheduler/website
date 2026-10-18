@@ -9,6 +9,7 @@ import { FEATURES, featureHref, type FeatureSlug } from "@/lib/features";
 import { CROSS_CUTTING, MODULES } from "@/lib/modules";
 import { AUDIENCES } from "@/lib/audiences";
 import { API_BASE_URL, getTagDocs } from "@/lib/openapi";
+import { REG_BASE, REGS, TEXT_AS_OF, regHref, regTitle } from "@/lib/regulations";
 import { RESOURCE_GROUPS } from "@/lib/resources";
 import { PRICING_FAQS } from "@/lib/seo";
 import {
@@ -187,6 +188,21 @@ function guides(): { href: string; label: string; description: string }[] {
 
 const isPrimaryDoc = (article: DocArticle) => article.kind === "overview" || article.kind === "reference";
 
+/**
+ * The regulations library in llms.txt: the hub, then every section's Markdown
+ * twin with its one-line answer. Its first four lines (heading, blank, intro,
+ * blank) open the same section in llms-full.txt.
+ */
+function regulationsIndex(): string[] {
+  return [
+    "## FAA regulations in plain English",
+    "",
+    `${item("Regulations hub", abs(REG_BASE), `The ${REGS.length} sections of 14 CFR owners, flight schools and pilots look up most, each explained beside the official eCFR text (current as of ${TEXT_AS_OF}).`)}`,
+    "",
+    ...REGS.map((r) => item(regTitle(r), markdownUrl(regHref(r.slug)), r.summary.answer)),
+  ];
+}
+
 /* ------------------------------------------------------------------ */
 /* /llms.txt                                                           */
 /* ------------------------------------------------------------------ */
@@ -230,6 +246,8 @@ export function llmsTxt(): string {
     "## Guides",
     "",
     ...guides().map((g) => item(g.label, abs(g.href), g.description)),
+    "",
+    ...regulationsIndex(),
     "",
     "## Optional",
     ""
@@ -288,6 +306,17 @@ export function llmsFullTxt(): string {
   out.push(item("OpenAPI document", `${API_BASE_URL}/openapi.json`), "");
 
   out.push("## Guides", "", ...guides().map((g) => item(g.label, abs(g.href), g.description)), "");
+
+  // The regulations library: each section's answer and plain-English points.
+  // The official text stays on the pages and their .md twins; repeating 52
+  // sections of the CFR here would triple the file for text the eCFR already
+  // serves.
+  out.push(...regulationsIndex().slice(0, 4), "");
+  for (const r of REGS) {
+    out.push(`### ${regTitle(r)}`, "", `Page: ${abs(regHref(r.slug))} (Markdown: ${markdownUrl(regHref(r.slug))})`, "", oneLine(r.summary.answer), "");
+    out.push(...r.summary.points.map((p) => `- ${oneLine(p.text)}`), "");
+    for (const faq of r.summary.faqs) out.push(`**${oneLine(faq.q)}** ${oneLine(faq.a)}`, "");
+  }
 
   for (const { section, article } of groupBySection()) {
     if (article === null) {

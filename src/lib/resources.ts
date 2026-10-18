@@ -124,6 +124,33 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
     ],
   },
   {
+    // The plain-English regulations library. The hub plus the sections people
+    // search for by number most; the other pages are one click away on the hub.
+    title: "Regulations",
+    items: [
+      {
+        href: "/regulations",
+        label: "FAA regulations in plain English",
+        description: "The FARs owners, flight schools and pilots look up most, explained beside the official text.",
+      },
+      {
+        href: "/regulations/91-409",
+        label: "Annual and 100-hour inspections",
+        description: "14 CFR 91.409: when each is due and who needs a 100-hour.",
+      },
+      {
+        href: "/regulations/61-56",
+        label: "The flight review",
+        description: "14 CFR 61.56: one hour of ground, one of flight, every 24 calendar months.",
+      },
+      {
+        href: "/regulations/61-23",
+        label: "How long a medical lasts",
+        description: "14 CFR 61.23: each class under and over 40, and BasicMed.",
+      },
+    ],
+  },
+  {
     // The pillar page sits first and the two topic guides link back to it, so
     // the internal linking points somewhere rather than in a ring.
     title: "Reporting",
@@ -221,6 +248,7 @@ export const NAV_RESOURCE_GROUPS: ResourceGroup[] = [
     title: "Guides",
     items: linksByHref(
       "/airworthiness-directives",
+      "/regulations",
       "/resources/flight-school-scheduling-software",
       "/resources/flight-school-reports",
       "/resources/flight-training-records",

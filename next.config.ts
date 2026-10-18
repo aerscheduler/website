@@ -63,6 +63,9 @@ const nextConfig: NextConfig = {
     return {
       beforeFiles: [
         { source: "/docs/:section/:slug([a-z0-9-]+)\\.md", destination: "/md/docs/:section/:slug" },
+        // The regulations library's twins: each section and Part page, and the hub.
+        { source: "/regulations/:slug([a-z0-9-]+)\\.md", destination: "/md/regulations/:slug" },
+        { source: "/regulations.md", destination: "/md/regulations" },
       ],
       afterFiles: [],
       fallback: [],
@@ -73,6 +76,16 @@ const nextConfig: NextConfig = {
       // The Markdown routes' internal path is not a second public URL for the same
       // file. Redirects run on the incoming path only, so this cannot loop with the
       // `.md` rewrite that maps onto it.
+      {
+        source: "/md/regulations/:slug",
+        destination: "/regulations/:slug.md",
+        permanent: true,
+      },
+      {
+        source: "/md/regulations",
+        destination: "/regulations.md",
+        permanent: true,
+      },
       {
         source: "/md/docs/:section/:slug",
         destination: "/docs/:section/:slug.md",

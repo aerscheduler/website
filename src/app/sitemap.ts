@@ -3,6 +3,7 @@ import { FEATURE_LIST } from "@/lib/features";
 import { COMPETITOR_LIST, competitorHref } from "@/lib/competitors";
 import { apiDocRoutes } from "@/lib/developers";
 import { docRoutes } from "@/lib/docs";
+import { PARTS_WITH_PAGES, REG_BASE, REGS, TEXT_AS_OF, partHref, regHref } from "@/lib/regulations";
 import { SITE_URL } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -151,8 +152,28 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: path === "/docs" ? 0.85 : path.split("/").length === 3 ? 0.75 : 0.65,
   }));
 
+  // The regulations library, from its registry. A section's lastModified is the
+  // date the rule itself was last amended, which is what a crawler should
+  // re-read on; the hub and Part indexes change when the text snapshot does.
+  const regulationEntries: MetadataRoute.Sitemap = [
+    { url: `${SITE_URL}${REG_BASE}`, lastModified: new Date(TEXT_AS_OF), changeFrequency: "weekly", priority: 0.85 },
+    ...PARTS_WITH_PAGES.map((p) => ({
+      url: `${SITE_URL}${partHref(p.part)}`,
+      lastModified: new Date(TEXT_AS_OF),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
+    ...REGS.map((r) => ({
+      url: `${SITE_URL}${regHref(r.slug)}`,
+      lastModified: new Date(r.official.amendedOn ?? TEXT_AS_OF),
+      changeFrequency: "monthly" as const,
+      priority: 0.75,
+    })),
+  ];
+
   return [
     ...staticEntries,
+    ...regulationEntries,
     ...featureRoutes,
     ...compareEntries,
     ...apiDocEntries,

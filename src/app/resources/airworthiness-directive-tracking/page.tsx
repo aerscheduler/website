@@ -211,7 +211,20 @@ export default function Page() {
             <Link className="text-primary underline" href="/docs/maintenance/track-airworthiness-directives">
               Track Airworthiness Directives
             </Link>{" "}
-            is the step-by-step version for somebody already using {SITE_NAME}.
+            is the step-by-step version for somebody already using {SITE_NAME}. The Part 39 rules
+            behind all of it, in plain English:{" "}
+            <Link className="text-primary underline" href="/regulations/39-7">
+              39.7, flying without complying
+            </Link>
+            ,{" "}
+            <Link className="text-primary underline" href="/regulations/39-19">
+              39.19, alternative methods of compliance
+            </Link>{" "}
+            and{" "}
+            <Link className="text-primary underline" href="/regulations/39-23">
+              39.23, ferry permits
+            </Link>
+            .
           </p>
         </section>
 

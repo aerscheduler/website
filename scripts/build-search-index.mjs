@@ -33,7 +33,7 @@
 
 import { readdirSync, readFileSync, statSync, writeFileSync, existsSync } from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const appRoot = path.join(root, "src", "app");
@@ -419,6 +419,9 @@ const PAGE_META = {
   // The public AD library. Its AD and model pages are dynamic (thousands, from the API) and are
   // found through the library's own search; these are its fixed pages.
   "/airworthiness-directives": { group: "Guides", title: "AD library: search FAA Airworthiness Directives" },
+  // The regulations library hub. Its section and Part pages are /regulations/[slug],
+  // expanded from the registry below.
+  "/regulations": { group: "Guides", title: "FAA regulations in plain English" },
   "/airworthiness-directives/new": { group: "Guides", title: "New Airworthiness Directives" },
   "/airworthiness-directives/search": { group: "Pages", title: "Search the AD library" },
   "/airworthiness-directives/monthly": { group: "Guides", title: "ADs by month" },
@@ -472,6 +475,49 @@ const interpolate = (text) =>
     .replace(/\$\{([A-Za-z_$][\w$]*)\}/g, (whole, name) => SUBSTITUTIONS[name] ?? " ")
     // Anything left is a call or a member expression we cannot resolve.
     .replace(/\$\{[^}]*\}/g, " ");
+
+/* ------------------------------------------------------------------ */
+/* Regulations library                                                 */
+/* ------------------------------------------------------------------ */
+
+// /regulations/[slug] pages, from the same registry and summaries the pages
+// render. One record per section, findable by every way people write the cite
+// ("91.409", "FAR 91.409", "14 CFR 91.409") and by its topic.
+{
+  const regRoot = path.join(root, "src", "content", "regulations");
+  const { REGULATIONS, PARTS } = await import(pathToFileURL(path.join(regRoot, "registry.mjs")).href);
+  const { SUMMARIES } = await import(pathToFileURL(path.join(regRoot, "sections", "index.mjs")).href);
+  const bySite = new Map(SUMMARIES.map((x) => [x.cite, x]));
+  for (const r of REGULATIONS) {
+    const sum = bySite.get(r.cite);
+    if (!sum) continue; // check-regulations.mjs fails the build on a missing summary
+    const letter = /Appendix ([A-Z])/.exec(r.ecfrId ?? "")?.[1];
+    const cite = r.kind === "appendix" ? `Part ${r.part} Appendix ${letter}` : r.cite;
+    push({
+      id: `regulation:${r.slug}`,
+      type: "guide",
+      title: `${cite}: ${r.name}`,
+      href: `/regulations/${r.slug}`,
+      path: ["Guides", "Regulations"],
+      description: sum.answer,
+      keywords: `14 CFR ${cite} FAR ${cite} ${r.kind === "appendix" ? "" : `\u00a7${r.cite} ${r.cite.replace(".", " ")}`} part ${r.part} regulation`,
+      body: truncate(collapse([...sum.points.map((x) => x.text), ...sum.faqs.map((f) => f.q)].join(". "))),
+    });
+  }
+  for (const part of PARTS) {
+    if (!REGULATIONS.some((r) => r.part === part.part && bySite.has(r.cite))) continue;
+    push({
+      id: `regulation:part-${part.part}`,
+      type: "guide",
+      title: `14 CFR Part ${part.part}: ${part.title}`,
+      href: `/regulations/part-${part.part}`,
+      path: ["Guides", "Regulations"],
+      description: part.blurb,
+      keywords: `FAR Part ${part.part} 14 CFR Part ${part.part}`,
+      body: "",
+    });
+  }
+}
 
 /* ------------------------------------------------------------------ */
 /* Competitor comparison pages                                         */

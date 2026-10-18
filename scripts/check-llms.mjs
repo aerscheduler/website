@@ -141,8 +141,20 @@ if (!built) {
     else if (!md.startsWith("# ")) fail(`/md${r} does not start with an H1 title`);
   }
 
+  // The regulations library: every section and Part page has a Markdown twin,
+  // and llms.txt lists every section's twin.
+  const regPages = [...routes].filter((r) => /^\/regulations\/[a-z0-9-]+$/.test(r));
+  const regSections = regPages.filter((r) => !/\/part-\d+$/.test(r));
+  if (regSections.length < 40) fail(`only ${regSections.length} regulation pages prerendered; the route pattern here is blind`);
+  for (const r of [...regPages, "/regulations"]) {
+    const md = body(`/md${r}`);
+    if (!md) fail(`${r} has no prerendered Markdown twin at /md${r}`);
+    else if (!md.startsWith("# ")) fail(`/md${r} does not start with an H1 title`);
+  }
+  if (llms) for (const r of regSections) if (!llms.includes(`(${SITE_URL}${r}.md)`)) fail(`/llms.txt does not list ${r}.md`);
+
   // Every Markdown twin, for the checks that run over all outputs.
-  const mdBodies = docArticles.map((r) => [`/md${r}`, body(`/md${r}`)]).filter(([, t]) => t);
+  const mdBodies = [...docArticles, ...regPages, "/regulations"].map((r) => [`/md${r}`, body(`/md${r}`)]).filter(([, t]) => t);
   const outputs = [["/llms.txt", llms], ["/llms-full.txt", full], ...mdBodies].filter(([, t]) => t);
 
   if (llms) {
@@ -204,7 +216,11 @@ if (!built) {
   }
 
   // Content types were recorded with the prerendered files.
-  for (const [route, type] of [["/llms.txt", "text/plain"], ["/llms-full.txt", "text/plain"], ...docArticles.map((r) => [`/md${r}`, "text/markdown"])]) {
+  for (const [route, type] of [
+    ["/llms.txt", "text/plain"],
+    ["/llms-full.txt", "text/plain"],
+    ...[...docArticles, ...regPages, "/regulations"].map((r) => [`/md${r}`, "text/markdown"]),
+  ]) {
     const meta = path.join(appDir, `${route}.meta`);
     if (!existsSync(meta)) { fail(`${route} has no .meta file`); continue; }
     const headers = JSON.parse(readFileSync(meta, "utf8")).headers ?? {};
@@ -224,8 +240,18 @@ if (!built) {
     }
   }
 
+  const regRule = before.find((r) => r.destination === "/md/regulations/:slug");
+  if (!regRule) fail("next.config.ts has no beforeFiles rewrite to /md/regulations/:slug");
+  else {
+    const re = new RegExp(regRule.regex);
+    for (const r of regPages) {
+      if (!re.test(`${r}.md`)) fail(`the regulations .md rewrite does not match ${r}.md`);
+      if (re.test(r)) fail(`the regulations .md rewrite also matches the HTML path ${r}`);
+    }
+  }
+
   report(
-    `${docArticles.length} articles with Markdown twins; llms.txt ${Math.round((llms?.length ?? 0) / 1024)} KB, llms-full.txt ${Math.round((full?.length ?? 0) / 1024)} KB`
+    `${docArticles.length} articles and ${regPages.length} regulation pages with Markdown twins; llms.txt ${Math.round((llms?.length ?? 0) / 1024)} KB, llms-full.txt ${Math.round((full?.length ?? 0) / 1024)} KB`
   );
 }
 
