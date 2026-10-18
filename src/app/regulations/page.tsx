@@ -94,7 +94,7 @@ export default function RegulationsHub() {
             if (!regs.length) return null;
             return (
               <div key={t.slug} id={t.slug} className="scroll-mt-24 grid gap-6 lg:grid-cols-[16rem_1fr]">
-                <div className="space-y-2">
+                <div className="space-y-2 lg:sticky lg:top-28 lg:self-start">
                   <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">{t.title}</h2>
                   <p className="text-sm font-medium text-muted-foreground">{t.audience}</p>
                   <p className="text-sm leading-relaxed text-muted-foreground">{t.blurb}</p>
