@@ -23697,7 +23697,7 @@
           "Maintenance"
         ],
         "summary": "Search the AD library",
-        "description": "Every Airworthiness Directive in the library, newest first, paged. `q` matches an AD number or its start (`2013-11`), or every word somewhere in the number, title, maker, subject or applicability. Rows carry no text (`details`, `summary`, `applicability`): read one with `GET /maintenance/airworthiness-directives/{adNumber}`. Public federal data, so any member may search it.",
+        "description": "The library search, the same one as the public `GET /public/airworthiness-directives`: an AD number or its start (`2013-11`) first, then ranked full-text over number, title, subject, maker, applicability and summary; when nothing ranks, every word as a substring, newest first. Without `q`, every AD, newest first. Paged, `limit` up to 100. Rows carry no text (`details`, `summary`, `applicability`): read one with `GET /maintenance/airworthiness-directives/{adNumber}`. Public federal data, so any member may search it.",
         "responses": {
           "200": {
             "description": "The matching ADs, without their text.",
@@ -34419,82 +34419,29 @@
         ]
       }
     },
-    "/public/airworthiness-directives/stats": {
-      "get": {
-        "tags": [
-          "AD library"
-        ],
-        "summary": "AD library counts",
-        "description": "How many ADs the public library holds, the years covered, pages by kind, and when it last changed. Unauthenticated, cached for five minutes, 3,000 requests per 5 minutes per address.",
-        "responses": {
-          "200": {
-            "description": "Success.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Authenticated, but not allowed to do this.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Rate limited. `Retry-After` says how long to wait.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        },
-        "operationId": "getAdLibraryStats",
-        "security": [],
-        "parameters": []
-      }
-    },
-    "/public/airworthiness-directives/search": {
+    "/public/airworthiness-directives": {
       "get": {
         "tags": [
           "AD library"
         ],
         "summary": "Search the AD library",
-        "description": "Ranked: an AD number or its start first, then full-text over number, title, subject, maker, applicability and summary. Unauthenticated, cached for five minutes, 3,000 requests per 5 minutes per address.",
+        "description": "The library search, the same one as `GET /maintenance/airworthiness-directives`: an AD number or its start first, then ranked full-text over number, title, subject, maker, applicability and summary; when nothing ranks, every word as a substring, newest first. Without `q`, every AD, newest first. Unauthenticated: no account and no key. Cached for five minutes; 3,000 requests per 5 minutes per address.",
         "responses": {
           "200": {
-            "description": "Success.",
+            "description": "The matching ADs, best first, without their text.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
                     "data": {
-                      "type": "object"
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PublicAirworthinessDirective"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -34532,259 +34479,60 @@
             }
           }
         },
-        "operationId": "searchAdLibrary",
+        "operationId": "searchPublicAirworthinessDirectives",
         "security": [],
         "parameters": [
           {
             "name": "q",
             "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "type",
-            "in": "query",
+            "required": false,
             "schema": {
               "type": "string"
             },
-            "description": "airplane, rotorcraft, engine, propeller, appliance, glider, balloon or various."
+            "description": "An AD number or its start, or words."
           },
           {
-            "name": "page",
+            "name": "productType",
             "in": "query",
+            "required": false,
             "schema": {
-              "type": "integer",
-              "minimum": 1
-            }
+              "type": "string"
+            },
+            "description": "Restrict to kinds of product, comma-separated: `airplane`, `rotorcraft`, `engine`, `propeller`, `glider`, `balloon`, `appliance`, `various`."
           },
           {
-            "name": "pageSize",
+            "name": "limit",
             "in": "query",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 50
-            }
-          }
-        ]
-      }
-    },
-    "/public/airworthiness-directives/recent": {
-      "get": {
-        "tags": [
-          "AD library"
-        ],
-        "summary": "New ADs",
-        "description": "Published in the last `days` days (default 30, up to 90), plus every AD on the Federal Register's public-inspection desk, flagged `onPublicInspection`. Unauthenticated, cached for five minutes, 3,000 requests per 5 minutes per address.",
-        "responses": {
-          "200": {
-            "description": "Success.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Authenticated, but not allowed to do this.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Rate limited. `Retry-After` says how long to wait.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        },
-        "operationId": "listRecentAds",
-        "security": [],
-        "parameters": [
-          {
-            "name": "days",
-            "in": "query",
+            "required": false,
             "schema": {
               "type": "integer",
               "minimum": 1,
-              "maximum": 90
-            }
-          }
-        ]
-      }
-    },
-    "/public/airworthiness-directives/months": {
-      "get": {
-        "tags": [
-          "AD library"
-        ],
-        "summary": "Months with ADs",
-        "description": "Every month that has published ADs, newest first, with how many. Unauthenticated, cached for five minutes, 3,000 requests per 5 minutes per address.",
-        "responses": {
-          "200": {
-            "description": "Success.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object"
-                    }
-                  }
-                }
-              }
-            }
+              "maximum": 100,
+              "default": 100
+            },
+            "description": "Rows to return, 1 to 100. Defaults to 100; a larger value is clamped."
           },
-          "401": {
-            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Authenticated, but not allowed to do this.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Rate limited. `Retry-After` says how long to wait.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        },
-        "operationId": "listAdMonths",
-        "security": [],
-        "parameters": []
-      }
-    },
-    "/public/airworthiness-directives/months/{month}": {
-      "get": {
-        "tags": [
-          "AD library"
-        ],
-        "summary": "ADs published in a month",
-        "description": "Every AD published in one month (YYYY-MM), with the FAA's summary of each. Unauthenticated, cached for five minutes, 3,000 requests per 5 minutes per address.",
-        "responses": {
-          "200": {
-            "description": "Success.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Authenticated, but not allowed to do this.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "No such page.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Rate limited. `Retry-After` says how long to wait.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        },
-        "operationId": "listAdsInMonth",
-        "security": [],
-        "parameters": [
           {
-            "name": "month",
-            "in": "path",
-            "required": true,
+            "name": "offset",
+            "in": "query",
+            "required": false,
             "schema": {
-              "type": "string",
-              "pattern": "^\\d{4}-\\d{2}$"
-            }
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
           }
         ]
       }
     },
-    "/public/airworthiness-directives/ads/{adNumber}": {
+    "/public/airworthiness-directives/{adNumber}": {
       "get": {
         "tags": [
           "AD library"
         ],
         "summary": "One AD in full",
-        "description": "Applicability and required actions as structured blocks, the FAA's summary, supersession both ways, and the pages it is filed on (`mentioned` marks an equipment AD naming an aircraft). Unauthenticated, cached for five minutes, 3,000 requests per 5 minutes per address.",
+        "description": "Applicability and required actions as structured blocks, the FAA's summary, supersession both ways, and the pages it is listed on. As `GET /maintenance/airworthiness-directives/{adNumber}`, without an organization. Unauthenticated: no account and no key. Cached for five minutes; 3,000 requests per 5 minutes per address.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -34794,7 +34542,7 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "type": "object"
+                      "$ref": "#/components/schemas/PublicAirworthinessDirectiveFull"
                     }
                   }
                 }
@@ -34842,7 +34590,7 @@
             }
           }
         },
-        "operationId": "getPublicAd",
+        "operationId": "getPublicAirworthinessDirective",
         "security": [],
         "parameters": [
           {
@@ -34852,28 +34600,460 @@
             "schema": {
               "type": "string"
             },
-            "description": "As in 2011-10-09."
+            "description": "As in `2011-10-09` or `96-12-22`."
           }
         ]
       }
     },
-    "/public/airworthiness-directives/pages/{kind}": {
+    "/public/airworthiness-directives/coverage": {
+      "get": {
+        "tags": [
+          "AD library"
+        ],
+        "summary": "What the library holds",
+        "description": "How many ADs, the oldest and newest, how many are on public inspection, and pages by kind. Unauthenticated: no account and no key. Cached for five minutes; 3,000 requests per 5 minutes per address.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AdLibraryCoverage"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getPublicAdLibraryCoverage",
+        "security": [],
+        "parameters": []
+      }
+    },
+    "/public/airworthiness-directives/recent": {
+      "get": {
+        "tags": [
+          "AD library"
+        ],
+        "summary": "New ADs",
+        "description": "Published in the last `days` days (default 30, up to 90), and every AD on the Federal Register's public-inspection desk, flagged `onPublicInspection`. Newest first. Unauthenticated: no account and no key. Cached for five minutes; 3,000 requests per 5 minutes per address.",
+        "responses": {
+          "200": {
+            "description": "New ADs, newest first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PublicAirworthinessDirective"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listRecentPublicAirworthinessDirectives",
+        "security": [],
+        "parameters": [
+          {
+            "name": "days",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 90
+            },
+            "description": "How far back. Default 30, up to 90."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1,1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row , `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
+      }
+    },
+    "/public/airworthiness-directives/months": {
+      "get": {
+        "tags": [
+          "AD library"
+        ],
+        "summary": "Months with ADs",
+        "description": "Every month with published ADs, newest first, with how many. Unauthenticated: no account and no key. Cached for five minutes; 3,000 requests per 5 minutes per address.",
+        "responses": {
+          "200": {
+            "description": "Months, newest first.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AdLibraryMonth"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listPublicAdMonths",
+        "security": [],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1,1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row , `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
+      }
+    },
+    "/public/airworthiness-directives/months/{month}": {
+      "get": {
+        "tags": [
+          "AD library"
+        ],
+        "summary": "ADs published in a month",
+        "description": "Every AD published in one month, oldest first, each with the FAA's `summary` as well. Unauthenticated: no account and no key. Cached for five minutes; 3,000 requests per 5 minutes per address.",
+        "responses": {
+          "200": {
+            "description": "That month's ADs.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PublicAirworthinessDirective"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not a month.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listPublicAirworthinessDirectivesInMonth",
+        "security": [],
+        "parameters": [
+          {
+            "name": "month",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}$"
+            },
+            "description": "YYYY-MM."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1,1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row , `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
+      }
+    },
+    "/public/airworthiness-directives/{segment}": {
       "get": {
         "tags": [
           "AD library"
         ],
         "summary": "Pages of one kind",
-        "description": "Every aircraft model or maker, engine family or maker, propeller maker or equipment maker with a page, busiest first. Unauthenticated, cached for five minutes, 3,000 requests per 5 minutes per address.",
+        "description": "Every aircraft model or maker, engine family or maker, propeller maker or equipment maker with a page, most registered first. Unauthenticated: no account and no key. Cached for five minutes; 3,000 requests per 5 minutes per address.",
         "responses": {
           "200": {
-            "description": "Success.",
+            "description": "The pages.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
                     "data": {
-                      "type": "object"
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AdLibraryPageSummary"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
                     }
                   }
                 }
@@ -34900,16 +35080,6 @@
               }
             }
           },
-          "404": {
-            "description": "No such page.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
           "429": {
             "description": "Rate limited. `Retry-After` says how long to wait.",
             "content": {
@@ -34921,34 +35091,80 @@
             }
           }
         },
-        "operationId": "listAdPages",
+        "operationId": "listPublicAdPages",
         "security": [],
         "parameters": [
           {
-            "name": "kind",
+            "name": "segment",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
               "enum": [
                 "aircraft",
-                "engine",
-                "propeller",
-                "appliance"
+                "engines",
+                "propellers",
+                "appliances"
               ]
             },
-            "description": "The kind of page."
+            "description": "The kind of page, in the website's words."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1,1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row , `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
           }
         ]
       }
     },
-    "/public/airworthiness-directives/pages/{kind}/{slug}": {
+    "/public/airworthiness-directives/{segment}/{slug}": {
       "get": {
         "tags": [
           "AD library"
         ],
         "summary": "One page",
-        "description": "Its ADs (newest first), figures, and for aircraft models the equipment ADs that name it (`equipment`). Unauthenticated, cached for five minutes, 3,000 requests per 5 minutes per address.",
+        "description": "Its ADs (newest first), figures, and for an aircraft the equipment ADs that name it. The path is the website's: `/public/airworthiness-directives/aircraft/cessna-172s` serves www.aerscheduler.com/airworthiness-directives/aircraft/cessna-172s. Unauthenticated: no account and no key. Cached for five minutes; 3,000 requests per 5 minutes per address.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -34958,7 +35174,7 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "type": "object"
+                      "$ref": "#/components/schemas/AdLibraryPage"
                     }
                   }
                 }
@@ -35006,23 +35222,23 @@
             }
           }
         },
-        "operationId": "getAdPage",
+        "operationId": "getPublicAdPage",
         "security": [],
         "parameters": [
           {
-            "name": "kind",
+            "name": "segment",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
               "enum": [
                 "aircraft",
-                "engine",
-                "propeller",
-                "appliance"
+                "engines",
+                "propellers",
+                "appliances"
               ]
             },
-            "description": "The kind of page."
+            "description": "The kind of page, in the website's words."
           },
           {
             "name": "slug",
@@ -35031,30 +35247,25 @@
             "schema": {
               "type": "string"
             },
-            "description": "The page, as in cessna-172s or lycoming-o-320."
+            "description": "The page, as in `cessna-172s` or `lycoming-o-320`."
           }
         ]
       }
     },
-    "/public/airworthiness-directives/pages/{kind}/{slug}.csv": {
+    "/public/airworthiness-directives/{segment}/{slug}.csv": {
       "get": {
         "tags": [
           "AD library"
         ],
         "summary": "One page as CSV",
-        "description": "One row per AD, with what it requires and the Federal Register link. Unauthenticated, cached for five minutes, 3,000 requests per 5 minutes per address.",
+        "description": "One row per AD, with what it requires and the Federal Register link. `text/csv`. Unauthenticated: no account and no key. Cached for five minutes; 3,000 requests per 5 minutes per address.",
         "responses": {
           "200": {
-            "description": "Success.",
+            "description": "The page's ADs as CSV.",
             "content": {
-              "application/json": {
+              "text/csv": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object"
-                    }
-                  }
+                  "type": "string"
                 }
               }
             }
@@ -35100,23 +35311,23 @@
             }
           }
         },
-        "operationId": "getAdPageCsv",
+        "operationId": "getPublicAdPageCsv",
         "security": [],
         "parameters": [
           {
-            "name": "kind",
+            "name": "segment",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
               "enum": [
                 "aircraft",
-                "engine",
-                "propeller",
-                "appliance"
+                "engines",
+                "propellers",
+                "appliances"
               ]
             },
-            "description": "The kind of page."
+            "description": "The kind of page, in the website's words."
           },
           {
             "name": "slug",
@@ -35125,7 +35336,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "The page, as in cessna-172s or lycoming-o-320."
+            "description": "The page, as in `cessna-172s` or `lycoming-o-320`."
           }
         ]
       }
@@ -35136,7 +35347,7 @@
           "AD library"
         ],
         "summary": "Every AD and page",
-        "description": "For sitemaps: every AD number and page, with when each changed. Unauthenticated, cached for five minutes, 3,000 requests per 5 minutes per address.",
+        "description": "For sitemaps and mirrors: every AD number and page, with when each changed. Unauthenticated: no account and no key. Cached for five minutes; 3,000 requests per 5 minutes per address.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -35146,7 +35357,46 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "type": "object"
+                      "type": "object",
+                      "properties": {
+                        "ads": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "adNumber": {
+                                "type": "string"
+                              },
+                              "updatedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "readable": {
+                                "type": "boolean",
+                                "description": "Its text is laid out for reading."
+                              }
+                            }
+                          }
+                        },
+                        "pages": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string"
+                              },
+                              "slug": {
+                                "type": "string"
+                              },
+                              "updatedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              }
+                            }
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -35184,7 +35434,7 @@
             }
           }
         },
-        "operationId": "getAdLibrarySitemap",
+        "operationId": "getPublicAdLibrarySitemap",
         "security": [],
         "parameters": []
       }
@@ -41464,6 +41714,618 @@
           "hasMore": {
             "type": "boolean",
             "description": "Whether another page exists. Check this, some collections are larger than one page."
+          }
+        },
+        "additionalProperties": true
+      },
+      "PublicAirworthinessDirective": {
+        "type": "object",
+        "description": "One AD in a public library list: enough to tell it apart and open it, without its text.",
+        "properties": {
+          "adNumber": {
+            "type": "string",
+            "description": "As printed: `96-12-22` before 2000, `2013-11-10` since, `2007-21-14 R1` for a revision.",
+            "example": "2011-10-09"
+          },
+          "amendment": {
+            "description": "The 14 CFR 39.13 amendment that adopted it.",
+            "example": "39-16687",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "description": "The Federal Register title.",
+            "example": "Airworthiness Directives; Cessna Aircraft Company Airplanes"
+          },
+          "manufacturer": {
+            "type": "string",
+            "description": "The type certificate holder as the AD names it.",
+            "example": "Cessna Aircraft Company"
+          },
+          "productType": {
+            "type": "string",
+            "description": "What kind of product it is about.",
+            "enum": [
+              "airplane",
+              "rotorcraft",
+              "engine",
+              "propeller",
+              "glider",
+              "balloon",
+              "appliance",
+              "various"
+            ]
+          },
+          "publishedOn": {
+            "type": "string",
+            "description": "Federal Register publication date; for one on public inspection, the date it is to be published.",
+            "format": "date"
+          },
+          "effectiveOn": {
+            "description": "Effective date. Set at publication.",
+            "format": "date",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "subject": {
+            "description": "The subject line (JASC code). Absent before about 2008.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "supersedes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "AD numbers this one supersedes or revises."
+          },
+          "supersededBy": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Later ADs that supersede or revise this one."
+          },
+          "requires": {
+            "description": "What it requires, from the FAA's summary (\"Requires replacing the oil pressure switch ...\"). Null when the summary does not say.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "repetitive": {
+            "type": "boolean",
+            "description": "Its text mentions a repeated inspection or replacement. A reading aid, never a compliance answer."
+          },
+          "onPublicInspection": {
+            "type": "boolean",
+            "description": "Filed for publication and on the Federal Register's public-inspection desk, not yet published."
+          },
+          "url": {
+            "type": "string",
+            "description": "Where to read the AD: federalregister.gov, or the FAA's own copy for one from `drs`."
+          },
+          "source": {
+            "type": "string",
+            "description": "`federal_register`: read from its Federal Register text. `drs`: from the FAA's DRS index of every AD, which has no text; `url` is the FAA's copy.",
+            "enum": [
+              "federal_register",
+              "drs"
+            ]
+          },
+          "datedByNumber": {
+            "type": "boolean",
+            "description": "The FAA gave no date, so `publishedOn` is the start of the two-week period the AD number names. Show the year."
+          }
+        },
+        "additionalProperties": true
+      },
+      "PublicAirworthinessDirectiveFull": {
+        "type": "object",
+        "description": "One AD in full, from the public library.",
+        "properties": {
+          "adNumber": {
+            "type": "string",
+            "description": "As printed: `96-12-22` before 2000, `2013-11-10` since, `2007-21-14 R1` for a revision.",
+            "example": "2011-10-09"
+          },
+          "amendment": {
+            "description": "The 14 CFR 39.13 amendment that adopted it.",
+            "example": "39-16687",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "description": "The Federal Register title.",
+            "example": "Airworthiness Directives; Cessna Aircraft Company Airplanes"
+          },
+          "manufacturer": {
+            "type": "string",
+            "description": "The type certificate holder as the AD names it.",
+            "example": "Cessna Aircraft Company"
+          },
+          "productType": {
+            "type": "string",
+            "description": "What kind of product it is about.",
+            "enum": [
+              "airplane",
+              "rotorcraft",
+              "engine",
+              "propeller",
+              "glider",
+              "balloon",
+              "appliance",
+              "various"
+            ]
+          },
+          "publishedOn": {
+            "type": "string",
+            "description": "Federal Register publication date; for one on public inspection, the date it is to be published.",
+            "format": "date"
+          },
+          "effectiveOn": {
+            "description": "Effective date. Set at publication.",
+            "format": "date",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "subject": {
+            "description": "The subject line (JASC code). Absent before about 2008.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "supersedes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "AD numbers this one supersedes or revises."
+          },
+          "supersededBy": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Later ADs that supersede or revise this one."
+          },
+          "requires": {
+            "description": "What it requires, from the FAA's summary (\"Requires replacing the oil pressure switch ...\"). Null when the summary does not say.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "repetitive": {
+            "type": "boolean",
+            "description": "Its text mentions a repeated inspection or replacement. A reading aid, never a compliance answer."
+          },
+          "onPublicInspection": {
+            "type": "boolean",
+            "description": "Filed for publication and on the Federal Register's public-inspection desk, not yet published."
+          },
+          "url": {
+            "type": "string",
+            "description": "Where to read the AD: federalregister.gov, or the FAA's own copy for one from `drs`."
+          },
+          "source": {
+            "type": "string",
+            "description": "`federal_register`: read from its Federal Register text. `drs`: from the FAA's DRS index of every AD, which has no text; `url` is the FAA's copy.",
+            "enum": [
+              "federal_register",
+              "drs"
+            ]
+          },
+          "datedByNumber": {
+            "type": "boolean",
+            "description": "The FAA gave no date, so `publishedOn` is the start of the two-week period the AD number names. Show the year."
+          },
+          "applicability": {
+            "type": "string",
+            "description": "The applicability paragraph, whole: models, serial ranges, installed parts, exceptions."
+          },
+          "unsafeCondition": {
+            "description": "The unsafe condition it addresses.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "summary": {
+            "description": "The Federal Register summary.",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "details": {
+            "description": "The applicability and required actions as readable structure, laid out as the Federal Register prints them. Null until read; empty lists when the layout could not be read (then use `applicability`).",
+            "properties": {
+              "v": {
+                "type": "integer",
+                "description": "Format version.",
+                "example": 1
+              },
+              "applicability": {
+                "type": "array",
+                "items": {
+                  "description": "One piece of an AD's text. `p` a paragraph at its outline depth (`(1)` is 1, `(i)` is 2); `h` a heading inside a section; `note` a note; `table` a table with its column headings and rows.",
+                  "type": "object",
+                  "properties": {
+                    "t": {
+                      "type": "string",
+                      "description": "Kind.",
+                      "enum": [
+                        "p",
+                        "h",
+                        "note",
+                        "table"
+                      ]
+                    },
+                    "text": {
+                      "type": "string",
+                      "description": "The text (`p`, `h`, `note`)."
+                    },
+                    "level": {
+                      "type": "integer",
+                      "description": "Outline depth of a paragraph, 0 to 3."
+                    },
+                    "title": {
+                      "description": "A table's title.",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "head": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "A table's column headings."
+                    },
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "description": "A table's rows, one string per cell."
+                    }
+                  },
+                  "required": [
+                    "t"
+                  ]
+                }
+              },
+              "actions": {
+                "type": "array",
+                "description": "The sections that say what to do, in order.",
+                "items": {
+                  "type": "object",
+                  "description": "One section.",
+                  "properties": {
+                    "heading": {
+                      "type": "string",
+                      "description": "Its heading.",
+                      "example": "Required Actions"
+                    },
+                    "blocks": {
+                      "type": "array",
+                      "items": {
+                        "description": "One piece of an AD's text. `p` a paragraph at its outline depth (`(1)` is 1, `(i)` is 2); `h` a heading inside a section; `note` a note; `table` a table with its column headings and rows.",
+                        "type": "object",
+                        "properties": {
+                          "t": {
+                            "type": "string",
+                            "description": "Kind.",
+                            "enum": [
+                              "p",
+                              "h",
+                              "note",
+                              "table"
+                            ]
+                          },
+                          "text": {
+                            "type": "string",
+                            "description": "The text (`p`, `h`, `note`)."
+                          },
+                          "level": {
+                            "type": "integer",
+                            "description": "Outline depth of a paragraph, 0 to 3."
+                          },
+                          "title": {
+                            "description": "A table's title.",
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "head": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "description": "A table's column headings."
+                          },
+                          "rows": {
+                            "type": "array",
+                            "items": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "description": "A table's rows, one string per cell."
+                          }
+                        },
+                        "required": [
+                          "t"
+                        ]
+                      }
+                    }
+                  },
+                  "additionalProperties": true
+                }
+              }
+            },
+            "additionalProperties": true,
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "supersedesInLibrary": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Which of `supersedes` the library holds, so can be linked."
+          },
+          "pages": {
+            "type": "array",
+            "description": "The aircraft, engine, propeller and equipment pages it is listed on.",
+            "items": {
+              "type": "object",
+              "description": "A page it is listed on.",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "description": "The kind of page.",
+                  "enum": [
+                    "aircraft",
+                    "engine",
+                    "propeller",
+                    "appliance"
+                  ]
+                },
+                "slug": {
+                  "type": "string",
+                  "description": "The page.",
+                  "example": "cessna-172s"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Its name.",
+                  "example": "Cessna 172S"
+                },
+                "fleetCount": {
+                  "type": "integer",
+                  "description": "How many are on the US registry."
+                },
+                "mentioned": {
+                  "type": "boolean",
+                  "description": "An equipment AD that names this aircraft, rather than an AD written for it."
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "When the library last changed it.",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": true
+      },
+      "AdLibraryPageSummary": {
+        "type": "object",
+        "description": "One aircraft model or maker, engine family or maker, propeller maker or equipment maker with a page.",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "description": "The page, as in the website's address.",
+            "example": "cessna-172s"
+          },
+          "name": {
+            "type": "string",
+            "description": "Its name.",
+            "example": "Cessna 172S"
+          },
+          "maker": {
+            "type": "string",
+            "description": "The maker.",
+            "example": "Cessna"
+          },
+          "fleetCount": {
+            "type": "integer",
+            "description": "How many are on the US registry. 0 for a propeller or equipment maker."
+          },
+          "adCount": {
+            "type": "integer",
+            "description": "ADs listed on it, equipment ADs that name it included."
+          },
+          "isMaker": {
+            "type": "boolean",
+            "description": "A maker's page, gathering its models' ADs, rather than one model's."
+          }
+        },
+        "additionalProperties": true
+      },
+      "AdLibraryPage": {
+        "type": "object",
+        "description": "One page of the library: its ADs and figures.",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "description": "The kind of page.",
+            "enum": [
+              "aircraft",
+              "engine",
+              "propeller",
+              "appliance"
+            ]
+          },
+          "slug": {
+            "type": "string",
+            "description": "The page.",
+            "example": "cessna-172s"
+          },
+          "name": {
+            "type": "string",
+            "description": "Its name.",
+            "example": "Cessna 172S"
+          },
+          "maker": {
+            "type": "string",
+            "description": "The maker.",
+            "example": "Cessna"
+          },
+          "isMaker": {
+            "type": "boolean",
+            "description": "A maker's page rather than one model's."
+          },
+          "fleetCount": {
+            "type": "integer",
+            "description": "How many are on the US registry."
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "When the page last changed.",
+            "format": "date-time"
+          },
+          "figures": {
+            "type": "object",
+            "description": "Counts over `ads`.",
+            "properties": {
+              "total": {
+                "type": "integer",
+                "description": "ADs listed."
+              },
+              "notSuperseded": {
+                "type": "integer",
+                "description": "Of those, not superseded and published."
+              },
+              "superseded": {
+                "type": "integer",
+                "description": "Of those, superseded."
+              },
+              "repetitive": {
+                "type": "integer",
+                "description": "Not superseded, with a repeat action."
+              },
+              "newest": {
+                "description": "The newest publication date.",
+                "format": "date",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": true
+          },
+          "ads": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicAirworthinessDirective"
+            },
+            "description": "ADs whose text names it, newest first."
+          },
+          "equipment": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicAirworthinessDirective"
+            },
+            "description": "For an aircraft: equipment ADs that name it, which apply only if that equipment is installed."
+          }
+        },
+        "additionalProperties": true
+      },
+      "AdLibraryCoverage": {
+        "type": "object",
+        "description": "How much the public library holds.",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "description": "Published ADs."
+          },
+          "oldest": {
+            "description": "The oldest publication date.",
+            "format": "date",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "newest": {
+            "description": "The newest publication date.",
+            "format": "date",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "onPublicInspection": {
+            "type": "integer",
+            "description": "ADs filed for publication and not yet published."
+          },
+          "pages": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "description": "Pages by kind: `aircraft`, `engine`, `propeller`, `appliance`."
+          },
+          "lastAddedAt": {
+            "description": "When an AD was last added.",
+            "format": "date-time",
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": true
+      },
+      "AdLibraryMonth": {
+        "type": "object",
+        "description": "A month with published ADs.",
+        "properties": {
+          "month": {
+            "type": "string",
+            "description": "YYYY-MM.",
+            "example": "2026-09"
+          },
+          "count": {
+            "type": "integer",
+            "description": "ADs published in it."
           }
         },
         "additionalProperties": true
