@@ -416,6 +416,18 @@ const PAGE_META = {
   "/terms-and-conditions": { group: "Pages", title: "Terms and conditions" },
   "/delete-account": { group: "Pages", title: "Delete your account" },
   "/migrating/my-fbo": { group: "Guides", title: "MyFBO alternative & migration" },
+  // The public AD library. Its AD and model pages are dynamic (thousands, from the API) and are
+  // found through the library's own search; these are its fixed pages.
+  "/airworthiness-directives": { group: "Guides", title: "AD library: search every AD since 1995" },
+  "/airworthiness-directives/new": { group: "Guides", title: "New Airworthiness Directives" },
+  "/airworthiness-directives/search": { group: "Pages", title: "Search the AD library" },
+  "/airworthiness-directives/monthly": { group: "Guides", title: "ADs by month" },
+  "/airworthiness-directives/aircraft": { group: "Guides", title: "ADs by aircraft model" },
+  "/airworthiness-directives/engines": { group: "Guides", title: "ADs by engine" },
+  "/airworthiness-directives/propellers": { group: "Guides", title: "Propeller ADs" },
+  "/airworthiness-directives/appliances": { group: "Guides", title: "Equipment and appliance ADs" },
+  "/airworthiness-directives/data": { group: "Pages", title: "AD data: JSON API, CSV and RSS" },
+  "/airworthiness-directives/follow": { group: "Pages", title: "Your AD library emails" },
   "/resources/flight-school-scheduling-software": { group: "Guides", title: "Scheduling software" },
   "/resources/quickbooks-integration": { group: "Guides", title: "QuickBooks integration" },
   "/resources/split-billing-shared-flights": { group: "Guides", title: "Split billing and shared flights" },

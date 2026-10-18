@@ -10,9 +10,10 @@ export default function robots(): MetadataRoute.Robots {
       // link to, and every `?q=` is a distinct URL, so left alone they become
       // an unbounded set of near-duplicates competing with the real pages. The
       // route also carries a noindex header; this stops the crawl earlier.
-      disallow: "/search",
+      // The AD library's search results are the same thin, unbounded set.
+      disallow: ["/search", "/airworthiness-directives/search", "/airworthiness-directives/follow"],
     },
-    sitemap: `${SITE_URL}/sitemap.xml`,
+    sitemap: [`${SITE_URL}/sitemap.xml`, `${SITE_URL}/airworthiness-directives/sitemap.xml`],
     host: SITE_URL,
   };
 }

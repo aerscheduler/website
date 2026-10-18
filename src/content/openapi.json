@@ -137,6 +137,10 @@
       "description": "Health and status."
     },
     {
+      "name": "AD library",
+      "description": "The public library of FAA Airworthiness Directives since 1995 (www.aerscheduler.com/airworthiness-directives): search, one AD, pages by aircraft, engine, propeller and equipment, CSV. No account and no key."
+    },
+    {
       "name": "Realtime",
       "description": "WebSocket tickets for live console updates (schedule, notifications, billing)."
     },
@@ -34413,6 +34417,776 @@
             "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
           }
         ]
+      }
+    },
+    "/public/airworthiness-directives/stats": {
+      "get": {
+        "tags": [
+          "AD library"
+        ],
+        "summary": "AD library counts",
+        "description": "How many ADs the public library holds, the years covered, pages by kind, and when it last changed. Unauthenticated, cached for five minutes, 3,000 requests per 5 minutes per address.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getAdLibraryStats",
+        "security": [],
+        "parameters": []
+      }
+    },
+    "/public/airworthiness-directives/search": {
+      "get": {
+        "tags": [
+          "AD library"
+        ],
+        "summary": "Search the AD library",
+        "description": "Ranked: an AD number or its start first, then full-text over number, title, subject, maker, applicability and summary. Unauthenticated, cached for five minutes, 3,000 requests per 5 minutes per address.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "searchAdLibrary",
+        "security": [],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "airplane, rotorcraft, engine, propeller, appliance, glider, balloon or various."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        ]
+      }
+    },
+    "/public/airworthiness-directives/recent": {
+      "get": {
+        "tags": [
+          "AD library"
+        ],
+        "summary": "New ADs",
+        "description": "Published in the last `days` days (default 30, up to 90), plus every AD on the Federal Register's public-inspection desk, flagged `onPublicInspection`. Unauthenticated, cached for five minutes, 3,000 requests per 5 minutes per address.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listRecentAds",
+        "security": [],
+        "parameters": [
+          {
+            "name": "days",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 90
+            }
+          }
+        ]
+      }
+    },
+    "/public/airworthiness-directives/months": {
+      "get": {
+        "tags": [
+          "AD library"
+        ],
+        "summary": "Months with ADs",
+        "description": "Every month that has published ADs, newest first, with how many. Unauthenticated, cached for five minutes, 3,000 requests per 5 minutes per address.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listAdMonths",
+        "security": [],
+        "parameters": []
+      }
+    },
+    "/public/airworthiness-directives/months/{month}": {
+      "get": {
+        "tags": [
+          "AD library"
+        ],
+        "summary": "ADs published in a month",
+        "description": "Every AD published in one month (YYYY-MM), with the FAA's summary of each. Unauthenticated, cached for five minutes, 3,000 requests per 5 minutes per address.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such page.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listAdsInMonth",
+        "security": [],
+        "parameters": [
+          {
+            "name": "month",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}$"
+            }
+          }
+        ]
+      }
+    },
+    "/public/airworthiness-directives/ads/{adNumber}": {
+      "get": {
+        "tags": [
+          "AD library"
+        ],
+        "summary": "One AD in full",
+        "description": "Applicability and required actions as structured blocks, the FAA's summary, supersession both ways, and the pages it is filed on (`mentioned` marks an equipment AD naming an aircraft). Unauthenticated, cached for five minutes, 3,000 requests per 5 minutes per address.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not in the library.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getPublicAd",
+        "security": [],
+        "parameters": [
+          {
+            "name": "adNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "As in 2011-10-09."
+          }
+        ]
+      }
+    },
+    "/public/airworthiness-directives/pages/{kind}": {
+      "get": {
+        "tags": [
+          "AD library"
+        ],
+        "summary": "Pages of one kind",
+        "description": "Every aircraft model or maker, engine family or maker, propeller maker or equipment maker with a page, busiest first. Unauthenticated, cached for five minutes, 3,000 requests per 5 minutes per address.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such page.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listAdPages",
+        "security": [],
+        "parameters": [
+          {
+            "name": "kind",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "aircraft",
+                "engine",
+                "propeller",
+                "appliance"
+              ]
+            },
+            "description": "The kind of page."
+          }
+        ]
+      }
+    },
+    "/public/airworthiness-directives/pages/{kind}/{slug}": {
+      "get": {
+        "tags": [
+          "AD library"
+        ],
+        "summary": "One page",
+        "description": "Its ADs (newest first), figures, and for aircraft models the equipment ADs that name it (`equipment`). Unauthenticated, cached for five minutes, 3,000 requests per 5 minutes per address.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such page.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getAdPage",
+        "security": [],
+        "parameters": [
+          {
+            "name": "kind",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "aircraft",
+                "engine",
+                "propeller",
+                "appliance"
+              ]
+            },
+            "description": "The kind of page."
+          },
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The page, as in cessna-172s or lycoming-o-320."
+          }
+        ]
+      }
+    },
+    "/public/airworthiness-directives/pages/{kind}/{slug}.csv": {
+      "get": {
+        "tags": [
+          "AD library"
+        ],
+        "summary": "One page as CSV",
+        "description": "One row per AD, with what it requires and the Federal Register link. Unauthenticated, cached for five minutes, 3,000 requests per 5 minutes per address.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No such page.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getAdPageCsv",
+        "security": [],
+        "parameters": [
+          {
+            "name": "kind",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "aircraft",
+                "engine",
+                "propeller",
+                "appliance"
+              ]
+            },
+            "description": "The kind of page."
+          },
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The page, as in cessna-172s or lycoming-o-320."
+          }
+        ]
+      }
+    },
+    "/public/airworthiness-directives/sitemap": {
+      "get": {
+        "tags": [
+          "AD library"
+        ],
+        "summary": "Every AD and page",
+        "description": "For sitemaps: every AD number and page, with when each changed. Unauthenticated, cached for five minutes, 3,000 requests per 5 minutes per address.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getAdLibrarySitemap",
+        "security": [],
+        "parameters": []
       }
     },
     "/public/book/{orgSlug}/offerings/{offeringSlug}": {

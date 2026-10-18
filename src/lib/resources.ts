@@ -99,10 +99,15 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
     title: "Airworthiness",
     items: [
       {
+        href: "/airworthiness-directives",
+        label: "AD library",
+        description: "Every FAA Airworthiness Directive since 1995, by aircraft, engine, propeller and equipment. Free.",
+      },
+      {
         href: "/resources/airworthiness-directive-tracking",
         label: "Airworthiness Directive tracking",
         description:
-          "Applicability, compliance and enforcement are three jobs. Which ones a scheduling system can actually do.",
+          "Finding the ADs that name each aircraft, deciding which apply, recording compliance, enforcing a lapse.",
       },
       {
         href: "/resources/calendar-months-and-inspection-due-dates",
@@ -215,6 +220,7 @@ export const NAV_RESOURCE_GROUPS: ResourceGroup[] = [
   {
     title: "Guides",
     items: linksByHref(
+      "/airworthiness-directives",
       "/resources/flight-school-scheduling-software",
       "/resources/flight-school-reports",
       "/resources/flight-training-records",
@@ -258,6 +264,7 @@ export const FOOTER_RESOURCE_LINKS: ResourceLink[] = [
     description: "Guides, comparisons, and documentation.",
   },
   ...linksByHref(
+    "/airworthiness-directives",
     "/compare/flight-schedule-pro",
     "/compare/flight-circle",
     "/resources/flight-school-scheduling-software"

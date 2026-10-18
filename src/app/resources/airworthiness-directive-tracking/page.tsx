@@ -197,6 +197,11 @@ export default function Page() {
         <section className="mt-10 space-y-4">
           <h2 className="text-2xl font-semibold tracking-tight">Related</h2>
           <p className="text-muted-foreground">
+            The{" "}
+            <Link className="text-primary underline" href="/airworthiness-directives">
+              AD library
+            </Link>{" "}
+            is every AD since 1995, free to search and read, by aircraft, engine, propeller and equipment.{" "}
             <Link className="text-primary underline" href="/features/maintenance">
               Maintenance and squawks
             </Link>{" "}

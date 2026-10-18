@@ -68,9 +68,14 @@ const GUIDE_CLUSTERS: {
       "Three pages for three different readers: an owner choosing a system, a mechanic checking a date, and whoever hands records to an inspector.",
     items: [
       {
+        href: "/airworthiness-directives",
+        title: "AD library",
+        body: "Every FAA Airworthiness Directive published since 1995, readable, filed under the aircraft, engines, propellers and equipment it names, with new ADs a day early and email alerts. Free, no account.",
+      },
+      {
         href: "/resources/airworthiness-directive-tracking",
         title: "Airworthiness Directive tracking",
-        body: "Applicability, compliance and enforcement are three different jobs. Which of them a scheduling system can actually do, and where you still want ADlog or AVTRAK.",
+        body: "Finding the ADs that name each aircraft, deciding which apply, recording compliance and enforcing a lapse: what each job takes, and where ADlog or AVTRAK still fit.",
       },
       {
         href: "/resources/calendar-months-and-inspection-due-dates",
