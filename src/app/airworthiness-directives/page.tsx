@@ -13,13 +13,13 @@ import { signupUrl } from "@/lib/site";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "FAA Airworthiness Directive Search: Every AD Since 1995, Free",
+  title: "FAA Airworthiness Directive Search, Free",
   description:
-    "Search every FAA Airworthiness Directive published since 1995 by AD number, aircraft model, engine, propeller or equipment. Readable text, supersession links, new ADs within the hour, email alerts and CSV. Free, no account.",
+    "Search FAA Airworthiness Directives by AD number, aircraft model, engine, propeller or equipment. Readable text, supersession links, new ADs within the hour, email alerts and CSV. Free, no account.",
   alternates: { canonical: AD_BASE, types: { "application/rss+xml": `${AD_BASE}/feed.xml` } },
   openGraph: {
     title: "FAA Airworthiness Directive search",
-    description: "Every AD since 1995, readable, by aircraft, engine, propeller and equipment. Free.",
+    description: "FAA ADs, readable, by aircraft, engine, propeller and equipment. Free.",
     url: AD_BASE,
   },
 };
@@ -32,10 +32,6 @@ const FAQS = [
   {
     q: "How current is it?",
     a: "It checks the Federal Register every hour. ADs are usually on the Federal Register's public-inspection desk the day before they are published, so most appear here, marked as to be published, a day before their official publication. Emergency ADs are sent to owners before they are published at all, so they can appear here days after the owners received them.",
-  },
-  {
-    q: "Why are ADs from before 1995 missing?",
-    a: "The library is built from the Federal Register's online text, which starts in 1994. Older ADs, many still in force on older aircraft, are in the FAA's DRS. We say so on every aircraft page rather than let a short list look complete.",
   },
   {
     q: "How do you decide which ADs are listed for an aircraft?",
@@ -72,7 +68,7 @@ export default async function AdLibraryPage() {
           <Breadcrumbs items={[{ name: "AD library", href: AD_BASE }]} />
           <p className="mt-6 text-sm font-medium tracking-wide text-primary uppercase">Free AD library</p>
           <h1 className="mt-2 text-4xl font-semibold tracking-tight text-balance text-brand-surface sm:text-5xl">
-            Search every FAA Airworthiness Directive since 1995
+            Search FAA Airworthiness Directives
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
             {stats ? fmt(stats.count) : "Every"} ADs from the Federal Register, laid out readably and filed under the aircraft, engines,

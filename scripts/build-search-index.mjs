@@ -418,7 +418,7 @@ const PAGE_META = {
   "/migrating/my-fbo": { group: "Guides", title: "MyFBO alternative & migration" },
   // The public AD library. Its AD and model pages are dynamic (thousands, from the API) and are
   // found through the library's own search; these are its fixed pages.
-  "/airworthiness-directives": { group: "Guides", title: "AD library: search every AD since 1995" },
+  "/airworthiness-directives": { group: "Guides", title: "AD library: search FAA Airworthiness Directives" },
   "/airworthiness-directives/new": { group: "Guides", title: "New Airworthiness Directives" },
   "/airworthiness-directives/search": { group: "Pages", title: "Search the AD library" },
   "/airworthiness-directives/monthly": { group: "Guides", title: "ADs by month" },

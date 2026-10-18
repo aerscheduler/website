@@ -7,7 +7,7 @@ import { AD_BASE, fmt, searchAds } from "@/lib/ad-library";
 
 export const metadata: Metadata = {
   title: "Search Airworthiness Directives",
-  description: "Search every FAA Airworthiness Directive since 1995 by AD number, maker, model, part or problem.",
+  description: "Search FAA Airworthiness Directives by AD number, maker, model, part or problem.",
   // Every query is its own URL and duplicates the AD pages it lists.
   robots: { index: false, follow: true },
 };

@@ -26,16 +26,15 @@ export const metadata: Metadata = {
 /**
  * THE HONEST POSITION, and the page exists to state it rather than to blur it.
  *
- * Since 2026-10-16 there is an AD library: every AD the Federal Register has published since
- * 1995, matched to each aircraft by the make and model of its airframe, engine and propeller.
- * It LISTS; a person DECIDES. Serial ranges and equipment are not checked by the software, ADs
- * before 1995 are not in it, and the page says so. Everything here is checkable against the
+ * Since 2026-10-16 there is an AD library, matched to each aircraft by the make and model of
+ * its airframe, engine and propeller. It LISTS; a person DECIDES. Serial ranges and equipment
+ * are not checked by the software, and the page says so. Everything here is checkable against the
  * product, and the limits sit above the call to action rather than below it.
  */
 const HALVES = [
   {
     label: "Applicability: which directives apply to this aeroplane",
-    body: "An AD names the aircraft it applies to by make, model and usually a serial number range. AerScheduler lists every AD published since 1995 that names each aircraft's make and model, its engine or its propeller, and tells you the day a new one does. Whether a listed AD applies, by serial number or installed equipment, is still decided by a person, and the decision is recorded with who made it and when.",
+    body: "An AD names the aircraft it applies to by make, model and usually a serial number range. AerScheduler lists the ADs that name each aircraft's make and model, its engine or its propeller, and tells you the day a new one does. Whether a listed AD applies, by serial number or installed equipment, is still decided by a person, and the decision is recorded with who made it and when.",
   },
   {
     label: "Compliance: what you did about the ones that apply",
@@ -54,7 +53,7 @@ const FAQS = [
   },
   {
     q: "Do I need dedicated AD software, or is my scheduling system enough?",
-    a: "It depends on what your fleet needs looked up. AerScheduler lists the ADs published since 1995 that name each aircraft, engine and propeller, alerts you to new ones, and keeps the decision, the compliance record and the schedule in one place, so a lapsed directive takes the aeroplane off the board rather than appearing on a report somebody reads on Monday. A dedicated service such as ADlog, AVTRAK or Tdata adds a curated catalogue: directives older than 1995, appliance ADs written against installed equipment, and determinations made for you by serial number. If you already pay for one, keep it, leave AD finding off in AerScheduler, and record compliance for the ADs it identifies.",
+    a: "It depends on what your fleet needs looked up. AerScheduler lists the ADs that name each aircraft, engine and propeller, alerts you to new ones, and keeps the decision, the compliance record and the schedule in one place, so a lapsed directive takes the aeroplane off the board rather than appearing on a report somebody reads on Monday. A dedicated service such as ADlog, AVTRAK or Tdata adds a curated catalogue: appliance ADs written against installed equipment, and determinations made for you by serial number. If you already pay for one, keep it, leave AD finding off in AerScheduler, and record compliance for the ADs it identifies.",
   },
   {
     q: "What has to be in an AD compliance record?",
@@ -74,7 +73,7 @@ const FAQS = [
   },
   {
     q: "Is a compliance log the same as an AD status report?",
-    a: "No, and conflating the two is the mistake worth avoiding. A log of sign-offs tells you what you did. An AD status tells you where the aircraft stands against every directive that names it, including ones found not applicable by serial number and why. AerScheduler keeps both: the compliance log, and the AD status report, which lists every AD in the library against each aircraft with its decision, who made it, how it is tracked, when it was last done and when it is next due. The report says on its face that ADs before 1995 are not in the library.",
+    a: "No, and conflating the two is the mistake worth avoiding. A log of sign-offs tells you what you did. An AD status tells you where the aircraft stands against every directive that names it, including ones found not applicable by serial number and why. AerScheduler keeps both: the compliance log, and the AD status report, which lists every AD in the library against each aircraft with its decision, who made it, how it is tracked, when it was last done and when it is next due.",
   },
   {
     q: "Does a lapsed Airworthiness Directive stop the aircraft being booked?",
@@ -128,8 +127,8 @@ export default function Page() {
           </h2>
           <p className="text-muted-foreground">
             With <em>Find the ADs for our aircraft</em> on, {SITE_NAME} lists the Airworthiness Directives
-            that name each aircraft, from a library of every AD the Federal Register has published
-            since 1995, checked for new ones every day. Each AD opens laid out as it was published,
+            that name each aircraft, from a library of FAA ADs checked for new ones every
+            hour. Each AD opens laid out as it was published,
             with the model that matched highlighted. An owner, admin or technician decides it:
             applies, and tracked as an inspection, or not applicable, with the reason. When a new
             AD names one of your aircraft, they get a push and an email that day, and a weekly
@@ -137,8 +136,7 @@ export default function Page() {
             inspector.
           </p>
           <p className="text-muted-foreground">
-            What it does not do: ADs published before 1995 are not in the library, so an older
-            airframe still has some found by hand. An AD written against equipment rather than the
+            What it does not do: an AD written against equipment rather than the
             airframe, engine or propeller, an avionics unit or a muffler part number, is not
             listed, so those are still found by hand. Emergency ADs reach owners before they are published, so
             our alert can be days behind one. And the software does not check serial number
@@ -201,7 +199,7 @@ export default function Page() {
             <Link className="text-primary underline" href="/airworthiness-directives">
               AD library
             </Link>{" "}
-            is every AD since 1995, free to search and read, by aircraft, engine, propeller and equipment.{" "}
+            is free to search and read, by aircraft, engine, propeller and equipment.{" "}
             <Link className="text-primary underline" href="/features/maintenance">
               Maintenance and squawks
             </Link>{" "}

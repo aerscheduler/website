@@ -1397,7 +1397,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "choose-how-we-handle-airworthiness-directives",
         title: "Turn on finding the ADs for your aircraft",
         description:
-          "One switch under Settings, off by default. On, AerScheduler lists every AD published since 1995 that names each aircraft's airframe, engine or propeller for a person to decide, alerts you to new ones, and keeps the AD status report. What makes the list complete, and why we never decide whether an AD applies.",
+          "One switch under Settings, off by default. On, AerScheduler lists every AD in the library that names each aircraft's airframe, engine or propeller for a person to decide, alerts you to new ones, and keeps the AD status report. What makes the list complete, and why we never decide whether an AD applies.",
         kind: "task",
         audience: ["Owners", "Admins"],
         seoQuery: "turn off airworthiness directive tracking flight school software",
@@ -1415,7 +1415,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "review-the-ads-for-an-aircraft",
         title: "Review the ADs for an aircraft",
         description:
-          "With Find the ADs for our aircraft on, each aircraft's ADs tab lists the Airworthiness Directives published since 1995 that name its airframe, engine or propeller. Read each one and mark it Applies (and track it as an inspection) or Not applicable with a reason. Nothing is decided for you, and each decision keeps who made it and when.",
+          "With Find the ADs for our aircraft on, each aircraft's ADs tab lists the Airworthiness Directives that name its airframe, engine or propeller. Read each one and mark it Applies (and track it as an inspection) or Not applicable with a reason. Nothing is decided for you, and each decision keeps who made it and when.",
         kind: "task",
         audience: ["Owners", "Admins", "Technicians"],
         seoQuery: "which airworthiness directives apply to my aircraft",
@@ -1424,7 +1424,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "airworthiness-directives-across-the-fleet",
         title: "See every aircraft's ADs, and search the AD library",
         description:
-          "Maintenance has two AD views. Fleet ADs lists every aircraft's Airworthiness Directives in one list, grouped by aircraft or by status, and you decide them right there. The AD library searches every AD published since 1995 by number, maker, model or any word, and shows which of your aircraft each one names.",
+          "Maintenance has two AD views. Fleet ADs lists every aircraft's Airworthiness Directives in one list, grouped by aircraft or by status, and you decide them right there. The AD library searches every AD it holds by number, maker, model or any word, and shows which of your aircraft each one names.",
         kind: "task",
         audience: ["Owners", "Admins", "Technicians"],
         seoQuery: "search airworthiness directives by aircraft model",

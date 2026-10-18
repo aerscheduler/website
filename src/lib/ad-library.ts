@@ -2,7 +2,7 @@ import { API_URL } from "@/lib/site";
 
 /**
  * The public AD library (www.aerscheduler.com/airworthiness-directives): every Airworthiness
- * Directive the Federal Register has published since 1995, read from the API's public endpoints
+ * Directive in the library, read from the API's public endpoints
  * (`server/src/routes/publicAds.routes.ts`), no account needed. Pages re-fetch hourly, so a new
  * AD reaches them without a website deploy. The text is the Federal Register's own, a US
  * government work; we lay it out and file it under the aircraft, engine, propeller or

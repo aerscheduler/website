@@ -6,7 +6,7 @@ export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Equipment and Appliance Airworthiness Directives",
-  description: "FAA Airworthiness Directives since 1995 written against equipment rather than an aircraft: magnetos, ELTs, seats, oxygen, avionics and more, by maker.",
+  description: "FAA Airworthiness Directives written against equipment rather than an aircraft: magnetos, ELTs, seats, oxygen, avionics and more, by maker.",
   alternates: { canonical: `${AD_BASE}/appliances` },
 };
 

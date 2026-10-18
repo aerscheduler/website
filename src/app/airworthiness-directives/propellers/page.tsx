@@ -6,7 +6,7 @@ export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Propeller Airworthiness Directives",
-  description: "FAA propeller Airworthiness Directives since 1995 by maker: Hartzell, McCauley, Sensenich, MT-Propeller and others, readable and free.",
+  description: "FAA propeller Airworthiness Directives by maker: Hartzell, McCauley, Sensenich, MT-Propeller and others, readable and free.",
   alternates: { canonical: `${AD_BASE}/propellers` },
 };
 

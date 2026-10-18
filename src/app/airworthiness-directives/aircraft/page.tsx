@@ -6,7 +6,7 @@ export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Airworthiness Directives by Aircraft Model",
-  description: "Every FAA Airworthiness Directive since 1995 for each aircraft model registered in the US, from the Cessna 172 to the Cirrus SR22, readable and free.",
+  description: "The FAA Airworthiness Directives for each aircraft model registered in the US, from the Cessna 172 to the Cirrus SR22, readable and free.",
   alternates: { canonical: `${AD_BASE}/aircraft` },
 };
 

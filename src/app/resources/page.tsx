@@ -70,7 +70,7 @@ const GUIDE_CLUSTERS: {
       {
         href: "/airworthiness-directives",
         title: "AD library",
-        body: "Every FAA Airworthiness Directive published since 1995, readable, filed under the aircraft, engines, propellers and equipment it names, with new ADs a day early and email alerts. Free, no account.",
+        body: "FAA Airworthiness Directives, readable, filed under the aircraft, engines, propellers and equipment it names, with new ADs a day early and email alerts. Free, no account.",
       },
       {
         href: "/resources/airworthiness-directive-tracking",

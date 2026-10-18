@@ -7,7 +7,7 @@ export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Airworthiness Directives by Month",
-  description: "Every FAA Airworthiness Directive published each month since 1995, with the FAA's summary of each.",
+  description: "Every FAA Airworthiness Directive published each month, with the FAA's summary of each.",
   alternates: { canonical: `${AD_BASE}/monthly` },
 };
 

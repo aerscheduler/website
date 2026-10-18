@@ -76,7 +76,7 @@ const INCLUDED: { title: string; items: string[] }[] = [
     items: [
       "Inspections on tach, Hobbs or calendar",
       "Squawks that ground the aircraft",
-      "ADs from a library published since 1995",
+      "ADs from the AD library",
       "Life-limited components",
       "Work orders on customers' aircraft",
       "Owner approvals and job invoices",

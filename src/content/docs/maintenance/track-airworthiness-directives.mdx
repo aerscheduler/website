@@ -11,7 +11,7 @@ is the history, and the **Airworthiness compliance** report prints it.
 Two things to be clear about before you rely on this.
 
 **AerScheduler never decides which ADs apply to your aircraft.** With **Find the ADs for our aircraft** on,
-each aircraft's **ADs** tab lists the ones published since 1995 that name it, for you to decide
+each aircraft's **ADs** tab lists the ones that name it, for you to decide
 (see [Review the ADs for an aircraft](/docs/maintenance/review-the-ads-for-an-aircraft)).
 Otherwise, get the list from your IA or an AD subscription, then track each one here.
 
@@ -55,15 +55,15 @@ schedule one. What this page adds is saying which rule it is, and keeping the si
     without its number cannot be found, filtered, or listed on the report an inspector
     reads.
 
-    If the AD was published in the Federal Register since 1995, AerScheduler finds it as
+    If the AD is in the library, AerScheduler finds it as
     you type and fills in the amendment, the revision date (its effective date) and a link
     to the Federal Register copy. A blank **Name** becomes the AD number and its subject,
     for example "AD 2013-11-11 Engine oil pressure". Anything you typed yourself is kept.
   </Step>
   <Step n={4} title="Check what was filled in">
     A line under the number says which AD was found. If a later AD superseded it, a second
-    line names it: track the one in force instead. An AD older than 1995, or one we
-    have not loaded yet, says it is not in the library. Fill in the revision and link by
+    line names it: track the one in force instead. An AD the library
+    does not hold says it is not in the library. Fill in the revision and link by
     hand.
   </Step>
   <Step n={5} title="Set when it comes due">
@@ -77,9 +77,8 @@ distinguishable from a shop interval at a glance.
 
 ## Where the AD details come from
 
-The AD library holds every Airworthiness Directive the Federal Register has published since
-1995, and checks for new ones every day. ADs from before 1995 are not in it, so for an older
-airframe some ADs still have to be entered by hand. The library fills in details; it never
+The AD library holds the FAA's Airworthiness Directives and checks for new ones every hour. An
+AD it does not hold can still be entered by hand. The library fills in details; it never
 decides whether an AD applies to your aircraft.
 
 ## When the AD is superseded
@@ -205,9 +204,8 @@ reports for exactly that reason.
 Worth knowing before you rely on it:
 
 - **It never decides which ADs apply.** With **Find the ADs for our aircraft** on, the AD library lists the
-  ADs published since 1995 that name each aircraft, and a person decides each one; see [Review
-  the ADs for an aircraft](/docs/maintenance/review-the-ads-for-an-aircraft). ADs from before
-  1995 are not listed, so add those by hand. The airworthiness report below is a history of
+  ADs that name each aircraft, and a person decides each one; see [Review
+  the ADs for an aircraft](/docs/maintenance/review-the-ads-for-an-aircraft). The airworthiness report below is a history of
   sign-offs; each aircraft's AD status is the **AD status** report.
 - **The report covers what you have signed off here.** Anything complied with before you
   started using AerScheduler, and anything you have not entered, is not in it.

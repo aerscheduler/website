@@ -138,7 +138,7 @@
     },
     {
       "name": "AD library",
-      "description": "The public library of FAA Airworthiness Directives since 1995 (www.aerscheduler.com/airworthiness-directives): search, one AD, pages by aircraft, engine, propeller and equipment, CSV. No account and no key."
+      "description": "The public library of FAA Airworthiness Directives (www.aerscheduler.com/airworthiness-directives): search, one AD, pages by aircraft, engine, propeller and equipment, CSV. No account and no key."
     },
     {
       "name": "Realtime",
@@ -23697,7 +23697,7 @@
           "Maintenance"
         ],
         "summary": "Search the AD library",
-        "description": "Every Airworthiness Directive the Federal Register has published since 1995, newest first, paged. `q` matches an AD number or its start (`2013-11`), or every word somewhere in the number, title, maker, subject or applicability. Rows carry no text (`details`, `summary`, `applicability`): read one with `GET /maintenance/airworthiness-directives/{adNumber}`. Public federal data, so any member may search it.",
+        "description": "Every Airworthiness Directive in the library, newest first, paged. `q` matches an AD number or its start (`2013-11`), or every word somewhere in the number, title, maker, subject or applicability. Rows carry no text (`details`, `summary`, `applicability`): read one with `GET /maintenance/airworthiness-directives/{adNumber}`. Public federal data, so any member may search it.",
         "responses": {
           "200": {
             "description": "The matching ADs, without their text.",
@@ -23962,7 +23962,7 @@
           "Maintenance"
         ],
         "summary": "AD library coverage",
-        "description": "How much of the AD library is loaded: the count, the oldest and newest publication dates, and whether every year from 1995 to last year is in. The library fills itself from the Federal Register; the current year fills daily.",
+        "description": "How much of the AD library is loaded: the count, the oldest and newest publication dates, and whether every past year of the Federal Register backfill is in. The current year fills hourly.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -24041,7 +24041,7 @@
           "Maintenance"
         ],
         "summary": "Look up an AD by number",
-        "description": "One Airworthiness Directive from the library. Accepts `2013-11-11`, `AD 2013-11-11` or `2007-21-14R1`. `supersededBy` lists later ADs that replace it.\n\n`404` when it is not in the library, an ordinary answer: the library holds ADs published since 1995, so an older one is entered by hand.",
+        "description": "One Airworthiness Directive from the library. Accepts `2013-11-11`, `AD 2013-11-11` or `2007-21-14R1`. `supersededBy` lists later ADs that replace it.\n\n`404` when it is not in the library, an ordinary answer: an AD the library does not hold is entered by hand.",
         "responses": {
           "200": {
             "description": "Success.",
@@ -43611,7 +43611,7 @@
       },
       "AirworthinessDirective": {
         "type": "object",
-        "description": "A published Airworthiness Directive from the AD library: every AD the Federal Register has published since 1995, kept current daily. Reference data shared by every organization. Whether it applies to an aircraft is a person's decision; nothing here says so.",
+        "description": "A published Airworthiness Directive from the AD library of FAA Airworthiness Directives, kept current hourly. Reference data shared by every organization. Whether it applies to an aircraft is a person's decision; nothing here says so.",
         "properties": {
           "adNumber": {
             "type": "string",
@@ -43854,7 +43854,7 @@
         "properties": {
           "ad": {
             "type": "object",
-            "description": "The AD. `inLibrary` is false for one tracked here that the library does not hold (published before 1995).",
+            "description": "The AD. `inLibrary` is false for one tracked here that the library does not hold.",
             "properties": {
               "adNumber": {
                 "type": "string",

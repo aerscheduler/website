@@ -101,7 +101,7 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
       {
         href: "/airworthiness-directives",
         label: "AD library",
-        description: "Every FAA Airworthiness Directive since 1995, by aircraft, engine, propeller and equipment. Free.",
+        description: "FAA Airworthiness Directives by aircraft, engine, propeller and equipment. Free.",
       },
       {
         href: "/resources/airworthiness-directive-tracking",

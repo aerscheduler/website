@@ -253,7 +253,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       },
       maintenance: {
         title: "Maintenance\nand AD tracking",
-        body: "Every inspection counts down by tach, Hobbs or calendar month, and an overdue annual grounds the aircraft until it is signed off. Every AD published since 1995 that names the airframe, engine or propeller is listed for a person to decide, from a library updated daily.",
+        body: "Every inspection counts down by tach, Hobbs or calendar month, and an overdue annual grounds the aircraft until it is signed off. Every AD in the library that names the airframe, engine or propeller is listed for a person to decide, from a library updated daily.",
         note: "Flight Schedule Pro sells maintenance as its Maintenance Hub and does not publish AD tracking. Here inspections, squawks and ADs come with every plan.",
       },
       "work-orders": {
@@ -316,7 +316,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       ],
       [
         "Airworthiness directives",
-        "Every AD since 1995 naming the airframe, engine or propeller, listed for a person to decide, with alerts for new ones.",
+        "Every AD in the library naming the airframe, engine or propeller, listed for a person to decide, with alerts for new ones.",
         "Not published",
         "Maintenance",
       ],
@@ -412,7 +412,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       },
       maintenance: {
         title: "Maintenance\nand AD tracking",
-        body: "Every inspection counts down by tach, Hobbs or calendar month, and an overdue annual grounds the aircraft until it is signed off. Every AD published since 1995 that names the airframe, engine or propeller is listed for a person to decide, from a library updated daily.",
+        body: "Every inspection counts down by tach, Hobbs or calendar month, and an overdue annual grounds the aircraft until it is signed off. Every AD in the library that names the airframe, engine or propeller is listed for a person to decide, from a library updated daily.",
         note: "In Flight Circle an AD is a reminder you type in, with a link to the directive. Here you pick it from the library and track it on the airframe or the component it applies to.",
       },
       "work-orders": {
@@ -474,7 +474,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       ],
       [
         "Airworthiness directives",
-        "Every AD since 1995 naming the airframe, engine or propeller, from a library updated daily, listed for a person to decide.",
+        "Every AD in the library naming the airframe, engine or propeller, from a library updated daily, listed for a person to decide.",
         "Entered by hand as a maintenance reminder, with a link to the directive.",
         "Maintenance",
       ],
@@ -539,7 +539,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       },
       maintenance: {
         title: "Maintenance\nand AD tracking",
-        body: "Every inspection counts down by tach, Hobbs or calendar month, and an overdue annual grounds the aircraft until it is signed off. Every AD published since 1995 that names the airframe, engine or propeller is listed for a person to decide, from a library updated daily.",
+        body: "Every inspection counts down by tach, Hobbs or calendar month, and an overdue annual grounds the aircraft until it is signed off. Every AD in the library that names the airframe, engine or propeller is listed for a person to decide, from a library updated daily.",
         note: "Schedule Pointe lists advanced maintenance tracking and does not publish AD tracking. Here ADs come from a library and sit on the airframe or the component.",
       },
       "work-orders": {
@@ -604,7 +604,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       ],
       [
         "Airworthiness directives",
-        "Every AD since 1995 naming the airframe, engine or propeller, from a library updated daily, listed for a person to decide.",
+        "Every AD in the library naming the airframe, engine or propeller, from a library updated daily, listed for a person to decide.",
         "Not published",
         "Maintenance",
       ],
@@ -668,7 +668,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       },
       maintenance: {
         title: "Maintenance\nand AD tracking",
-        body: "Every inspection counts down by tach, Hobbs or calendar month, and an overdue annual grounds the aircraft until it is signed off. Every AD published since 1995 that names the airframe, engine or propeller is listed for a person to decide, from a library updated daily.",
+        body: "Every inspection counts down by tach, Hobbs or calendar month, and an overdue annual grounds the aircraft until it is signed off. Every AD in the library that names the airframe, engine or propeller is listed for a person to decide, from a library updated daily.",
         note: "FlightLogger does not publish AD tracking. Here ADs come from a library and sit on the airframe or the component they apply to.",
       },
       "work-orders": {
@@ -742,7 +742,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       ],
       [
         "Airworthiness directives",
-        "Every AD since 1995 naming the airframe, engine or propeller, from a library updated daily, listed for a person to decide.",
+        "Every AD in the library naming the airframe, engine or propeller, from a library updated daily, listed for a person to decide.",
         "Not published",
         "Maintenance",
       ],
@@ -811,7 +811,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       },
       maintenance: {
         title: "Maintenance\nand AD tracking",
-        body: "Every inspection counts down by tach, Hobbs or calendar month, and an overdue annual grounds the aircraft until it is signed off. Every AD published since 1995 that names the airframe, engine or propeller is listed for a person to decide, from a library updated daily.",
+        body: "Every inspection counts down by tach, Hobbs or calendar month, and an overdue annual grounds the aircraft until it is signed off. Every AD in the library that names the airframe, engine or propeller is listed for a person to decide, from a library updated daily.",
         note: "Talon tracks maintenance in RMS, a separate product. Here inspections, squawks and ADs live in the same system as the schedule.",
       },
     },
@@ -873,7 +873,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       ],
       [
         "Airworthiness directives",
-        "Every AD since 1995 naming the airframe, engine or propeller, from a library updated daily, listed for a person to decide.",
+        "Every AD in the library naming the airframe, engine or propeller, from a library updated daily, listed for a person to decide.",
         "Not published in ETA",
         "Maintenance",
       ],
@@ -934,7 +934,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       },
       maintenance: {
         title: "Maintenance\nand AD tracking",
-        body: "Every inspection counts down by tach, Hobbs or calendar month, and an overdue annual grounds the aircraft until it is signed off. Every AD published since 1995 that names the airframe, engine or propeller is listed for a person to decide, from a library updated daily.",
+        body: "Every inspection counts down by tach, Hobbs or calendar month, and an overdue annual grounds the aircraft until it is signed off. Every AD in the library that names the airframe, engine or propeller is listed for a person to decide, from a library updated daily.",
       },
     },
     reasons: [
@@ -1054,7 +1054,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       },
       maintenance: {
         title: "Maintenance\nand AD tracking",
-        body: "Every inspection counts down by tach, Hobbs or calendar month, and an overdue annual grounds the aircraft until it is signed off. Every AD published since 1995 that names the airframe, engine or propeller is listed for a person to decide, from a library updated daily.",
+        body: "Every inspection counts down by tach, Hobbs or calendar month, and an overdue annual grounds the aircraft until it is signed off. Every AD in the library that names the airframe, engine or propeller is listed for a person to decide, from a library updated daily.",
         note: "In BookOurPlane an admin schedules maintenance and can ground an aircraft with a message. Here inspections count down and ground the aircraft on their own.",
       },
       reporting: {
@@ -1113,7 +1113,7 @@ export const COMPETITORS: Record<CompetitorSlug, Competitor> = {
       ],
       [
         "Airworthiness directives",
-        "Every AD since 1995 naming the airframe, engine or propeller, from a library updated daily, listed for a person to decide.",
+        "Every AD in the library naming the airframe, engine or propeller, from a library updated daily, listed for a person to decide.",
         "Not published",
         "Maintenance",
       ],

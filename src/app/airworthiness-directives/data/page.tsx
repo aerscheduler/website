@@ -6,7 +6,7 @@ import { AD_BASE, apiBase } from "@/lib/ad-library";
 export const metadata: Metadata = {
   title: "Airworthiness Directive Data: Free JSON API, CSV and RSS",
   description:
-    "Free, keyless access to every FAA Airworthiness Directive since 1995: a JSON API, CSV per aircraft, engine and maker, and an RSS feed of new ADs.",
+    "Free, keyless access to the FAA Airworthiness Directives in the library: a JSON API, CSV per aircraft, engine and maker, and an RSS feed of new ADs.",
   alternates: { canonical: `${AD_BASE}/data` },
 };
 

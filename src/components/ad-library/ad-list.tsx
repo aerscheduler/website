@@ -7,7 +7,8 @@ import { cn } from "@/lib/cn";
 
 /**
  * A list of ADs that a mechanic can actually work through: filter by words, hide the ones a
- * later AD replaced, show only those whose required actions repeat. Every row links to the AD.
+ * later AD replaced, show only those published since a date (the last annual, say), and put the
+ * ones whose required actions repeat first. Every row links to the AD.
  */
 export function AdList({
   ads,
@@ -24,21 +25,25 @@ export function AdList({
   const [hideSuperseded, setHideSuperseded] = useState(true);
   const [onlyRepeat, setOnlyRepeat] = useState(false);
   const [type, setType] = useState<string>("all");
+  const [since, setSince] = useState("");
 
   const types = useMemo(() => [...new Set(ads.map((a) => a.productType))].sort(), [ads]);
   const supersededCount = ads.filter((a) => a.supersededBy.length).length;
 
   const shown = useMemo(() => {
     const words = q.trim().toLowerCase().split(/\s+/).filter(Boolean);
-    return ads.filter((a) => {
+    const kept = ads.filter((a) => {
       if (filters && hideSuperseded && a.supersededBy.length) return false;
+      if (since && a.publishedOn.slice(0, 10) < since) return false;
       if (onlyRepeat && !a.repetitive) return false;
       if (type !== "all" && a.productType !== type) return false;
       if (!words.length) return true;
       const hay = `${a.adNumber} ${a.title} ${a.subject ?? ""} ${a.manufacturer} ${a.requires ?? ""}`.toLowerCase();
       return words.every((w) => hay.includes(w));
     });
-  }, [ads, q, hideSuperseded, onlyRepeat, type, filters]);
+    // The ones that come back every annual first; the order within each group is unchanged.
+    return filters ? [...kept.filter((a) => a.repetitive), ...kept.filter((a) => !a.repetitive)] : kept;
+  }, [ads, q, hideSuperseded, onlyRepeat, type, since, filters]);
 
   return (
     <div className="space-y-3">
@@ -67,6 +72,15 @@ export function AdList({
               ))}
             </select>
           )}
+          <label className="inline-flex items-center gap-2 text-sm text-muted-foreground">
+            Published since
+            <input
+              type="date"
+              value={since}
+              onChange={(e) => setSince(e.target.value)}
+              className="h-10 rounded-lg border border-border bg-white px-2.5 text-sm text-foreground"
+            />
+          </label>
           {supersededCount > 0 && (
             <label className="inline-flex items-center gap-2 text-sm text-muted-foreground">
               <input type="checkbox" checked={hideSuperseded} onChange={(e) => setHideSuperseded(e.target.checked)} className="size-4 accent-[var(--primary)]" />

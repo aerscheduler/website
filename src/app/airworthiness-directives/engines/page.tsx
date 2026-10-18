@@ -6,7 +6,7 @@ export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Airworthiness Directives by Engine",
-  description: "FAA Airworthiness Directives since 1995 for each engine family on US-registered aircraft: Lycoming O-320, O-360, IO-540, Continental O-200, IO-520, Rotax 912 and more.",
+  description: "FAA Airworthiness Directives for each engine family on US-registered aircraft: Lycoming O-320, O-360, IO-540, Continental O-200, IO-520, Rotax 912 and more.",
   alternates: { canonical: `${AD_BASE}/engines` },
 };
 
