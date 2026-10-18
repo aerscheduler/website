@@ -11,14 +11,14 @@ export const metadata: Metadata = {
 };
 
 const ENDPOINTS: { path: string; what: string }[] = [
-  { path: "/search?q=seat+rail&page=1", what: "Ranked search: an AD number or its start, or any words. 25 a page." },
-  { path: "/ads/2011-10-09", what: "One AD in full: applicability and required actions as structured blocks, supersession, the pages it is filed on." },
-  { path: "/recent?days=30", what: "Published in the last 30 days (up to 90), plus anything on public inspection now." },
-  { path: "/pages/aircraft", what: "Every page of a kind: aircraft, engine, propeller or appliance." },
-  { path: "/pages/aircraft/cessna-172s", what: "One page: its ADs, figures by year." },
-  { path: "/pages/aircraft/cessna-172s.csv", what: "The same as CSV." },
+  { path: "?q=seat+rail", what: "Search: an AD number or its start, or any words, best match first. Without q, every AD, newest first." },
+  { path: "/2011-10-09", what: "One AD in full: applicability and required actions as structured blocks, supersession, the pages it is listed on." },
+  { path: "/recent?days=30", what: "Published in the last 30 days (up to 90), and anything on public inspection now." },
+  { path: "/aircraft", what: "Every aircraft page. Also /engines, /propellers and /appliances." },
+  { path: "/aircraft/cessna-172s", what: "One page, at the same path as on this site: its ADs and figures." },
+  { path: "/aircraft/cessna-172s.csv", what: "The same as CSV." },
   { path: "/months/2026-09", what: "Every AD published in a month, with the FAA's summary." },
-  { path: "/stats", what: "Counts, the years covered, when the library last changed." },
+  { path: "/coverage", what: "How many ADs, the oldest and newest, and pages by kind." },
 ];
 
 export default function DataPage() {
@@ -40,7 +40,10 @@ export default function DataPage() {
         <h2 className="text-xl font-semibold text-brand-surface">JSON API</h2>
         <p className="text-muted-foreground">
           Base address <code className="rounded bg-muted px-1.5 py-0.5 text-sm">{apiBase}</code>. GET only, cached for a few minutes, and
-          limited to 3,000 requests per 5 minutes from one address. Dates are UTC days.
+          limited to 3,000 requests per 5 minutes from one address. One record comes as <code className="rounded bg-muted px-1.5 py-0.5 text-sm">{"{ data }"}</code>,
+          a list as <code className="rounded bg-muted px-1.5 py-0.5 text-sm">{"{ data, pagination }"}</code> paged with <code className="rounded bg-muted px-1.5 py-0.5 text-sm">limit</code> and{" "}
+          <code className="rounded bg-muted px-1.5 py-0.5 text-sm">offset</code>, the same as the rest of the{" "}
+          <Link href="/docs/api/ad-library" className="text-primary hover:underline">AerScheduler API</Link>, where every field is described. Dates are UTC days.
         </p>
         <div className="overflow-x-auto rounded-lg border border-border">
           <table className="w-full text-sm">
