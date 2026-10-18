@@ -72,7 +72,7 @@ export default async function AdLibraryPage() {
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
             {stats ? fmt(stats.count) : "Every"} ADs from the Federal Register, laid out readably and filed under the aircraft, engines,
-            propellers and equipment they name. Checked every hour. Free, no account.
+            propellers and equipment they name.
           </p>
           <AdSearchBox className="mt-8 max-w-2xl" />
           <p className="mt-3 text-sm text-muted-foreground">
