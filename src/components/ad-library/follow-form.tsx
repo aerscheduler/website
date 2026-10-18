@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { BellRing, Check, Loader2 } from "lucide-react";
 import { apiBase } from "@/lib/ad-library";
+import { track } from "@/lib/analytics";
 
 /**
  * Follow a page by email: no account. The API emails a confirmation link; only after it is
@@ -29,7 +30,10 @@ export function FollowForm({ kind, slug, name }: { kind: string; slug: string; n
         setState("error");
         return;
       }
-      setState(body?.data?.status === "already" ? "already" : "sent");
+      const status = body?.data?.status === "already" ? "already" : "sent";
+      // An email lead from a free resource. What was followed, never the address.
+      track("ad_follow", { kind, slug, status });
+      setState(status);
     } catch {
       setError("That did not work. Try again in a minute.");
       setState("error");

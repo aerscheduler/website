@@ -82,6 +82,9 @@ export function Button({
         className
       )}
       onClick={handleClick}
+      // The site-wide link listener in components/analytics.tsx skips this anchor,
+      // since handleClick above already reported it.
+      data-tracked=""
       {...props}
     >
       {children}

@@ -5,10 +5,13 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { captureAttribution } from "@/lib/attribution";
 import { hasConsent, onConsentChange } from "@/lib/consent";
 import {
+  pathGroup,
+  sectionOf,
   startAnalytics,
   startConsentMode,
   syncGoogleConsent,
   track,
+  trackConversion,
   trackPageview,
 } from "@/lib/analytics";
 
@@ -107,6 +110,41 @@ function AnalyticsInner() {
     if (hasConsent()) recordedFor.current = currentKey.current;
   }, [pathname, searchParams]);
 
+  // Links and forms that are not the shared Button. The free resources (AD library,
+  // regulations, aircraft tax) end in plain <a href={signupUrl(...)}> links, which
+  // Button's own click handler never sees, so a signup started from them used to
+  // reach PostHog only as an anonymous autocapture click and never reached Google.
+  // Button marks its anchor `data-tracked`, so nothing is counted twice.
+  useEffect(() => {
+    const onClick = (event: MouseEvent) => {
+      const link = (event.target as Element | null)?.closest?.("a[href]");
+      if (!link || link.closest("[data-tracked]")) return;
+      const href = link.getAttribute("href") ?? "";
+      const from = window.location.pathname;
+      const props = { label: link.textContent?.trim().slice(0, 80) ?? "", href, from, section: sectionOf(from), via: "link" };
+      if (href.includes("/signup")) trackConversion("signup_started", props);
+      else if (href.includes("calendar.app.google")) trackConversion("demo_booked", props);
+      else if (href.includes("app.aerscheduler.com/demo")) trackConversion("demo_opened", props);
+    };
+    // Every form on the site, by what it submits to: the AD search, the N-number
+    // check, the AD follow. Never the values typed into it.
+    const onSubmit = (event: SubmitEvent) => {
+      const form = event.target as HTMLFormElement | null;
+      if (!form) return;
+      const action = form.getAttribute("action");
+      const name = form.getAttribute("aria-label") ?? form.getAttribute("name") ?? (action ? new URL(action, window.location.origin).pathname : "form");
+      const path = window.location.pathname;
+      track("form_submitted", { form: name, path: pathGroup(path), section: sectionOf(path) });
+    };
+    // Capture phase: a handler that stops propagation must not hide the click.
+    document.addEventListener("click", onClick, true);
+    document.addEventListener("submit", onSubmit, true);
+    return () => {
+      document.removeEventListener("click", onClick, true);
+      document.removeEventListener("submit", onSubmit, true);
+    };
+  }, []);
+
   // The last page of the visit never gets a route change, so it needs its own exit hook.
   useEffect(() => {
     const onHide = () => {
@@ -129,5 +167,5 @@ function reportDwell(path: string, ms: number): void {
   // Under a second is a redirect, not a read. Over an hour is a tab left open overnight,
   // including it would wreck every average on the page-performance chart.
   if (seconds < 1 || seconds > 3600) return;
-  track("page_time", { path, seconds });
+  track("page_time", { path, path_group: pathGroup(path), section: sectionOf(path), seconds });
 }

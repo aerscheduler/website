@@ -68,6 +68,7 @@ export default function AircraftTaxHub() {
           </p>
         </header>
         <HubSearch
+          hub="aircraft-tax"
           items={SEARCH_ITEMS}
           label="Search aircraft tax by state"
           placeholder="A state, or a question like flight instruction in Texas"

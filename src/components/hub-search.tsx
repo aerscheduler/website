@@ -1,10 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Search } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { track } from "@/lib/analytics";
 
 export type HubSearchItem = {
   href: string;
@@ -34,11 +35,14 @@ const fold = (s: string) =>
  * cite or state code ranks first, then titles holding more of the words.
  */
 export function HubSearch({
+  hub,
   items,
   label,
   placeholder,
   className,
 }: {
+  /** Which hub, for analytics: "regulations", "aircraft-tax". */
+  hub: string;
   items: HubSearchItem[];
   label: string;
   placeholder: string;
@@ -70,6 +74,18 @@ export function HubSearch({
       .map((x) => x.it);
   }, [q, indexed]);
 
+  // What people look for, once they stop typing: the queries with no results are
+  // the pages worth writing next. The text is a cite, a state or a topic, never
+  // anything personal, so it is sent as typed.
+  const query = q.trim();
+  useEffect(() => {
+    if (query.length < 2) return;
+    const timer = setTimeout(() => track("hub_search", { hub, query: query.slice(0, 80), results: results.length }), 1200);
+    return () => clearTimeout(timer);
+  }, [hub, query, results.length]);
+  const opened = (href: string, position: number, how: "click" | "enter") =>
+    track("hub_search_open", { hub, query: query.slice(0, 80), href, position, how });
+
   return (
     <div role="search" className={cn("w-full", className)}>
       <label className="relative block">
@@ -80,7 +96,10 @@ export function HubSearch({
           value={q}
           onChange={(e) => setQ(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter" && results[0]) router.push(results[0].href);
+            if (e.key === "Enter" && results[0]) {
+              opened(results[0].href, 1, "enter");
+              router.push(results[0].href);
+            }
           }}
           placeholder={placeholder}
           aria-controls="hub-search-results"
@@ -92,9 +111,9 @@ export function HubSearch({
           <div className="mt-2 overflow-hidden rounded-lg border border-border bg-white shadow-sm">
             {results.length ? (
               <ul className="divide-y divide-border">
-                {results.map((r) => (
+                {results.map((r, i) => (
                   <li key={r.href}>
-                    <Link href={r.href} className="block px-4 py-3 hover:bg-muted/40">
+                    <Link href={r.href} onClick={() => opened(r.href, i + 1, "click")} className="block px-4 py-3 hover:bg-muted/40">
                       <span className="block font-medium text-brand-surface">{r.title}</span>
                       <span className="mt-0.5 line-clamp-1 text-sm text-muted-foreground">{r.detail}</span>
                     </Link>

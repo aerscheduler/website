@@ -68,6 +68,7 @@ export default function RegulationsHub() {
             Each one starts with the answer, explains the rule paragraph by paragraph, and shows the official text underneath.
           </p>
           <HubSearch
+            hub="regulations"
             items={SEARCH_ITEMS}
             label="Search the regulations"
             placeholder="A cite like 91.409, or a topic like 100 hour or medical"

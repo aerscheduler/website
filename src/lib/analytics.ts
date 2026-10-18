@@ -399,9 +399,47 @@ export function track(event: string, props?: AnyProps): void {
   withClient((client) => client.capture(event, props));
 }
 
-/** A pageview, with the campaign already attached by `register` above. */
+/**
+ * Which part of the site a path belongs to, so one chart can split the free
+ * resources (the AD library, regulations, aircraft tax, guides) from the product
+ * pages they are meant to lead to.
+ */
+export function sectionOf(path: string): string {
+  if (path.startsWith("/airworthiness-directives")) return "ad-library";
+  if (path.startsWith("/regulations")) return "regulations";
+  if (path.startsWith("/aircraft-tax")) return "aircraft-tax";
+  if (path.startsWith("/resources")) return "guides";
+  if (path.startsWith("/docs")) return "docs";
+  return "marketing";
+}
+
+const RESOURCE_SECTIONS = new Set(["ad-library", "regulations", "aircraft-tax", "guides"]);
+
+/**
+ * The path with per-aircraft segments collapsed. Every N-number checked is its own
+ * URL, and a chart with one row per tail buries the page itself.
+ */
+export function pathGroup(path: string): string {
+  return path.replace(/^\/airworthiness-directives\/check\/[^/]+$/, "/airworthiness-directives/check/:tail");
+}
+
+/**
+ * A pageview, with the campaign already attached by `register` above.
+ *
+ * The first free resource a person ever opens is kept on the person (`$set_once`),
+ * so a signup months later can still be split by "came in through the AD library"
+ * against "came in through the tax pages".
+ */
 export function trackPageview(path: string, props?: AnyProps): void {
-  track("$pageview", { $current_url: window.location.href, path, ...props });
+  const section = sectionOf(path);
+  track("$pageview", {
+    $current_url: window.location.href,
+    path,
+    path_group: pathGroup(path),
+    section,
+    ...(RESOURCE_SECTIONS.has(section) ? { $set_once: { first_resource_section: section, first_resource_path: pathGroup(path) } } : {}),
+    ...props,
+  });
 }
 
 /**

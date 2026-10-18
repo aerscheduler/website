@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { track } from "@/lib/analytics";
 import { FLAT_OLD_TYPE, OTHER_TYPE, annualTax, annualTypes, formatMoney, saleTax, type CalcRule } from "@/lib/aircraft-tax-calc";
 
 export type CalcState = { slug: string; name: string; href: string; rule: CalcRule };
@@ -62,6 +63,28 @@ export function AircraftTaxCalculator({ states, year }: { states: CalcState[]; y
     [annual, price, weight, seats, chosenType, modelYear, year, regYear]
   );
 
+  // One event per settled estimate, once the reader has changed something: the
+  // defaults on load are not a use. The price is bucketed, not sent as typed.
+  const touched = useRef(false);
+  useEffect(() => {
+    if (!touched.current) return;
+    const timer = setTimeout(
+      () =>
+        track("tax_estimate", {
+          state: slug,
+          price_band: priceBand(num(price)),
+          sale_kind: sale.kind,
+          sale_total: saleResult.total,
+          annual_kind: annual.kind,
+          annual_total: annualResult.total,
+          entered_local_rate: num(rate) > 0,
+          entered_credit: num(paid) > 0,
+        }),
+      1500
+    );
+    return () => clearTimeout(timer);
+  }, [slug, price, rate, paid, sale.kind, annual.kind, saleResult.total, annualResult.total]);
+
   const needsRate = sale.kind === "state-plus-local" || sale.kind === "combined";
   const rateHint =
     sale.kind === "combined"
@@ -81,7 +104,12 @@ export function AircraftTaxCalculator({ states, year }: { states: CalcState[]; y
 
   return (
     <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-      <form className="space-y-5" onSubmit={(e) => e.preventDefault()} aria-label="Aircraft tax calculator">
+      <form
+        className="space-y-5"
+        onSubmit={(e) => e.preventDefault()}
+        onChange={() => (touched.current = true)}
+        aria-label="Aircraft tax calculator"
+      >
         <Field id="tax-state" label="State">
           <select id="tax-state" value={slug} onChange={(e) => setSlug(e.target.value)} className={field}>
             {states.map((s) => (
@@ -172,6 +200,15 @@ export function AircraftTaxCalculator({ states, year }: { states: CalcState[]; y
       </section>
     </div>
   );
+}
+
+/** Wide bands, enough to tell a trainer from a jet without sending the exact price. */
+function priceBand(price: number): string {
+  if (price < 50_000) return "under 50k";
+  if (price < 150_000) return "50k to 150k";
+  if (price < 500_000) return "150k to 500k";
+  if (price < 2_000_000) return "500k to 2m";
+  return "2m and up";
 }
 
 function Field({ id, label, hint, children }: { id: string; label: string; hint?: string; children: React.ReactNode }) {
