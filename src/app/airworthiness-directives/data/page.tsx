@@ -78,7 +78,9 @@ export default function DataPage() {
         <h2 className="text-xl font-semibold text-brand-surface">What the fields mean</h2>
         <ul className="list-disc space-y-1.5 pl-5 text-muted-foreground">
           <li><code>onPublicInspection</code>: filed with the Federal Register and not yet published; <code>publishedOn</code> is the scheduled date.</li>
-          <li><code>supersedes</code> and <code>supersededBy</code>: AD numbers, from the AD&apos;s own text.</li>
+          <li><code>source</code>: <code>federal_register</code> for an AD read from its Federal Register text, <code>drs</code> for one from the FAA&apos;s index of every AD, which carries no text; its <code>url</code> is the FAA&apos;s copy.</li>
+          <li><code>datedByNumber</code>: the FAA gave no date, so <code>publishedOn</code> is the two-week period the AD number names. Use the year.</li>
+          <li><code>supersedes</code> and <code>supersededBy</code>: AD numbers, from the AD or the FAA&apos;s index.</li>
           <li><code>repetitive</code>: the required actions mention doing something again. A reading aid, not a compliance answer.</li>
           <li>Pages list an AD when its text names the model; a listing is not a determination that the AD applies.</li>
         </ul>

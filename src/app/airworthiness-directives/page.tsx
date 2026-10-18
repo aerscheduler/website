@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 const FAQS = [
   {
     q: "Is this the official record of Airworthiness Directives?",
-    a: "No. The Federal Register document is the legal text, and the FAA's Dynamic Regulatory System (DRS) shows each AD's current status. This library republishes the Federal Register's text, laid out for reading, and links every AD to the original.",
+    a: "No. The Federal Register document is the legal text, and the FAA's Dynamic Regulatory System (DRS) shows each AD's current status. This library republishes the Federal Register's text, laid out for reading, and links every AD to the original. Older ADs the Federal Register does not hold online come from the FAA's own index of every AD, with a link to the FAA's copy.",
   },
   {
     q: "How current is it?",
@@ -71,8 +71,8 @@ export default async function AdLibraryPage() {
             Search FAA Airworthiness Directives
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-            {stats ? fmt(stats.count) : "Every"} ADs from the Federal Register, laid out readably and filed under the aircraft, engines,
-            propellers and equipment they name.
+            {stats ? fmt(stats.count) : "Every"} FAA Airworthiness Directives, filed under the aircraft, engines, propellers and equipment
+            they name, with the text laid out for reading wherever the Federal Register has it.
           </p>
           <AdSearchBox className="mt-8 max-w-2xl" />
           <p className="mt-3 text-sm text-muted-foreground">

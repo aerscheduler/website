@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { LibraryNotice } from "@/components/ad-library/notice";
-import { AD_BASE, adAbout, adDate, adHref, adTitle, getMonth, PRODUCT_LABEL } from "@/lib/ad-library";
+import { AD_BASE, adAbout, adDate, adPublished, adHref, adTitle, getMonth, PRODUCT_LABEL } from "@/lib/ad-library";
 
 /**
  * Every AD published in one month, grouped by the kind of product it is for, with the FAA's own
@@ -68,7 +68,7 @@ export default async function MonthPage({ params }: Props) {
               <div key={a.adNumber} className="space-y-1 border-b border-border pb-5 last:border-0">
                 <p className="text-sm text-muted-foreground">
                   <Link href={adHref(a.adNumber)} className="font-mono font-medium text-primary hover:underline">AD {a.adNumber}</Link>
-                  {" · "}published {adDate(a.publishedOn)}
+                  {" · "}published {adPublished(a)}
                   {a.effectiveOn ? `, effective ${adDate(a.effectiveOn)}` : ""}
                 </p>
                 <h3 className="font-semibold text-brand-surface">

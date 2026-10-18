@@ -10,8 +10,8 @@ export function LibraryNotice({ className, compact = false }: { className?: stri
     <aside className={cn("space-y-1.5 border-t border-border pt-6 text-sm leading-relaxed text-muted-foreground", className)}>
       <p>
         <span className="font-medium text-brand-surface">Not the official record.</span>{" "}The text is the Federal Register&apos;s,
-        laid out for reading; the Federal Register document linked on each AD is the legal version, and the FAA&apos;s DRS shows
-        the current revision.
+        laid out for reading, and for older ADs the FAA&apos;s own index; the original linked on each AD is the legal version, and the
+        FAA&apos;s DRS shows the current revision.
       </p>
       {!compact && (
         <p>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { adAbout, adDate, adHref, adTitle, PRODUCT_LABEL, type AdRow } from "@/lib/ad-library";
+import { adAbout, adDate, adHref, adPublished, adTitle, PRODUCT_LABEL, type AdRow } from "@/lib/ad-library";
 import { cn } from "@/lib/cn";
 
 /**
@@ -118,7 +118,7 @@ export function AdList({
                   </span>
                 </span>
                 <span className="shrink-0 text-sm text-muted-foreground tabular-nums sm:pt-0.5 sm:text-right">
-                  {a.onPublicInspection ? "Public inspection" : adDate(a.publishedOn)}
+                  {a.onPublicInspection ? "Public inspection" : adPublished(a)}
                 </span>
               </Link>
             </li>

@@ -45,6 +45,10 @@ export type AdRow = {
   repetitive: boolean;
   onPublicInspection: boolean;
   url: string;
+  /** "federal_register": read from its text. "drs": from the FAA's index, which has no text; `url` is the FAA's copy. */
+  source: "federal_register" | "drs";
+  /** No date from the FAA: `publishedOn` is the period its number names, so show the year. */
+  datedByNumber: boolean;
   /** "Requires repetitive inspections of ...", from the FAA's summary; null when it has none. */
   requires: string | null;
 };
@@ -135,6 +139,10 @@ export async function searchAds(q: string, page = 1) {
 /** The API's own address for a page's CSV, which needs no account. */
 export const csvHref = (kind: string, slug: string) => `${API_URL}/public${AD_BASE}/${segmentFor(kind)}/${slug}.csv`;
 export const apiBase = `${API_URL}/public${AD_BASE}`;
+
+/** When an AD was published: the day, or the year alone when the FAA gave only its number. */
+export const adPublished = (a: { publishedOn: string; datedByNumber?: boolean }, style: "short" | "long" = "short") =>
+  a.datedByNumber ? a.publishedOn.slice(0, 4) : adDate(a.publishedOn, style);
 
 /** Dates are UTC days: formatted in UTC, or Oct 6 reads Oct 5 in America. */
 export const adDate = (iso: string | null | undefined, style: "short" | "long" = "short") =>

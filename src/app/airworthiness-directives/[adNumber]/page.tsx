@@ -7,7 +7,7 @@ import { JsonLd } from "@/components/json-ld";
 import { AdText } from "@/components/ad-library/ad-text";
 import { Chip } from "@/components/ad-library/ad-list";
 import { LibraryNotice } from "@/components/ad-library/notice";
-import { AD_BASE, adAbout, adDate, adHref, adTitle, getAd, KINDS, pageHref, PRODUCT_LABEL, segmentFor } from "@/lib/ad-library";
+import { AD_BASE, adAbout, adDate, adHref, adPublished, adTitle, getAd, KINDS, pageHref, PRODUCT_LABEL, segmentFor } from "@/lib/ad-library";
 import { SITE_URL, signupUrl } from "@/lib/site";
 
 /**
@@ -31,6 +31,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const short = who.length > 80 ? `${who.slice(0, 77).replace(/[,\s]+\S*$/, "")}...` : who;
   const title = `AD ${ad.adNumber}: ${short}`;
   const description = (ad.summary ?? ad.unsafeCondition ?? ad.applicability ?? who).replace(/\s+/g, " ").slice(0, 300);
+  // Not offered to search engines without its text: an AD from the FAA's index alone is a few
+  // lines and a link, too thin to stand as a page.
   const readable = !!ad.details?.applicability?.length;
   return {
     title,
@@ -115,7 +117,7 @@ export default async function AdPage({ params }: Props) {
         )}
 
         <dl className="mt-8 grid grid-cols-2 gap-4 rounded-lg border border-border bg-white p-4 text-sm sm:grid-cols-4">
-          <Fact label={ad.onPublicInspection ? "To be published" : "Published"}>{adDate(ad.publishedOn, "long")}</Fact>
+          <Fact label={ad.onPublicInspection ? "To be published" : ad.datedByNumber ? "Issued" : "Published"}>{adPublished(ad, "long")}</Fact>
           <Fact label="Effective">{adDate(ad.effectiveOn, "long") ?? (ad.onPublicInspection ? "Set at publication" : "Not stated")}</Fact>
           <Fact label="Maker">{ad.manufacturer}</Fact>
           <Fact label="Supersedes">
@@ -140,6 +142,17 @@ export default async function AdPage({ params }: Props) {
           <Section title="Applies to">
             {ad.details?.applicability?.length ? (
               <AdText blocks={ad.details.applicability} />
+            ) : ad.source === "drs" ? (
+              <div className="space-y-2">
+                <p className="text-[15px] leading-relaxed">{ad.applicability}</p>
+                <p className="text-sm text-muted-foreground">
+                  The models as the FAA&apos;s AD index lists them. The serial ranges, installed parts and exceptions are in the AD itself:{" "}
+                  <a href={ad.url} target="_blank" rel="noreferrer" className="text-primary hover:underline">
+                    read it at the FAA
+                  </a>
+                  .
+                </p>
+              </div>
             ) : ad.applicability ? (
               <p className="text-[15px] leading-relaxed">{ad.applicability}</p>
             ) : (
@@ -199,12 +212,21 @@ export default async function AdPage({ params }: Props) {
 
           <Section title="Official sources">
             <ul className="space-y-2 text-[15px]">
-              <li>
-                <a href={ad.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-primary underline-offset-2 hover:underline">
-                  {ad.onPublicInspection ? "The public-inspection copy at the Federal Register" : "The Federal Register document"} <ArrowUpRight className="size-3.5" aria-hidden />
-                </a>
-                <span className="text-muted-foreground"> · document {ad.frDocumentNumber}, the legal text</span>
-              </li>
+              {ad.source === "drs" ? (
+                <li>
+                  <a href={ad.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-primary underline-offset-2 hover:underline">
+                    The AD at the FAA <ArrowUpRight className="size-3.5" aria-hidden />
+                  </a>
+                  <span className="text-muted-foreground"> · its text as the FAA keeps it</span>
+                </li>
+              ) : (
+                <li>
+                  <a href={ad.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-primary underline-offset-2 hover:underline">
+                    {ad.onPublicInspection ? "The public-inspection copy at the Federal Register" : "The Federal Register document"} <ArrowUpRight className="size-3.5" aria-hidden />
+                  </a>
+                  <span className="text-muted-foreground"> · document {ad.frDocumentNumber}, the legal text</span>
+                </li>
+              )}
               <li>
                 <a href="https://drs.faa.gov/" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-primary underline-offset-2 hover:underline">
                   FAA Dynamic Regulatory System (DRS) <ArrowUpRight className="size-3.5" aria-hidden />
