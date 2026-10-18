@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { FLAT_OLD_TYPE, annualTax, formatMoney, saleTax, type CalcRule } from "@/lib/aircraft-tax-calc";
+import { FLAT_OLD_TYPE, OTHER_TYPE, annualTax, annualTypes, formatMoney, saleTax, type CalcRule } from "@/lib/aircraft-tax-calc";
 
 export type CalcState = { slug: string; name: string; href: string; rule: CalcRule };
 
@@ -26,6 +26,9 @@ export function AircraftTaxCalculator({ states, year }: { states: CalcState[]; y
   const [weight, setWeight] = useState("2550");
   const [modelYear, setModelYear] = useState("2004");
   const [type, setType] = useState("");
+  const [seats, setSeats] = useState("4");
+  const [regYear, setRegYear] = useState("1");
+  const [choice, setChoice] = useState("");
 
   // Deep link: /aircraft-tax/calculator?state=idaho. Read after mount so the
   // page stays fully static.
@@ -36,21 +39,45 @@ export function AircraftTaxCalculator({ states, year }: { states: CalcState[]; y
 
   const state = states.find((s) => s.slug === slug) ?? states[0];
   const { sale, annual } = state.rule;
-  const types =
-    annual.kind === "by-type" ? Object.keys(annual.fees) : annual.kind === "by-type-and-age" ? [...Object.keys(annual.rows), FLAT_OLD_TYPE] : [];
+  const types = annualTypes(annual);
   const chosenType = types.includes(type) ? type : (types[0] ?? "");
+  const choices = sale.kind === "choice" ? Object.keys(sale.options) : [];
+  const chosen = choices.includes(choice) ? choice : (choices[0] ?? "");
 
   const saleResult = useMemo(
-    () => saleTax(sale, { price: num(price), rate: num(rate), paidElsewhere: num(paid) }),
-    [sale, price, rate, paid]
+    () => saleTax(sale, { price: num(price), rate: num(rate), paidElsewhere: num(paid), weight: num(weight), choice: chosen }),
+    [sale, price, rate, paid, weight, chosen]
   );
   const annualResult = useMemo(
-    () => annualTax(annual, { price: num(price), weight: num(weight), type: chosenType, modelYear: num(modelYear), year }),
-    [annual, price, weight, chosenType, modelYear, year]
+    () =>
+      annualTax(annual, {
+        price: num(price),
+        weight: num(weight),
+        seats: num(seats),
+        type: chosenType,
+        modelYear: num(modelYear),
+        year,
+        registrationYear: num(regYear),
+      }),
+    [annual, price, weight, seats, chosenType, modelYear, year, regYear]
   );
 
   const needsRate = sale.kind === "state-plus-local" || sale.kind === "combined";
+  const rateHint =
+    sale.kind === "combined"
+      ? sale.min !== undefined && sale.max !== undefined
+        ? `Percent, from ${sale.min} to ${sale.max}`
+        : `Percent${sale.max ? `, at most ${sale.max}` : ""}`
+      : sale.kind === "state-plus-local" && sale.localMax
+        ? `Percent, at most ${sale.localMax}`
+        : "Percent, added to the state rate";
   const credits = "credit" in sale && sale.credit;
+  // Flat-fee types (antique, glider) skip the weight, age and seat questions.
+  const formula = chosenType === "" || chosenType === OTHER_TYPE;
+  const needsWeight =
+    ("exemptFromWeight" in sale && !!sale.exemptFromWeight) || annual.kind === "per-pound" || (annual.kind === "by-weight" && formula);
+  const needsModelYear =
+    (annual.kind === "by-type-and-age" && chosenType !== FLAT_OLD_TYPE) || (annual.kind === "rate-by-age" && annual.countFrom === "model" && formula);
 
   return (
     <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
@@ -67,12 +94,19 @@ export function AircraftTaxCalculator({ states, year }: { states: CalcState[]; y
         <Field id="tax-price" label="Purchase price" hint="US dollars">
           <input id="tax-price" inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value)} className={field} />
         </Field>
+        {sale.kind === "choice" && (
+          <Field id="tax-choice" label={sale.label}>
+            <select id="tax-choice" value={chosen} onChange={(e) => setChoice(e.target.value)} className={field}>
+              {choices.map((c) => (
+                <option key={c} value={c}>
+                  {c} ({sale.options[c]}%)
+                </option>
+              ))}
+            </select>
+          </Field>
+        )}
         {needsRate && (
-          <Field
-            id="tax-rate"
-            label={sale.kind === "combined" ? sale.localLabel : sale.localLabel}
-            hint={sale.kind === "combined" ? `Percent${sale.max ? `, at most ${sale.max}` : ""}` : "Percent, added to the state rate"}
-          >
+          <Field id="tax-rate" label={sale.localLabel} hint={rateHint}>
             <input id="tax-rate" inputMode="decimal" placeholder="0" value={rate} onChange={(e) => setRate(e.target.value)} className={field} />
           </Field>
         )}
@@ -92,13 +126,29 @@ export function AircraftTaxCalculator({ states, year }: { states: CalcState[]; y
             </select>
           </Field>
         )}
-        {annual.kind === "by-type-and-age" && chosenType !== FLAT_OLD_TYPE && (
+        {needsModelYear && (
           <Field id="tax-year" label="Model year">
             <input id="tax-year" inputMode="numeric" value={modelYear} onChange={(e) => setModelYear(e.target.value)} className={field} />
           </Field>
         )}
-        {annual.kind === "per-pound" && (
-          <Field id="tax-weight" label="Maximum certified gross weight" hint="Pounds, from the type certificate data sheet">
+        {annual.kind === "rate-by-age" && annual.countFrom === "registration" && formula && (
+          <Field id="tax-reg" label="Year of registration in this state">
+            <select id="tax-reg" value={regYear} onChange={(e) => setRegYear(e.target.value)} className={field}>
+              {annual.rates.map((_, i) => (
+                <option key={i} value={String(i + 1)}>
+                  {i === annual.rates.length - 1 ? `Year ${i + 1} or later` : `Year ${i + 1}`}
+                </option>
+              ))}
+            </select>
+          </Field>
+        )}
+        {annual.kind === "per-seat" && (
+          <Field id="tax-seats" label="Seats" hint="Manufacturer's maximum listed seating">
+            <input id="tax-seats" inputMode="numeric" value={seats} onChange={(e) => setSeats(e.target.value)} className={field} />
+          </Field>
+        )}
+        {needsWeight && (
+          <Field id="tax-weight" label="Maximum certified takeoff weight" hint="Pounds, from the type certificate data sheet">
             <input id="tax-weight" inputMode="numeric" value={weight} onChange={(e) => setWeight(e.target.value)} className={field} />
           </Field>
         )}

@@ -32,12 +32,14 @@ const foldFigures = (text) =>
 
 /** Statutes often spell numbers out: "ninety (90) days", "one-half percent". */
 const WORDS = {
-  "0.5": ["one-half percent", "one-half of one percent"],
+  "0.5": ["one-half percent", "one-half of one percent", "fifty hundredths"],
+  "0.25": ["twenty-five hundredths"],
+  "0.75": ["seventy-five hundredths"],
   "3.25": ["three and one-fourth percent"],
   "5.75": ["five and three-fourths percent"],
   "6.5": ["six and five-tenths percent", "six and one-half percent"],
-  4: ["four percent"], 6: ["six percent"], 15: ["fifteen"], 6000: ["six thousand"],
-  10: ["ten"], 20: ["twenty"], 21: ["twenty-one"], 30: ["thirty"], 60: ["sixty"], 90: ["ninety"],
+  1: ["one percent"], 2: ["two percent"], 3: ["three percent"], 4: ["four percent"], 6: ["six percent"], 15: ["fifteen"], 6000: ["six thousand"],
+  10: ["ten"], 20: ["twenty"], 35: ["thirty-five"], 50: ["fifty percent"], 5000: ["five thousand"], 21: ["twenty-one"], 30: ["thirty"], 60: ["sixty"], 90: ["ninety"],
 };
 
 const failures = [];
@@ -96,8 +98,9 @@ function figures(text) {
   for (const m of text.matchAll(/\$?(\d[\d,]*(?:\.\d+)?)/g)) {
     const n = foldFigures(m[1].replace(/,/g, "").replace(/\.$/, ""));
     const before = text.slice(Math.max(0, m.index - 6), m.index);
+    if (before.endsWith(".")) continue; // the tail of a dotted cite: RCW 82.48.030
     if (/^(19|20)\d\d$/.test(n)) continue; // a year
-    if (/Parts? $|Part $|Form $|SB $/.test(before)) continue; // a reference, not an amount
+    if (/Parts? $|Part $|Form $|SB $|RCW $/.test(before)) continue; // a reference, not an amount
     out.add(n);
   }
   return [...out];
@@ -117,7 +120,6 @@ for (const r of REGIONS) {
 {
   const { CALC } = await import(pathToFileURL(path.join(dataRoot, "calc.mjs")).href);
   const bySlug = new Map(REGIONS.map((r) => [r.slug, r]));
-  const norm = (text) => text.replace(/,/g, "").replace(/(\d+)\.(\d*?)0+(?!\d)/g, (_, a, b) => (b ? `${a}.${b}` : a));
   for (const [slug, calc] of Object.entries(CALC)) {
     const r = bySlug.get(slug);
     if (!r) {
@@ -125,17 +127,25 @@ for (const r of REGIONS) {
       continue;
     }
     const sources = Object.values(r.facts).flatMap((f) => f.sources);
-    const haystack = norm(sources.map((s) => `${s.title} ${s.quote}`).join(" ")).toLowerCase();
+    // Quotes only: a title's cite, "HRS 237-24.3(11)", is not a figure the reader is shown.
+    // Paragraph labels like "(3)" are dropped for the same reason.
+    const haystack = foldFigures(sources.map((s) => s.quote).join(" "))
+      .replace(/\((\d{1,2}|[a-z]{1,4})\)/g, " ")
+      .toLowerCase();
     const numbers = [];
     const walk = (v, key) => {
-      if (key === "bandStarts" || key === "note") return;
-      if (typeof v === "number") numbers.push(v);
+      // Montana's age bands come from the schedule's column header, which the
+      // quotes carry in their titles rather than their text.
+      if (key === "bandStarts" || key === "bands") return;
+      // Notes and labels are shown to the reader, so their figures count too.
+      if (typeof v === "string") for (const n of figures(v)) numbers.push(n);
+      else if (typeof v === "number") numbers.push(v);
       else if (Array.isArray(v)) v.forEach((x) => walk(x));
       else if (v && typeof v === "object") for (const [k, x] of Object.entries(v)) walk(x, k);
     };
     walk(calc);
     for (const n of numbers) {
-      const str = String(n);
+      const str = foldFigures(String(n));
       const found =
         new RegExp(`(^|[^\\d.])${str.replace(".", "\\.")}(?![\\d])`).test(haystack) || (WORDS[str] ?? []).some((w) => haystack.includes(w));
       if (!found) fail(`calc.mjs ${slug}: uses ${str}, which no quoted source for ${r.name} contains`);

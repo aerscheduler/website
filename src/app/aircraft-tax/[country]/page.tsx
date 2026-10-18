@@ -46,7 +46,7 @@ export default async function CountryPage({ params }: Props) {
         </h1>
         <p className="text-lg leading-relaxed text-muted-foreground">
           What each state taxes when you buy, base, rent out, teach in and maintain an aircraft, and what it charges every year. Every answer
-          quotes the state&apos;s own publication, statute or rule. {regions.length} states so far.
+          quotes the state&apos;s own publication, statute or rule. All 50 states and the District of Columbia.
         </p>
       </header>
       <p className="mt-6 text-base">
