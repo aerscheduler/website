@@ -94,24 +94,24 @@ export default async function AdPage({ params }: Props) {
         </header>
 
         {ad.supersededBy.length > 0 && (
-          <div className="mt-6 rounded-lg border border-amber-300/70 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-            <span className="font-semibold">Superseded.</span> A later AD replaced this one:{" "}
+          <p className="mt-6 max-w-3xl text-[15px] leading-relaxed text-foreground">
+            <span className="font-semibold text-brand-surface">Superseded.</span> A later AD replaced this one:{" "}
             {ad.supersededBy.map((n, i) => (
               <span key={n}>
                 {i > 0 && ", "}
-                <Link href={adHref(n)} className="font-mono font-medium underline underline-offset-2">
+                <Link href={adHref(n)} className="font-mono font-medium text-primary hover:underline">
                   AD {n}
                 </Link>
               </span>
             ))}
             . Comply with the one in force.
-          </div>
+          </p>
         )}
         {ad.onPublicInspection && (
-          <div className="mt-6 rounded-lg border border-amber-300/70 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          <p className="mt-6 max-w-3xl text-[15px] leading-relaxed text-muted-foreground">
             The FAA has filed this AD for publication in the Federal Register on {adDate(ad.publishedOn, "long")}. This page shows the
             public-inspection copy and is replaced by the published text when it appears. Its effective date is set at publication.
-          </div>
+          </p>
         )}
 
         <dl className="mt-8 grid grid-cols-2 gap-4 rounded-lg border border-border bg-white p-4 text-sm sm:grid-cols-4">

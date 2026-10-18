@@ -122,7 +122,7 @@ export function Chip({ tone, children }: { tone: "grey" | "blue" | "amber" | "gr
         "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium",
         tone === "grey" && "bg-muted text-muted-foreground",
         tone === "blue" && "bg-primary/10 text-primary",
-        tone === "amber" && "bg-amber-100 text-amber-900",
+        tone === "amber" && "border border-border bg-white text-foreground",
         tone === "green" && "bg-emerald-50 text-emerald-800"
       )}
     >

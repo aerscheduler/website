@@ -43,8 +43,8 @@ const CALLOUTS = {
   warning: {
     icon: AlertTriangle,
     label: "Careful",
-    tone: "border-amber-300/60 bg-amber-50",
-    accent: "text-amber-700",
+    tone: "border-border bg-[#fafbfc]",
+    accent: "text-brand-surface",
   },
   important: {
     icon: ShieldAlert,

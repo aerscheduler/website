@@ -61,11 +61,8 @@ export async function ModelPageView({ segment, slug }: { segment: KindSegment; s
               : `Every AD in the library whose text names the ${page.name}${page.fleetCount ? `, of which ${fmt(page.fleetCount)} are registered in the US` : ""}.`
             : `Every ${segment === "propellers" ? "propeller" : "equipment"} AD in the library that names ${page.name} as the maker.`}
         </p>
-      </header>
-
-      <div className="mt-6">
         <Pre1995Note />
-      </div>
+      </header>
 
       <dl className="mt-6 flex flex-wrap gap-x-8 gap-y-3 border-y border-border py-4">
         <Figure label="ADs listed" value={fmt(page.figures.total)} />
