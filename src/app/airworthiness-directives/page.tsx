@@ -141,7 +141,7 @@ export default async function AdLibraryPage() {
           </div>
 
           <div className="space-y-4">
-            <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">How it differs from the FAA&apos;s own AD search</h2>
+            <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">What it does that DRS does not</h2>
             <dl className="grid gap-x-10 gap-y-5 sm:grid-cols-2">
               <Point title="Lists ADs by what is on the aircraft">
                 The airframe model, the engine family, the propeller and the equipment maker, each on its own page, so a 172S owner does

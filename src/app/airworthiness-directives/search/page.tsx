@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { AdList } from "@/components/ad-library/ad-list";
 import { AdSearchBox } from "@/components/ad-library/search-box";
-import { AD_BASE, fmt, SEARCH_PAGE_SIZE, searchAds } from "@/lib/ad-library";
+import { AD_BASE, fmt, searchAds } from "@/lib/ad-library";
 
 export const metadata: Metadata = {
   title: "Search Airworthiness Directives",
@@ -18,7 +18,7 @@ export default async function AdSearchPage({ searchParams }: Props) {
   const { q = "", page = "1" } = await searchParams;
   const n = Math.max(1, Number(page) || 1);
   const results = q.trim() ? await searchAds(q.trim(), n) : null;
-  const pages = results ? Math.ceil(results.total / SEARCH_PAGE_SIZE) : 0;
+  const pages = results ? Math.ceil(results.total / results.pageSize) : 0;
   const link = (p: number) => `${AD_BASE}/search?q=${encodeURIComponent(q)}&page=${p}`;
   return (
     <article className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:py-14">
