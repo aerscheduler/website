@@ -125,6 +125,10 @@ function AnalyticsInner() {
       if (href.includes("/signup")) trackConversion("signup_started", props);
       else if (href.includes("calendar.app.google")) trackConversion("demo_booked", props);
       else if (href.includes("app.aerscheduler.com/demo")) trackConversion("demo_opened", props);
+      // Most new accounts are created in the phone apps, where no campaign or page
+      // survives the store. This click is the last thing the site can see of them.
+      else if (href.includes("apps.apple.com")) track("app_store_click", { ...props, store: "ios" });
+      else if (href.includes("play.google.com")) track("app_store_click", { ...props, store: "android" });
     };
     // Every form on the site, by what it submits to: the AD search, the N-number
     // check, the AD follow. Never the values typed into it.

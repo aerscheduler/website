@@ -47,7 +47,13 @@ import { hasConsent } from "./consent";
  */
 const POSTHOG_KEY =
   process.env.NEXT_PUBLIC_POSTHOG_KEY ?? "phc_mT7orBRFhBnm56BRyhGgtSKjiQvRBZwCoMRSSSbBCDyt";
-const POSTHOG_HOST = process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "https://us.i.posthog.com";
+/**
+ * Our own domain, rewritten to PostHog in next.config.ts, so an ad blocker that
+ * lists us.i.posthog.com does not hide the visitor. `ui_host` below keeps links
+ * to the PostHog app (the toolbar) pointing at PostHog itself.
+ */
+const POSTHOG_HOST = process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "/ingest";
+const POSTHOG_UI_HOST = "https://us.posthog.com";
 
 /**
  * Whether this build should report to PostHog at all. See the same block in the
@@ -234,6 +240,7 @@ function startPostHog(): void {
 function initPostHog(posthog: PostHog): void {
   posthog.init(POSTHOG_KEY, {
     api_host: POSTHOG_HOST,
+    ui_host: POSTHOG_UI_HOST,
     // The visitor crosses from aerscheduler.com to app.aerscheduler.com mid-funnel. Without
     // this, PostHog mints a second anonymous id on the console and the signup funnel breaks
     // in half at the most important step.

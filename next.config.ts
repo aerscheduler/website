@@ -3,6 +3,14 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  /**
+   * PostHog's endpoints end in a slash (`/e/`, `/decide/`), and Next would
+   * redirect `/ingest/e/` to `/ingest/e` before the rewrite below ever saw it,
+   * which drops the events. So Next's own trailing-slash redirect is off, and
+   * `src/proxy.ts` does the same redirect for every page instead, leaving only
+   * `/ingest` alone.
+   */
+  skipTrailingSlashRedirect: true,
   images: {
     unoptimized: false,
     /**
@@ -62,6 +70,12 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return {
       beforeFiles: [
+        // PostHog through our own domain. Ad blockers drop requests to
+        // us.i.posthog.com, which hid roughly a tenth to a quarter of visitors
+        // from every chart; a first-party path is not on their lists. Assets
+        // first, because the general rule would also match them.
+        { source: "/ingest/static/:path*", destination: "https://us-assets.i.posthog.com/static/:path*" },
+        { source: "/ingest/:path*", destination: "https://us.i.posthog.com/:path*" },
         { source: "/docs/:section/:slug([a-z0-9-]+)\\.md", destination: "/md/docs/:section/:slug" },
         // The regulations library's twins: each section and Part page, and the hub.
         { source: "/regulations/:slug([a-z0-9-]+)\\.md", destination: "/md/regulations/:slug" },

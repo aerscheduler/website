@@ -27,6 +27,7 @@ import {
   type SearchType,
 } from "@/lib/search";
 import { cn } from "@/lib/cn";
+import { track } from "@/lib/analytics";
 
 /**
  * Site-wide search: an icon in the header that opens a dialog.
@@ -227,7 +228,26 @@ function SearchDialog({ onClose }: { onClose: () => void }) {
     listRef.current?.querySelector('[data-active="true"]')?.scrollIntoView({ block: "nearest" });
   }, [active]);
 
+  // What people search the whole site for, once they stop typing, and what they
+  // open. A query with no results is a page nobody has written yet.
+  const typed = query.trim();
+  useEffect(() => {
+    if (!engine || typed.length < 2) return;
+    const timer = setTimeout(
+      () => track("site_search", { query: typed.slice(0, 80), results: flat.length, filter: typeFilter ?? undefined }),
+      1200
+    );
+    return () => clearTimeout(timer);
+  }, [engine, typed, flat.length, typeFilter]);
+
   const go = (href: string) => {
+    const position = flat.findIndex((r) => r.href === href);
+    track("site_search_open", {
+      query: typed.slice(0, 80),
+      href,
+      position: position >= 0 ? position + 1 : null,
+      filter: typeFilter ?? undefined,
+    });
     onClose();
     router.push(href);
   };

@@ -18,6 +18,17 @@ import { COUNTRY_COOKIE } from "@/lib/geo";
  * failure here degrades to the old behaviour rather than to silent tracking.
  */
 export default function proxy(request: NextRequest) {
+  // Next's own trailing-slash redirect is off (next.config.ts, for the PostHog
+  // proxy at /ingest), so it is done here: one URL per page, as before.
+  const { pathname } = request.nextUrl;
+  if (pathname.length > 1 && pathname.endsWith("/")) {
+    // A plain URL: NextURL remembers the trailing slash it was parsed with and
+    // puts it back when serialised, which made this redirect point at itself.
+    const url = new URL(request.url);
+    url.pathname = pathname.replace(/\/+$/, "") || "/";
+    return NextResponse.redirect(url, 308);
+  }
+
   const response = NextResponse.next();
 
   const raw = request.headers.get("x-vercel-ip-country");
@@ -43,5 +54,5 @@ export const config = {
    * with a file extension keeps this off the hot path for hashed assets, images and
    * the sitemap, which have no consent banner to inform.
    */
-  matcher: ["/((?!api|_next/static|_next/image|.*\\.[\\w]+$).*)"],
+  matcher: ["/((?!api|ingest|_next/static|_next/image|.*\\.[\\w]+$).*)"],
 };
