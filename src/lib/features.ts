@@ -350,6 +350,7 @@ export const FEATURES: Record<FeatureSlug, Feature> = {
     bullets: [
       "One to one, groups, and a conversation on every booking",
       "@ mentions of people, aircraft, bookings, work orders and squawks",
+      "Photos, PDFs and documents on any message: the squawk, the logbook page, the receipt",
       "Each reader sees only the records they are allowed to open",
       "Live in the console and the app, with one push for a burst of messages",
       "Email only for what is still unread 15 minutes later, as one roundup",
