@@ -1395,9 +1395,9 @@ export const DOC_SECTIONS: DocSection[] = [
       },
       {
         slug: "choose-how-we-handle-airworthiness-directives",
-        title: "Choose how much AerScheduler does about Airworthiness Directives",
+        title: "Turn on finding the ADs for your aircraft",
         description:
-          "Four choices, and nothing is on by default. Do nothing about ADs, track them here yourself, have AerScheduler list the published ADs that name each aircraft for you to decide, or say that applicability is tracked in another system such as ADlog or AVTRAK. Also explains what a serial number buys you and why we never decide whether an AD applies.",
+          "One switch under Settings, off by default. On, AerScheduler lists every AD published since 1995 that names each aircraft's airframe, engine or propeller for a person to decide, alerts you to new ones, and keeps the AD status report. What makes the list complete, and why we never decide whether an AD applies.",
         kind: "task",
         audience: ["Owners", "Admins"],
         seoQuery: "turn off airworthiness directive tracking flight school software",
@@ -1415,7 +1415,7 @@ export const DOC_SECTIONS: DocSection[] = [
         slug: "review-the-ads-for-an-aircraft",
         title: "Review the ADs for an aircraft",
         description:
-          "With Find them for me on, each aircraft's ADs tab lists the Airworthiness Directives published since 1995 that name its airframe, engine or propeller. Read each one and mark it Applies (and track it as an inspection) or Not applicable with a reason. Nothing is decided for you, and each decision keeps who made it and when.",
+          "With Find the ADs for our aircraft on, each aircraft's ADs tab lists the Airworthiness Directives published since 1995 that name its airframe, engine or propeller. Read each one and mark it Applies (and track it as an inspection) or Not applicable with a reason. Nothing is decided for you, and each decision keeps who made it and when.",
         kind: "task",
         audience: ["Owners", "Admins", "Technicians"],
         seoQuery: "which airworthiness directives apply to my aircraft",

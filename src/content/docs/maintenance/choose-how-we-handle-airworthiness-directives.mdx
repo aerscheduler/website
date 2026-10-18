@@ -1,137 +1,88 @@
 <Summary>
-Nothing about Airworthiness Directives is on by default. <Where app="web">Settings → Airworthiness
-Directives</Where> has four choices: do nothing, track them here yourself, have us list the ADs
-that name each of your aircraft, or tell us they are tracked somewhere else. The same page shows
-how much we know about each aircraft to match ADs against.
+<Where app="web">Settings → Airworthiness Directives</Where> has one switch, **Find the ADs for
+our aircraft**. It is off by default. Turned on, AerScheduler lists the Airworthiness Directives
+that name each of your aircraft for somebody to decide, and alerts you when a new one is
+published.
 </Summary>
 
 <Roles>Owners, Admins</Roles>
 
-## Why this is a choice and not a feature
+## Why it is off by default
 
 Plenty of organizations use AerScheduler for oil changes, annuals and the 100-hour, and have no
 interest in us being involved in Airworthiness Directives. Plenty of others already pay for
 ADlog, AVTRAK or a Tdata subscription and have a mechanic who owns the whole question.
 
-Listing ADs for those organizations would not be a helpful default. It would be several
-hundred candidate directives nobody asked for, attached to a subject where a flood of alerts
-teaches people to stop reading alerts.
+Turning it on for them would put several hundred ADs to review in front of people who never
+asked, attached to a subject where a flood of alerts teaches people to stop reading alerts. So it
+stays off until an owner or admin turns it on.
 
-So it is off, and it stays off until somebody chooses otherwise.
+## Turn it on
 
-## The four choices
-
-<Screenshot id="ad-tracking-modes" />
+<Screenshot id="ad-tracking-switch" />
 
 <Steps>
-  <Step n={1} title="Not here">
-    We do nothing about ADs. Maintenance works exactly as it does now.
-
-    You can still set an inspection's **Where this comes from** to *Airworthiness Directive* if
-    you want the badge and the permanent compliance record. That is recordkeeping and it costs
-    nothing. Nothing is proposed, nothing is watched, nobody is notified.
+  <Step n={1} title="Settings, then Airworthiness Directives">
+    Owners and admins only.
   </Step>
-  <Step n={2} title="I track them here">
-    You enter the ADs, we keep the records. The AD badge, the permanent compliance record, the
-    Compliance log and the Airworthiness compliance report.
-
-    We still do not tell you which ADs apply. You add the ones your IA or your AD subscription
-    identifies.
-  </Step>
-  <Step n={3} title="Find them for me">
-    Each aircraft gets an **ADs** tab listing the Airworthiness Directives published in the
-    Federal Register since 1995 that name its make and model, its engine or its propeller.
-    Owners, admins and technicians decide each one: it applies, and is tracked like any AD
-    inspection, or it does not, and they say why. Every decision keeps who made it and when.
-    See [Review the ADs for an aircraft](/docs/maintenance/review-the-ads-for-an-aircraft).
-
-    Nothing is decided for you. A listed AD is one worth reading, not one that applies. ADs from
-    before 1995 are not in the list, so an older airframe's still have to be found the way you
-    find them today. Everything in *I track them here* still works.
-  </Step>
-  <Step n={4} title="Somewhere else">
-    Applicability is tracked in another system. Name it, and we propose nothing and watch
-    nothing.
-
-    The name is printed on any AD document we produce, so a reader knows where the authoritative
-    list lives rather than assuming it is ours.
+  <Step n={2} title="Switch on Find the ADs for our aircraft">
+    It saves straight away. An owner or admin can also turn it on from the empty
+    <Where app="web">Maintenance → Fleet ADs</Where> page.
   </Step>
 </Steps>
 
+With it on:
+
+- Each aircraft gets an **ADs** tab listing the Airworthiness Directives published in the Federal
+  Register since 1995 that name its make and model, its engine or its propeller. See
+  [Review the ADs for an aircraft](/docs/maintenance/review-the-ads-for-an-aircraft).
+- **Maintenance → Fleet ADs** lists every aircraft's ADs in one place, and **Reports → AD status**
+  is what you hand an inspector. See
+  [See every aircraft's ADs](/docs/maintenance/airworthiness-directives-across-the-fleet).
+- Owners, admins and technicians are told when a newly published AD names one of your aircraft,
+  and get a weekly email of what is still undecided.
+
+With it off, maintenance works exactly as before. You can still set an inspection's **Where this
+comes from** to *Airworthiness Directive* for the badge and the permanent compliance record; see
+[Track Airworthiness Directives](/docs/maintenance/track-airworthiness-directives).
+
 <Callout type="important">
-Whatever you choose, AerScheduler never decides whether an Airworthiness Directive applies to
-your aircraft. *Find them for me* lists the ones that name it, from 1995 on; deciding which apply
-is still yours to do. What this product also does is keep the record of what you complied with,
-and when.
-
-That determination belongs to a certificated person, and it is the one thing software getting
-it wrong could actually hurt somebody over.
+AerScheduler never decides whether an Airworthiness Directive applies to your aircraft. A listed
+AD is one worth reading, not one that applies; an owner, admin or technician decides each one,
+and the decision keeps who made it and when. ADs from before 1995 are not in the library, so an
+older airframe's still have to be found the way you find them today.
 </Callout>
 
-## What a serial number buys you
+## What makes the list complete
 
-An AD names the aircraft it applies to by make and model, and usually by a serial number range:
-*"Model PC-12/47E airplanes, manufacturer serial numbers 2001 through 2999"*. Two 172s parked
-next to each other are frequently not both affected.
+The list matches by the make and model of the airframe, the engine and the propeller, so each one
+you record finds more:
 
-The same settings page shows, per aeroplane, how precisely we could match:
+- **Engine.** Filled in from the FAA registry for US aircraft, and on the aircraft form when you
+  look up a tail. Check it on the aircraft page if engine ADs are missing.
+- **Propeller.** The FAA registry does not record propellers, so type it on the aircraft form.
+- **Serial number.** Never used to leave an AD off, because a misread range would hide one that
+  applies. It is what the person reviewing checks an AD's serial range against, and the
+  **Airworthiness compliance** report prints it beside the tail.
 
-<Screenshot id="ad-readiness-panel" />
-
-- **By serial.** The aircraft's ADs can be checked against the serial range each one names.
-- **By model only.** We list the ADs that name its make and model, but whoever reviews them has
-  to find the serial number to rule one out on its range.
-- **Not enough detail.** We do not know the make or model, so nothing can be listed.
-
-The list on an aircraft's **ADs** tab is the same either way: we never use the serial number to
-leave an AD off, because a misread range would hide one that applies. The serial is what the
-person reviewing checks against.
-
-A serial number also earns its keep on the paperwork. The **Airworthiness compliance** report
-prints **Make and model** and **Serial** beside the tail number. Those two are the whole of how
-a directive states applicability, so it can be checked against the aeroplane on the page you hand
-an inspector instead of somebody walking out to the hangar to read a data plate.
-
-Recording one need not be data entry. Picking a tail from the lookup on the aircraft form can
-fill the serial in along with the make, model and year, so an aeroplane added that way arrives
-in the **by serial** bucket without anybody walking out to the ramp. Read it against the data
-plate once: the federal file is a copy of somebody else's paperwork, and plenty of rows in it
-carry no serial number at all.
-
-Expect to type some of them. The lookup covers **US registrations only**, so a club with a
-European sailplane gets no matches and enters the serial itself. A tail the lookup cannot find is
-an ordinary answer rather than an error: nothing is broken, you type the fields instead. And any
-aircraft added before the lookup began filling this field still has an empty one.
-
-Choose any aeroplane in that list to open its aircraft form without leaving the page. It opens
-with the cursor already in **Serial number**, so there is nothing to scroll for. Type it, save,
-and the list corrects itself. The number is on the data plate, and it is on the aircraft's
-registration. A fleet of more than six gets a search box above the list, so you can find one tail
-without reading all of them.
-
-<Callout type="note">
-A serial number is not required to turn anything on. Matching by model still works; it is just
-noisier. We would rather show you a longer list and say why than block the feature behind an
-afternoon of data entry.
-</Callout>
+Each aircraft's **ADs** tab says what is missing for that aircraft, in the info button beside its
+search.
 
 ## Who can change this
 
-Owners and admins. Not an office manager with the settings grant, and not a technician.
+Owners and admins. Not an office manager with the settings grant, and not a technician. Turning it
+on changes what every technician at the organization is asked to review, which makes it a decision
+about how the organization runs rather than a preference.
 
-Turning *Find them for me* on changes what every technician at the organization is asked to
-review, which makes it a decision about how the organization runs rather than a preference.
+## Turning it off
 
-## Changing your mind
-
-Switching modes never deletes anything. Compliance records are permanent regardless, and the
-decisions made on each aircraft's **ADs** tab are kept, so an organization that turns *Find them
-for me* off and on again finds them where it left them. One that switches to *Somewhere else*
-keeps its history and simply stops seeing the list.
+Nothing is deleted. Compliance records are permanent regardless, and the decisions made on each
+aircraft's **ADs** tab are kept, so an organization that turns it off and on again finds them
+where it left them. While it is off the AD lists, the alerts and the weekly email stop.
 
 ## Related
 
 - [Review the ADs for an aircraft](/docs/maintenance/review-the-ads-for-an-aircraft)
+- [See every aircraft's ADs, and search the AD library](/docs/maintenance/airworthiness-directives-across-the-fleet)
 - [Track Airworthiness Directives](/docs/maintenance/track-airworthiness-directives)
-- [Sign off a completed inspection](/docs/maintenance/sign-off-an-inspection)
 - [How maintenance tracking works](/docs/maintenance/how-maintenance-tracking-works)

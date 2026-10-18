@@ -1061,25 +1061,14 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
     crop: '[data-doc-shot="sign-off-compliance"]',
   },
   {
-    id: "ad-tracking-modes",
+    id: "ad-tracking-switch",
     screen: "Settings, Airworthiness Directives",
     route: "/settings?tab=ad-tracking",
-    alt: "The four choices for how much AerScheduler does about Airworthiness Directives",
-    caption:
-      "Nothing here is on by default, and Watch for new ones is not available yet.",
+    alt: "The Find the ADs for our aircraft switch",
+    caption: "One switch, off by default. On, each aircraft's ADs are listed for somebody to decide.",
     dataState:
-      "The default state: mode off, so Not here is the pressed card. Capture as the OWNER (DOCS_EMAIL=test-owner@aerscheduler.com); this tab is owner and admin only and does not render for anybody else, which is the point of the who-can-change-this section in the article.",
-    crop: '[data-doc-shot="ad-tracking-modes"]',
-  },
-  {
-    id: "ad-readiness-panel",
-    screen: "Settings, What we could match",
-    route: "/settings?tab=ad-tracking",
-    alt: "Per aircraft, how precisely an Airworthiness Directive could be matched",
-    caption: "A serial number is the one thing that narrows a match from a model to an aeroplane.",
-    dataState:
-      "A fleet where the three buckets are all non-empty, so the counts read as a distribution rather than a single number: at least one aircraft with make, model and serial (matched by serial), one with make and model only, and one missing a model. Seeded by seed-test-org-maintenance-for-docs.mjs. Owner or admin only.",
-    crop: '[data-doc-shot="ad-readiness-panel"]',
+      "The switch ON (AERTEST01 is seeded on by seed-test-ad-library.sql), so the line pointing to Maintenance, Fleet ADs shows under it. Capture as the OWNER (DOCS_EMAIL=test-owner@aerscheduler.com); this tab is owner and admin only.",
+    crop: '[data-doc-shot="ad-tracking-switch"]',
   },
   {
     id: "compliance-log-scope",

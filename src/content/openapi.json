@@ -2376,11 +2376,11 @@
         "tags": [
           "Organizations"
         ],
-        "summary": "Read the Airworthiness Directive tracking mode and readiness",
-        "description": "Whether this organization wants AerScheduler involved in Airworthiness Directives, and how well it could be. `mode` is one of `off` (we do nothing about ADs), `manual` (the organization enters ADs itself), `catalogue` (each aircraft lists the published ADs that name its airframe, engine or propeller, from the AD library, for somebody to decide; see `GET /maintenance/resources/{resourceId}/airworthiness-directives`) or `external` (applicability is tracked in another system, named by `externalSystem`).\n\n`aircraft` reports, per aeroplane, how precisely a published AD could be matched: `serial` when we can narrow the AD's serial-number range, `model` when we can only tell that an AD mentions this make and model, and `none` when we do not know enough to propose anything. **Admin only.**",
+        "summary": "Read whether AerScheduler finds the ADs for your aircraft",
+        "description": "One switch. When `enabled`, each aircraft lists the published ADs that name its airframe, engine or propeller, from the AD library, for somebody to decide (see `GET /maintenance/resources/{resourceId}/airworthiness-directives`), with alerts and the AD status report. Off by default. **Admin only.**",
         "responses": {
           "200": {
-            "description": "The mode and what could be matched for each aeroplane.",
+            "description": "The setting.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2389,84 +2389,17 @@
                     "data": {
                       "type": "object",
                       "properties": {
+                        "enabled": {
+                          "type": "boolean",
+                          "description": "Whether AerScheduler finds the ADs for this organization's aircraft."
+                        },
                         "mode": {
                           "type": "string",
                           "enum": [
                             "off",
-                            "manual",
-                            "catalogue",
-                            "external"
-                          ]
-                        },
-                        "externalSystem": {
-                          "type": [
-                            "string",
-                            "null"
+                            "catalogue"
                           ],
-                          "description": "Which system tracks applicability, when mode is `external`."
-                        },
-                        "counts": {
-                          "type": "object",
-                          "properties": {
-                            "total": {
-                              "type": "integer"
-                            },
-                            "serial": {
-                              "type": "integer"
-                            },
-                            "model": {
-                              "type": "integer"
-                            },
-                            "none": {
-                              "type": "integer"
-                            }
-                          }
-                        },
-                        "aircraft": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "resourceId": {
-                                "type": "integer"
-                              },
-                              "tailNumber": {
-                                "type": "string"
-                              },
-                              "make": {
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "model": {
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "serialNumber": {
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "quality": {
-                                "type": "string",
-                                "enum": [
-                                  "serial",
-                                  "model",
-                                  "none"
-                                ]
-                              },
-                              "missing": {
-                                "type": "array",
-                                "items": {
-                                  "type": "string"
-                                }
-                              }
-                            }
-                          }
+                          "description": "The same setting as `enabled`: `catalogue` is on."
                         }
                       }
                     }
@@ -2512,18 +2445,32 @@
         "tags": [
           "Organizations"
         ],
-        "summary": "Set the Airworthiness Directive tracking mode",
-        "description": "Changes what AerScheduler does about ADs. Setting `external` requires `externalSystem`, which is printed on the AD status report so a reader knows applicability lives elsewhere. Returns the same shape as the GET, including refreshed readiness. **Admin only.**",
+        "summary": "Turn finding the ADs for your aircraft on or off",
+        "description": "Send `enabled`. The older `mode` (`off` or `catalogue`) is still accepted. **Admin only.**",
         "responses": {
           "200": {
-            "description": "The updated mode and readiness.",
+            "description": "The updated setting.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
                     "data": {
-                      "type": "object"
+                      "type": "object",
+                      "properties": {
+                        "enabled": {
+                          "type": "boolean",
+                          "description": "Whether AerScheduler finds the ADs for this organization's aircraft."
+                        },
+                        "mode": {
+                          "type": "string",
+                          "enum": [
+                            "off",
+                            "catalogue"
+                          ],
+                          "description": "The same setting as `enabled`: `catalogue` is on."
+                        }
+                      }
                     }
                   }
                 }
@@ -2531,7 +2478,7 @@
             }
           },
           "400": {
-            "description": "An unknown mode, or `external` with no system named.",
+            "description": "Neither `enabled` nor a valid `mode` was sent.",
             "content": {
               "application/json": {
                 "schema": {
@@ -2578,26 +2525,17 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "mode"
-                ],
                 "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  },
                   "mode": {
                     "type": "string",
                     "enum": [
                       "off",
-                      "manual",
-                      "catalogue",
-                      "external"
-                    ]
-                  },
-                  "externalSystem": {
-                    "type": [
-                      "string",
-                      "null"
+                      "catalogue"
                     ],
-                    "maxLength": 60,
-                    "description": "Required when mode is `external`. Cleared otherwise."
+                    "description": "Accepted in place of `enabled`."
                   }
                 }
               }
@@ -23274,8 +23212,8 @@
         "tags": [
           "Maintenance"
         ],
-        "summary": "Read the AD mode",
-        "description": "The organization's Airworthiness Directive mode (`off`, `manual`, `catalogue` or `external`) and the external system's name, readable by any member. `catalogue` is the one where each aircraft lists its ADs to review. Changing it, and the readiness readout, is `/organizations/adTracking` (admin only).",
+        "summary": "Read whether the organization finds its ADs",
+        "description": "Whether AerScheduler finds the ADs for this organization's aircraft, readable by any member. When `enabled`, each aircraft lists its ADs to review. Turning it on or off is `PATCH /organizations/adTracking` (admin only).",
         "responses": {
           "200": {
             "description": "Success.",
@@ -23287,20 +23225,17 @@
                     "data": {
                       "type": "object",
                       "properties": {
+                        "enabled": {
+                          "type": "boolean",
+                          "description": "Whether AerScheduler finds the ADs for this organization's aircraft."
+                        },
                         "mode": {
                           "type": "string",
                           "enum": [
                             "off",
-                            "manual",
-                            "catalogue",
-                            "external"
-                          ]
-                        },
-                        "externalSystem": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
+                            "catalogue"
+                          ],
+                          "description": "The same setting as `enabled`: `catalogue` is on."
                         }
                       }
                     }

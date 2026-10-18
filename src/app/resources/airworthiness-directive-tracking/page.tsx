@@ -54,7 +54,7 @@ const FAQS = [
   },
   {
     q: "Do I need dedicated AD software, or is my scheduling system enough?",
-    a: "It depends on what your fleet needs looked up. AerScheduler lists the ADs published since 1995 that name each aircraft, engine and propeller, alerts you to new ones, and keeps the decision, the compliance record and the schedule in one place, so a lapsed directive takes the aeroplane off the board rather than appearing on a report somebody reads on Monday. A dedicated service such as ADlog, AVTRAK or Tdata adds a curated catalogue: directives older than 1995, appliance ADs written against installed equipment, and determinations made for you by serial number. If you already pay for one, keep it and choose Somewhere else in AerScheduler, and the documents we produce say where applicability lives.",
+    a: "It depends on what your fleet needs looked up. AerScheduler lists the ADs published since 1995 that name each aircraft, engine and propeller, alerts you to new ones, and keeps the decision, the compliance record and the schedule in one place, so a lapsed directive takes the aeroplane off the board rather than appearing on a report somebody reads on Monday. A dedicated service such as ADlog, AVTRAK or Tdata adds a curated catalogue: directives older than 1995, appliance ADs written against installed equipment, and determinations made for you by serial number. If you already pay for one, keep it, leave AD finding off in AerScheduler, and record compliance for the ADs it identifies.",
   },
   {
     q: "What has to be in an AD compliance record?",
@@ -127,7 +127,7 @@ export default function Page() {
             What {SITE_NAME} does, and what it does not
           </h2>
           <p className="text-muted-foreground">
-            With <em>Find them for me</em> chosen, {SITE_NAME} lists the Airworthiness Directives
+            With <em>Find the ADs for our aircraft</em> on, {SITE_NAME} lists the Airworthiness Directives
             that name each aircraft, from a library of every AD the Federal Register has published
             since 1995, checked for new ones every day. Each AD opens laid out as it was published,
             with the model that matched highlighted. An owner, admin or technician decides it:
@@ -145,10 +145,9 @@ export default function Page() {
             ranges: a listed AD is one to read, not one that applies.
           </p>
           <p className="text-muted-foreground">
-            If you already pay for ADlog, AVTRAK or a Tdata subscription, keep it. Choose{" "}
-            <em>Somewhere else</em>, name it, and any document we produce says on its face where
-            applicability actually lives, while the schedule still does the part your AD service
-            cannot: refuse the booking.
+            If you already pay for ADlog, AVTRAK or a Tdata subscription, keep it. Leave AD finding
+            off, record compliance here for the ADs it identifies, and let the schedule do the part
+            your AD service cannot: refuse the booking.
           </p>
           <p className="text-muted-foreground">
             Nothing about this is on by default. An organization using {SITE_NAME} for oil changes
@@ -228,8 +227,8 @@ export default function Page() {
         <section className="mt-12 rounded-lg border bg-muted/30 p-6">
           <h2 className="text-xl font-semibold tracking-tight">Try it on one aeroplane</h2>
           <p className="mt-2 text-muted-foreground">
-            {TRIAL_DAYS} days free. Add a tail with its engine and propeller, choose Find them for
-            me, and read the ADs that name it.
+            {TRIAL_DAYS} days free. Add a tail with its engine and propeller, turn on Find the ADs
+            for our aircraft, and read the ADs that name it.
           </p>
           <div className="mt-4 flex flex-wrap gap-3">
             <Button href={signupUrl()} size="lg">

@@ -690,7 +690,7 @@ export const FEATURE_LANDING: Partial<Record<FeatureSlug, FeatureLanding>> = {
       },
       {
         q: "Does it track Airworthiness Directives?",
-        a: "Yes. Choose Find them for me and it lists every AD published since 1995 that names each aircraft's make and model, engine or propeller, and alerts you when a new one does. An owner, admin or technician decides each one, and it never decides for you that one does not apply: that determination belongs to a certificated person. ADs older than 1995 are not in the library. If you run ADlog or AVTRAK, choose Somewhere else, name it, and we list nothing.",
+        a: "Yes. Turn on Find the ADs for our aircraft and it lists every AD published since 1995 that names each aircraft's make and model, engine or propeller, and alerts you when a new one does. An owner, admin or technician decides each one, and it never decides for you that one does not apply: that determination belongs to a certificated person. ADs older than 1995 are not in the library. If you run ADlog or AVTRAK, leave it off and AerScheduler lists nothing.",
       },
       {
         q: "Can my mechanic have access without seeing the money?",
