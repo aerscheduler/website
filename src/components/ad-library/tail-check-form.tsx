@@ -7,7 +7,18 @@ import { CHECK_BASE, checkHref, isTailNumber } from "@/lib/ad-library";
 import { cn } from "@/lib/cn";
 
 /** An N-number in, the aircraft's AD check out. A plain GET form underneath, for no JavaScript. */
-export function TailCheckForm({ defaultValue = "", className, autoFocus = false }: { defaultValue?: string; className?: string; autoFocus?: boolean }) {
+export function TailCheckForm({
+  defaultValue = "",
+  className,
+  autoFocus = false,
+  compact = false,
+}: {
+  defaultValue?: string;
+  className?: string;
+  autoFocus?: boolean;
+  /** A narrow column: a short placeholder and button, so neither is cut off. */
+  compact?: boolean;
+}) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -38,7 +49,7 @@ export function TailCheckForm({ defaultValue = "", className, autoFocus = false 
             autoCapitalize="characters"
             autoComplete="off"
             spellCheck={false}
-            placeholder="N-number, like N172SP"
+            placeholder={compact ? "N172SP" : "N-number, like N172SP"}
             aria-invalid={error ? true : undefined}
             className="h-12 w-full rounded-lg border border-border bg-white pr-3 pl-10 font-mono text-base text-foreground uppercase shadow-sm outline-none placeholder:font-sans placeholder:normal-case placeholder:text-muted-foreground/80 focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
@@ -49,7 +60,7 @@ export function TailCheckForm({ defaultValue = "", className, autoFocus = false 
           className="inline-flex h-12 shrink-0 items-center gap-2 rounded-lg bg-primary px-5 text-sm font-medium text-primary-foreground shadow-sm hover:bg-primary/90"
         >
           {pending && <Loader2 className="size-4 animate-spin" aria-hidden />}
-          {pending ? "Checking" : "Check ADs"}
+          {pending ? "Checking" : compact ? "Check" : "Check ADs"}
         </button>
       </div>
       {error && <p className="mt-2 text-sm text-foreground">{error}</p>}

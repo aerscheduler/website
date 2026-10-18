@@ -104,6 +104,11 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
         description: "FAA Airworthiness Directives by aircraft, engine, propeller and equipment. Free.",
       },
       {
+        href: "/aircraft",
+        label: "Aircraft ownership guides",
+        description: "Every model with 200 or more registered: the fleet, its ADs and the ones that repeat, and what to check before buying.",
+      },
+      {
         href: "/airworthiness-directives/check",
         label: "AD check by N-number",
         description: "Every AD that names one aircraft's airframe and engine, as a printable pre-buy or annual checklist. Free.",

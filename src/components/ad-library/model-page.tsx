@@ -87,6 +87,12 @@ export async function ModelPageView({ segment, slug }: { segment: KindSegment; s
           </p>
         </div>
         <aside className="space-y-4">
+          {segment === "aircraft" && !isMaker && page.fleetCount >= 200 && (
+            <Link href={`/aircraft/${page.slug}`} className="block rounded-lg border border-border bg-white p-4 text-sm hover:border-primary">
+              <span className="font-medium text-brand-surface">{page.name} ownership guide</span>
+              <span className="mt-1 block text-muted-foreground">The US fleet, its engines, the ADs that repeat, and what to check before buying one.</span>
+            </Link>
+          )}
           <div className="rounded-lg border border-border bg-white p-4">
             <FollowForm kind={page.kind} slug={page.slug} name={page.name} />
           </div>

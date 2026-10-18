@@ -13,7 +13,7 @@ export default function robots(): MetadataRoute.Robots {
       // The AD library's search results are the same thin, unbounded set.
       disallow: ["/search", "/airworthiness-directives/search", "/airworthiness-directives/follow"],
     },
-    sitemap: [`${SITE_URL}/sitemap.xml`, `${SITE_URL}/airworthiness-directives/sitemap.xml`],
+    sitemap: [`${SITE_URL}/sitemap.xml`, `${SITE_URL}/airworthiness-directives/sitemap.xml`, `${SITE_URL}/aircraft/sitemap.xml`],
     host: SITE_URL,
   };
 }

@@ -426,6 +426,7 @@ const PAGE_META = {
   // the hub is indexed so search finds it once it ships, and the state pages are
   // added below only when published.
   "/aircraft-tax": { group: "Guides", title: "Aircraft tax by state" },
+  "/aircraft": { group: "Guides", title: "Aircraft ownership guides" },
   "/aircraft-tax/calculator": { group: "Guides", title: "Aircraft sales tax calculator" },
   "/airworthiness-directives/new": { group: "Guides", title: "New Airworthiness Directives" },
   "/airworthiness-directives/search": { group: "Pages", title: "Search the AD library" },
