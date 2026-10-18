@@ -177,6 +177,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const taxEntries: MetadataRoute.Sitemap = TAX_PUBLISHED
     ? [
         { url: `${SITE_URL}${TAX_BASE}`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+        { url: `${SITE_URL}${TAX_BASE}/calculator`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
         ...COUNTRY_LIST.map((c) => ({ url: `${SITE_URL}${countryHref(c)}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.75 })),
         ...ALL_REGIONS.map((r) => ({
           url: `${SITE_URL}${regionHref(r)}`,

@@ -45,6 +45,11 @@ export default function AircraftTaxHub() {
             registration taxes. Each answer quotes the state&apos;s own source.
           </p>
         </header>
+        <p className="mt-6 text-base">
+          <Link href={`${TAX_BASE}/calculator`} className="font-medium text-primary hover:underline">
+            Estimate the tax on an aircraft with the calculator
+          </Link>
+        </p>
         {COUNTRY_LIST.map((c) => (
           <section key={c.code} className="mt-12 space-y-4">
             <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">

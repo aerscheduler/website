@@ -1,4 +1,5 @@
 import { COUNTRIES, PUBLISHED, REGIONS, TOPICS as RAW_TOPICS } from "@/content/aircraft-tax/registry.mjs";
+import type { TaxRegion as RegionData } from "@/content/aircraft-tax/types";
 import { SITE_URL } from "@/lib/site";
 
 /**
@@ -15,11 +16,11 @@ export { PUBLISHED };
 export const TAX_BASE = "/aircraft-tax";
 
 export type TaxCountry = (typeof COUNTRIES)[number];
-export type TaxRegion = (typeof REGIONS)[number];
+export type TaxRegion = RegionData;
 /** The seven topics, typed as the keys every country labels. */
 export type TaxTopic = keyof TaxCountry["labels"];
 export const TOPICS = RAW_TOPICS as TaxTopic[];
-export type TaxFact = TaxRegion["facts"][string];
+export type { TaxFact } from "@/content/aircraft-tax/types";
 export type TaxStatus = "taxable" | "exempt" | "conditional" | "none" | "unclear";
 
 export const COUNTRY_LIST: TaxCountry[] = COUNTRIES.filter((c) => REGIONS.some((r) => r.country === c.code));
@@ -42,6 +43,9 @@ export const STATUS_LABEL: Record<TaxStatus, string> = {
   none: "None",
   unclear: "Not clearly published",
 };
+
+/** For the comparison table, where "Not clearly published" would wrap every cell. */
+export const SHORT_LABEL: Record<TaxStatus, string> = { ...STATUS_LABEL, unclear: "Unclear" };
 
 export const question = (c: TaxCountry, t: TaxTopic, r: TaxRegion) => c.questions[t].replace("{region}", r.name);
 

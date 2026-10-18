@@ -12,7 +12,23 @@ import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const { COUNTRIES, REGIONS, TOPICS } = await import(pathToFileURL(path.join(root, "src/content/aircraft-tax/registry.mjs")).href);
+const dataRoot = path.join(root, "src/content/aircraft-tax");
+const { COUNTRIES, REGIONS: LISTED, TOPICS } = await import(pathToFileURL(path.join(dataRoot, "registry.mjs")).href);
+
+// `node scripts/check-aircraft-tax.mjs us/alabama.mjs us/alaska.mjs` checks
+// those files only, before they are listed in us/index.mjs. With no arguments
+// it checks every listed region, which is what the build runs.
+const files = process.argv.slice(2);
+const REGIONS = files.length
+  ? await Promise.all(files.map(async (f) => (await import(pathToFileURL(path.resolve(dataRoot, f)).href)).default))
+  : LISTED;
+
+/** Statutes often spell numbers out: "ninety (90) days", "one-half percent". */
+const WORDS = {
+  "0.5": ["one-half percent", "one-half of one percent"],
+  "6.5": ["six and five-tenths percent"],
+  10: ["ten"], 20: ["twenty"], 21: ["twenty-one"], 30: ["thirty"], 60: ["sixty"], 90: ["ninety"],
+};
 
 const failures = [];
 const fail = (m) => failures.push(m);
@@ -49,6 +65,61 @@ for (const r of REGIONS) {
       else if (age > MAX_AGE_DAYS) fail(`${where} ${t}: ${s.title} was last checked ${s.checkedOn}, over a year ago; recheck it`);
     }
     for (const text of [f.answer, r.summary]) if (BANNED.test(text)) fail(`${where} ${t}: banned dash in "${text.slice(0, 60)}"`);
+    // Every figure in an answer (a rate, a dollar amount, a day count, a weight)
+    // must appear in one of that answer's quotes. This is the rule that stops a
+    // plausible number from another state or from memory reaching the page.
+    const quoted = f.sources.map((s) => s.quote).join(" ").replace(/,/g, "");
+    for (const n of figures(f.answer)) {
+      const asWords = WORDS[n] ?? [];
+      const found =
+        new RegExp(`(^|[^\\d.])${n.replace(".", "\\.")}(?![\\d])`).test(quoted) || asWords.some((w) => quoted.toLowerCase().includes(w));
+      if (!found) {
+        fail(`${where} ${t}: the answer says ${n}, which no quote for this answer contains`);
+      }
+    }
+  }
+}
+
+/** Figures worth checking: "6", "5,000", "0.5", "$37.50". Years and FAR part numbers are references, not figures. */
+function figures(text) {
+  const out = new Set();
+  for (const m of text.matchAll(/\$?(\d[\d,]*(?:\.\d+)?)/g)) {
+    const n = m[1].replace(/,/g, "").replace(/\.$/, "");
+    const before = text.slice(Math.max(0, m.index - 6), m.index);
+    if (/^(19|20)\d\d$/.test(n)) continue; // a year
+    if (/Parts? $|Part $|Form $|SB $/.test(before)) continue; // a reference, not an amount
+    out.add(n);
+  }
+  return [...out];
+}
+
+// The calculator may only use figures the state's page quotes.
+{
+  const { CALC } = await import(pathToFileURL(path.join(dataRoot, "calc.mjs")).href);
+  const bySlug = new Map(REGIONS.map((r) => [r.slug, r]));
+  const norm = (text) => text.replace(/,/g, "").replace(/(\d+)\.(\d*?)0+(?!\d)/g, (_, a, b) => (b ? `${a}.${b}` : a));
+  for (const [slug, calc] of Object.entries(CALC)) {
+    const r = bySlug.get(slug);
+    if (!r) {
+      if (!files.length) fail(`calc.mjs has ${slug}, which is not a listed region`);
+      continue;
+    }
+    const sources = Object.values(r.facts).flatMap((f) => f.sources);
+    const haystack = norm(sources.map((s) => `${s.title} ${s.quote}`).join(" ")).toLowerCase();
+    const numbers = [];
+    const walk = (v, key) => {
+      if (key === "bandStarts" || key === "note") return;
+      if (typeof v === "number") numbers.push(v);
+      else if (Array.isArray(v)) v.forEach((x) => walk(x));
+      else if (v && typeof v === "object") for (const [k, x] of Object.entries(v)) walk(x, k);
+    };
+    walk(calc);
+    for (const n of numbers) {
+      const str = String(n);
+      const found =
+        new RegExp(`(^|[^\\d.])${str.replace(".", "\\.")}(?![\\d])`).test(haystack) || (WORDS[str] ?? []).some((w) => haystack.includes(w));
+      if (!found) fail(`calc.mjs ${slug}: uses ${str}, which no quoted source for ${r.name} contains`);
+    }
   }
 }
 

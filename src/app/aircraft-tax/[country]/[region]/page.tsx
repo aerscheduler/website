@@ -19,6 +19,7 @@ import {
   regionHref,
   regionsIn,
 } from "@/lib/aircraft-tax";
+import { CALC } from "@/content/aircraft-tax/calc.mjs";
 import { faqJsonLd } from "@/lib/seo";
 
 export const dynamicParams = false;
@@ -72,7 +73,14 @@ export default async function RegionPage({ params }: Props) {
           <p className="text-sm font-medium text-primary">Aircraft tax · {c.name}</p>
           <h1 className="text-3xl font-semibold tracking-tight text-balance text-brand-surface sm:text-4xl">{r.name} aircraft sales and use tax</h1>
           <p className="text-lg leading-relaxed text-pretty text-foreground">{r.summary}</p>
-          <p className="text-sm text-muted-foreground">Every answer below quotes the state&apos;s own source. Last checked {fmtDate(lastChecked(r))}.</p>
+          <p className="text-sm text-muted-foreground">
+            Every answer below quotes the state&apos;s own source. Last checked {fmtDate(lastChecked(r))}.{" "}
+            {CALC[r.slug] && (
+              <Link href={`${TAX_BASE}/calculator?state=${r.slug}`} className="font-medium text-primary hover:underline">
+                Estimate the tax on your aircraft
+              </Link>
+            )}
+          </p>
         </header>
 
         <nav aria-label="On this page" className="mt-8 flex flex-wrap gap-2">

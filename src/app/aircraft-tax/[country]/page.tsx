@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { TaxNotice } from "@/components/aircraft-tax/fact";
@@ -48,6 +49,11 @@ export default async function CountryPage({ params }: Props) {
           quotes the state&apos;s own publication, statute or rule. {regions.length} states so far.
         </p>
       </header>
+      <p className="mt-6 text-base">
+        <Link href={`${TAX_BASE}/calculator`} className="font-medium text-primary hover:underline">
+          Estimate the tax on an aircraft with the calculator
+        </Link>
+      </p>
       <div className="mt-10">
         <TaxMatrix country={c} regions={regions} />
       </div>

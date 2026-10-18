@@ -1,22 +1,14 @@
 import { ExternalLink } from "lucide-react";
 import { cn } from "@/lib/cn";
-import { STATUS_LABEL, fmtDate, type TaxFact, type TaxStatus } from "@/lib/aircraft-tax";
+import { SHORT_LABEL, STATUS_LABEL, fmtDate, type TaxFact, type TaxStatus } from "@/lib/aircraft-tax";
 
-const TONE: Record<TaxStatus, string> = {
-  taxable: "bg-orange-50 text-orange-800 ring-orange-200",
-  exempt: "bg-emerald-50 text-emerald-800 ring-emerald-200",
-  conditional: "bg-violet-50 text-violet-800 ring-violet-200",
-  none: "bg-slate-100 text-slate-700 ring-slate-200",
-  unclear: "bg-slate-100 text-slate-700 ring-slate-200",
-};
-
-/** The one-word verdict for a topic. Status words are the summary, not decoration. */
-export function StatusChip({ status, className }: { status: TaxStatus; className?: string }) {
-  return (
-    <span className={cn("inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold whitespace-nowrap ring-1 ring-inset", TONE[status], className)}>
-      {STATUS_LABEL[status]}
-    </span>
-  );
+/**
+ * The one-word verdict for a topic, as plain text. Tony, 2026-10-18: coloured
+ * badges "scream AI slop", so the status is a word in the type, weighted, never
+ * a pill or a colour.
+ */
+export function StatusText({ status, short = false, className }: { status: TaxStatus; short?: boolean; className?: string }) {
+  return <span className={cn("text-sm font-medium whitespace-nowrap text-brand-surface", className)}>{short ? SHORT_LABEL[status] : STATUS_LABEL[status]}</span>;
 }
 
 /**
@@ -27,11 +19,10 @@ export function StatusChip({ status, className }: { status: TaxStatus; className
 export function Fact({ id, question, fact }: { id: string; question: string; fact: TaxFact }) {
   return (
     <section id={id} className="scroll-mt-24 space-y-3 border-t border-border pt-8">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-xl font-semibold tracking-tight text-balance text-brand-surface">{question}</h2>
-        <StatusChip status={fact.status as TaxStatus} />
-      </div>
-      <p className="leading-relaxed text-foreground">{fact.answer}</p>
+      <h2 className="text-xl font-semibold tracking-tight text-balance text-brand-surface">{question}</h2>
+      <p className="leading-relaxed text-foreground">
+        <StatusText status={fact.status as TaxStatus} className="text-base font-semibold" />. {fact.answer}
+      </p>
       {fact.sources.length > 0 ? (
         <ul className="space-y-3">
           {fact.sources.map((s, i) => (

@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { StatusChip } from "@/components/aircraft-tax/fact";
+import { StatusText } from "@/components/aircraft-tax/fact";
 import { TOPICS, regionHref, type TaxCountry, type TaxRegion, type TaxStatus } from "@/lib/aircraft-tax";
 
 /**
  * Regions down, topics across: the comparison people want before they read one
- * state's page. Each chip links to that answer and its sources.
+ * state's page. Each word links to that answer and its sources.
  */
 export function TaxMatrix({ country, regions }: { country: TaxCountry; regions: TaxRegion[] }) {
   return (
@@ -30,8 +30,8 @@ export function TaxMatrix({ country, regions }: { country: TaxCountry; regions: 
               </th>
               {TOPICS.map((t) => (
                 <td key={t} className="px-3 py-3">
-                  <Link href={`${regionHref(r)}#${t}`} aria-label={`${r.name}: ${country.labels[t]}`}>
-                    <StatusChip status={r.facts[t].status as TaxStatus} />
+                  <Link href={`${regionHref(r)}#${t}`} aria-label={`${r.name}: ${country.labels[t]}`} className="hover:underline">
+                    <StatusText status={r.facts[t].status as TaxStatus} short className="font-normal text-foreground" />
                   </Link>
                 </td>
               ))}
