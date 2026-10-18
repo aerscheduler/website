@@ -171,7 +171,7 @@ export default [
     points: [
       { text: "At least 1 hour of flight training and 1 hour of ground training, covering the Part 91 rules and the maneuvers the instructor chooses.", para: "a" },
       { text: "It must be done since the beginning of the 24th calendar month before the month you fly as pilot in command.", para: "c" },
-      { text: "A checkride or proficiency check for a certificate, rating or operating privilege resets it.", para: "d" },
+      { text: "A practical test or proficiency check given by an examiner, check airman or the military, for a certificate, rating or operating privilege, counts instead. An instrument proficiency check from an instructor does not.", para: "d" },
       { text: "Completing a phase of an FAA pilot proficiency program (WINGS) counts as a flight review.", para: "e" },
       { text: "Flight instructors who met their recent experience requirements skip the hour of ground training.", para: "f" },
       { text: "A student pilot with a current solo endorsement does not need one.", para: "g" },
