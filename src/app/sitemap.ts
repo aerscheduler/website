@@ -4,6 +4,7 @@ import { COMPETITOR_LIST, competitorHref } from "@/lib/competitors";
 import { apiDocRoutes } from "@/lib/developers";
 import { docRoutes } from "@/lib/docs";
 import { PARTS_WITH_PAGES, REG_BASE, REGS, TEXT_AS_OF, partHref, regHref } from "@/lib/regulations";
+import { ALL_REGIONS, COUNTRY_LIST, PUBLISHED as TAX_PUBLISHED, TAX_BASE, countryHref, lastChecked, regionHref } from "@/lib/aircraft-tax";
 import { SITE_URL } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -171,9 +172,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
   ];
 
+  // Aircraft tax by state, only once published (src/content/aircraft-tax/registry.mjs).
+  // lastModified is the date the state's answers were last checked.
+  const taxEntries: MetadataRoute.Sitemap = TAX_PUBLISHED
+    ? [
+        { url: `${SITE_URL}${TAX_BASE}`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+        ...COUNTRY_LIST.map((c) => ({ url: `${SITE_URL}${countryHref(c)}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.75 })),
+        ...ALL_REGIONS.map((r) => ({
+          url: `${SITE_URL}${regionHref(r)}`,
+          lastModified: new Date(lastChecked(r)),
+          changeFrequency: "monthly" as const,
+          priority: 0.7,
+        })),
+      ]
+    : [];
+
   return [
     ...staticEntries,
     ...regulationEntries,
+    ...taxEntries,
     ...featureRoutes,
     ...compareEntries,
     ...apiDocEntries,

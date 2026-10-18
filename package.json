@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "node scripts/sync-openapi.mjs && node scripts/check-docs-auth.mjs && node scripts/check-docs.mjs && node scripts/check-llms.mjs && node scripts/check-regulations.mjs && node --test src/lib/mdx-markdown.test.mjs && node scripts/build-search-index.mjs && next build && node scripts/check-llms.mjs --built",
+    "build": "node scripts/sync-openapi.mjs && node scripts/check-docs-auth.mjs && node scripts/check-docs.mjs && node scripts/check-llms.mjs && node scripts/check-regulations.mjs && node scripts/check-aircraft-tax.mjs && node --test src/lib/mdx-markdown.test.mjs && node scripts/build-search-index.mjs && next build && node scripts/check-llms.mjs --built",
     "dev": "node scripts/build-search-index.mjs && next dev --turbopack",
     "search:index": "node scripts/build-search-index.mjs",
     "start": "next start",
@@ -12,6 +12,7 @@
     "check:docs": "node scripts/check-docs.mjs",
     "check:llms": "node scripts/check-llms.mjs",
     "check:regulations": "node scripts/check-regulations.mjs",
+    "check:aircraft-tax": "node scripts/check-aircraft-tax.mjs",
     "sync:ecfr": "node scripts/sync-ecfr.mjs",
     "test:llms": "node --test src/lib/mdx-markdown.test.mjs",
     "docs:screenshots": "node scripts/capture-docs-screenshots.mjs"

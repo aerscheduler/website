@@ -66,6 +66,8 @@ const nextConfig: NextConfig = {
         // The regulations library's twins: each section and Part page, and the hub.
         { source: "/regulations/:slug([a-z0-9-]+)\\.md", destination: "/md/regulations/:slug" },
         { source: "/regulations.md", destination: "/md/regulations" },
+        // Aircraft tax by state: each region page's twin.
+        { source: "/aircraft-tax/:country([a-z-]+)/:region([a-z-]+)\\.md", destination: "/md/aircraft-tax/:country/:region" },
       ],
       afterFiles: [],
       fallback: [],
@@ -79,6 +81,11 @@ const nextConfig: NextConfig = {
       {
         source: "/md/regulations/:slug",
         destination: "/regulations/:slug.md",
+        permanent: true,
+      },
+      {
+        source: "/md/aircraft-tax/:country/:region",
+        destination: "/aircraft-tax/:country/:region.md",
         permanent: true,
       },
       {

@@ -422,6 +422,10 @@ const PAGE_META = {
   // The regulations library hub. Its section and Part pages are /regulations/[slug],
   // expanded from the registry below.
   "/regulations": { group: "Guides", title: "FAA regulations in plain English" },
+  // Aircraft tax by state. Unlisted until PUBLISHED in src/content/aircraft-tax/registry.mjs;
+  // the hub is indexed so search finds it once it ships, and the state pages are
+  // added below only when published.
+  "/aircraft-tax": { group: "Guides", title: "Aircraft tax by state" },
   "/airworthiness-directives/new": { group: "Guides", title: "New Airworthiness Directives" },
   "/airworthiness-directives/search": { group: "Pages", title: "Search the AD library" },
   "/airworthiness-directives/monthly": { group: "Guides", title: "ADs by month" },
@@ -516,6 +520,27 @@ const interpolate = (text) =>
       keywords: `FAR Part ${part.part} 14 CFR Part ${part.part}`,
       body: "",
     });
+  }
+}
+
+// Aircraft tax by state: one record per state, only once the pages are published.
+{
+  const taxRoot = path.join(root, "src", "content", "aircraft-tax");
+  const { PUBLISHED, REGIONS, COUNTRIES } = await import(pathToFileURL(path.join(taxRoot, "registry.mjs")).href);
+  if (PUBLISHED) {
+    for (const r of REGIONS) {
+      const c = COUNTRIES.find((x) => x.code === r.country);
+      push({
+        id: `aircraft-tax:${c.slug}:${r.slug}`,
+        type: "guide",
+        title: `${r.name} aircraft tax`,
+        href: `/aircraft-tax/${c.slug}/${r.slug}`,
+        path: ["Guides", "Aircraft tax"],
+        description: r.summary,
+        keywords: `${r.name} aircraft sales tax use tax rental flight instruction ${r.code}`,
+        body: "",
+      });
+    }
   }
 }
 
