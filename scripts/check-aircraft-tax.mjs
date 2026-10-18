@@ -23,10 +23,20 @@ const REGIONS = files.length
   ? await Promise.all(files.map(async (f) => (await import(pathToFileURL(path.resolve(dataRoot, f)).href)).default))
   : LISTED;
 
+/** Quotes write figures many ways: "6,000", "6.500%", "four per cent". Fold them to one. */
+const foldFigures = (text) =>
+  text
+    .replace(/,(?=\d{3})/g, "")
+    .replace(/(\d+)\.(\d*?)0+(?!\d)/g, (_, a, b) => (b ? `${a}.${b}` : a))
+    .replace(/per cent/gi, "percent");
+
 /** Statutes often spell numbers out: "ninety (90) days", "one-half percent". */
 const WORDS = {
   "0.5": ["one-half percent", "one-half of one percent"],
-  "6.5": ["six and five-tenths percent"],
+  "3.25": ["three and one-fourth percent"],
+  "5.75": ["five and three-fourths percent"],
+  "6.5": ["six and five-tenths percent", "six and one-half percent"],
+  4: ["four percent"], 6: ["six percent"], 15: ["fifteen"], 6000: ["six thousand"],
   10: ["ten"], 20: ["twenty"], 21: ["twenty-one"], 30: ["thirty"], 60: ["sixty"], 90: ["ninety"],
 };
 
@@ -68,7 +78,7 @@ for (const r of REGIONS) {
     // Every figure in an answer (a rate, a dollar amount, a day count, a weight)
     // must appear in one of that answer's quotes. This is the rule that stops a
     // plausible number from another state or from memory reaching the page.
-    const quoted = f.sources.map((s) => s.quote).join(" ").replace(/,/g, "");
+    const quoted = foldFigures(f.sources.map((s) => s.quote).join(" "));
     for (const n of figures(f.answer)) {
       const asWords = WORDS[n] ?? [];
       const found =
@@ -84,13 +94,23 @@ for (const r of REGIONS) {
 function figures(text) {
   const out = new Set();
   for (const m of text.matchAll(/\$?(\d[\d,]*(?:\.\d+)?)/g)) {
-    const n = m[1].replace(/,/g, "").replace(/\.$/, "");
+    const n = foldFigures(m[1].replace(/,/g, "").replace(/\.$/, ""));
     const before = text.slice(Math.max(0, m.index - 6), m.index);
     if (/^(19|20)\d\d$/.test(n)) continue; // a year
     if (/Parts? $|Part $|Form $|SB $/.test(before)) continue; // a reference, not an amount
     out.add(n);
   }
   return [...out];
+}
+
+// The summary at the top of each page is held to the same rule as the answers:
+// every figure in it must be in one of the state's quotes.
+for (const r of REGIONS) {
+  const all = foldFigures(Object.values(r.facts).flatMap((f) => f.sources.map((s) => s.quote)).join(" "));
+  for (const n of figures(r.summary)) {
+    const found = new RegExp(`(^|[^\\d.])${n.replace(".", "\\.")}(?![\\d])`).test(all) || (WORDS[n] ?? []).some((w) => all.toLowerCase().includes(w));
+    if (!found) fail(`${r.country}/${r.slug} summary: says ${n}, which no quote for the state contains`);
+  }
 }
 
 // The calculator may only use figures the state's page quotes.

@@ -25,7 +25,7 @@
 /** Types are in ./types.d.ts. */
 
 /** Flip to true to list the pages: sitemap, nav, search, llms.txt, and indexing. */
-export const PUBLISHED = false;
+export const PUBLISHED = true;
 
 /** The questions every jurisdiction answers, in page order. Labels come from the country. */
 export const TOPICS = ["buying", "bringingIn", "exemptions", "rental", "instruction", "maintenance", "annual"];
