@@ -69,14 +69,13 @@ export type ModelPage = {
   isMaker: boolean;
   fleetCount: number;
   updatedAt: string;
-  figures: { total: number; notSuperseded: number; superseded: number; repetitive: number; newest: string | null; byYear: { year: number; count: number }[] };
+  figures: { total: number; notSuperseded: number; superseded: number; repetitive: number; newest: string | null };
   ads: AdRow[];
   /** Equipment ADs whose text names this aircraft model (aircraft model pages only). */
   equipment: AdRow[];
 };
 export type LibraryStats = {
   count: number;
-  firstYear: number;
   oldest: string | null;
   newest: string | null;
   onPublicInspection: number;
@@ -100,23 +99,41 @@ async function get<T>(path: string, revalidate = AD_REVALIDATE): Promise<T | nul
 
 const data = <T,>(body: { data: T } | null) => body?.data ?? null;
 
-export const getStats = async () => data(await get<{ data: LibraryStats }>("/stats"));
-export const getAd = async (adNumber: string) => data(await get<{ data: AdFull }>(`/ads/${encodeURIComponent(adNumber)}`));
-export const getPages = async (kind: PageKind) => data(await get<{ data: PageSummary[] }>(`/pages/${kind}`)) ?? [];
-export const getModelPage = async (kind: PageKind, slug: string) => data(await get<{ data: ModelPage }>(`/pages/${kind}/${encodeURIComponent(slug)}`));
-export const getRecent = async (days = 30) => data(await get<{ data: AdRow[] }>(`/recent?days=${days}`)) ?? [];
-export const getMonths = async () => data(await get<{ data: { month: string; count: number }[] }>("/months")) ?? [];
-export const getMonth = async (month: string) => data(await get<{ data: (AdRow & { summary: string | null })[] }>(`/months/${month}`));
+/** A list as the API sends every list: a page of rows and where it sits. */
+type Paged<T> = { data: T[]; pagination: { total: number; limit: number; offset: number; returned: number; hasMore: boolean } };
+
+/** Every row of a list, a page of 1,000 at a time (the aircraft pages run past one). */
+async function all<T>(path: string): Promise<T[] | null> {
+  const out: T[] = [];
+  for (let offset = 0; ; offset += 1000) {
+    const sep = path.includes("?") ? "&" : "?";
+    const page = await get<Paged<T>>(`${path}${sep}limit=1000&offset=${offset}`);
+    if (!page) return offset === 0 ? null : out;
+    out.push(...page.data);
+    if (!page.pagination?.hasMore) return out;
+  }
+}
+
+export const getStats = async () => data(await get<{ data: LibraryStats }>("/coverage"));
+export const getAd = async (adNumber: string) => data(await get<{ data: AdFull }>(`/${encodeURIComponent(adNumber)}`));
+export const getPages = async (kind: PageKind) => (await all<PageSummary>(`/${segmentFor(kind)}`)) ?? [];
+export const getModelPage = async (kind: PageKind, slug: string) => data(await get<{ data: ModelPage }>(`/${segmentFor(kind)}/${encodeURIComponent(slug)}`));
+export const getRecent = async (days = 30) => (await all<AdRow>(`/recent?days=${days}`)) ?? [];
+export const getMonths = async () => (await all<{ month: string; count: number }>("/months")) ?? [];
+export const getMonth = async (month: string) => all<AdRow & { summary: string | null }>(`/months/${month}`);
 export const getSitemap = async () =>
   data(await get<{ data: { ads: { adNumber: string; updatedAt: string; readable: boolean }[]; pages: { kind: PageKind; slug: string; updatedAt: string }[] } }>("/sitemap"));
-export async function searchAds(q: string, page = 1, type?: string) {
-  const params = new URLSearchParams({ q, page: String(page), pageSize: "25" });
-  if (type) params.set("type", type);
-  return (await get<{ data: AdRow[]; total: number; page: number; pageSize: number }>(`/search?${params}`, 300)) ?? { data: [], total: 0, page, pageSize: 25 };
+
+/** Search results a page at a time: page 1 is the first 25. */
+export const SEARCH_PAGE_SIZE = 25;
+export async function searchAds(q: string, page = 1) {
+  const params = new URLSearchParams({ q, limit: String(SEARCH_PAGE_SIZE), offset: String((page - 1) * SEARCH_PAGE_SIZE) });
+  const res = await get<Paged<AdRow>>(`?${params}`, 300);
+  return { data: res?.data ?? [], total: res?.pagination.total ?? 0 };
 }
 
 /** The API's own address for a page's CSV, which needs no account. */
-export const csvHref = (kind: string, slug: string) => `${API_URL}/public${AD_BASE}/pages/${kind}/${slug}.csv`;
+export const csvHref = (kind: string, slug: string) => `${API_URL}/public${AD_BASE}/${segmentFor(kind)}/${slug}.csv`;
 export const apiBase = `${API_URL}/public${AD_BASE}`;
 
 /** Dates are UTC days: formatted in UTC, or Oct 6 reads Oct 5 in America. */
