@@ -1,6 +1,6 @@
 <Summary>
 Open **Messages** (the chat button in the bottom-right corner of every console page, or the
-bell in the console's top bar or on Home in the app), then the pencil for a new message. Pick one person for a direct conversation or several for a group. On a
+bell in the console's top bar or on Home in the app), then the pencil for a new message. Pick one person for a direct conversation, several for a group, or a people group for the conversation that follows it. On a
 booking, use its **Conversation** card to message everyone on it. Type **@** to mention a
 person, an aircraft, a booking or a work order.
 </Summary>
@@ -11,6 +11,7 @@ person, an aircraft, a booking or a work order.
 |---|---|---|
 | **Direct** | You and one other person | Only the two of you |
 | **Group** | The people you picked | Only the people in it |
+| **People group** | Everyone in one of your organization's people groups, joining and leaving with it | Only the people in it |
 | **Booking** | Everyone on the booking | Everyone on the booking, plus owners, admins and dispatchers |
 
 Direct messages and groups are private, admins included. A booking conversation follows the
@@ -31,7 +32,8 @@ the app, tap the bell on Home, then **Messages**, or **+** on Home, then **New M
 <Step n={2} title="Choose who it is with">
 Click the pencil beside search (or **New message** in the **+** menu), then type names in **To** and pick people from the list. One
 person opens your direct conversation with them (there is only ever one). Two or more start a
-group, and you can give it a name.
+group, and you can give it a name. People groups you are in are listed above the people
+(owners, admins and dispatchers see every people group): pick one to open its conversation.
 </Step>
 <Step n={3} title="Write and send">
 Press **Enter** to send in the console, and **Shift+Enter** for a new line. In the app, tap
@@ -85,6 +87,24 @@ asked for and whether it has been invoiced or paid; only the people who can open
 see it. An aircraft or a work order comes up again and again in a conversation, so its card
 sits under the newest message that mentions it, showing where it stands now; earlier mentions
 are just the link.
+
+## Message a people group
+
+People groups are the ones in Settings → Groups (the same groups that carry currency rules
+and invitations). Type a group's name in **To** and pick it, and Messages opens the
+conversation for that group, starting it the first time. There is only ever one per group.
+
+It follows the group:
+
+- **People:** whoever an admin adds to the group in Settings joins the conversation, and whoever
+  is taken out leaves it. One line in the conversation says who joined and who left. The person
+  who started it, and owners, admins and dispatchers who joined in, stay. As in any group,
+  somebody who joins reads what is said from then on.
+- **Name:** it is named after the group, and renaming the group renames it.
+- **No Leave and no Add people:** change the group in Settings instead, or **Mute** the
+  conversation to stop hearing about it.
+- **Deleting the group** turns the conversation into an ordinary group with the same people and
+  name, which you can then edit like any other.
 
 ## Name a group, change its photo and its people
 
@@ -163,7 +183,8 @@ console or the app first, no email goes out.
 - **Quiet one conversation:** open it, click its name at the top, then **Mute**. In the app,
   use the gear. Muted conversations still count as unread, they just never push or email.
 - **Leave a group:** click its name at the top, then **Leave**. Somebody still in it can add
-  you back.
+  you back. A people group's conversation has no Leave: mute it, or ask an admin to take you
+  out of the group.
 
 Clicking a conversation's name also shows who is in it, a link to the booking or the person's
 profile, and every record mentioned in it. In the console you can also right-click a

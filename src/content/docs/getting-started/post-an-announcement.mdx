@@ -1,14 +1,16 @@
 <Summary>
 <Where app="web">Operations → Announcements → New announcement</Where>. Enter a title and a
-message, optionally set an expiry, and post. Members see it on Home until they tap Got it.
+message, optionally set an expiry, choose who it is for (everyone, some roles, or some people
+groups), and post. Members see it on Home until they tap Got it.
 After that it stays on the announcements page. Those with the iOS or Android app can get a
 push.
 </Summary>
 
 <Roles>Owners, Admins</Roles>
 
-Use this for anything the whole school needs to know: a runway closure, a schedule change, a
-new checklist, or a reminder about paperwork.
+Use this for anything the organization needs to know: a runway closure, a schedule change, a
+new checklist, or a reminder about paperwork. For news only some people need, address it to
+their role or their people group.
 
 ## Post one
 
@@ -26,9 +28,16 @@ new checklist, or a reminder about paperwork.
     Leave Expires as Never to keep the notice until you delete it. Expired notices leave the
     live board.
   </Step>
-  <Step n={4} title="Click Post announcement">
-    The notice appears on the board immediately. Members with push enabled and the iOS or
-    Android app installed get an alert.
+  <Step n={4} title="Choose who it is for">
+    <strong>Who it's for</strong> starts on Everyone. Pick roles (Students, Instructors, Renters,
+    Dispatchers, Technicians) and people groups from Settings → Groups to narrow it. A person sees
+    the notice if they hold any role or are in any group you picked. Owners and admins always see
+    every notice. In the app, it is the <strong>Who it's for</strong> row on the Create sheet.
+  </Step>
+  <Step n={5} title="Click Post announcement">
+    The notice appears on the board immediately, tagged with the roles and groups it is for.
+    The people it is for get an alert if they have push enabled and the iOS or Android app.
+    Nobody else sees it: not on Home, not on the board, not in search.
   </Step>
 </Steps>
 
@@ -42,12 +51,13 @@ in the app) until an admin deletes it or it expires.
 
 <Callout type="note">
 Got it is not a delete. Other people still see the notice on Home until they mark it
-themselves. If the school never takes the notice down, this is how it leaves Home.
+themselves. If an admin never takes the notice down, this is how it leaves Home.
 </Callout>
 
 ## Edit or delete
 
-Open the menu on a notice and choose Edit or Delete. Deleting removes it for everyone.
+Open the menu on a notice and choose Edit or Delete. Edit can also change who it is for.
+Deleting removes it for everyone.
 
 ## Related
 
