@@ -13,19 +13,19 @@ import { useMemo, useState } from "react";
 type Field = { key: string; label: string; unit: string; placeholder: string; hint?: string };
 
 const VARIABLE: Field[] = [
-  { key: "fuelBurn", label: "Fuel burn", unit: "gal/hr", placeholder: "Like 9.5", hint: "Typical cruise; your POH and how you fly decide it." },
-  { key: "fuelPrice", label: "Fuel price", unit: "$/gal", placeholder: "Like 7.00" },
-  { key: "overhaulCost", label: "Engine overhaul", unit: "$", placeholder: "Like 40,000", hint: "A quote from an engine shop." },
-  { key: "tbo", label: "Hours to overhaul", unit: "hr", placeholder: "Like 2,000", hint: "The engine maker's published time between overhauls." },
-  { key: "maintenance", label: "Maintenance reserve", unit: "$/hr", placeholder: "Like 25", hint: "Everything else that wears: tires, brakes, avionics, the unexpected." },
+  { key: "fuelBurn", label: "Fuel burn", unit: "gal/hr", placeholder: "9.5", hint: "Typical cruise; your POH and how you fly decide it." },
+  { key: "fuelPrice", label: "Fuel price", unit: "$/gal", placeholder: "0.00" },
+  { key: "overhaulCost", label: "Engine overhaul", unit: "$", placeholder: "0.00", hint: "A quote from an engine shop." },
+  { key: "tbo", label: "Hours to overhaul", unit: "hr", placeholder: "2000", hint: "The engine maker's published time between overhauls." },
+  { key: "maintenance", label: "Maintenance reserve", unit: "$/hr", placeholder: "0.00", hint: "Everything else that wears: tires, brakes, avionics, the unexpected." },
 ];
 
 const FIXED: Field[] = [
-  { key: "insurance", label: "Insurance", unit: "$/yr", placeholder: "Like 2,400" },
-  { key: "hangar", label: "Hangar or tiedown", unit: "$/yr", placeholder: "Like 4,800" },
-  { key: "annual", label: "Annual inspection", unit: "$/yr", placeholder: "Like 2,500" },
-  { key: "loan", label: "Loan payments", unit: "$/yr", placeholder: "Like 12,000" },
-  { key: "other", label: "Everything else", unit: "$/yr", placeholder: "Like 1,000", hint: "Subscriptions, database updates, the property tax some states charge." },
+  { key: "insurance", label: "Insurance", unit: "$/yr", placeholder: "0.00" },
+  { key: "hangar", label: "Hangar or tiedown", unit: "$/yr", placeholder: "0.00" },
+  { key: "annual", label: "Annual inspection", unit: "$/yr", placeholder: "0.00" },
+  { key: "loan", label: "Loan payments", unit: "$/yr", placeholder: "0.00" },
+  { key: "other", label: "Everything else", unit: "$/yr", placeholder: "0.00", hint: "Subscriptions, database updates, the property tax some states charge." },
 ];
 
 const money = (n: number) => `$${Math.round(n).toLocaleString("en-US")}`;
@@ -81,7 +81,7 @@ export function CostEstimator({ model, fuelBurn, tbo, engine }: { model: string;
       <div className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
         <div className="space-y-4">
           <p className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">Per hour flown</p>
-          {input({ key: "hours", label: "Hours flown a year", unit: "hr/yr", placeholder: "Like 100" })}
+          {input({ key: "hours", label: "Hours flown a year", unit: "hr/yr", placeholder: "100" })}
           {VARIABLE.map(input)}
         </div>
         <div className="space-y-4">
