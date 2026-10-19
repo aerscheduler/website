@@ -14884,6 +14884,16 @@
               }
             }
           },
+          "400": {
+            "description": "An expiry that is not a date, already past, or longer than the template allows; or an instructor endorsing themselves.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
           "401": {
             "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
             "content": {
@@ -14952,7 +14962,7 @@
                   "expiresAt": {
                     "type": "string",
                     "format": "date-time",
-                    "description": "Defaults from the template , 90 days for a solo endorsement. Omit for one that does not expire."
+                    "description": "Defaults from the template , 90 days for a solo endorsement. Omit for one that does not expire. Must be in the future, and no later than the template's own expiry: a 90-day solo can be shortened, not stretched."
                   },
                   "enrollmentId": {
                     "type": "integer",
@@ -43321,6 +43331,324 @@
               },
               "additionalProperties": true
             }
+          },
+          "safety": {
+            "description": "Its accident record, from the NTSB's aviation accident database (accidents, not incidents; homebuilts left out). Counts, not rates: nobody publishes the hours each model flies. Refreshed monthly.",
+            "properties": {
+              "since": {
+                "type": "integer",
+                "description": "The first year counted."
+              },
+              "accidents": {
+                "type": "integer",
+                "description": "Accidents since then."
+              },
+              "fatal": {
+                "type": "integer",
+                "description": "Of those, fatal."
+              },
+              "fatalities": {
+                "type": "integer",
+                "description": "People killed."
+              },
+              "destroyed": {
+                "type": "integer",
+                "description": "Aircraft destroyed."
+              },
+              "events": {
+                "type": "array",
+                "description": "Defining events, most common first.",
+                "items": {
+                  "type": "object",
+                  "description": "An event.",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "As the NTSB names it, abbreviations written out.",
+                      "example": "Loss of control in flight"
+                    },
+                    "count": {
+                      "type": "integer",
+                      "description": "Accidents."
+                    }
+                  },
+                  "additionalProperties": true
+                }
+              },
+              "phases": {
+                "type": "array",
+                "description": "The phase of flight of each defining event.",
+                "items": {
+                  "type": "object",
+                  "description": "A phase.",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Phase.",
+                      "example": "Landing"
+                    },
+                    "count": {
+                      "type": "integer",
+                      "description": "Accidents."
+                    }
+                  },
+                  "additionalProperties": true
+                }
+              },
+              "byYear": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "description": "A year.",
+                  "properties": {
+                    "year": {
+                      "type": "integer",
+                      "description": "Year."
+                    },
+                    "accidents": {
+                      "type": "integer",
+                      "description": "Accidents."
+                    },
+                    "fatal": {
+                      "type": "integer",
+                      "description": "Fatal."
+                    }
+                  },
+                  "additionalProperties": true
+                }
+              },
+              "recent": {
+                "type": "array",
+                "description": "The latest accidents.",
+                "items": {
+                  "type": "object",
+                  "description": "An accident.",
+                  "properties": {
+                    "ntsbNo": {
+                      "type": "string",
+                      "description": "The NTSB case number.",
+                      "example": "CEN24FA073"
+                    },
+                    "date": {
+                      "type": "string",
+                      "description": "Date.",
+                      "format": "date"
+                    },
+                    "city": {
+                      "description": "City.",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "state": {
+                      "description": "State.",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "injury": {
+                      "description": "Highest injury.",
+                      "enum": [
+                        "fatal",
+                        "serious",
+                        "minor",
+                        "none",
+                        null
+                      ],
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "fatalities": {
+                      "type": "integer",
+                      "description": "People killed."
+                    },
+                    "damage": {
+                      "description": "Damage.",
+                      "enum": [
+                        "destroyed",
+                        "substantial",
+                        "minor",
+                        null
+                      ],
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "event": {
+                      "description": "The defining event.",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "phase": {
+                      "description": "Its phase of flight.",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "additionalProperties": true
+                }
+              },
+              "asOf": {
+                "description": "When it was last refreshed.",
+                "format": "date-time",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": true,
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "problems": {
+            "description": "What mechanics and operators reported failing, from the FAA's Service Difficulty Reports over ten years. Counts of reports, not failure rates: most of general aviation reports voluntarily. Refreshed monthly.",
+            "properties": {
+              "since": {
+                "type": "integer",
+                "description": "The first year counted."
+              },
+              "reports": {
+                "type": "integer",
+                "description": "Reports."
+              },
+              "systems": {
+                "type": "array",
+                "description": "Systems reported most, by JASC code.",
+                "items": {
+                  "type": "object",
+                  "description": "A system.",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "description": "JASC code.",
+                      "example": "8530"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Its name.",
+                      "example": "Reciprocating Engine Cylinder Section"
+                    },
+                    "count": {
+                      "type": "integer",
+                      "description": "Reports."
+                    }
+                  },
+                  "additionalProperties": true
+                }
+              },
+              "parts": {
+                "type": "array",
+                "description": "Parts and conditions reported most.",
+                "items": {
+                  "type": "object",
+                  "description": "A part.",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Part.",
+                      "example": "Pushrod"
+                    },
+                    "condition": {
+                      "description": "Condition.",
+                      "example": "worn",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "count": {
+                      "type": "integer",
+                      "description": "Reports."
+                    }
+                  },
+                  "additionalProperties": true
+                }
+              },
+              "byYear": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "description": "A year.",
+                  "properties": {
+                    "year": {
+                      "type": "integer",
+                      "description": "Year."
+                    },
+                    "reports": {
+                      "type": "integer",
+                      "description": "Reports."
+                    }
+                  },
+                  "additionalProperties": true
+                }
+              },
+              "recent": {
+                "type": "array",
+                "description": "The latest reports, in the reporter's words.",
+                "items": {
+                  "type": "object",
+                  "description": "A report.",
+                  "properties": {
+                    "date": {
+                      "type": "string",
+                      "description": "Date.",
+                      "format": "date"
+                    },
+                    "system": {
+                      "description": "System.",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "part": {
+                      "description": "Part.",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "condition": {
+                      "description": "Condition.",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "text": {
+                      "type": "string",
+                      "description": "What was found, up to 400 characters."
+                    }
+                  },
+                  "additionalProperties": true
+                }
+              },
+              "asOf": {
+                "description": "When it was last refreshed.",
+                "format": "date-time",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": true,
+            "type": [
+              "object",
+              "null"
+            ]
           }
         },
         "additionalProperties": true
