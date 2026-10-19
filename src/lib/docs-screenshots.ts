@@ -1445,7 +1445,7 @@ export const SCREENSHOTS: ScreenshotSpec[] = [
       '[role="row"][aria-label^="Test Student, "][aria-label*="Part 141"]',
       'nav[aria-label="Enrollment"] button:has-text("Lessons")',
       // A record that is both signed and countersigned, so the dialog is offered at all.
-      'div:has(> div > span:has-text("Basic instrument manoeuvres")) button:has-text("Amend")',
+      'div:has(> div > span:has-text("Basic instrument maneuvers")) button:has-text("Amend")',
       "fill:#amend-reason=Hobbs read 1.4, not 1.6. Corrected against the dispatch sheet.",
     ],
     dataState:
