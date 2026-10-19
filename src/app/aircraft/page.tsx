@@ -28,6 +28,10 @@ export default async function GuidesPage() {
         <Link href={AD_BASE} className="text-primary hover:underline">
           AD library
         </Link>
+        . Weighing two? See the{" "}
+        <Link href="/aircraft/compare" className="text-primary hover:underline">
+          comparisons
+        </Link>
         . Looking at one aircraft? Use the{" "}
         <Link href={CHECK_BASE} className="text-primary hover:underline">
           AD check by N-number

@@ -427,6 +427,7 @@ const PAGE_META = {
   // added below only when published.
   "/aircraft-tax": { group: "Guides", title: "Aircraft tax by state" },
   "/aircraft": { group: "Guides", title: "Aircraft ownership guides" },
+  "/aircraft/compare": { group: "Guides", title: "Aircraft compared side by side" },
   "/aircraft-tax/calculator": { group: "Guides", title: "Aircraft sales tax calculator" },
   "/airworthiness-directives/new": { group: "Guides", title: "New Airworthiness Directives" },
   "/airworthiness-directives/search": { group: "Pages", title: "Search the AD library" },

@@ -1,6 +1,7 @@
 import { adAbout, adHref, adPublished, adTitle, CHECK_BASE, fmt, pageHref, PRODUCT_LABEL, type AdBlock, type AdFull } from "@/lib/ad-library";
 import { defaultTbo, FUEL_BURN, guideHref, guideTitle, share, type Guide } from "@/lib/aircraft-guides";
 import { SITE_URL } from "@/lib/site";
+import { compareHref, compareRows, differences, pairTitle } from "@/lib/aircraft-compare";
 
 /**
  * The Markdown copies of an AD page and an aircraft ownership guide, for AI assistants and
@@ -149,5 +150,28 @@ export function guideMarkdown(g: Guide): string {
   if (g.variants.length) {
     out.push(`## The rest of the ${g.family} family`, "", ...g.variants.map((v) => `- [${v.nickname ? `${v.name} ${v.nickname}` : v.name}](${abs(v.guide ? guideHref(v.slug) : pageHref("aircraft", v.slug))}): ${fmt(v.fleetCount)} registered`), "");
   }
+  return tidy(out);
+}
+
+export function compareMarkdown(a: Guide, b: Guide): string {
+  const rows = compareRows(a, b);
+  const out = [
+    `# ${pairTitle(a, b)}`,
+    "",
+    `Page: ${abs(compareHref(a.slug, b.slug))}`,
+    `Guides: ${abs(guideHref(a.slug))}, ${abs(guideHref(b.slug))}`,
+    "",
+    "## Where they differ",
+    "",
+    ...differences(a, b).map((d) => `- ${d}`),
+    "",
+    "## Side by side",
+    "",
+    `| | ${guideTitle(a)} | ${guideTitle(b)} |`,
+    "| --- | --- | --- |",
+    ...rows.map((r) => `| ${r.label} | ${r.a} | ${r.b} |`),
+    "",
+    "Report and accident counts are not rates: the hours each model flies are not published. Sources: the FAA aircraft registry, Airworthiness Directives and Service Difficulty Reports, and the NTSB aviation accident database.",
+  ];
   return tidy(out);
 }

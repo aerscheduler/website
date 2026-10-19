@@ -8,8 +8,9 @@ import { AdList } from "@/components/ad-library/ad-list";
 import { TailCheckForm } from "@/components/ad-library/tail-check-form";
 import { AD_BASE, CHECK_BASE, fmt, pageHref } from "@/lib/ad-library";
 import { CostEstimator } from "@/components/aircraft-guides/cost-estimator";
-import { defaultTbo, FUEL_BURN, getGuide, GUIDE_BASE, guideHref, guideTitle, share } from "@/lib/aircraft-guides";
+import { defaultTbo, FUEL_BURN, getGuide, getGuides, GUIDE_BASE, guideHref, guideTitle, share } from "@/lib/aircraft-guides";
 import { faqJsonLd } from "@/lib/seo";
+import { pairsFor } from "@/lib/aircraft-compare";
 import { signupUrl } from "@/lib/site";
 
 /**
@@ -47,6 +48,8 @@ export default async function GuidePage({ params }: Props) {
   const engineAds = engines.reduce((n, e) => n + (e.ads?.current ?? 0), 0);
   const p = g.problems;
   const sf = g.safety;
+  const names = new Map((await getGuides()).map((x) => [x.slug, x]));
+  const compareWith = pairsFor(g.slug).filter((p) => names.has(p.other));
 
   const faqs = [
     { q: `How many ${g.name}s are registered in the US?`, a: `${fmt(g.fleetCount)}, in the FAA aircraft registry.` },
@@ -300,6 +303,19 @@ export default async function GuidePage({ params }: Props) {
               </li>
             </ol>
           </section>
+
+          {compareWith.length > 0 && (
+            <section className="space-y-3">
+              <h2 id="compare" className="scroll-mt-24 text-2xl font-semibold tracking-tight text-brand-surface">Compare it with</h2>
+              <div className="flex flex-wrap gap-2">
+                {compareWith.map((p) => (
+                  <Link key={p.href} href={p.href} className="rounded-full border border-border bg-white px-3 py-1 text-sm hover:border-primary hover:text-primary">
+                    {g.name} vs {names.get(p.other)?.name ?? p.other}
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
 
           {g.variants.length > 0 && (
             <section className="space-y-3">

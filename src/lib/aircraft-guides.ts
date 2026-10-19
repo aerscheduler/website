@@ -68,7 +68,7 @@ export const FUEL_BURN: Record<string, number> = {
   "cessna-152": 6, "cessna-140": 5, "cessna-172m": 8, "cessna-172n": 8, "cessna-172p": 8, "cessna-172r": 8.5, "cessna-172s": 9,
   "cessna-182p": 12.5, "cessna-182q": 12.5, "cessna-182t": 13, "piper-pa-28-140": 8, "piper-pa-28-151": 8, "piper-pa-28-161": 8.5,
   "piper-pa-28-180": 9.5, "piper-pa-28-181": 9.5, "piper-j3c-65": 4, "piper-pa-18-150": 8, "aeronca-7ac": 4.5, "cirrus-sr20": 11,
-  "cirrus-sr22": 17, "mooney-m20j": 9.5, "beechcraft-a36": 15, "diamond-da40": 9, "robinson-r44": 15,
+  "cirrus-sr22": 17, "mooney-m20j": 9.5, "beechcraft-a36": 15, "diamond-da-40": 9, "robinson-r44": 15,
 };
 
 /**
