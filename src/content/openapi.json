@@ -137,6 +137,10 @@
       "description": "Health and status."
     },
     {
+      "name": "Aircraft guides",
+      "description": "Ownership guides per aircraft model (www.aerscheduler.com/aircraft): the FAA registry's view of the US fleet and the model's ADs. No account and no key."
+    },
+    {
       "name": "AD library",
       "description": "The public library of FAA Airworthiness Directives (www.aerscheduler.com/airworthiness-directives): search, one AD, pages by aircraft, engine, propeller and equipment, CSV. No account and no key."
     },
@@ -34910,6 +34914,197 @@
         ]
       }
     },
+    "/public/aircraft": {
+      "get": {
+        "tags": [
+          "Aircraft guides"
+        ],
+        "summary": "Models with an ownership guide",
+        "description": "Every aircraft model with at least 200 US registrations, most registered first: www.aerscheduler.com/aircraft. Unauthenticated: no account and no key. Cached for five minutes; 3,000 requests per 5 minutes per address.",
+        "responses": {
+          "200": {
+            "description": "The models.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/AircraftGuideSummary"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "listAircraftGuides",
+        "security": [],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "description": "Rows to return, 1,1000. Defaults to 1000; a larger value is clamped rather than rejected."
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "description": "Rows to skip, for paging. Defaults to 0."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to order by before paging, as a dot path into the row , `total`, `user.firstName`. Omit to keep the endpoint's own order. Numbers and ISO timestamps order as numbers and instants, not as text, and empty values always sort last regardless of direction. Ordering happens before the page is cut, so it orders the whole collection rather than the page you are holding."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "`asc` (default) or `desc`. Only meaningful with `sort`."
+          }
+        ]
+      }
+    },
+    "/public/aircraft/{slug}": {
+      "get": {
+        "tags": [
+          "Aircraft guides"
+        ],
+        "summary": "One model's ownership guide",
+        "description": "Its US fleet from the FAA registry (years built, engines, seats), its ADs in figures with the repeat-action ones listed, its engines' ADs, and the other models in its family: www.aerscheduler.com/aircraft/{slug}. Rebuilt daily. Unauthenticated: no account and no key. Cached for five minutes; 3,000 requests per 5 minutes per address.",
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/AircraftGuide"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No token, an expired token, a malformed one, or a session token naming a membership that is no longer yours (\"Your session is out of date\"). Sign in again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated, but not allowed to do this.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No guide for that model.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. `Retry-After` says how long to wait.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getAircraftGuide",
+        "security": [],
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The model, as in `cessna-172s`."
+          }
+        ]
+      }
+    },
     "/public/airworthiness-directives/coverage": {
       "get": {
         "tags": [
@@ -42807,6 +43002,325 @@
               }
             },
             "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "AircraftGuideSummary": {
+        "type": "object",
+        "description": "A model with an ownership guide.",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "description": "The guide, as in www.aerscheduler.com/aircraft/{slug}.",
+            "example": "cessna-172s"
+          },
+          "name": {
+            "type": "string",
+            "description": "The model.",
+            "example": "Cessna 172S"
+          },
+          "nickname": {
+            "description": "What pilots call it, when one name covers the designation.",
+            "example": "Skyhawk SP",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "maker": {
+            "type": "string",
+            "description": "The maker.",
+            "example": "Cessna"
+          },
+          "fleetCount": {
+            "type": "integer",
+            "description": "US registrations."
+          },
+          "adCount": {
+            "type": "integer",
+            "description": "ADs that name its airframe."
+          },
+          "oldest": {
+            "description": "About the oldest year built.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "newest": {
+            "description": "About the newest year built.",
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": true
+      },
+      "AircraftGuide": {
+        "type": "object",
+        "description": "One model's ownership guide: its fleet, its ADs, its engines' ADs and its family.",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "description": "The guide.",
+            "example": "cessna-172s"
+          },
+          "name": {
+            "type": "string",
+            "description": "The model.",
+            "example": "Cessna 172S"
+          },
+          "nickname": {
+            "description": "What pilots call it.",
+            "example": "Skyhawk SP",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "maker": {
+            "type": "string",
+            "description": "The maker.",
+            "example": "Cessna"
+          },
+          "designation": {
+            "type": "string",
+            "description": "The model designation ADs use.",
+            "example": "172S"
+          },
+          "family": {
+            "type": "string",
+            "description": "Its family.",
+            "example": "172"
+          },
+          "fleetCount": {
+            "type": "integer",
+            "description": "US registrations."
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "When the guide's figures were last rebuilt.",
+            "format": "date-time"
+          },
+          "profile": {
+            "description": "The FAA registry's view of the model's US fleet. Counts only.",
+            "properties": {
+              "years": {
+                "description": "Year built: about the oldest and newest (1st and 99th percentile, past the registry's typos), and the middle half.",
+                "properties": {
+                  "known": {
+                    "type": "integer",
+                    "description": "Aircraft whose year is recorded."
+                  },
+                  "oldest": {
+                    "type": "integer",
+                    "description": "About the oldest."
+                  },
+                  "newest": {
+                    "type": "integer",
+                    "description": "About the newest."
+                  },
+                  "p25": {
+                    "type": "integer",
+                    "description": "A quarter were built by this year."
+                  },
+                  "median": {
+                    "type": "integer",
+                    "description": "Half were built by this year."
+                  },
+                  "p75": {
+                    "type": "integer",
+                    "description": "Three quarters were built by this year."
+                  }
+                },
+                "additionalProperties": true,
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "engines": {
+                "type": "array",
+                "description": "Engines installed on 2% of the fleet or more, most common first.",
+                "items": {
+                  "type": "object",
+                  "description": "An engine.",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "The engine family.",
+                      "example": "Lycoming IO-360"
+                    },
+                    "slug": {
+                      "description": "Its AD library page.",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "count": {
+                      "type": "integer",
+                      "description": "Aircraft with it."
+                    }
+                  },
+                  "additionalProperties": true
+                }
+              },
+              "seats": {
+                "description": "The most common seat count.",
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "gear": {
+                "description": "The most common gear, when the registry records it.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "engineType": {
+                "description": "The most common engine type.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "category": {
+                "description": "The most common category.",
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": true,
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "ads": {
+            "type": "object",
+            "description": "Its airframe ADs.",
+            "properties": {
+              "listed": {
+                "type": "integer",
+                "description": "ADs that name its airframe."
+              },
+              "current": {
+                "type": "integer",
+                "description": "Of those, published and not superseded."
+              },
+              "superseded": {
+                "type": "integer",
+                "description": "Of those, superseded."
+              },
+              "repetitive": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PublicAirworthinessDirective"
+                },
+                "description": "Current ADs with a repeat action, newest first: the ones an owner keeps paying for."
+              },
+              "newest": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PublicAirworthinessDirective"
+                },
+                "description": "The five newest current ADs."
+              },
+              "equipment": {
+                "type": "integer",
+                "description": "Equipment ADs that name the model."
+              }
+            },
+            "additionalProperties": true
+          },
+          "engines": {
+            "type": "array",
+            "description": "The engines installed, as in `profile.engines`, each with its current and repeat-action AD counts.",
+            "items": {
+              "type": "object",
+              "description": "An engine.",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The engine family."
+                },
+                "slug": {
+                  "description": "Its AD library page.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "count": {
+                  "type": "integer",
+                  "description": "Aircraft with it."
+                },
+                "ads": {
+                  "description": "Its ADs.",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Page name."
+                    },
+                    "current": {
+                      "type": "integer",
+                      "description": "Current ADs."
+                    },
+                    "repetitive": {
+                      "type": "integer",
+                      "description": "Of those, with a repeat action."
+                    }
+                  },
+                  "additionalProperties": true,
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "variants": {
+            "type": "array",
+            "description": "Other models in the family, most registered first.",
+            "items": {
+              "type": "object",
+              "description": "A model.",
+              "properties": {
+                "slug": {
+                  "type": "string",
+                  "description": "Its page."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "The model."
+                },
+                "nickname": {
+                  "description": "What pilots call it.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "fleetCount": {
+                  "type": "integer",
+                  "description": "US registrations."
+                },
+                "guide": {
+                  "type": "boolean",
+                  "description": "It has a guide."
+                }
+              },
+              "additionalProperties": true
+            }
           }
         },
         "additionalProperties": true

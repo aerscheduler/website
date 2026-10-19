@@ -7,7 +7,8 @@ import { JsonLd } from "@/components/json-ld";
 import { AdList } from "@/components/ad-library/ad-list";
 import { TailCheckForm } from "@/components/ad-library/tail-check-form";
 import { AD_BASE, CHECK_BASE, fmt, pageHref } from "@/lib/ad-library";
-import { getGuide, GUIDE_BASE, guideHref, guideTitle, share } from "@/lib/aircraft-guides";
+import { CostEstimator } from "@/components/aircraft-guides/cost-estimator";
+import { defaultTbo, FUEL_BURN, getGuide, GUIDE_BASE, guideHref, guideTitle, share } from "@/lib/aircraft-guides";
 import { faqJsonLd } from "@/lib/seo";
 import { signupUrl } from "@/lib/site";
 
@@ -44,11 +45,29 @@ export default async function GuidePage({ params }: Props) {
   const engines = g.engines;
   const main = engines[0];
   const engineAds = engines.reduce((n, e) => n + (e.ads?.current ?? 0), 0);
+  const p = g.problems;
+  const sf = g.safety;
 
   const faqs = [
     { q: `How many ${g.name}s are registered in the US?`, a: `${fmt(g.fleetCount)}, in the FAA aircraft registry.` },
     ...(y ? [{ q: `When was the ${g.name} built?`, a: `From about ${y.oldest} to ${y.newest}. Half of those registered today were built by ${y.median}.` }] : []),
     ...(main ? [{ q: `What engine does the ${g.name} have?`, a: `Most have the ${main.name} (${share(main.count, g.fleetCount)} of those registered)${engines.length > 1 ? `; others have the ${engines.slice(1).map((e) => e.name).join(", ")}` : ""}.` }] : []),
+    ...(p && p.reports
+      ? [
+          {
+            q: `What are common problems with the ${g.name}?`,
+            a: `In ${fmt(p.reports)} Service Difficulty Reports filed with the FAA since ${p.since}, the systems reported most were ${p.systems.slice(0, 3).map((x) => x.name.toLowerCase()).join(", ")}${p.parts[0] ? `, and the part most often reported was a ${p.parts[0].condition ? `${p.parts[0].condition} ` : ""}${p.parts[0].name.toLowerCase()}` : ""}.`,
+          },
+        ]
+      : []),
+    ...(sf
+      ? [
+          {
+            q: `How many accidents has the ${g.name} had?`,
+            a: `${fmt(sf.accidents)} in the NTSB's database since ${sf.since}, ${fmt(sf.fatal)} of them fatal. The most common defining event was ${sf.events[0]?.name.toLowerCase() ?? "not recorded"}. These are counts, not rates: how many hours the fleet flew is not published.`,
+          },
+        ]
+      : []),
     {
       q: `How many Airworthiness Directives does the ${g.name} have?`,
       a: `${g.ads.current} current ADs name the ${g.designation} airframe, ${g.ads.repetitive.length} of them with a repeat action${engineAds ? `, and ${engineAds} more name its engines` : ""}. Whether each applies to one aircraft depends on its serial number and installed equipment.`,
@@ -138,6 +157,98 @@ export default async function GuidePage({ params }: Props) {
             </p>
           </section>
 
+          {p && p.reports > 0 && (
+            <section className="space-y-4">
+              <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">What gets reported</h2>
+              <p className="text-[15px] text-brand-surface">
+                {fmt(p.reports)} Service Difficulty Reports since {p.since}: a mechanic or operator files one when a part fails or is found defective.
+              </p>
+              <div className="grid gap-6 sm:grid-cols-2">
+                <Ranked title="Systems reported most" rows={p.systems.slice(0, 6).map((x) => ({ label: x.name, count: x.count }))} />
+                <Ranked title="Parts reported most" rows={p.parts.slice(0, 6).map((x) => ({ label: x.condition ? `${x.name}, ${x.condition}` : x.name, count: x.count }))} />
+              </div>
+              {p.recent.length > 0 && (
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-brand-surface">The latest reports</h3>
+                  <ul className="divide-y divide-border overflow-hidden rounded-lg border border-border bg-white">
+                    {p.recent.slice(0, 4).map((x, i) => (
+                      <li key={i} className="px-4 py-3 text-[15px]">
+                        <p className="text-sm text-muted-foreground">
+                          {[x.date, x.system, x.part ? `${x.part}${x.condition ? `, ${x.condition}` : ""}` : null].filter(Boolean).join(" · ")}
+                        </p>
+                        <p className="mt-0.5 text-brand-surface">{x.text}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              <p className="text-sm text-muted-foreground">
+                From the FAA&apos;s{" "}
+                <a href="https://sdrs.faa.gov/Query.aspx" target="_blank" rel="noreferrer" className="text-primary hover:underline">
+                  Service Difficulty Reporting System
+                </a>
+                , refreshed monthly. Counts of what was reported, not failure rates: most of general aviation reports voluntarily, and a busy training
+                fleet reports more than a private one.
+              </p>
+            </section>
+          )}
+
+          {sf && sf.accidents > 0 && (
+            <section className="space-y-4">
+              <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">Accident record</h2>
+              <p className="text-[15px] text-brand-surface">
+                {fmt(sf.accidents)} accident{sf.accidents === 1 ? "" : "s"} since {sf.since}, {fmt(sf.fatal)} fatal
+                {sf.fatalities ? ` (${fmt(sf.fatalities)} ${sf.fatalities === 1 ? "person" : "people"} killed in them, a midair counting both aircraft)` : ""}, {fmt(sf.destroyed)} aircraft destroyed.
+              </p>
+              <div className="grid gap-6 sm:grid-cols-2">
+                <Ranked title="What happened" rows={sf.events.slice(0, 6).map((x) => ({ label: x.name, count: x.count }))} />
+                <Ranked title="Phase of flight" rows={sf.phases.slice(0, 6).map((x) => ({ label: x.name, count: x.count }))} />
+              </div>
+              {sf.recent.length > 0 && (
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-brand-surface">The latest</h3>
+                  <div className="overflow-x-auto rounded-lg border border-border bg-white">
+                    <table className="w-full text-sm">
+                      <thead className="text-left text-xs text-muted-foreground">
+                        <tr className="border-b border-border">
+                          <th className="px-4 py-2 font-medium">Date</th>
+                          <th className="px-4 py-2 font-medium">Where</th>
+                          <th className="px-4 py-2 font-medium">What happened</th>
+                          <th className="px-4 py-2 font-medium">Injuries</th>
+                          <th className="px-4 py-2 font-medium">NTSB number</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border">
+                        {sf.recent.slice(0, 6).map((c) => (
+                          <tr key={c.ntsbNo}>
+                            <td className="px-4 py-2 whitespace-nowrap tabular-nums">{c.date}</td>
+                            <td className="px-4 py-2">{[c.city ? c.city.charAt(0) + c.city.slice(1).toLowerCase() : null, c.state].filter(Boolean).join(", ")}</td>
+                            <td className="px-4 py-2">{[c.phase, c.event].filter(Boolean).join(": ")}</td>
+                            <td className="px-4 py-2">{c.injury ? c.injury.charAt(0).toUpperCase() + c.injury.slice(1) : ""}</td>
+                            <td className="px-4 py-2 font-mono text-xs">{c.ntsbNo}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+              <p className="text-sm text-muted-foreground">
+                From the NTSB&apos;s aviation accident database, refreshed monthly; accidents only, homebuilts left out. Counts, not rates: nobody publishes
+                how many hours each model flies, and a training fleet flies far more than a private one. Look up any case by its number in the NTSB&apos;s{" "}
+                <a href="https://data.ntsb.gov/carol-main-public/basic-search" target="_blank" rel="noreferrer" className="text-primary hover:underline">
+                  CAROL
+                </a>
+                .
+              </p>
+            </section>
+          )}
+
+          <section className="space-y-4">
+            <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">What it costs to run</h2>
+            <CostEstimator model={g.name} engine={main?.name ?? null} fuelBurn={FUEL_BURN[g.slug] ?? null} tbo={defaultTbo(g.slug, main?.name ?? null)} />
+          </section>
+
           <section className="space-y-4">
             <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">Before you buy one</h2>
             <ol className="list-decimal space-y-3 pl-5 text-[15px] marker:text-muted-foreground">
@@ -150,6 +261,12 @@ export default async function GuidePage({ params }: Props) {
                 logbooks and when the next one is due.
               </li>
               <li>Compare the engine&apos;s time since overhaul with its maker&apos;s published overhaul time, and look for the reason behind any long gap in flying.</li>
+              {p && p.systems[0] && (
+                <li>
+                  Ask the mechanic doing the pre-buy to look hard at the {p.systems[0].name.toLowerCase()}
+                  {p.parts[0] ? ` and for ${p.parts[0].condition ? `${p.parts[0].condition} ` : ""}${p.parts[0].name.toLowerCase()}s` : ""}: they are what gets reported most on this model.
+                </li>
+              )}
               {g.ads.equipment > 0 && (
                 <li>
                   {g.ads.equipment} equipment AD{g.ads.equipment === 1 ? " names" : "s name"} the {g.designation} (a muffler, a seat belt, a display): find out
@@ -224,6 +341,22 @@ export default async function GuidePage({ params }: Props) {
         </aside>
       </div>
     </article>
+  );
+}
+
+function Ranked({ title, rows }: { title: string; rows: { label: string; count: number }[] }) {
+  return (
+    <div className="space-y-2">
+      <h3 className="font-semibold text-brand-surface">{title}</h3>
+      <ol className="divide-y divide-border overflow-hidden rounded-lg border border-border bg-white text-[15px]">
+        {rows.map((r) => (
+          <li key={r.label} className="flex items-baseline justify-between gap-4 px-4 py-2.5">
+            <span className="min-w-0 text-brand-surface">{r.label}</span>
+            <span className="shrink-0 text-sm text-muted-foreground tabular-nums">{fmt(r.count)}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
   );
 }
 
