@@ -82,6 +82,9 @@ const nextConfig: NextConfig = {
         { source: "/regulations.md", destination: "/md/regulations" },
         // Aircraft tax by state: each region page's twin.
         { source: "/aircraft-tax/:country([a-z-]+)/:region([a-z-]+)\\.md", destination: "/md/aircraft-tax/:country/:region" },
+        // The aircraft ownership guides and the AD library's AD pages, the same way.
+        { source: "/aircraft/:slug([a-z0-9-]+)\\.md", destination: "/md/aircraft/:slug" },
+        { source: "/airworthiness-directives/:adNumber([0-9][0-9A-Za-z-]*)\\.md", destination: "/md/airworthiness-directives/:adNumber" },
       ],
       afterFiles: [],
       fallback: [],

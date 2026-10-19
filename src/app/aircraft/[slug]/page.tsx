@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${t} Ownership Guide: Fleet, ADs and What to Check`,
     description,
-    alternates: { canonical: guideHref(g.slug) },
+    alternates: { canonical: guideHref(g.slug), types: { "text/markdown": `${guideHref(g.slug)}.md` } },
     openGraph: { title: `${t} ownership guide`, description, url: guideHref(g.slug), type: "article" },
   };
 }
@@ -91,10 +91,27 @@ export default async function GuidePage({ params }: Props) {
         {main ? `, most with the ${main.name}` : ""}. Its Airworthiness Directives, its engines&apos;, and what to check before buying one.
       </p>
 
+      <nav aria-label="On this page" className="mt-6 flex flex-wrap gap-x-4 gap-y-1.5 text-sm">
+        {[
+          ["fleet", "The fleet"],
+          ["airworthiness-directives", "ADs"],
+          ...(p && p.reports > 0 ? [["problems", "What gets reported"]] : []),
+          ...(sf && sf.accidents > 0 ? [["accidents", "Accident record"]] : []),
+          ["costs", "Costs"],
+          ["before-you-buy", "Before you buy"],
+          ...(g.variants.length ? [["family", "Family"]] : []),
+          ["questions", "Questions"],
+        ].map(([id, label]) => (
+          <a key={id} href={`#${id}`} className="text-primary hover:underline">
+            {label}
+          </a>
+        ))}
+      </nav>
+
       <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
         <div className="min-w-0 space-y-12">
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">The fleet</h2>
+            <h2 id="fleet" className="scroll-mt-24 text-2xl font-semibold tracking-tight text-brand-surface">The fleet</h2>
             <dl className="grid grid-cols-2 gap-x-6 gap-y-4 rounded-lg border border-border bg-white p-5 text-sm sm:grid-cols-3">
               <Fact label="Registered in the US">{fmt(g.fleetCount)}</Fact>
               <Fact label="Built">{y ? `${y.oldest} to ${y.newest}` : "Not recorded"}</Fact>
@@ -131,7 +148,7 @@ export default async function GuidePage({ params }: Props) {
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">Airworthiness Directives</h2>
+            <h2 id="airworthiness-directives" className="scroll-mt-24 text-2xl font-semibold tracking-tight text-brand-surface">Airworthiness Directives</h2>
             <p className="text-[15px] text-brand-surface">
               {g.ads.current} current AD{g.ads.current === 1 ? "" : "s"} name the {g.designation} airframe, {g.ads.repetitive.length} with a repeat action
               {g.ads.superseded ? `; ${g.ads.superseded} more were superseded` : ""}.
@@ -159,7 +176,7 @@ export default async function GuidePage({ params }: Props) {
 
           {p && p.reports > 0 && (
             <section className="space-y-4">
-              <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">What gets reported</h2>
+              <h2 id="problems" className="scroll-mt-24 text-2xl font-semibold tracking-tight text-brand-surface">What gets reported</h2>
               <p className="text-[15px] text-brand-surface">
                 {fmt(p.reports)} Service Difficulty Reports since {p.since}: a mechanic or operator files one when a part fails or is found defective.
               </p>
@@ -195,7 +212,7 @@ export default async function GuidePage({ params }: Props) {
 
           {sf && sf.accidents > 0 && (
             <section className="space-y-4">
-              <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">Accident record</h2>
+              <h2 id="accidents" className="scroll-mt-24 text-2xl font-semibold tracking-tight text-brand-surface">Accident record</h2>
               <p className="text-[15px] text-brand-surface">
                 {fmt(sf.accidents)} accident{sf.accidents === 1 ? "" : "s"} since {sf.since}, {fmt(sf.fatal)} fatal
                 {sf.fatalities ? ` (${fmt(sf.fatalities)} ${sf.fatalities === 1 ? "person" : "people"} killed in them, a midair counting both aircraft)` : ""}, {fmt(sf.destroyed)} aircraft destroyed.
@@ -245,12 +262,12 @@ export default async function GuidePage({ params }: Props) {
           )}
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">What it costs to run</h2>
+            <h2 id="costs" className="scroll-mt-24 text-2xl font-semibold tracking-tight text-brand-surface">What it costs to run</h2>
             <CostEstimator model={g.name} engine={main?.name ?? null} fuelBurn={FUEL_BURN[g.slug] ?? null} tbo={defaultTbo(g.slug, main?.name ?? null)} />
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">Before you buy one</h2>
+            <h2 id="before-you-buy" className="scroll-mt-24 text-2xl font-semibold tracking-tight text-brand-surface">Before you buy one</h2>
             <ol className="list-decimal space-y-3 pl-5 text-[15px] marker:text-muted-foreground">
               <li>
                 Run its N-number through the <Link href={CHECK_BASE} className="text-primary hover:underline">AD check</Link>: every AD that names its
@@ -286,7 +303,7 @@ export default async function GuidePage({ params }: Props) {
 
           {g.variants.length > 0 && (
             <section className="space-y-3">
-              <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">The rest of the {g.family} family</h2>
+              <h2 id="family" className="scroll-mt-24 text-2xl font-semibold tracking-tight text-brand-surface">The rest of the {g.family} family</h2>
               <div className="flex flex-wrap gap-2">
                 {g.variants.map((v) => (
                   <Link
@@ -303,7 +320,7 @@ export default async function GuidePage({ params }: Props) {
           )}
 
           <section className="space-y-5">
-            <h2 className="text-2xl font-semibold tracking-tight text-brand-surface">Questions</h2>
+            <h2 id="questions" className="scroll-mt-24 text-2xl font-semibold tracking-tight text-brand-surface">Questions</h2>
             <dl className="space-y-5">
               {faqs.map((f) => (
                 <div key={f.q}>

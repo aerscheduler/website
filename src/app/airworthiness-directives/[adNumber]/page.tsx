@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
-    alternates: { canonical: adHref(ad.adNumber) },
+    alternates: { canonical: adHref(ad.adNumber), types: { "text/markdown": `${adHref(ad.adNumber)}.md` } },
     // Not offered to search engines until it is published, or when its layout could not be read.
     robots: readable && !ad.onPublicInspection ? undefined : { index: false, follow: true },
     openGraph: { title, description, url: adHref(ad.adNumber), type: "article" },
@@ -264,10 +264,12 @@ function Fact({ label, children }: { label: string; children: React.ReactNode })
   );
 }
 
+/** A section with an anchor from its title ("Applies to" is #applies-to), to link or cite. */
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  const id = title.toLowerCase().replace(/&apos;|'/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
   return (
     <section className="space-y-3">
-      <h2 className="text-xl font-semibold tracking-tight text-brand-surface">{title}</h2>
+      <h2 id={id} className="scroll-mt-24 text-xl font-semibold tracking-tight text-brand-surface">{title}</h2>
       {children}
     </section>
   );

@@ -261,6 +261,8 @@ export function llmsTxt(): string {
     "",
     ...guides().map((g) => item(g.label, abs(g.href), g.description)),
     "",
+    "Every aircraft ownership guide and every page of the AD library reads as Markdown too: add `.md` to its address, as in `/aircraft/<model>.md` or `/airworthiness-directives/<AD number>.md`.",
+    "",
     ...regulationsIndex(),
     "",
     ...aircraftTaxIndex(),
@@ -320,7 +322,7 @@ export function llmsFullTxt(): string {
   out.push(...getTagDocs().map((tag) => item(tag.name, abs(`/docs/api/${tag.slug}`), apiText(tag.description))));
   out.push(item("OpenAPI document", `${API_BASE_URL}/openapi.json`), "");
 
-  out.push("## Guides", "", ...guides().map((g) => item(g.label, abs(g.href), g.description)), "");
+  out.push("## Guides", "", ...guides().map((g) => item(g.label, abs(g.href), g.description)), "", "Every aircraft ownership guide and every page of the AD library reads as Markdown too: add `.md` to its address, as in `/aircraft/<model>.md` or `/airworthiness-directives/<AD number>.md`.", "");
 
   // The regulations library: each section's answer and plain-English points.
   // The official text stays on the pages and their .md twins; repeating 52
