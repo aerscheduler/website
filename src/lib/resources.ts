@@ -79,6 +79,11 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
         label: "Flying club dues & fees",
         description: "Joining fees, monthly dues, tiers, and the cases that make collecting them a chore.",
       },
+      {
+        href: "/aircraft/rental-rate-calculator",
+        label: "Aircraft rental rate calculator",
+        description: "What to charge per hour, wet or dry, from your own costs. Free.",
+      },
     ],
   },
   {

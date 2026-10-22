@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { GuideGrid } from "@/components/aircraft-guides/guide-grid";
 import { AD_BASE, CHECK_BASE, fmt } from "@/lib/ad-library";
-import { getGuides, GUIDE_BASE } from "@/lib/aircraft-guides";
+import { getGuides, GUIDE_BASE, RATE_CALCULATOR_PATH } from "@/lib/aircraft-guides";
 
 /** The ownership guides, one per model with at least 200 US registrations, by maker. */
 export const revalidate = 86400;
@@ -31,6 +31,10 @@ export default async function GuidesPage() {
         . Weighing two? See the{" "}
         <Link href="/aircraft/compare" className="text-primary hover:underline">
           comparisons
+        </Link>
+        . Renting one out? Work out{" "}
+        <Link href={RATE_CALCULATOR_PATH} className="text-primary hover:underline">
+          what to charge per hour
         </Link>
         . Looking at one aircraft? Use the{" "}
         <Link href={CHECK_BASE} className="text-primary hover:underline">

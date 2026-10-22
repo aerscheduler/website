@@ -9,6 +9,9 @@ import type { AdRow } from "@/lib/ad-library";
  */
 export const GUIDE_BASE = "/aircraft";
 export const guideHref = (slug: string) => `${GUIDE_BASE}/${slug}`;
+/** What to charge to rent one: the rental rate calculator, linked from every guide's costs section. */
+export const RATE_CALCULATOR_PATH = `${GUIDE_BASE}/rental-rate-calculator`;
+export const rateCalculatorHref = (slug?: string) => (slug ? `${RATE_CALCULATOR_PATH}?model=${slug}` : RATE_CALCULATOR_PATH);
 
 export type AircraftProfile = {
   years: { known: number; oldest: number; newest: number; p25: number; median: number; p75: number } | null;

@@ -428,6 +428,7 @@ const PAGE_META = {
   "/aircraft-tax": { group: "Guides", title: "Aircraft tax by state" },
   "/aircraft": { group: "Guides", title: "Aircraft ownership guides" },
   "/aircraft/compare": { group: "Guides", title: "Aircraft compared side by side" },
+  "/aircraft/rental-rate-calculator": { group: "Guides", title: "Aircraft rental rate calculator" },
   "/aircraft-tax/calculator": { group: "Guides", title: "Aircraft sales tax calculator" },
   "/airworthiness-directives/new": { group: "Guides", title: "New Airworthiness Directives" },
   "/airworthiness-directives/search": { group: "Pages", title: "Search the AD library" },

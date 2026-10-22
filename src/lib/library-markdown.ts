@@ -1,5 +1,5 @@
 import { adAbout, adHref, adPublished, adTitle, CHECK_BASE, fmt, pageHref, PRODUCT_LABEL, type AdBlock, type AdFull } from "@/lib/ad-library";
-import { defaultTbo, FUEL_BURN, guideHref, guideTitle, share, type Guide } from "@/lib/aircraft-guides";
+import { defaultTbo, FUEL_BURN, guideHref, guideTitle, rateCalculatorHref, share, type Guide } from "@/lib/aircraft-guides";
 import { faaCovers, faaRequires, faaWhy } from "@/lib/ad-glance.mjs";
 import { SITE_URL } from "@/lib/site";
 import { compareHref, compareRows, differences, pairTitle } from "@/lib/aircraft-compare";
@@ -158,7 +158,7 @@ export function guideMarkdown(g: Guide): string {
   const burn = FUEL_BURN[g.slug];
   const tbo = defaultTbo(g.slug, main?.name ?? null);
   if (burn || tbo) {
-    out.push("## Costs to run", "", burn ? `- Typical cruise fuel burn: ${burn} gal/hr` : "", tbo ? `- Published hours between engine overhauls (${main?.name}): ${fmt(tbo)}` : "", `- Cost estimator: ${abs(guideHref(g.slug))}#costs`, "");
+    out.push("## Costs to run", "", burn ? `- Typical cruise fuel burn: ${burn} gal/hr` : "", tbo ? `- Published hours between engine overhauls (${main?.name}): ${fmt(tbo)}` : "", `- Cost estimator: ${abs(guideHref(g.slug))}#costs`, `- What to charge to rent one, wet or dry: ${abs(rateCalculatorHref(burn ? g.slug : undefined))}`, "");
   }
   out.push(
     "## Before you buy one",

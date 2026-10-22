@@ -8,7 +8,7 @@ import { AdList } from "@/components/ad-library/ad-list";
 import { TailCheckForm } from "@/components/ad-library/tail-check-form";
 import { AD_BASE, CHECK_BASE, fmt, pageHref } from "@/lib/ad-library";
 import { CostEstimator } from "@/components/aircraft-guides/cost-estimator";
-import { defaultTbo, FUEL_BURN, getGuide, getGuides, GUIDE_BASE, guideHref, guideTitle, share } from "@/lib/aircraft-guides";
+import { defaultTbo, FUEL_BURN, getGuide, getGuides, GUIDE_BASE, guideHref, guideTitle, rateCalculatorHref, share } from "@/lib/aircraft-guides";
 import { faqJsonLd } from "@/lib/seo";
 import { pairsFor } from "@/lib/aircraft-compare";
 import { signupUrl } from "@/lib/site";
@@ -267,6 +267,13 @@ export default async function GuidePage({ params }: Props) {
           <section className="space-y-4">
             <h2 id="costs" className="scroll-mt-24 text-2xl font-semibold tracking-tight text-brand-surface">What it costs to run</h2>
             <CostEstimator model={g.name} engine={main?.name ?? null} fuelBurn={FUEL_BURN[g.slug] ?? null} tbo={defaultTbo(g.slug, main?.name ?? null)} />
+            <p className="text-sm text-muted-foreground">
+              Renting it out, to a school, a club or on leaseback?{" "}
+              <Link href={rateCalculatorHref(FUEL_BURN[g.slug] ? g.slug : undefined)} className="text-primary hover:underline">
+                Work out what to charge per hour
+              </Link>
+              , wet or dry.
+            </p>
           </section>
 
           <section className="space-y-4">

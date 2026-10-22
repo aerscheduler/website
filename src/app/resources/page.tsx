@@ -132,6 +132,11 @@ const GUIDE_CLUSTERS: {
         body: "What clubs charge to join and to stay, the tiers they settle on, and the five awkward cases (mid-month joiners, seasonal members, a comped month) that decide whether dues are a five-minute job.",
       },
       {
+        href: "/aircraft/rental-rate-calculator",
+        title: "Aircraft rental rate calculator",
+        body: "What to charge per hour to rent an aircraft, wet or dry: fuel, engine and propeller reserves, 100-hour inspections and a year's fixed costs, plus your margin. Shows its working.",
+      },
+      {
         href: "/resources/quickbooks-integration",
         title: "QuickBooks Online integration",
         body: "How paid AerScheduler invoices sync to QuickBooks Online as Sales Receipts, without CSV exports.",
