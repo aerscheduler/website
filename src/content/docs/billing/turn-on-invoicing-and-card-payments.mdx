@@ -20,6 +20,19 @@ organization owner can do any of it.
 
 ## Connect payouts with Stripe
 
+There are two ways in, side by side on the Payouts card:
+
+- **Connect payouts** creates a new Stripe account for your organization. Use it if you
+  don't have one yet.
+- **Use an existing Stripe account** connects one you already take payments with. You sign
+  in to Stripe and pick the account, and it keeps its own history and payout settings.
+  Stripe checks new accounts closely, so an account with a track record is less likely to
+  be paused when your first larger payments come in.
+
+The steps below are for a new account. For an existing one, click **Use an existing Stripe
+account**, sign in on Stripe's page, choose the account and click **Connect**. You land back
+on Settings with a message saying payouts are connected.
+
 <Steps>
 <Step n={1} title="Open Settings and choose Billing">
 The Billing tab starts with **Payouts** and **Billing enabled** on the same card, then
@@ -127,9 +140,9 @@ the invoices, each one a link.
 In the Payouts card, beside **Connect payouts** or **Manage payouts**. Type your
 organization's name to confirm.
 </Step>
-<Step n={3} title="Click Connect payouts">
-Stripe's onboarding starts for the new account. If you already have a Stripe login, use
-the same email, and the new account sits beside your existing one in Stripe.
+<Step n={3} title="Connect the other account">
+**Use an existing Stripe account** to connect one you already have, history and all. Or
+**Connect payouts** to create a new one.
 </Step>
 </Steps>
 
@@ -149,9 +162,8 @@ What changes when you disconnect:
   on the old account can still be refunded from the member's account.
 
 <Callout type="note">
-Connecting always creates a new Stripe account. AerScheduler can't take over a Stripe
-account you already have, so that account's payment history stays in its own Stripe
-dashboard.
+A Stripe account can only be connected to one AerScheduler organization at a time. If
+Stripe says the account is already connected elsewhere, disconnect it there first.
 </Callout>
 
 ## Doing this from the iOS app

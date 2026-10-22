@@ -879,7 +879,11 @@ export const DOC_SECTIONS: DocSection[] = [
         faqs: [
           {
             q: "Can I switch to a different Stripe account?",
-            a: "Yes. Settle any open invoices, click Disconnect Stripe in Settings, Billing, then Connect payouts to set up the new account. Your members, aircraft and balances stay. Members add their cards again once the new account is connected.",
+            a: "Yes. Settle any open invoices, click Disconnect Stripe in Settings, Billing, then connect the other account. Your members, aircraft and balances stay. Members add their cards again once the new account is connected.",
+          },
+          {
+            q: "Can I use a Stripe account I already have?",
+            a: "Yes. Click Use an existing Stripe account in Settings, Billing, sign in to Stripe and choose the account. It keeps its own history and payout settings.",
           },
         ],
       },
