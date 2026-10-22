@@ -137,6 +137,11 @@ const GUIDE_CLUSTERS: {
         body: "What to charge per hour to rent an aircraft, wet or dry: fuel, engine and propeller reserves, 100-hour inspections and a year's fixed costs, plus your margin. Shows its working.",
       },
       {
+        href: "/aircraft-tax/flight-schools",
+        title: "Sales tax on flight instruction and aircraft rental",
+        body: "Whether each state taxes the lessons you teach and the aircraft you rent out, and where billing the two on separate lines changes the answer. Quoted from each state's own source.",
+      },
+      {
         href: "/resources/quickbooks-integration",
         title: "QuickBooks Online integration",
         body: "How paid AerScheduler invoices sync to QuickBooks Online as Sales Receipts, without CSV exports.",

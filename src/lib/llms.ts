@@ -10,7 +10,7 @@ import { CROSS_CUTTING, MODULES } from "@/lib/modules";
 import { AUDIENCES } from "@/lib/audiences";
 import { API_BASE_URL, getTagDocs } from "@/lib/openapi";
 import { REG_BASE, REGS, TEXT_AS_OF, regHref, regTitle } from "@/lib/regulations";
-import { ALL_REGIONS, PUBLISHED as TAX_PUBLISHED, TAX_BASE, regionHref } from "@/lib/aircraft-tax";
+import { ALL_REGIONS, FLIGHT_SCHOOL_TAX_PATH, PUBLISHED as TAX_PUBLISHED, TAX_BASE, regionHref } from "@/lib/aircraft-tax";
 import { RESOURCE_GROUPS } from "@/lib/resources";
 import { PRICING_FAQS } from "@/lib/seo";
 import {
@@ -211,6 +211,7 @@ function aircraftTaxIndex(): string[] {
     "## Aircraft tax by state",
     "",
     item("Aircraft tax hub", abs(TAX_BASE), "Sales and use tax, rentals, flight instruction, maintenance and yearly taxes by state, each answer quoted from the state's own source."),
+    item("Sales tax for flight schools", abs(FLIGHT_SCHOOL_TAX_PATH), "Whether each state taxes flight instruction and aircraft rental, and where billing the two separately changes the answer."),
     "",
     ...ALL_REGIONS.map((r) => item(`${r.name} aircraft tax`, markdownUrl(regionHref(r)), r.summary)),
     "",

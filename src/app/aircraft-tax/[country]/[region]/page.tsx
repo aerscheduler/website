@@ -18,6 +18,7 @@ import {
   question,
   regionHref,
   regionsIn,
+  FLIGHT_SCHOOL_TAX_PATH,
 } from "@/lib/aircraft-tax";
 import { CALC } from "@/content/aircraft-tax/calc.mjs";
 import { faqJsonLd } from "@/lib/seo";
@@ -97,7 +98,17 @@ export default async function RegionPage({ params }: Props) {
 
         <div className="mt-10 space-y-8">
           {TOPICS.map((t) => (
-            <Fact key={t} id={t} question={question(c, t, r)} fact={r.facts[t]} />
+            <div key={t} className="space-y-3">
+              <Fact id={t} question={question(c, t, r)} fact={r.facts[t]} />
+              {t === "instruction" && c.code === "US" && (
+                <p className="text-sm text-muted-foreground">
+                  Run a flight school or club?{" "}
+                  <Link href={FLIGHT_SCHOOL_TAX_PATH} className="font-medium text-primary hover:underline">
+                    Compare instruction and rental tax in every state
+                  </Link>
+                </p>
+              )}
+            </div>
           ))}
         </div>
 

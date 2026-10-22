@@ -14,6 +14,8 @@ import { SITE_URL } from "@/lib/site";
 
 export { PUBLISHED };
 export const TAX_BASE = "/aircraft-tax";
+/** Instruction and rental tax across every state, written for flight schools and clubs. */
+export const FLIGHT_SCHOOL_TAX_PATH = `${TAX_BASE}/flight-schools`;
 
 export type TaxCountry = (typeof COUNTRIES)[number];
 export type TaxRegion = RegionData;

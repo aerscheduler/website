@@ -5,7 +5,7 @@ import { JsonLd } from "@/components/json-ld";
 import { TaxNotice } from "@/components/aircraft-tax/fact";
 import { TaxMatrix } from "@/components/aircraft-tax/matrix";
 import { HubSearch, type HubSearchItem } from "@/components/hub-search";
-import { ALL_REGIONS, COUNTRY_LIST, PUBLISHED, TAX_BASE, TOPICS, countryHref, countryOf, question, regionHref, regionsIn } from "@/lib/aircraft-tax";
+import { ALL_REGIONS, COUNTRY_LIST, FLIGHT_SCHOOL_TAX_PATH, PUBLISHED, TAX_BASE, TOPICS, countryHref, countryOf, question, regionHref, regionsIn } from "@/lib/aircraft-tax";
 import { faqJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -37,6 +37,7 @@ const FAQS = [
  * lands on that answer rather than the top of the page.
  */
 const SEARCH_ITEMS: HubSearchItem[] = [
+  { href: FLIGHT_SCHOOL_TAX_PATH, title: "Sales tax for flight schools", detail: "Instruction and aircraft rental tax in every state.", ids: ["flight school"], text: "flight instruction lessons rental club" },
   { href: `${TAX_BASE}/calculator`, title: "Aircraft sales tax calculator", detail: "Estimate the tax on buying or basing an aircraft, and the yearly fee.", ids: ["calculator"], text: "estimate calculate" },
   ...ALL_REGIONS.flatMap((r) => {
     const c = countryOf(r);
@@ -77,6 +78,10 @@ export default function AircraftTaxHub() {
         <p className="mt-6 text-base">
           <Link href={`${TAX_BASE}/calculator`} className="font-medium text-primary hover:underline">
             Estimate the tax on an aircraft with the calculator
+          </Link>
+          <span className="text-muted-foreground"> · </span>
+          <Link href={FLIGHT_SCHOOL_TAX_PATH} className="font-medium text-primary hover:underline">
+            Instruction and rental tax for flight schools
           </Link>
         </p>
         {COUNTRY_LIST.map((c) => (

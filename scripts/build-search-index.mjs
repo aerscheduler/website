@@ -430,6 +430,7 @@ const PAGE_META = {
   "/aircraft/compare": { group: "Guides", title: "Aircraft compared side by side" },
   "/aircraft/rental-rate-calculator": { group: "Guides", title: "Aircraft rental rate calculator" },
   "/aircraft-tax/calculator": { group: "Guides", title: "Aircraft sales tax calculator" },
+  "/aircraft-tax/flight-schools": { group: "Guides", title: "Sales tax on flight instruction and aircraft rental" },
   "/airworthiness-directives/new": { group: "Guides", title: "New Airworthiness Directives" },
   "/airworthiness-directives/search": { group: "Pages", title: "Search the AD library" },
   "/airworthiness-directives/monthly": { group: "Guides", title: "ADs by month" },

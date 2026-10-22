@@ -4,7 +4,7 @@ import { COMPETITOR_LIST, competitorHref } from "@/lib/competitors";
 import { apiDocRoutes } from "@/lib/developers";
 import { docRoutes } from "@/lib/docs";
 import { PARTS_WITH_PAGES, REG_BASE, REGS, TEXT_AS_OF, partHref, regHref } from "@/lib/regulations";
-import { ALL_REGIONS, COUNTRY_LIST, PUBLISHED as TAX_PUBLISHED, TAX_BASE, countryHref, lastChecked, regionHref } from "@/lib/aircraft-tax";
+import { ALL_REGIONS, COUNTRY_LIST, FLIGHT_SCHOOL_TAX_PATH, PUBLISHED as TAX_PUBLISHED, TAX_BASE, countryHref, lastChecked, regionHref } from "@/lib/aircraft-tax";
 import { SITE_URL } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -178,6 +178,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ? [
         { url: `${SITE_URL}${TAX_BASE}`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
         { url: `${SITE_URL}${TAX_BASE}/calculator`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+        { url: `${SITE_URL}${FLIGHT_SCHOOL_TAX_PATH}`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
         ...COUNTRY_LIST.map((c) => ({ url: `${SITE_URL}${countryHref(c)}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.75 })),
         ...ALL_REGIONS.map((r) => ({
           url: `${SITE_URL}${regionHref(r)}`,

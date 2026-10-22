@@ -84,6 +84,11 @@ export const RESOURCE_GROUPS: ResourceGroup[] = [
         label: "Aircraft rental rate calculator",
         description: "What to charge per hour, wet or dry, from your own costs. Free.",
       },
+      {
+        href: "/aircraft-tax/flight-schools",
+        label: "Sales tax for flight schools",
+        description: "Whether each state taxes flight instruction and aircraft rental, quoted from its own source.",
+      },
     ],
   },
   {
