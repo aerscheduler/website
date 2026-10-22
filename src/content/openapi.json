@@ -31181,6 +31181,13 @@
                     "items": {
                       "type": "string"
                     }
+                  },
+                  "forGroupIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "description": "Member groups it is for, beside the roles."
                   }
                 },
                 "required": [
@@ -50076,9 +50083,24 @@
           },
           "forRoles": {
             "type": "array",
-            "description": "Roles that should see it. Empty means everyone.",
+            "description": "Roles that should see it. With forGroups empty too, everyone.",
             "items": {
               "type": "string"
+            }
+          },
+          "forGroups": {
+            "type": "array",
+            "description": "Member groups that should see it, beside the roles: a member of any of them sees it.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                }
+              }
             }
           },
           "seenAt": {
