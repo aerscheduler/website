@@ -876,6 +876,12 @@ export const DOC_SECTIONS: DocSection[] = [
         kind: "task",
         audience: ["Owners"],
         seoQuery: "how to accept card payments at a flight school with Stripe",
+        faqs: [
+          {
+            q: "Can I switch to a different Stripe account?",
+            a: "Yes. Settle any open invoices, click Disconnect Stripe in Settings, Billing, then Connect payouts to set up the new account. Your members, aircraft and balances stay. Members add their cards again once the new account is connected.",
+          },
+        ],
       },
       {
         slug: "choose-your-billing-currency",

@@ -108,8 +108,51 @@ To pick it back up, open <Where app="web">Settings → Billing</Where> and click
 If Stripe has rejected your account, **Connect payouts** says so instead of opening Stripe.
 Only Stripe can change that decision. Sign in at dashboard.stripe.com with the login you
 used for the account to see why and what Stripe asks for. Turning billing off and on, or
-switching how members pay, does not affect it. To use a different Stripe account, email
-support@aerscheduler.com.
+switching how members pay, does not affect it. To use a different Stripe account instead,
+see [Switch to a different Stripe account](#switch-to-a-different-stripe-account).
+
+## Switch to a different Stripe account
+
+To move your payouts to another Stripe account, for example because Stripe rejected the
+first one, disconnect it and connect again. Your organization, members, aircraft and
+balances stay as they are. You do not need a new AerScheduler account.
+
+<Steps>
+<Step n={1} title="Settle any open invoices">
+An invoice still unpaid on the current Stripe account has to be collected, marked paid
+or voided first. Until then **Disconnect Stripe** is greyed out, and pointing at it lists
+the invoices, each one a link.
+</Step>
+<Step n={2} title="Click Disconnect Stripe">
+In the Payouts card, beside **Connect payouts** or **Manage payouts**. Type your
+organization's name to confirm.
+</Step>
+<Step n={3} title="Click Connect payouts">
+Stripe's onboarding starts for the new account. If you already have a Stripe login, use
+the same email, and the new account sits beside your existing one in Stripe.
+</Step>
+</Steps>
+
+What changes when you disconnect:
+
+- Nobody can pay by card or bank until the new account is connected and Stripe has
+  verified it. **Billing enabled** stays on, so charging resumes by itself once it is.
+- If you invoice each booking, flights closed out in the meantime are not invoiced. They
+  wait under **Unbilled reservations** in Billing, to bill once the new account is ready.
+  On the account ledger, flight charges keep posting as usual.
+- Members' saved cards and autopay are cleared, because cards are kept in the Stripe
+  account. Each member adds a card again after you reconnect. If your booking rules
+  require a card on file, members are asked for one at their next booking.
+- Rates, fees, billing settings, member balances and past invoices stay.
+- Money already on the old account still reaches AerScheduler: a bank payment that settles
+  later, a refund you issue from the old Stripe dashboard, a dispute. A card top-up taken
+  on the old account can still be refunded from the member's account.
+
+<Callout type="note">
+Connecting always creates a new Stripe account. AerScheduler can't take over a Stripe
+account you already have, so that account's payment history stays in its own Stripe
+dashboard.
+</Callout>
 
 ## Doing this from the iOS app
 
