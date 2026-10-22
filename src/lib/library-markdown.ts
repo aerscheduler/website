@@ -1,5 +1,6 @@
 import { adAbout, adHref, adPublished, adTitle, CHECK_BASE, fmt, pageHref, PRODUCT_LABEL, type AdBlock, type AdFull } from "@/lib/ad-library";
 import { defaultTbo, FUEL_BURN, guideHref, guideTitle, share, type Guide } from "@/lib/aircraft-guides";
+import { faaCovers, faaRequires, faaWhy } from "@/lib/ad-glance.mjs";
 import { SITE_URL } from "@/lib/site";
 import { compareHref, compareRows, differences, pairTitle } from "@/lib/aircraft-compare";
 
@@ -38,6 +39,7 @@ export function adMarkdown(ad: AdFull): string {
     `Supersedes: ${ad.supersedes.length ? ad.supersedes.join(", ") : "nothing"}`,
     ad.supersededBy.length ? `Superseded by: ${ad.supersededBy.join(", ")} (comply with the one in force)` : "",
     "",
+    ...adGlanceMarkdown(ad),
     "## Applies to",
     "",
     ...(ad.details?.applicability?.length ? ad.details.applicability.flatMap((b) => [blockMarkdown(b), ""]) : [ad.applicability || "Not given; read the AD at the source below."]),
@@ -60,6 +62,26 @@ export function adMarkdown(ad: AdFull): string {
     "_Not the official record. Whether an AD applies to one aircraft depends on its serial number, installed equipment and records, and is a certificated mechanic's determination._"
   );
   return tidy(out);
+}
+
+/** The page's "At a glance": the FAA's own sentences, quoted, or nothing when it has none. */
+function adGlanceMarkdown(ad: AdFull): string[] {
+  const requires = faaRequires(ad);
+  const why = faaWhy(ad);
+  const covers = faaCovers(ad);
+  if (!requires && !why) return [];
+  return [
+    "## At a glance",
+    "",
+    "Quoted from the FAA's summary of this AD. The full text below is what applies.",
+    "",
+    ...(requires ? [`- What it requires: ${requires.join(" ")}`] : []),
+    ...(why ? [`- Why: ${why}`] : []),
+    ...(covers ? [`- Applies to: ${covers}`] : []),
+    ...(ad.repetitive ? ["- Repeats: its required actions mention a repeat inspection or replacement"] : []),
+    `- Check an aircraft by N-number: ${abs(CHECK_BASE)}`,
+    "",
+  ];
 }
 
 export function guideMarkdown(g: Guide): string {

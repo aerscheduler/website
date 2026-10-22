@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "node scripts/sync-openapi.mjs && node scripts/check-docs-auth.mjs && node scripts/check-docs.mjs && node scripts/check-llms.mjs && node scripts/check-regulations.mjs && node scripts/check-aircraft-tax.mjs && node --test src/lib/mdx-markdown.test.mjs && node scripts/build-search-index.mjs && next build && node scripts/check-llms.mjs --built",
+    "build": "node scripts/sync-openapi.mjs && node scripts/check-docs-auth.mjs && node scripts/check-docs.mjs && node scripts/check-llms.mjs && node scripts/check-regulations.mjs && node scripts/check-aircraft-tax.mjs && node --test src/lib/mdx-markdown.test.mjs src/lib/ad-glance.test.mjs && node scripts/build-search-index.mjs && next build && node scripts/check-llms.mjs --built",
     "dev": "node scripts/build-search-index.mjs && next dev --turbopack",
     "search:index": "node scripts/build-search-index.mjs",
     "start": "next start",

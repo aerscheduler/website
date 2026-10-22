@@ -1,0 +1,747 @@
+[
+ {
+  "adNumber": "2008-26-10",
+  "summary": "The FAA is adopting a new airworthiness directive (AD) for certain Cessna Aircraft Company (Cessna) 172, 175, 177, 180, 182, 185, 188, 206, 207, 208, 210, 303, 336, and 337 series airplanes. This AD requires you to inspect the alternate static air source selector valve to assure that the part number identification placard does not obstruct the alternate static air source selector valve port. If the part number identification placard obstructs the port, this AD also requires you to remove the placard, assure that the port is unobstructed, and report to the FAA if obstruction is found. This AD results from reports of airplanes found with alternate static air source selector valve port obstruction caused by improper installation of the part number identification placard. The actions specified by this AD are intended to prevent erroneous indications from the altimeter, airspeed, and vertical speed indicators, which could cause the pilot to react to incorrect flight information and possibly result in loss of control.",
+  "unsafeCondition": "This AD is the result of reports of improper installation of the part number identification placard on the alternate static air source selector valve. We are issuing this AD to prevent erroneous indications from the altimeter, airspeed, and vertical speed indicators, which could cause the pilot to react to incorrect flight information and possibly result in loss of control.",
+  "pages": [
+   {
+    "kind": "aircraft",
+    "name": "Cessna",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 172M",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 172N",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 172S",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 182P",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 172",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 182Q",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 182T",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 180",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 172P",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 172K",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 172L",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 177B",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 208B",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 182A",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 172H",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 172F",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 172G",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 172R",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 172E",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 182S",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 175",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 182R",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 182J",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 172D",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 182",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 177",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 172A",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 182M",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Cessna 182H",
+    "mentioned": false
+   }
+  ]
+ },
+ {
+  "adNumber": "2026-14-07",
+  "summary": "The FAA is adopting a new airworthiness directive (AD) for certain Bell Textron Canada Limited (Bell) Model 407 helicopters. This AD was prompted by a report of a fractured pilot cyclic stick tube and subsequent findings of other pilot cyclic stick tubes with fatigue cracking. This AD requires repetitively inspecting the pilot cyclic stick tube assembly for a crack and, depending on the results, repairing or replacing the pilot cyclic stick tube assembly. The FAA is issuing this AD to address the unsafe condition on these products.",
+  "unsafeCondition": "This AD was prompted by a report of a fractured pilot cyclic stick tube and subsequent findings of other pilot cyclic stick tubes with fatigue cracking. The FAA is issuing this AD to detect and correct a crack in the pilot cyclic stick tube which, if not addressed, could lead to an in-flight failure of the pilot cyclic stick tube and consequent loss of control of the helicopter.",
+  "pages": [
+   {
+    "kind": "aircraft",
+    "name": "Bell",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Bell 407",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Bell 206B",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Bell 206A",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Bell 206",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Bell 206L",
+    "mentioned": false
+   }
+  ]
+ },
+ {
+  "adNumber": "2008-14-06",
+  "summary": "We are adopting a new airworthiness directive (AD) for the specified Bell Helicopter Textron Canada (BHTC) helicopters. This AD results from mandatory continuing airworthiness information (MCAI) originated by an aviation authority to identify and correct an unsafe condition on an aviation product. The Aviation Authority of Canada with whom we have a bilateral agreement states in the MCAI: \"Horizontal stabilizers part numbers 206-023-119-167 and 407-023-801-109 may have manufacturing flaws on the inside surface of the upper and/or lower skin at the tailboom attachment inserts. These flaws may result in cracking of the skin and failure of the horizontal stabilizer.\" The manufacturer's service information states that in addition to cracks, the horizontal stabilizer may have deformation or debonding around and between the inserts. We are issuing this AD to require actions to correct the unsafe condition on these products.",
+  "unsafeCondition": "The mandatory continuing airworthiness information (MCAI) states: \"Horizontal stabilizers part numbers 206-023-119-167 and 407-023-801-109 may have manufacturing flaws on the inside surface of the upper and/or lower skin at the tailboom attachment inserts. These flaws may result in cracking of the skin and failure of the horizontal stabilizer.\" The manufacturer's service information states that in addition to cracks, the horizontal stabilizer may have deformation or debonding around and between the inserts. This AD requires actions that are intended to address all these unsafe conditions. Actions and Compliance (e) Within the next 100 hours time-in-service (TIS) or 30 days, whichever occurs first, unless done previously. (1) Determine whether you have an affected serial numbered horizontal stabilizer installed by removing the elevators from the horizontal stabilizer. Access the horizontal stabilizer identification tag containing the horizontal stabilizer serial number as shown in Figure 1 and remove the elevators by following the Accomplishment Instructions, Part I, of Bell Helicopter Textron Canada (BHTC) Alert Service Bulletin (ASB) No. 206L-06-141, dated September 12, 2006, applicable to the Model 206L series helicopter (206L ASB) or BHTC ASB No. 407-06-72, dated September 12, 2006, applicable to the Model 407 helicopters (407 ASB). (2) If the serial number on the identification tag is a serial number listed in Table 1 of the 206L ASB or 407 ASB, inspect the horizontal stabilizer as follows: (i) Using a 10x or higher magnifying glass, inspect the horizontal stabilizer for a crack or deformation around the areas of the inserts. Also, using a tap test method, inspect for debonding between the inserts by following the Accomplishment Instructions, Part II, of either the 206L ASB or 407 ASB, as applicable. (ii) If you find a crack, deformation, or debonding, replace the horizontal stabilizer with an airworthy horizontal stabilizer that does not have a serial number listed in Table 1 of the 206L ASB or 407 ASB. Replace the horizontal stabilizer by following the Accomplishment Instructions, Part III, of either the 206L ASB or the 407 ASB, as applicable. (iii) If you do not find a crack, deformation, or debonding, thereafter, at intervals not to exceed 600 hours TIS or during each annual inspection, whichever occurs first, repeat the inspection required by paragraph (e)(2)(i) of this AD. (f) Replacing any horizontal stabilizer containing a serial number listed in Table 1 of 206L ASB or 407 ASB with a horizontal stabilizer that does not contain such a serial number by following the Accomplishment Instructions, Part III, of either the 206L ASB or 407 ASB, as applicable, constitutes terminating actions for the requirements of this AD. Differences Between This AD and the MCAI AD (g) The MCAI requires compliance \"within the next 100 hours air time but no later than 9 May 2007.\" This AD requires compliance within the next 100 hours TIS or 30 days, whichever occurs first, unless done previously. Also, the MCAI requires replacing the horizontal stabilizer by September 30, 2008, and we have not mandated a compliance time for replacing the horizontal stabilizer. Other Information (h) Alternative Methods of Compliance (AMOCs): The Manager, Safety Management Group, FAA, has the authority to approve AMOCs for this AD, if requested using the procedures found in 14 CFR 39.19. Send information to ATTN Sharon Miles, Aviation Safety Engineer, FAA, Rotorcraft Directorate, Regulations and Guidance Group, Fort Worth, Texas 76193-0111, telephone (817) 222-5122, fax (817) 222- 5961. Related Information (i) MCAI Transport Canada AD No. CF-2007-03, dated March 27, 2007, contains related information. Air Transport Association of America (ATA) Tracking Code (j) ATA Code 5510: Horizontal Stabilizer Structure. Material Incorporated by Reference (k) You must use the specified portions of Bell Helicopter Textron Canada Alert Service Bulletin No.",
+  "pages": [
+   {
+    "kind": "aircraft",
+    "name": "Bell",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Bell 407",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Bell 206B",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Bell Helicopter Textron",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Bell Helicopter Textron 206L-3",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Bell Helicopter Textron 206L-1",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Bell Helicopter Textron 206L-4",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Bell 206A",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Bell 206",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Bell 206L",
+    "mentioned": false
+   }
+  ]
+ },
+ {
+  "adNumber": "2010-15-10",
+  "summary": "We are adopting a new airworthiness directive (AD) for certain Piper Aircraft, Inc. (Piper) PA-28, PA-32, PA-34, and PA-44 series airplanes. This AD requires you to inspect the control wheel shaft on both the pilot and copilot sides and, if necessary, replace the control wheel shaft. This AD results from two field reports of incorrectly assembled control wheel shafts. We are issuing this AD to detect and correct any incorrectly assembled control wheel shafts. This condition, if left uncorrected, could lead to separation of the control wheel shaft, resulting in loss of pitch and roll control.",
+  "unsafeCondition": "This AD results from two field reports of incorrectly assembled control wheel shafts. We are issuing this AD to detect and correct any incorrectly assembled control wheel shafts. This condition, if left uncorrected, could lead to separation of the control wheel shaft, resulting in loss of pitch and roll control.",
+  "pages": [
+   {
+    "kind": "aircraft",
+    "name": "Piper",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-28-140",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-28-180",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-28-181",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-28-161",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-28R-200",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-32-300",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-28-151",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-28-235",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-32-260",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-34-200T",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-44-180",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-32R-301T",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-28R-180",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-32R-300",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-28-236",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-32R-301",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-28R-201T",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-28R-201",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-28RT-201T",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-28-160",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-34-220T",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-32RT-300T",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-32RT-300",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-28RT-201",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-34-200",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-32-301",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-28-150",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-28",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-32-301T",
+    "mentioned": false
+   }
+  ]
+ },
+ {
+  "adNumber": "2010-26-04",
+  "summary": "We are adopting a new airworthiness directive (AD) for the products listed above that are equipped with Thielert Aircraft Engine GmbH (TAE) Engine Model TAE-125-01 installed per Supplemental Type Certificate (STC) No. SA03303AT. This AD requires installing a full authority digital engine control (FADEC) backup battery, replacing the supplement pilot's operating handbook and FAA approved airplane flight manual, and revising the limitations section of the supplement airplane maintenance manual. This AD was prompted by an incident where an airplane experienced an in-flight engine shutdown caused by a momentary loss of electrical power to the FADEC. We are issuing this AD to prevent interruption of electrical power to the FADEC, which could result in an uncommanded engine shutdown. This failure could lead to a loss of engine power.",
+  "unsafeCondition": "This AD results from an incident where an airplane experienced an in-flight engine shutdown caused by a momentary loss of electrical power to the FADEC. We are issuing this AD to prevent interruption of electrical power to the FADEC, which could result in an uncommanded engine shutdown. This failure could lead to a loss of engine power.",
+  "pages": [
+   {
+    "kind": "aircraft",
+    "name": "Piper",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-28-140",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-28-180",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-28-181",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-28-161",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-28-151",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-28-235",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-28-236",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-28-160",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-28-150",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-28",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Piper PA-28-201T",
+    "mentioned": false
+   }
+  ]
+ },
+ {
+  "adNumber": "97-15-11",
+  "summary": "This amendment supersedes an existing airworthiness directive (AD), applicable to Avco Lycoming and Textron Lycoming reciprocating engines, that currently requires removal from service of defective piston pins, and replacement with serviceable parts. This amendment adds additional affected engine models that may have defective piston pins installed, and references a revised service bulletin. This amendment is prompted by the determination that additional engine models may have defective piston pins installed. The actions specified by this AD are intended to prevent piston pin failure, which could result in engine failure.",
+  "unsafeCondition": null,
+  "pages": [
+   {
+    "kind": "engine",
+    "name": "Lycoming",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Lycoming O-320",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Lycoming O-360",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Lycoming IO-360",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Lycoming IO-540",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Lycoming TIO-540",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Lycoming O-540",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Lycoming IO-320",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Lycoming AEIO-360",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Lycoming AEIO-540",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Lycoming HIO-360",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Lycoming TIO-541",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Lycoming GO-480",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Lycoming IO-720",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Lycoming VO-540",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Lycoming AEIO-320",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Lycoming TO-360",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Lycoming HO-360",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Lycoming GSO-480",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Lycoming IGSO-540",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Lycoming TIGO-541",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Lycoming TIO-360",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Lycoming LO-360",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Lycoming IGO-540",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Lycoming LIO-360",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Lycoming LYCOMING",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Lycoming LTIO-540",
+    "mentioned": false
+   }
+  ]
+ },
+ {
+  "adNumber": "2024-02-05",
+  "summary": "The FAA is adopting a new airworthiness directive (AD) for certain Bombardier, Inc., Model BD-700-1A10 and BD-700-1A11 airplanes. This AD was prompted by a determination that a certain nondestructive test (NDT) procedure associated with a certain airworthiness limitation for inspecting the inboard, mid, and outboard flap metallic end ribs does not contain all of the necessary instructions. This AD requires a revision to the existing maintenance or inspection program to require using a revised NDT procedure when performing an airworthiness limitation task. This AD also prohibits the use of earlier revisions of that NDT procedure. The FAA is issuing this AD to address the unsafe condition on these products.",
+  "unsafeCondition": "This AD was prompted by a determination that a certain nondestructive test (NDT) procedure associated with a certain airworthiness limitation for inspecting for cracks at the inboard, mid, and outboard flap metallic end ribs does not contain all of the necessary instructions. The FAA is issuing this AD to address undetected cracks. The unsafe condition, if not addressed, could result in structural failure of the flap, which could result in possible reduced structural integrity of the airplane.",
+  "pages": [
+   {
+    "kind": "aircraft",
+    "name": "Bombardier",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Bombardier BD-700-1A10",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Bombardier BD-700-1A11",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Bombardier BD-700-2A12",
+    "mentioned": false
+   }
+  ]
+ },
+ {
+  "adNumber": "2020-24-08",
+  "summary": "The FAA is adopting a new airworthiness directive (AD) for certain Rolls-Royce Deutschland Ltd & Co KG (Type Certificate Previously Held by Rolls-Royce plc) (RRD) RB211 Trent 768-60, 772-60, 772B-60 and 772C-60 model turbofan engines. This AD requires replacement of high-pressure turbine (HPT) blades with parts eligible for installation before exceeding specified flight cycles since new. This AD was prompted by several reports from the manufacturer that HPT blades on RB211 Trent 700 model turbofan engines have been subject to high levels of corrosion fatigue, leading to blade cracking and eventual release, resulting in an aborted take-off and in-flight shut- downs. The FAA is issuing this AD to address the unsafe condition on these products.",
+  "unsafeCondition": "This AD was prompted by a determination by the manufacturer that high-pressure turbine (HPT) blades on several RB211 Trent 700 model turbofan engines have been subject to high levels of corrosion fatigue, leading to HPT blade cracking and eventual release. The FAA is issuing this AD to prevent failure of the HPT blades. The unsafe condition, if not addressed, could result in blade failure and subsequent release of high-energy debris, possibly resulting in damage to, and reduced control of, the airplane.",
+  "pages": [
+   {
+    "kind": "engine",
+    "name": "Rolls-Royce",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Rolls-Royce RB",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Rolls-Royce RB211",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Rolls-Royce 700",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Rolls-Royce TRENT",
+    "mentioned": false
+   }
+  ]
+ },
+ {
+  "adNumber": "2019-08-10",
+  "summary": "We are adopting a new airworthiness directive (AD) for Bell Helicopter Textron Canada Limited (Bell) Model 206A, 206B, 206L, 206L- 1, 206L-3, 206L-4, and 407 helicopters. This AD requires inspecting and cleaning the oil supply restrictor (restrictor) to the freewheel assembly. This AD was prompted by reports of a blocked oil line restrictor in the freewheel lubrication system. The actions of this AD are intended to address an unsafe condition on these products.",
+  "unsafeCondition": "This AD defines the unsafe condition as a blocked oil line restrictor. This condition could cause failure of the freewheel assembly, which could result in failure of the main rotor mast and subsequent loss of control of the helicopter.",
+  "pages": [
+   {
+    "kind": "aircraft",
+    "name": "Bell",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Bell 407",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Bell 206B",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Bell Helicopter Textron",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Bell Helicopter Textron 206L-3",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Bell Helicopter Textron 206L-1",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Bell Helicopter Textron 206L-4",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Bell 206A",
+    "mentioned": false
+   },
+   {
+    "kind": "aircraft",
+    "name": "Bell 206L",
+    "mentioned": false
+   }
+  ]
+ },
+ {
+  "adNumber": "2017-16-11",
+  "summary": "We are adopting a new airworthiness directive (AD) for certain models of Lycoming Engines reciprocating engines. This AD requires an inspection of connecting rods and replacement of affected connecting rod small end bushings. This AD was prompted by several reports of connecting rod failures resulting in uncontained engine failure and in- flight shutdowns (IFSDs). We are issuing this AD to address the unsafe condition on these products.",
+  "unsafeCondition": "This AD was prompted by several reports of connecting rod failures resulting in uncontained engine failure and in-flight shutdowns (IFSDs). We are issuing this AD to prevent connecting rod failure. The unsafe condition, if not corrected, could result in uncontained engine failure, total engine power loss, IFSD, and possible loss of the airplane.",
+  "pages": [
+   {
+    "kind": "engine",
+    "name": "Lycoming",
+    "mentioned": false
+   },
+   {
+    "kind": "engine",
+    "name": "Lycoming LYCOMING",
+    "mentioned": false
+   }
+  ]
+ }
+]

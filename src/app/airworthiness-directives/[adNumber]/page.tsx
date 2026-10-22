@@ -7,6 +7,8 @@ import { JsonLd } from "@/components/json-ld";
 import { AdText } from "@/components/ad-library/ad-text";
 import { Chip } from "@/components/ad-library/ad-list";
 import { LibraryNotice } from "@/components/ad-library/notice";
+import { TailCheckForm } from "@/components/ad-library/tail-check-form";
+import { faaCovers, faaRequires, faaWhy, glanceTitle } from "@/lib/ad-glance.mjs";
 import { AD_BASE, adAbout, adDate, adHref, adPublished, adTitle, getAd, KINDS, pageHref, PRODUCT_LABEL, segmentFor } from "@/lib/ad-library";
 import { SITE_URL, signupUrl } from "@/lib/site";
 
@@ -29,8 +31,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!ad) return { title: "AD not found", robots: { index: false } };
   const who = adTitle(ad.title);
   const short = who.length > 80 ? `${who.slice(0, 77).replace(/[,\s]+\S*$/, "")}...` : who;
-  const title = `AD ${ad.adNumber}: ${short}`;
-  const description = (ad.summary ?? ad.unsafeCondition ?? ad.applicability ?? who).replace(/\s+/g, " ").slice(0, 300);
+  // Maker and model families ("AD 2008-26-10: Cessna 172, 182, 180 and more"), else the
+  // Federal Register's title, which lists every model and runs past what a result shows.
+  const title = glanceTitle(ad, ad.subject ? adAbout(ad) : null) ?? `AD ${ad.adNumber}: ${short}`;
+  // The FAA's "This AD requires ..." sentence says what the AD is; its summary opens with
+  // "The FAA is adopting a new airworthiness directive", which says nothing.
+  const description = clip(faaRequires(ad)?.join(" ") ?? ad.summary ?? ad.unsafeCondition ?? ad.applicability ?? who, 300);
   // Not offered to search engines without its text: an AD from the FAA's index alone is a few
   // lines and a link, too thin to stand as a page.
   const readable = !!ad.details?.applicability?.length;
@@ -52,6 +58,9 @@ export default async function AdPage({ params }: Props) {
   if (ad.adNumber !== decodeURIComponent(adNumber)) redirect(adHref(ad.adNumber));
 
   const about = adAbout(ad);
+  const requires = faaRequires(ad);
+  const why = faaWhy(ad);
+  const covers = faaCovers(ad);
   const pagesByKind = (Object.keys(KINDS) as (keyof typeof KINDS)[])
     .map((seg) => ({ seg, label: KINDS[seg].plural, pages: ad.pages.filter((p) => segmentFor(p.kind) === seg) }))
     .filter((g) => g.pages.length);
@@ -114,6 +123,59 @@ export default async function AdPage({ params }: Props) {
             The FAA has filed this AD for publication in the Federal Register on {adDate(ad.publishedOn, "long")}. This page shows the
             public-inspection copy and is replaced by the published text when it appears. Its effective date is set at publication.
           </p>
+        )}
+
+        {(requires || why) && (
+          <section aria-labelledby="at-a-glance" className="mt-8 rounded-lg border border-border bg-white p-5 sm:p-6">
+            <h2 id="at-a-glance" className="text-lg font-semibold tracking-tight text-brand-surface">
+              At a glance
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">Quoted from the FAA&apos;s summary of this AD. The full text below is what applies.</p>
+            <dl className="mt-5 space-y-4">
+              {requires && (
+                <Glance label="What it requires">
+                  {requires.map((s) => (
+                    <p key={s}>{s}</p>
+                  ))}
+                </Glance>
+              )}
+              {why && <Glance label="Why">{why}</Glance>}
+              {covers && (
+                <Glance label="Applies to">
+                  <p>
+                    {covers.charAt(0).toUpperCase()}
+                    {covers.slice(1)}.{" "}
+                    <a href="#applies-to" className="text-primary underline-offset-2 hover:underline">
+                      Serial numbers and exceptions
+                    </a>
+                  </p>
+                </Glance>
+              )}
+              {ad.repetitive && (
+                <Glance label="Repeats">
+                  Its required actions mention a repeat inspection or replacement.{" "}
+                  <a href="#what-it-requires" className="text-primary underline-offset-2 hover:underline">
+                    See the intervals
+                  </a>
+                </Glance>
+              )}
+              {ad.details && ad.details.actions.length > 0 && (
+                <Glance label="Deadlines">
+                  <a href="#what-it-requires" className="text-primary underline-offset-2 hover:underline">
+                    In the required actions below
+                  </a>
+                  , with the FAA&apos;s exact compliance times.
+                </Glance>
+              )}
+            </dl>
+            <div className="mt-6 border-t border-border pt-5">
+              <p className="font-medium text-brand-surface">Does it apply to your aircraft?</p>
+              <p className="mt-0.5 text-sm text-muted-foreground">
+                Enter an N-number to see every AD that names its model. Serial numbers and installed parts still decide.
+              </p>
+              <TailCheckForm compact className="mt-3 max-w-md" />
+            </div>
+          </section>
         )}
 
         <dl className="mt-8 grid grid-cols-2 gap-4 rounded-lg border border-border bg-white p-4 text-sm sm:grid-cols-4">
@@ -252,6 +314,22 @@ export default async function AdPage({ params }: Props) {
         </div>
       </article>
     </>
+  );
+}
+
+/** At most `max` characters, ending on a whole word. */
+function clip(text: string, max: number) {
+  const flat = text.replace(/\s+/g, " ").trim();
+  return flat.length <= max ? flat : `${flat.slice(0, max - 3).replace(/[,;:\s]+\S*$/, "")}...`;
+}
+
+/** One line of the glance: a label beside the FAA's sentence, stacked on a phone. */
+function Glance({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="grid gap-1 sm:grid-cols-[9rem_1fr] sm:gap-4">
+      <dt className="text-sm font-medium text-muted-foreground">{label}</dt>
+      <dd className="space-y-2 text-[15px] leading-relaxed text-foreground">{children}</dd>
+    </div>
   );
 }
 
