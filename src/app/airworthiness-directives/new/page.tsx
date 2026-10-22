@@ -6,8 +6,8 @@ import { AdList } from "@/components/ad-library/ad-list";
 import { LibraryNotice } from "@/components/ad-library/notice";
 import { AD_BASE, adDate, getRecent } from "@/lib/ad-library";
 
-// Hourly is the point of this page: it lists what the FAA filed in the last hour or two.
-export const revalidate = 900;
+// Freshness is the point of this page: the API refreshes it within minutes of an AD arriving.
+export const revalidate = 604800; // A week; the API refreshes it the moment ADs change (AD_CACHE_TAG in lib/ad-library.ts).
 
 export const metadata: Metadata = {
   title: "New FAA Airworthiness Directives: This Month and Tomorrow's",

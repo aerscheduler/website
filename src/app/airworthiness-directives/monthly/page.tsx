@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { AD_BASE, getMonths } from "@/lib/ad-library";
 
-export const revalidate = 3600;
+export const revalidate = 604800; // A week; the API refreshes it the moment ADs change (AD_CACHE_TAG in lib/ad-library.ts).
 
 export const metadata: Metadata = {
   title: "Airworthiness Directives by Month",

@@ -29,7 +29,8 @@ import { signupUrl } from "@/lib/site";
  * the equipment ADs that name its model, laid out to read on screen and to print as a pre-buy
  * or annual checklist. Not indexed: it is a tool's answer about somebody's aeroplane.
  */
-export const revalidate = 3600;
+// A day, for the registry record; the API refreshes the ADs the moment they change (AD_CACHE_TAG in lib/ad-library.ts).
+export const revalidate = 86400;
 
 type Props = { params: Promise<{ tail: string }> };
 

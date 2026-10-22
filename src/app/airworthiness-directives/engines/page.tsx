@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { KindIndexView } from "@/components/ad-library/model-page";
 import { AD_BASE } from "@/lib/ad-library";
 
-export const revalidate = 3600;
+export const revalidate = 604800; // A week; the API refreshes it the moment ADs change (AD_CACHE_TAG in lib/ad-library.ts).
 
 export const metadata: Metadata = {
   title: "Airworthiness Directives by Engine",

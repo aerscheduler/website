@@ -9,7 +9,7 @@ import { AD_BASE, adAbout, adDate, adPublished, adHref, adTitle, getMonth, PRODU
  * Every AD published in one month, grouped by the kind of product it is for, with the FAA's own
  * summary of each: the monthly roundup. Written by nobody, so it is always exactly the record.
  */
-export const revalidate = 3600;
+export const revalidate = 604800; // A week; the API refreshes it the moment ADs change (AD_CACHE_TAG in lib/ad-library.ts).
 export const dynamicParams = true;
 export function generateStaticParams() {
   return [];

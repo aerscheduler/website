@@ -4,10 +4,10 @@ import { SITE_URL } from "@/lib/site";
 
 /**
  * The AD library's own sitemap (/airworthiness-directives/sitemap.xml), separate from the
- * site's: about 14,000 addresses that change hourly, read from the API. An AD whose layout could
+ * site's: about 14,000 addresses read from the API, refreshed when ADs change. An AD whose layout could
  * not be read is left out, as its page is noindex.
  */
-export const revalidate = 3600;
+export const revalidate = 604800; // A week; the API refreshes it the moment ADs change (AD_CACHE_TAG in lib/ad-library.ts).
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [data, months] = await Promise.all([getSitemap(), getMonths()]);

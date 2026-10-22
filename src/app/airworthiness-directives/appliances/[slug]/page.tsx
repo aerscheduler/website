@@ -1,6 +1,6 @@
 import { ModelPageView, modelMetadata } from "@/components/ad-library/model-page";
 
-export const revalidate = 3600;
+export const revalidate = 604800; // A week; the API refreshes it the moment ADs change (AD_CACHE_TAG in lib/ad-library.ts).
 export const dynamicParams = true;
 export function generateStaticParams() {
   return [];

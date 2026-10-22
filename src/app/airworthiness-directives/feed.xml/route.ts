@@ -1,8 +1,8 @@
 import { AD_BASE, adAbout, adHref, adTitle, getRecent } from "@/lib/ad-library";
 import { SITE_URL } from "@/lib/site";
 
-/** RSS 2.0: the newest ADs, including those on public inspection, every 15 minutes. */
-export const revalidate = 900;
+/** RSS 2.0: the newest ADs, including those on public inspection, refreshed as they arrive. */
+export const revalidate = 604800; // A week; the API refreshes it the moment ADs change (AD_CACHE_TAG in lib/ad-library.ts).
 
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 

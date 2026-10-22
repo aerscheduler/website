@@ -87,12 +87,25 @@ export type LibraryStats = {
   lastAddedAt: string | null;
 };
 
-/** How often a page asks the API again, in seconds. New ADs arrive hourly. */
-export const AD_REVALIDATE = 3600;
+/**
+ * Every AD library fetch carries this tag. The API's sync posts to /api/revalidate when ADs
+ * actually change (new, published, corrected), which marks every page built from them stale.
+ * That, not a timer, is how a new AD reaches the site within minutes.
+ */
+export const AD_CACHE_TAG = "ad-library";
+
+/**
+ * The timer is only a safety net for a missed refresh, so a week. It was an hour until
+ * 2026-10-21: crawlers walking 14,000 AD pages rebuilt each one hourly whether or not anything
+ * had changed, and that blew through Vercel's free ISR allowance (566K writes against 200K).
+ */
+export const AD_REVALIDATE = 604800;
 
 async function get<T>(path: string, revalidate = AD_REVALIDATE): Promise<T | null> {
   try {
-    const res = await fetch(`${API_URL}/public${AD_BASE}${path}`, { next: { revalidate: process.env.NODE_ENV === "development" ? 0 : revalidate } });
+    const res = await fetch(`${API_URL}/public${AD_BASE}${path}`, {
+      next: { revalidate: process.env.NODE_ENV === "development" ? 0 : revalidate, tags: [AD_CACHE_TAG] },
+    });
     if (!res.ok) return null;
     return (await res.json()) as T;
   } catch {

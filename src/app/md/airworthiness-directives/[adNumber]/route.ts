@@ -3,7 +3,7 @@ import { adMarkdown } from "@/lib/library-markdown";
 import { SITE_URL } from "@/lib/site";
 
 /** One AD as Markdown, public at `/airworthiness-directives/<number>.md` (rewrite in next.config.ts). */
-export const revalidate = 3600;
+export const revalidate = 604800; // A week; the API refreshes it the moment ADs change (AD_CACHE_TAG in lib/ad-library.ts).
 
 export async function GET(_request: Request, { params }: { params: Promise<{ adNumber: string }> }) {
   const { adNumber } = await params;

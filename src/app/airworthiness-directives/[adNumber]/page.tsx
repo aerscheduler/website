@@ -13,9 +13,9 @@ import { SITE_URL, signupUrl } from "@/lib/site";
 /**
  * One Airworthiness Directive, readable: what it applies to, the FAA's own summary, what it
  * requires, what it replaced and what replaced it, and the aircraft, engines and equipment it
- * names. Generated on first visit and refreshed hourly; there are 12,000 of them.
+ * names. Generated on first visit and refreshed when ADs change; there are 12,000 of them.
  */
-export const revalidate = 3600;
+export const revalidate = 604800; // A week; the API refreshes it the moment ADs change (AD_CACHE_TAG in lib/ad-library.ts).
 export const dynamicParams = true;
 export function generateStaticParams() {
   return [];
