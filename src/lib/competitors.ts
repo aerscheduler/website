@@ -206,7 +206,7 @@ export const SWITCH_OFFER = {
     },
     {
       title: "Nothing to sign, nothing locked in",
-      body: "14 days free, and nothing is charged if you cancel before they end. Every report exports to CSV, so the answer to \"what if we change our mind\" is a download rather than a support ticket.",
+      body: "14 days free and no card to start. Every report exports to CSV, so the answer to \"what if we change our mind\" is a download rather than a support ticket.",
     },
   ],
 };
@@ -1178,7 +1178,7 @@ export const COMPETITOR_FAQS: Record<
     },
     {
       q: "Can I switch from Flight Schedule Pro without a sales call?",
-      a: "Yes. Signup is self-serve and the trial is 14 days, with nothing charged if you cancel before it ends. You can add an aircraft and put a flight on the board the same afternoon.",
+      a: "Yes. Signup is self-serve, the trial is 14 days, and no credit card is required. You can add an aircraft and put a flight on the board the same afternoon.",
     },
     {
       q: "Does AerScheduler have a mobile app?",
@@ -1200,7 +1200,7 @@ export const COMPETITOR_FAQS: Record<
     },
     {
       q: "Can I try it before talking to anyone?",
-      a: "Yes. There is a live demo you can open with no signup, and a 14-day free trial with no sales call.",
+      a: "Yes. There is a live demo you can open with no signup, and a 14-day trial that needs no credit card and no sales call.",
     },
     {
       q: "Does it handle multi-day and overnight rentals?",

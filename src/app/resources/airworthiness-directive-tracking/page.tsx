@@ -243,7 +243,7 @@ export default function Page() {
         <section className="mt-12 rounded-lg border bg-muted/30 p-6">
           <h2 className="text-xl font-semibold tracking-tight">Try it on one aeroplane</h2>
           <p className="mt-2 text-muted-foreground">
-            {TRIAL_DAYS} days free. Add a tail with its engine and propeller, turn on Find the ADs
+            {TRIAL_DAYS} days, no card. Add a tail with its engine and propeller, turn on Find the ADs
             for our aircraft, and read the ADs that name it.
           </p>
           <div className="mt-4 flex flex-wrap gap-3">

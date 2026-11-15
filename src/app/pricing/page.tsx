@@ -19,7 +19,7 @@ import {
 
 export const metadata: Metadata = {
   title: "Flight School Software Pricing",
-  description: `Simple flight school software pricing at $${PRICE_PER_AIRCRAFT}/mo per aircraft. Simulators and classrooms free. ${TRIAL_DAYS}-day free trial, cancel anytime. Enterprise available for larger operations.`,
+  description: `Simple flight school software pricing at $${PRICE_PER_AIRCRAFT}/mo per aircraft. Simulators and classrooms free. ${TRIAL_DAYS}-day free trial, no credit card. Enterprise available for larger operations.`,
   alternates: { canonical: "/pricing" },
   openGraph: {
     title: "Flight School Software Pricing",
@@ -183,7 +183,7 @@ export default function PricingPage() {
                 </Button>
               </div>
               <p className="animate-fade-up-delay-3 mt-4 text-sm text-black/45">
-                {TRIAL_DAYS}-day free trial · Cancel anytime · No sales call
+                {TRIAL_DAYS}-day free trial · No credit card · No sales call
               </p>
             </div>
             <div className="animate-fade-up-delay-3 mx-auto w-full max-w-md lg:mx-0 lg:ml-auto">

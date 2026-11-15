@@ -178,7 +178,7 @@ export function FeaturePage({ feature }: { feature: Feature }) {
                 </Button>
               </div>
               <p className="animate-fade-up-delay-3 mt-4 text-sm text-black/45">
-                ${PRICE_PER_AIRCRAFT}/aircraft/mo · {TRIAL_DAYS}-day free trial · Cancel anytime · No
+                ${PRICE_PER_AIRCRAFT}/aircraft/mo · {TRIAL_DAYS}-day free trial · No credit card · No
                 sales call
               </p>
             </div>

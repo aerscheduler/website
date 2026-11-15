@@ -54,7 +54,7 @@ export default function FeaturesIndexPage() {
             </Button>
           </div>
           <p className="mt-4 text-sm text-muted-foreground">
-            ${PRICE_PER_AIRCRAFT}/aircraft/mo · {TRIAL_DAYS}-day free trial · Cancel anytime · No
+            ${PRICE_PER_AIRCRAFT}/aircraft/mo · {TRIAL_DAYS}-day free trial · No credit card · No
             sales call
           </p>
         </div>

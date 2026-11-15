@@ -224,7 +224,7 @@ export function ComparePage({ competitor }: { competitor: Competitor }) {
                 </Button>
               </div>
               <p className="animate-fade-up-delay-3 mt-4 text-sm text-black/45">
-                {TRIAL_DAYS}-day free trial · Cancel anytime · No sales call
+                {TRIAL_DAYS}-day free trial · No credit card · No sales call
               </p>
             </div>
             <div className="animate-fade-up-delay-3 md:min-h-[540px]">
