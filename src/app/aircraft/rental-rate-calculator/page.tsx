@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { JsonLd } from "@/components/json-ld";
 import { RentalRateCalculator, type RentalModel } from "@/components/aircraft-guides/rental-rate-calculator";
-import { defaultTbo, FUEL_BURN, getGuide, GUIDE_BASE, GUIDE_REVALIDATE, guideHref, guideTitle, RATE_CALCULATOR_PATH } from "@/lib/aircraft-guides";
+import { defaultTbo, FUEL_BURN, getGuide, GUIDE_BASE, guideHref, guideTitle, RATE_CALCULATOR_PATH } from "@/lib/aircraft-guides";
 import { faqJsonLd } from "@/lib/seo";
 import { signupUrl } from "@/lib/site";
 
@@ -12,7 +12,9 @@ import { signupUrl } from "@/lib/site";
  * and a dry rate. For flight schools, flying clubs and leaseback owners. The model list is the
  * guides that have a typical fuel burn (FUEL_BURN), so a pick always fills something in.
  */
-export const revalidate = GUIDE_REVALIDATE;
+//A literal, like every sibling page: Next reads segment config statically and fails the build
+//("Invalid segment configuration export") on an imported constant. Same value as GUIDE_REVALIDATE.
+export const revalidate = 86400;
 
 export const metadata: Metadata = {
   title: "Aircraft Rental Rate Calculator: What to Charge, Wet or Dry",
