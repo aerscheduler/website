@@ -41,8 +41,10 @@ permission](/docs/getting-started/permissions-and-grants).
 | Open a work order, and move it through its stages | Yes | Yes | No | No |
 | Choose who a job is billed to | Yes | No: a job they open goes to the billed owner | No | No |
 | Add findings, labor and parts | Yes | Yes, at the shop's rates | No | No |
-| Change a line's price, rate, markup, discount, tax or billing | Yes | No | No | No |
-| Change a line somebody else entered | Yes | No | No | No |
+| Change a line's price, rate, markup, discount, tax or billing | Yes | With Shop pricing | No | No |
+| Change a line somebody else entered | Yes | With Shop pricing | No | No |
+| Pick a saved part onto a job, or save a new one | Yes | Yes | No | No |
+| Change a saved part's cost or price, or archive one | Yes | With Shop pricing | No | No |
 | Send findings to the owner, record the owner's answer | Yes | Yes | No | No |
 | Raise the job's invoice | Yes | No | No | No |
 | Delete a job opened by mistake | Yes | No | No | No |
@@ -64,6 +66,13 @@ so they see those rates and what each job charges, and they change only the line
 Only people with the technician role can be put on a job or a labor line, so give an admin who
 works on aircraft that role too. See
 [Run a work order](/docs/maintenance/run-a-work-order).
+
+**Shop pricing** is a permission an owner or admin can give one technician, a lead technician,
+on <Where app="web">People → that person → Permissions</Where>. With it they change any line's
+price, rate, markup, discount, tax and billing, change lines somebody else entered, set a job's
+own rates, and change or archive [saved parts](/docs/maintenance/save-parts-you-use-often),
+without an admin. Choosing who pays, raising the invoice and closing a job without one stay
+with admins.
 
 What a technician cannot do:
 

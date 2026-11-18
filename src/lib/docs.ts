@@ -1366,6 +1366,29 @@ export const DOC_SECTIONS: DocSection[] = [
         ],
       },
       {
+        slug: "save-parts-you-use-often",
+        title: "Save parts you use often",
+        description:
+          "Save the oil, filters, gaskets, supplies and fees your shop uses every week and pick them onto a work order, priced at the job's markup, instead of typing them.",
+        kind: "task",
+        audience: ["Owners", "Admins", "Technicians"],
+        seoQuery: "aircraft maintenance parts list for work orders",
+        faqs: [
+          {
+            q: "Does changing a saved part change jobs already priced?",
+            a: "No. Each line keeps its own copy of the part, so a new cost or price only changes the next time the part is picked. Lines already on jobs and invoices already raised stay as they were.",
+          },
+          {
+            q: "Is this inventory?",
+            a: "No. Saved parts are a price list to pick from, not a stock count. Nothing is counted down when you use one.",
+          },
+          {
+            q: "Who can change a saved part's price?",
+            a: "Owners and admins, and anybody given the Shop pricing permission, usually a lead technician. Any technician can pick saved parts and save new ones with their cost.",
+          },
+        ],
+      },
+      {
         slug: "use-the-go-no-go-board",
         title: "Use the Go / No-Go board",
         description:

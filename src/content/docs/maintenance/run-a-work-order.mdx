@@ -292,7 +292,9 @@ keeps the usual values never needs them: the **kind**, the **item** it is for, t
 **sales tax**, and whether it is **billed**. Click one to change it.
 
 <Callout type="note">
-Only an admin prices. Technicians enter work at the job's rates (see
+Only an admin prices, or a technician an admin has given **Shop pricing** (see [Who can do what
+in maintenance](/docs/maintenance/who-can-do-what-in-maintenance)), who then prices exactly as
+an admin does below. Technicians enter work at the job's rates (see
 [Rates for a customer or a job](#rates-for-a-customer-or-a-job)): their labor takes the job's
 labor rate and their parts and outside work its markup, on the console and on the phone alike. They type a
 price only on Shop supplies, Freight, Fee and Other lines. An admin changes a line's rate,
@@ -313,7 +315,11 @@ becomes the admin's. An admin sees every line in the invoice preview before rais
   A part also takes its part number, serial number and vendor, and a status (ordered, received,
   installed, returned, unused) with the day it was ordered and the day it is expected.
 - **Shop supplies**, **Freight and shipping**, **Fee** and **Other** are a quantity at a price.
-- **Discount** takes a percentage off a whole line: 10 takes 10% off. Only an admin gives one. The
+- **Saved part**, at the top of a new part, supply or fee, fills the line from the shop's [saved
+  parts](/docs/maintenance/save-parts-you-use-often): pick the oil or the filter and its name,
+  part number, vendor and cost come in, priced at this job's markup (or the part's fixed price).
+  Typing one that is not saved yet? Tick **Save to parts list** and it is there next time.
+- **Discount** takes a percentage off a whole line: 10 takes 10% off. Only an admin, or someone with Shop pricing, gives one. The
   card and the invoice show the line at its discounted price, with "(10% off)" in its name, and a
   line 100% off stays on the invoice at $0.00 so the owner sees the work you gave them.
 

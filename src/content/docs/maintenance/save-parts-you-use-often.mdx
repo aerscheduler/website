@@ -1,0 +1,58 @@
+<Summary>
+Save the oil, filters, gaskets, supplies and fees your shop uses every week, then pick them onto
+a work order instead of typing them. The part number, vendor and cost fill in, and the price
+follows the job's markup, so the same part is charged the same way every time.
+</Summary>
+
+<Roles>Owners, Admins, Technicians</Roles>
+
+## Where they are
+
+<Where app="web">Maintenance → Saved parts</Where>, under Work orders. Parts are grouped by kind:
+Parts, Shop supplies, Outside work, Freight and shipping, Fees and Other. Search by name, part
+number or vendor. **Used** counts how many job lines were picked from each one.
+
+## Start from what you have already used
+
+The first time you open Saved parts, **Add from past jobs** offers every part already put on a
+work order and not saved yet, one per part number, with the latest cost (or the price, when the
+line was priced by hand) and how often it was used. Untick any you do not want and press
+**Save**. A part number already saved is skipped.
+
+This needs **Shop pricing**: owners and admins have it, and you can give it to a lead technician.
+
+## Save a part
+
+Press **Save a part**, or tick **Save to parts list** when you add a part to a job that is not
+saved yet.
+
+- **Name** becomes the line's description.
+- **Part number**: one saved part per number, so "20W-50" cannot be saved twice by accident.
+- **Cost each** is what the shop pays, for parts and outside work. When the part is picked it is
+  marked up by **that job's** markup: the job's own, else the customer's, else the shop's
+  markup in Shop rates. A customer you bill at cost still pays cost.
+- **Fixed price each** (optional) charges a set price instead of cost plus markup, for example
+  oil sold by the quart. Supplies, freight and fees have only a price.
+- **Sales tax** follows your organization's rule unless you choose Taxable or Not taxable.
+
+Any technician can save a part with its cost. Setting a fixed price on a part, choosing its tax,
+changing a saved part or archiving one needs **Shop pricing**.
+
+## Pick one onto a job
+
+On a work order, add a part (or a supply or fee). **Saved part** at the top of the form lists the
+shop's parts; type to search. Picking one fills the description, part number, vendor, cost,
+price and tax. Change the quantity, serial number, status or anything else before adding it.
+The phone app has the same **Saved part** row when you add a part.
+
+A technician without Shop pricing can pick any saved part, including one with a fixed price or a
+tax choice: those are the part's own values, not a price they set.
+
+## Changing a saved part never changes a job
+
+Each line on a job keeps its own copy of the part. Changing a saved part's cost or price, or
+archiving it, changes what the **next** pick charges. Lines already on jobs, and invoices
+already raised, stay exactly as they were.
+
+**Archive** a part you no longer stock. It disappears from the picker and frees its part number;
+**Archived** at the top of the list shows them, and you can bring one back.
