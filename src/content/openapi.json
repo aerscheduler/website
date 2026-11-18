@@ -8403,7 +8403,7 @@
             }
           },
           "400": {
-            "description": "Nothing to confirm yet.",
+            "description": "Nothing to confirm yet, the PIN is missing or wrong, or you have already signed off.",
             "content": {
               "application/json": {
                 "schema": {
@@ -8461,8 +8461,15 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "description": "No fields required.",
-                "properties": {}
+                "description": "The caller signs off as themselves, and only a person on the booking may. `pin` is required unless the organization has turned off `requirePinToSignOff` in its preferences.",
+                "properties": {
+                  "pin": {
+                    "type": "string",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "description": "The caller's four-character confirmation PIN."
+                  }
+                }
               }
             }
           }
