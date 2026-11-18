@@ -37,6 +37,19 @@ as automatic close-out. Dispatchers do not get this button.
 Retrying after a successful charge does nothing. Reversing or moving money later is done
 from the member's account ledger, not by posting again.
 
+## A flight that never flew
+
+Sometimes an aircraft is ramped out and comes straight back without flying, for a
+maintenance issue or the weather. A ramped-out booking cannot be cancelled, so ramp it in
+with the same Hobbs and tach readings it went out with and have the pilot sign off.
+
+The flight then posts to the member's ledger at **0.00**. The booking closes out as
+billed, it leaves the Unbilled list, and the member's balance does not move. The row on
+their ledger says the aircraft logged no time.
+
+If the readings were a mistake and the aircraft did fly, **Reverse** the 0.00 charge on
+the member's ledger, correct the times, and sign off again. It bills the real time then.
+
 ## After the charge
 
 - The member's balance drops by the flight amount (it can go negative).
